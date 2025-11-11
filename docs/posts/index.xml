@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Posts on Irina&#39;s CTF Writeups</title>
+    <link>https://irinasusca.github.io/writeup-blog/posts/</link>
+    <description>Recent content in Posts on Irina&#39;s CTF Writeups</description>
+    <generator>Hugo -- 0.146.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 10 Nov 2025 21:08:35 +0200</lastBuildDate>
+    <atom:link href="https://irinasusca.github.io/writeup-blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Pico Babygame03 Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/babygame03-writeup/</link>
+      <pubDate>Mon, 10 Nov 2025 21:08:35 +0200</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/babygame03-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Break the game and get the flag. Welcome to &lt;strong&gt;&lt;a href=&#34;https://play.picoctf.org/practice/challenge/446&#34;&gt;BabyGame 03&lt;/a&gt;&lt;/strong&gt;! Navigate around the map and see what you can find! Be careful, you don&amp;rsquo;t have many moves. There are obstacles that instantly end the game on collision. The game is available to download here. There is no source available, so you&amp;rsquo;ll have to figure your way around the map.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/babygame03-writeup/baby-1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;After analyzing the binary and renaming the variables, we notice we have a &lt;strong&gt;player struct/array&lt;/strong&gt; consisting of the &lt;strong&gt;player y&lt;/strong&gt;, &lt;strong&gt;player x&lt;/strong&gt; and &lt;strong&gt;player lives&lt;/strong&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico Handoff Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/handoff-writeup/</link>
+      <pubDate>Mon, 10 Nov 2025 21:08:35 +0200</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/handoff-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;The first vuln we encounter in &lt;strong&gt;&lt;a href=&#34;https://play.picoctf.org/practice/challenge/486&#34;&gt;handoff&lt;/a&gt;&lt;/strong&gt; is that it doesn&amp;rsquo;t disable NX.
+(Basically, this means that we can execute shellcode on the stack!)&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/handoff-writeup/handoff-1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We are presented with a menu with 3 options:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Add a recipient&lt;/li&gt;
+&lt;li&gt;Send a message to a recipient&lt;/li&gt;
+&lt;li&gt;Exit&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Upon trying to exit, we are prompted to give our feedback.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;identifying-the-vulnerability&#34;&gt;Identifying the vulnerability&lt;/h2&gt;
+&lt;p&gt;Immediately after decompiling the binary, we notice a buffer overflow in its feedback buffer.
+We can also see that the value at &lt;code&gt;feedback[7]&lt;/code&gt; gets turned to &lt;code&gt;\0&lt;/code&gt;. However, the feedback buffer overflow is way too small for us to do anything with it, so our best bet is to find another buffer and &lt;code&gt;jmp&lt;/code&gt; to it.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

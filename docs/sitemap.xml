@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://irinasusca.github.io/writeup-blog/</loc>
+    <lastmod>2025-11-10T21:08:35+02:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/</loc>
+    <lastmod>2025-11-10T21:08:35+02:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/babygame03-writeup/</loc>
+    <lastmod>2025-11-10T21:08:35+02:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/handoff-writeup/</loc>
+    <lastmod>2025-11-10T21:08:35+02:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/picoctf/</loc>
+    <lastmod>2025-11-10T21:08:35+02:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/</loc>
+    <lastmod>2025-11-10T21:08:35+02:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/pwn/</loc>
+    <lastmod>2025-11-10T21:08:35+02:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/</loc>
+    <lastmod>2025-11-10T21:08:35+02:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/categories/</loc>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/search/</loc>
+  </url>
+</urlset>

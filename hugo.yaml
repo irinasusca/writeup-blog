@@ -1,0 +1,35 @@
+baseURL: "https://irinasusca.github.io/writeup-blog/"
+languageCode: "en-us"
+title: "Irina's CTF Writeups"
+theme: "PaperMod"
+
+params:
+  ShowReadingTime: true
+  
+menu:
+  main:
+    - name: "Home"
+      url: "/"
+      weight: 1
+    - name: "Posts"
+      url: "/posts/"
+      weight: 2
+    - name: "Search"
+      url: "/search/"
+      weight: 3
+      
+params:
+  homeInfoParams:
+    title: Irina's CTF Writeups
+    Content: Short ctf challs writeups focused on pwn and web — for future me and anyone else stuck on the same challenge.
+  socialIcons:
+    - name: github
+      url: "https://github.com/irinasusca"
+    - name: linkedin
+      url: "https://www.linkedin.com/in/irina-susca-24b8b5355/"
+      
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON 
