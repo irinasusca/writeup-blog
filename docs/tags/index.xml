@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Tags on Irina&#39;s CTF Writeups</title>
+    <link>https://irinasusca.github.io/writeup-blog/tags/</link>
+    <description>Recent content in Tags on Irina&#39;s CTF Writeups</description>
+    <generator>Hugo -- 0.146.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 10 Nov 2025 21:08:35 +0200</lastBuildDate>
+    <atom:link href="https://irinasusca.github.io/writeup-blog/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Buffer-Overflow</title>
+      <link>https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/</link>
+      <pubDate>Mon, 10 Nov 2025 21:08:35 +0200</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>PicoCTF</title>
+      <link>https://irinasusca.github.io/writeup-blog/tags/picoctf/</link>
+      <pubDate>Mon, 10 Nov 2025 21:08:35 +0200</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/tags/picoctf/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Pwn</title>
+      <link>https://irinasusca.github.io/writeup-blog/tags/pwn/</link>
+      <pubDate>Mon, 10 Nov 2025 21:08:35 +0200</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/tags/pwn/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

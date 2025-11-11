@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Pico Babygame03 Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="picoCTF, pwn, buffer-overflow">
+<meta name="description" content="Challenge overview
+Break the game and get the flag. Welcome to BabyGame 03! Navigate around the map and see what you can find! Be careful, you don&rsquo;t have many moves. There are obstacles that instantly end the game on collision. The game is available to download here. There is no source available, so you&rsquo;ll have to figure your way around the map.
+
+After analyzing the binary and renaming the variables, we notice we have a player struct/array consisting of the player y, player x and player lives.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/babygame03-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/babygame03-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/babygame03-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Pico Babygame03 Writeup">
+  <meta property="og:description" content="Challenge overview Break the game and get the flag. Welcome to BabyGame 03! Navigate around the map and see what you can find! Be careful, you don’t have many moves. There are obstacles that instantly end the game on collision. The game is available to download here. There is no source available, so you’ll have to figure your way around the map.
+After analyzing the binary and renaming the variables, we notice we have a player struct/array consisting of the player y, player x and player lives.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-11-10T21:08:35+02:00">
+    <meta property="article:modified_time" content="2025-11-10T21:08:35+02:00">
+    <meta property="article:tag" content="PicoCTF">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="Buffer-Overflow">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pico Babygame03 Writeup">
+<meta name="twitter:description" content="Challenge overview
+Break the game and get the flag. Welcome to BabyGame 03! Navigate around the map and see what you can find! Be careful, you don&rsquo;t have many moves. There are obstacles that instantly end the game on collision. The game is available to download here. There is no source available, so you&rsquo;ll have to figure your way around the map.
+
+After analyzing the binary and renaming the variables, we notice we have a player struct/array consisting of the player y, player x and player lives.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Pico Babygame03 Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/babygame03-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Pico Babygame03 Writeup",
+  "name": "Pico Babygame03 Writeup",
+  "description": "Challenge overview Break the game and get the flag. Welcome to BabyGame 03! Navigate around the map and see what you can find! Be careful, you don\u0026rsquo;t have many moves. There are obstacles that instantly end the game on collision. The game is available to download here. There is no source available, so you\u0026rsquo;ll have to figure your way around the map.\nAfter analyzing the binary and renaming the variables, we notice we have a player struct/array consisting of the player y, player x and player lives.\n",
+  "keywords": [
+    "picoCTF", "pwn", "buffer-overflow"
+  ],
+  "articleBody": "Challenge overview Break the game and get the flag. Welcome to BabyGame 03! Navigate around the map and see what you can find! Be careful, you don’t have many moves. There are obstacles that instantly end the game on collision. The game is available to download here. There is no source available, so you’ll have to figure your way around the map.\nAfter analyzing the binary and renaming the variables, we notice we have a player struct/array consisting of the player y, player x and player lives.\nImmediately after that, we have the map matrix.\nWe immediately run intos a couple of problems. We need to reach level 5 to win and to print the flag (image below), but we cannot move past level 4 because of the if condition inside of the while.\nFirst, let’s worry about getting up to level 4. We notice that we have a couple of special commands inside the move_player function, Such as p to solve the level and l to change the current playertile from @.\nThe only issue with directly using the solve function is that we have a limited amount of lives/moves, and it doesn’t account for that.\nIdentifying the vulnerabilities Since the map is initialized immediately after the player lives, and there is no bounds check for the player, we can modify the tile at position map-4 (map is a 1d array from 0 to 30x90-2) so that we overwrite player_lives with 0x23 (the dot).\nplayer_arr[1] + map + 90 * player_arr basically represents the current player position on the map, and it could also be written as player_x + map + 90 * player_y.\nSo if we modify player_x to 86 and player_y to -1 we reach “player position” map-4 (out of bounds), and then we can overwrite it for unlimited lives.\nThe payload I found to reach this position (including the solve function):\npayload = b'www'+b'a'*8+b'wsp' We repeat this until we reach level 4, where things start to get a little bit more complicated.\nUsing GDB (in my case, GEF) to analyze the stack, we can find the return address of the move_player function (which is 0x804992c) – by setting a breakpoint on the retn of move_player, 0x804969F, of course.\nIf we can modify that return value (which returns to main) to another address in main that comes after the level != 4 check, we can essentially reach level 5.\nIn this case, the value I chose is 0x8049970. So we only need to modify the LSB of the return value we found on the stack (we can only modify one byte, through playertile, either way).\nThe reason we can modify it is, same as player_lives, that the map array is also located on the stack, a few bytes after our return value! We can use the l command to change our playertile to \\x70.\nTo see exactly how many bytes away it is, we can use hexdump with GEF:\nAnd there it is – our \\x70 value! If we count the bytes from 2c to 70, we get 51, which is the offset from the LSB to the beginning of the map (in this case our playertile was on map[0]). So we would need to go to player_y = 0 and player_x = -51.\nTo avoid getting a SEGFault by messing with all the values on the stack in between, we can first move up to player_y = -3, move to the correct x value, and then go back down to player_y = 0. And it worked!\nNow, to evade the second if problem, which keeps us in the loop, we need to change the return address from 0x804992c again. It would be nice for it to be directly in win, but since we can only modify one byte, the best value we can choose is the call to win() inside of main.\nAgain, lucky for us, that is 0x80499FE! So we modify our playertile to \\xfe, but when we repeat the same technique, something goes wrong. After inspecting the stack again, our map array shifts more towards ebp and we need to use a bigger offset to modify the return address.\nGEF’s hexdump wouldn’t show enough addresses, so I had to use this command.\nWe can see now the distance is 67 bytes, so we update the offset in our script, and voila! We got the flag!\nAnd that’s pretty much it! The rest of the code can be found on my GitHub here.\n",
+  "wordCount" : "748",
+  "inLanguage": "en",
+  "datePublished": "2025-11-10T21:08:35+02:00",
+  "dateModified": "2025-11-10T21:08:35+02:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/babygame03-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Pico Babygame03 Writeup
+    </h1>
+    <div class="post-meta"><span title='2025-11-10 21:08:35 +0200 EET'>November 10, 2025</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>Break the game and get the flag. Welcome to <strong><a href="https://play.picoctf.org/practice/challenge/446">BabyGame 03</a></strong>! Navigate around the map and see what you can find! Be careful, you don&rsquo;t have many moves. There are obstacles that instantly end the game on collision. The game is available to download here. There is no source available, so you&rsquo;ll have to figure your way around the map.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babygame03-writeup/baby-1.png#center"></p>
+<p>After analyzing the binary and renaming the variables, we notice we have a <strong>player struct/array</strong> consisting of the <strong>player y</strong>, <strong>player x</strong> and <strong>player lives</strong>.</p>
+<p>Immediately after that, we have the <strong>map matrix</strong>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babygame03-writeup/baby-2.png#center"></p>
+<p>We immediately run intos a couple of problems. We need to reach <strong>level 5 to win</strong> and to print the flag <em>(image below)</em>, but we <strong>cannot move past level 4</strong> because of the if condition inside of the while.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babygame03-writeup/baby-3.png#center"></p>
+<hr>
+<p>First, let’s worry about getting up to level 4.
+We notice that we have a couple of special commands inside the move_player function,
+Such as <code>p</code> to solve the level and <code>l</code> to change the current playertile from @.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babygame03-writeup/baby-4.png#center"></p>
+<p>The only issue with directly using the solve function is that we have a limited amount of lives/moves, and it doesn&rsquo;t account for that.</p>
+<hr>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>Since the map is initialized immediately after the player lives, and there is no bounds check for the player, we can modify the tile at position <code>map-4</code>
+(<code>map</code> is a 1d array from <code>0</code> to <code>30x90-2</code>) so that we overwrite <strong>player_lives</strong> with <code>0x23</code> (the dot).</p>
+<p><code>player_arr[1] + map + 90 * player_arr</code> basically represents the current player
+position on the map, and it could also be written as <code>player_x + map + 90 * player_y</code>.</p>
+<p>So if we modify <code>player_x</code> to <code>86</code> and <code>player_y</code> to <code>-1</code> we reach &ldquo;player position&rdquo; <code>map-4</code> (out of bounds), and then we can overwrite it for unlimited lives.</p>
+<p>The payload I found to reach this position (including the solve function):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;www&#39;</span><span style="color:#f92672">+</span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span><span style="color:#f92672">+</span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;wsp&#39;</span>
+</span></span></code></pre></div><hr>
+<p>We repeat this until we reach level 4, where things start to get a little bit more complicated.</p>
+<p>Using GDB (in my case, GEF) to analyze the stack, we can find the return address of the <code>move_player</code> function (which is <code>0x804992c</code>) &ndash; by setting a breakpoint on the <code>retn</code> of <code>move_player</code>, <code>0x804969F</code>, of course.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babygame03-writeup/baby-5.png#center"></p>
+<p>If we can modify that return value (which returns to main) to another address in main that comes <em>after</em> the level != 4 check, we can essentially reach level 5.</p>
+<p>In this case, the value I chose is <code>0x8049970</code>. So we only need to modify the LSB of the return value we found on the stack (we can only modify one byte, through playertile, either way).</p>
+<p>The reason we can modify it is, same as <code>player_lives</code>, that the <code>map</code> array is also located on the stack, a few bytes after our return value!
+We can use the <code>l</code> command to change our playertile to <code>\x70</code>.</p>
+<p>To see exactly how many bytes away it is, we can use hexdump with GEF:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babygame03-writeup/baby-6.png#center"></p>
+<p>And there it is &ndash; our <code>\x70</code> value! If we count the bytes from <code>2c</code> to <code>70</code>, we get <code>51</code>, which is the offset from the LSB to the beginning of the map (in this case our playertile was on <code>map[0]</code>). So we would need to go to <code>player_y = 0</code> and <code>player_x = -51</code>.</p>
+<p>To avoid getting a SEGFault by messing with all the values on the stack in between, we can first move up to <code>player_y = -3</code>, move to the correct x value, and then go back down to <code>player_y = 0</code>. And it worked!</p>
+<hr>
+<p>Now, to evade the second <code>if</code> problem, which keeps us in the loop, we need to change the return address from <code>0x804992c</code> again. It would be nice for it to be directly in win, but since we can only modify one byte, the best value we can choose is the call to <code>win()</code> inside of <code>main</code>.</p>
+<p>Again, lucky for us, that is <code>0x80499FE</code>! So we modify our playertile to <code>\xfe</code>, but when we repeat the same technique, something goes wrong. After inspecting the stack again, our <code>map</code> array shifts more towards <code>ebp</code> and we need to use a bigger offset to modify the return address.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babygame03-writeup/baby-7.png#center"></p>
+<p>GEF&rsquo;s <code>hexdump</code> wouldn’t show enough addresses, so I had to use this command.</p>
+<p>We can see now the distance is <code>67</code> bytes, so we update the offset in our script, and voila!
+We got the flag!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babygame03-writeup/baby-8.png#center"></p>
+<p>And that’s pretty much it! The rest of the code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/pico/babygame03.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/picoctf/">PicoCTF</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/">Buffer-Overflow</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
