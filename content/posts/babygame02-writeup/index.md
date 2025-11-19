@@ -1,5 +1,5 @@
 +++
-date = '2025-11-10T21:08:35+02:00'
+date = '2025-11-19T21:08:35+02:00'
 draft = false
 title = 'Pico Babygame02 Writeup'
 ShowToc = true
