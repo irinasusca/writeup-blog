@@ -6,12 +6,26 @@
     <description>Recent content in Posts on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 10 Nov 2025 21:08:35 +0200</lastBuildDate>
+    <lastBuildDate>Wed, 19 Nov 2025 21:09:36 +0200</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Pico Stack Cache Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/stackcache-writeup/</link>
+      <pubDate>Wed, 19 Nov 2025 21:09:36 +0200</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/stackcache-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Undefined behaviours are fun. It looks like Dr. Oswal allowed buffer overflows again. Analyse &lt;strong&gt;&lt;a href=&#34;https://play.picoctf.org/practice/challenge/306&#34;&gt;this program&lt;/a&gt;&lt;/strong&gt; to identify how you can get to the flag.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/stackcache-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;At first glance, the &lt;strong&gt;vuln&lt;/strong&gt; looks like a 32-bit executable with a buffer overflow vulnerability.&lt;/p&gt;
+&lt;p&gt;Analyzing the binary, we come across some interesting funtions, &lt;code&gt;UnderConstruction&lt;/code&gt; and &lt;code&gt;win&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/stackcache-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;After a quick &lt;code&gt;checksec&lt;/code&gt;, we find vuln has both NX and a stack canary enabled.
+So we can probably find a way to leak the stack canary using the &lt;code&gt;UnderConstruction&lt;/code&gt; function.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Pico Babygame02 Writeup</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/babygame02-writeup/</link>
-      <pubDate>Mon, 10 Nov 2025 21:08:35 +0200</pubDate>
+      <pubDate>Wed, 19 Nov 2025 21:08:35 +0200</pubDate>
       <guid>https://irinasusca.github.io/writeup-blog/posts/babygame02-writeup/</guid>
       <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
 &lt;p&gt;Break the game and get the flag. Welcome to &lt;strong&gt;&lt;a href=&#34;https://play.picoctf.org/practice/challenge/346&#34;&gt;BabyGame 02&lt;/a&gt;&lt;/strong&gt;! Navigate around the map and see what you can find!&lt;/p&gt;
