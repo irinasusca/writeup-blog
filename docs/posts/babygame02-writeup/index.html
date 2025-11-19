@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Pico Babygame02 Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="picoCTF, pwn, buffer-overflow">
+<meta name="description" content="Challenge overview
+Break the game and get the flag. Welcome to BabyGame 02! Navigate around the map and see what you can find!
+
+After analyzing the binary and renaming the variables, we notice we have a player struct/array consisting of the player y, player x.
+Immediately after that, we have the map matrix.
+
+From the main function, by solving the puzzle, which can be easily achieved by using the special command p we &ldquo;win&rdquo;. And with the special command l we can replace the @ player character with a char (spoiler, it can be any byte of our liking, not necessarily a char).">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/babygame02-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/babygame02-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/babygame02-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Pico Babygame02 Writeup">
+  <meta property="og:description" content="Challenge overview Break the game and get the flag. Welcome to BabyGame 02! Navigate around the map and see what you can find!
+After analyzing the binary and renaming the variables, we notice we have a player struct/array consisting of the player y, player x.
+Immediately after that, we have the map matrix.
+From the main function, by solving the puzzle, which can be easily achieved by using the special command p we “win”. And with the special command l we can replace the @ player character with a char (spoiler, it can be any byte of our liking, not necessarily a char).">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-11-10T21:08:35+02:00">
+    <meta property="article:modified_time" content="2025-11-10T21:08:35+02:00">
+    <meta property="article:tag" content="PicoCTF">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="Buffer-Overflow">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pico Babygame02 Writeup">
+<meta name="twitter:description" content="Challenge overview
+Break the game and get the flag. Welcome to BabyGame 02! Navigate around the map and see what you can find!
+
+After analyzing the binary and renaming the variables, we notice we have a player struct/array consisting of the player y, player x.
+Immediately after that, we have the map matrix.
+
+From the main function, by solving the puzzle, which can be easily achieved by using the special command p we &ldquo;win&rdquo;. And with the special command l we can replace the @ player character with a char (spoiler, it can be any byte of our liking, not necessarily a char).">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Pico Babygame02 Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/babygame02-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Pico Babygame02 Writeup",
+  "name": "Pico Babygame02 Writeup",
+  "description": "Challenge overview Break the game and get the flag. Welcome to BabyGame 02! Navigate around the map and see what you can find!\nAfter analyzing the binary and renaming the variables, we notice we have a player struct/array consisting of the player y, player x.\nImmediately after that, we have the map matrix.\nFrom the main function, by solving the puzzle, which can be easily achieved by using the special command p we \u0026ldquo;win\u0026rdquo;. And with the special command l we can replace the @ player character with a char (spoiler, it can be any byte of our liking, not necessarily a char).\n",
+  "keywords": [
+    "picoCTF", "pwn", "buffer-overflow"
+  ],
+  "articleBody": "Challenge overview Break the game and get the flag. Welcome to BabyGame 02! Navigate around the map and see what you can find!\nAfter analyzing the binary and renaming the variables, we notice we have a player struct/array consisting of the player y, player x.\nImmediately after that, we have the map matrix.\nFrom the main function, by solving the puzzle, which can be easily achieved by using the special command p we “win”. And with the special command l we can replace the @ player character with a char (spoiler, it can be any byte of our liking, not necessarily a char).\nIdentifying the vulnerabilities What is most likely the vulnerability is that there is no bounds check for the map, and that we can overwrite the variables on the stack by modifying one byte.\nMore precisely, using our player, and moving it out of bounds will allow us to modify the byte at position\nplayer_x + map + 90 * player_y where map is the location of the map buffer on the stack.\nWe notice a win function, so all we need to do is find a way to jump into win. Using the file command, we can see that game is a 32-bit executable, so all the function parameters are stored on the stack.\nProbably so is the return to main inside move_player, so we can set a breakpoint on its return.\nThere is no stack canary or PIE, so nothing that we need to worry about.\nAnd there it is!\nUsing hexdump with GEF, we can analyze the offset from the beginning of map to our return address (the first 0x2e being the first dot inside map). The offset seems to be 39.\nTo modify the return address we need to find a position in win that is one byte away from 0x08049709.\nFor example, 0x804975D works perfectly! So all we need to do is overwrite its LSB 09 with 5D.\nWe can easily achieve this by using the l command. So first, modify it our player to \\x5D, then we move to position map - 39.\nplayer_x + map + 90 * player_y = map - 39\nOne way to solve this is player_x = -39 and player_y = 0. To not mess with other values on the stack that might crash our program, we could first go up to player_y=-2, go to the right player_x, then go back down to player_y=0.\np.recvuntil(b'X\\n') p.sendline(b'l'+b'\\x5D') p.recvuntil(b'X\\n') p.sendline(b'w'*4 + b'a'*4 + b'w'*2 +b'a'*39+b's'*2) Some problems… It seems to be working fine locally, but remotely we stumble upon another issue.\nAnd then another issue?\nIn these kinds of situations, what happens is some things get aligned differently, so the best thing to do is try other addresses near what we found.\nThe first one I found that works is \\x60, and with that we get the flag!\nAnd that’s it! The rest of the code can be found on my GitHub here.\n",
+  "wordCount" : "494",
+  "inLanguage": "en",
+  "datePublished": "2025-11-10T21:08:35+02:00",
+  "dateModified": "2025-11-10T21:08:35+02:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/babygame02-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Pico Babygame02 Writeup
+    </h1>
+    <div class="post-meta"><span title='2025-11-10 21:08:35 +0200 EET'>November 10, 2025</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a></li>
+                <li>
+                    <a href="#some-problems" aria-label="Some problems&hellip;">Some problems&hellip;</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>Break the game and get the flag. Welcome to <strong><a href="https://play.picoctf.org/practice/challenge/346">BabyGame 02</a></strong>! Navigate around the map and see what you can find!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babygame02-writeup/pic1.png#center"></p>
+<p>After analyzing the binary and renaming the variables, we notice we have a <strong>player struct/array</strong> consisting of the <strong>player y</strong>, <strong>player x</strong>.</p>
+<p>Immediately after that, we have the <strong>map matrix</strong>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babygame02-writeup/pic2.png#center"></p>
+<p>From the <code>main</code> function, by solving the puzzle, which can be easily achieved by using the special command <code>p</code> we &ldquo;win&rdquo;. And with the special command <code>l</code> we can replace the <code>@</code> player character with a char (spoiler, it can be any byte of our liking, not necessarily a char).</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babygame02-writeup/pic3.png#center"></p>
+<hr>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>What is most likely the vulnerability is that there is no bounds check for the map, and that we can overwrite the variables on the stack by modifying one byte.</p>
+<p>More precisely, using our player, and moving it out of bounds will allow us to modify the byte at position</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>player_x <span style="color:#f92672">+</span> map <span style="color:#f92672">+</span> <span style="color:#ae81ff">90</span> <span style="color:#f92672">*</span> player_y
+</span></span></code></pre></div><p>where map is the location of the map buffer on the stack.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babygame02-writeup/pic4.png#center"></p>
+<hr>
+<p>We notice a <code>win</code> function, so all we need to do is find a way to jump into <code>win</code>.
+Using the <code>file</code> command, we can see that <strong>game</strong> is a 32-bit executable, so all the function parameters are stored on the stack.</p>
+<p>Probably so is the return to <code>main</code> inside <code>move_player</code>, so we can set a breakpoint on its return.</p>
+<p>There is no stack canary or PIE, so nothing that we need to worry about.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babygame02-writeup/pic5.png#center"></p>
+<p>And there it is!</p>
+<p>Using <code>hexdump</code> with GEF, we can analyze the offset from the beginning of <code>map</code> to our return address (the first <code>0x2e</code> being the first dot inside <code>map</code>).
+The offset seems to be 39.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babygame02-writeup/pic6.png#center"></p>
+<p>To modify the return address we need to find a position in <code>win</code> that is one byte away from <code>0x08049709</code>.</p>
+<p>For example, <code>0x804975D</code> works perfectly!
+So all we need to do is overwrite its LSB <code>09</code> with <code>5D</code>.</p>
+<p>We can easily achieve this by using the <code>l</code> command.
+So first, modify it our player to <code>\x5D</code>, then we move to position <code>map - 39</code>.</p>
+<p><code>player_x + map + 90 * player_y = map - 39</code></p>
+<p>One way to solve this is <code>player_x = -39</code> and <code>player_y = 0</code>.
+To not mess with other values on the stack that might crash our program, we could first go up to <code>player_y=-2</code>, go to the right <code>player_x</code>, then go back down to <code>player_y=0</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;X</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;l&#39;</span><span style="color:#f92672">+</span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x5D</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;X</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;w&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">4</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">4</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;w&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">39</span><span style="color:#f92672">+</span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;s&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">2</span>)
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babygame02-writeup/pic7.png#center"></p>
+<hr>
+<h2 id="some-problems">Some problems&hellip;<a hidden class="anchor" aria-hidden="true" href="#some-problems">#</a></h2>
+<p>It seems to be working fine locally, but remotely we stumble upon another issue.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babygame02-writeup/pic8.png#center"></p>
+<p>And then <em>another</em> issue?</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babygame02-writeup/pic9.png#center"></p>
+<p>In these kinds of situations, what happens is some things get aligned differently, so the best thing to do is try other addresses near what we found.</p>
+<p>The first one I found that works is <code>\x60</code>, and with that we get the flag!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babygame02-writeup/pic10.png#center"></p>
+<p>And that’s it! The rest of the code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/pico/babygame02.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/picoctf/">PicoCTF</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/">Buffer-Overflow</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
