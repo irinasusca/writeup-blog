@@ -2,38 +2,44 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:35219/writeup-blog/</loc>
+    <loc>http://localhost:1313/writeup-blog/</loc>
     <lastmod>2025-11-19T21:09:36+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:35219/writeup-blog/tags/buffer-overflow/</loc>
+    <loc>http://localhost:1313/writeup-blog/tags/buffer-overflow/</loc>
     <lastmod>2025-11-19T21:09:36+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:35219/writeup-blog/posts/stackcache-writeup/</loc>
+    <loc>http://localhost:1313/writeup-blog/posts/stackcache-writeup/</loc>
     <lastmod>2025-11-19T21:09:36+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:35219/writeup-blog/tags/picoctf/</loc>
+    <loc>http://localhost:1313/writeup-blog/tags/picoctf/</loc>
     <lastmod>2025-11-19T21:09:36+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:35219/writeup-blog/posts/</loc>
+    <loc>http://localhost:1313/writeup-blog/posts/</loc>
     <lastmod>2025-11-19T21:09:36+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:35219/writeup-blog/tags/pwn/</loc>
+    <loc>http://localhost:1313/writeup-blog/tags/pwn/</loc>
     <lastmod>2025-11-19T21:09:36+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:35219/writeup-blog/tags/</loc>
+    <loc>http://localhost:1313/writeup-blog/tags/</loc>
     <lastmod>2025-11-19T21:09:36+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:35219/writeup-blog/posts/babygame02-writeup/</loc>
+    <loc>http://localhost:1313/writeup-blog/posts/babygame02-writeup/</loc>
     <lastmod>2025-11-19T21:08:35+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:35219/writeup-blog/posts/babygame03-writeup/</loc>
+    <loc>http://localhost:1313/writeup-blog/tags/heap/</loc>
     <lastmod>2025-11-10T21:08:35+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:35219/writeup-blog/posts/handoff-writeup/</loc>
+    <loc>http://localhost:1313/writeup-blog/posts/babygame03-writeup/</loc>
     <lastmod>2025-11-10T21:08:35+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:35219/writeup-blog/categories/</loc>
+    <loc>http://localhost:1313/writeup-blog/posts/functionoverwrite-writeup/</loc>
+    <lastmod>2025-11-10T21:08:35+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:35219/writeup-blog/search/</loc>
+    <loc>http://localhost:1313/writeup-blog/posts/handoff-writeup/</loc>
+    <lastmod>2025-11-10T21:08:35+02:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/writeup-blog/categories/</loc>
+  </url><url>
+    <loc>http://localhost:1313/writeup-blog/search/</loc>
   </url>
 </urlset>
