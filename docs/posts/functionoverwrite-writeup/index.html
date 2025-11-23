@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Pico Function Overwrite Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="picoCTF, pwn, overflow">
+<meta name="description" content="Challenge overview
+Story telling class 2/2
+Additional details will be available after launching your challenge instance.
+
+Upon a quick check, we see that the challenge is a 32-bit binary, and that we can trigger a SEGFAULT. It might be a buffer overflow, but the challenge doesn&rsquo;t necessarily hint that, so let&rsquo;s inspect it further.
+Also NX is enabled, so let&rsquo;s keep that in mind.
+
+The first input string is not susceptible to a buffer overflow, but something interesting happens on the second scanf. We read two %d (ints), but only one destination for them (&amp;number1).">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/functionoverwrite-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/functionoverwrite-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/functionoverwrite-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Pico Function Overwrite Writeup">
+  <meta property="og:description" content="Challenge overview Story telling class 2/2 Additional details will be available after launching your challenge instance.
+Upon a quick check, we see that the challenge is a 32-bit binary, and that we can trigger a SEGFAULT. It might be a buffer overflow, but the challenge doesn’t necessarily hint that, so let’s inspect it further.
+Also NX is enabled, so let’s keep that in mind.
+The first input string is not susceptible to a buffer overflow, but something interesting happens on the second scanf. We read two %d (ints), but only one destination for them (&amp;number1).">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-11-23T21:08:35+02:00">
+    <meta property="article:modified_time" content="2025-11-23T21:08:35+02:00">
+    <meta property="article:tag" content="PicoCTF">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="Overflow">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pico Function Overwrite Writeup">
+<meta name="twitter:description" content="Challenge overview
+Story telling class 2/2
+Additional details will be available after launching your challenge instance.
+
+Upon a quick check, we see that the challenge is a 32-bit binary, and that we can trigger a SEGFAULT. It might be a buffer overflow, but the challenge doesn&rsquo;t necessarily hint that, so let&rsquo;s inspect it further.
+Also NX is enabled, so let&rsquo;s keep that in mind.
+
+The first input string is not susceptible to a buffer overflow, but something interesting happens on the second scanf. We read two %d (ints), but only one destination for them (&amp;number1).">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Pico Function Overwrite Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/functionoverwrite-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Pico Function Overwrite Writeup",
+  "name": "Pico Function Overwrite Writeup",
+  "description": "Challenge overview Story telling class 2/2 Additional details will be available after launching your challenge instance.\nUpon a quick check, we see that the challenge is a 32-bit binary, and that we can trigger a SEGFAULT. It might be a buffer overflow, but the challenge doesn\u0026rsquo;t necessarily hint that, so let\u0026rsquo;s inspect it further.\nAlso NX is enabled, so let\u0026rsquo;s keep that in mind.\nThe first input string is not susceptible to a buffer overflow, but something interesting happens on the second scanf. We read two %d (ints), but only one destination for them (\u0026amp;number1).\n",
+  "keywords": [
+    "picoCTF", "pwn", "overflow"
+  ],
+  "articleBody": "Challenge overview Story telling class 2/2 Additional details will be available after launching your challenge instance.\nUpon a quick check, we see that the challenge is a 32-bit binary, and that we can trigger a SEGFAULT. It might be a buffer overflow, but the challenge doesn’t necessarily hint that, so let’s inspect it further.\nAlso NX is enabled, so let’s keep that in mind.\nThe first input string is not susceptible to a buffer overflow, but something interesting happens on the second scanf. We read two %d (ints), but only one destination for them (\u0026number1).\nWe also have another couple of functions, hard_checker, easy_checker and calculate_story_score.\nThe check in easy_checker:\nif ( calculate_story_score(input, input_size) != 1337 ) return printf(\"You've failed this class.\"); The check in hard_checker:\nif ( calculate_story_score(input, input_size) != 13371337 ) return printf(\"You've failed this class.\"); And the calculate_story_score they both use:\nNow, inspecting with gef, let’s see where all of our values end up. For input='inputexample', nr1=7 (so it satisfies the first check) and nr2='testing'), it looks like input is being placed on the stack while the second number is getting placed on the heap.\nThe functions we stepped into were hard_checker and then calculate_story_score, so no easy_checker.\nWhat calculate_story_score does is it sums all of the ASCII characters inside our input string.\nFor our inputexample string, the output should be\nsum = 105 + 110 + 112 + 117 + 116 + 101 + 120 + 97 + 109 + 112 + 108 + 101 So, 1308. Setting a breakpoint on the return of calculate_story_score, we can see the value right there on the stack! (0x51c = 1308)\nAnd here it is, checking if it’s equal to 13371337:\nIdentifying the vulnerability So, we need to find a string that has the sum of its ASCII characters equal to 13371337. But that’s quite a big number, isn’t it? And we only have 127 bytes available.\nChars go from 0-255, so our best case scenario would be 127*255, so 32385. Not even close to 13371337 is it?\nWe could either find a way to go into easy_checker instead, or find another way to raise our sum.\nSince the challenge hint was Don’t be so negative, I’m going to assume there’s a way to integer overflow or something else to allow us to reach that number.\nOne thing we haven’t handled yet is the two numbers. What bothers me are these lines of code:\nif ( numbers \u003c= 9 ) fun[number1] += v3; After trying with two numbers, (78 and 78), we can see they’re still placed in the stack and the heap respectively (I thought the second one might’ve ended up on the heap because I gave it too large a value, but it wasn’t the case).\nDebugging Detour Before actually figuring out how to solve this challenge, I wasted a surprising amount of time due to a small mistake, which is that I kept using a string value for the second %d argument. Since scanf(\"%d\") interprets 4-byte integers, my string \"testing\" became some random hex bytes that I misinterpreted as something hardcoded.\nBecause of that, I spent a lot of time trying to find ways to overwrite the ASCII sum, manipulate the comparison instruction, overwrite .rodata, or patch return addresses, so a couple of hours in gef and a lot of SEGFAULTS. Turns out the specific hex value was literally just the second integer, which I had broken it myself by feeding it a string.\nAnd also the challenge had nothing to do with the heap either.\nSo maybe the lesson to be learned is to be a lot more careful with “testing” input values.\nThe exploit Let’s take a look at the assembly code for this if:\nmov eax, [ebp+number1] #eax = number1 mov ecx, ds:(fun - 804C000h)[ebx+eax*4] #ecx = fun[number1] mov edx, [ebp+var_90] # edx = number2 mov eax, [ebp+number1] # eax = numbers add edx, ecx # edx += ecx mov ds:(fun - 804C000h)[ebx+eax*4], edx # fun[number1] = edx Or more simply put,\nfun_table[number1 * 4] += number2; Here we can see number2 getting loaded into edx. And ebx + 0x80 is just the address of fun.\nHere is fun in .data, located at 0804C080.\nAnother interesting thing was how the hard_checker function was called:\nv0 = check; return v0((int)input, input_size); Where check holds the address of hard_checker: 0x804c040 : 0x08049436\nAnd guess what, check is, just like fun, located in the .rodata!\nSince the condition in hard_checker was sum == 13371337, which is impossibe to reach, and we have a similar function called easy_checker that presents us with a much more attainable sum == 1337, we can already guess we are supposed to somehow modify the address in check from hard_checker to easy_checker.\nSince we can choose a negative [numbers] index, we can modify data out of bounds to control the value of check.\nDouble checking with vmmap, the area is rw, so we can modify values!\n0x0804c000 0x0804d000 0x00003000 rw- /home/kali/Downloads/vuln\nOkay, so\nfun - check is 0x804C080 - 0x804C040,\nwhich is 0x40.\nSince we need to modify fun[-0x40], that meansnumber1*4 should be -0x40 = -64. So we already figured out number1 = -16.\nTaking care of the sum, our inputexample was already close to 1337. 1337 - 1308 = 29, so instead of e (101 ASCII) I added two A’s (65+65 = 101 +29).\nNow, to figure out number2, we just need to calculate the offset between hard_checker and easy_checker.\nhard_checker : 0x08049436\neasy_checker : 0x80492FC\nSo out offset is -0x13A, -314 in hex.\nAnd we’re done!\nThe rest of the code can be found on my GitHub here.\n",
+  "wordCount" : "938",
+  "inLanguage": "en",
+  "datePublished": "2025-11-23T21:08:35+02:00",
+  "dateModified": "2025-11-23T21:08:35+02:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/functionoverwrite-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Pico Function Overwrite Writeup
+    </h1>
+    <div class="post-meta"><span title='2025-11-23 21:08:35 +0200 EET'>November 23, 2025</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerability" aria-label="Identifying the vulnerability">Identifying the vulnerability</a></li>
+                <li>
+                    <a href="#debugging-detour" aria-label="Debugging Detour">Debugging Detour</a></li>
+                <li>
+                    <a href="#the-exploit" aria-label="The exploit">The exploit</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>Story telling class 2/2
+Additional details will be available after launching your <strong><a href="https://play.picoctf.org/practice/challenge/272">challenge instance</a></strong>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/functionoverwrite-writeup/pic1.png#center"></p>
+<p>Upon a quick check, we see that the challenge is a <code>32-bit</code> binary, and that we can trigger a <code>SEGFAULT</code>. It might be a buffer overflow, but the challenge doesn&rsquo;t necessarily hint that, so let&rsquo;s inspect it further.</p>
+<p>Also NX is enabled, so let&rsquo;s keep that in mind.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/functionoverwrite-writeup/pic2.png#center"></p>
+<p>The first input string is not susceptible to a buffer overflow, but something interesting happens on the second <code>scanf</code>. We read two <code>%d</code> (ints), but only one destination for them (<code>&amp;number1</code>).</p>
+<p>We also have another couple of functions, <code>hard_checker</code>, <code>easy_checker</code> and <code>calculate_story_score</code>.</p>
+<p>The check in <code>easy_checker</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> ( calculate_story_score(input, input_size) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1337</span> )
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> printf(<span style="color:#e6db74">&#34;You&#39;ve failed this class.&#34;</span>);
+</span></span></code></pre></div><p>The check in <code>hard_checker</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> ( calculate_story_score(input, input_size) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">13371337</span> )
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> printf(<span style="color:#e6db74">&#34;You&#39;ve failed this class.&#34;</span>);
+</span></span></code></pre></div><p>And the <code>calculate_story_score</code> they both use:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/functionoverwrite-writeup/pic3.png#center"></p>
+<hr>
+<p>Now, inspecting with <code>gef</code>, let&rsquo;s see where all of our values end up.
+For <code>input='inputexample'</code>, <code>nr1=7</code> (so it satisfies the first check) and <code>nr2='testing'</code>), it looks like input is being placed on the stack while the second number is getting placed on the <em>heap</em>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/functionoverwrite-writeup/pic4.png#center"></p>
+<p>The functions we stepped into were <code>hard_checker</code> and then <code>calculate_story_score</code>, so no <code>easy_checker</code>.</p>
+<p>What <code>calculate_story_score</code> does is it sums all of the ASCII characters inside our input string.</p>
+<p>For our inputexample string, the output should be</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>sum <span style="color:#f92672">=</span> <span style="color:#ae81ff">105</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">110</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">112</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">117</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">116</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">101</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">120</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">97</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">109</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">112</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">108</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">101</span>
+</span></span></code></pre></div><p>So, <code>1308</code>.
+Setting a breakpoint on the return of <code>calculate_story_score</code>, we can see the value right there on the stack! (<code>0x51c</code> = <code>1308</code>)</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/functionoverwrite-writeup/pic5.png#center"></p>
+<p>And here it is, checking if it&rsquo;s equal to <code>13371337</code>:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/functionoverwrite-writeup/pic6.png#center">
+<img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/functionoverwrite-writeup/pic7.png#center"></p>
+<hr>
+<h2 id="identifying-the-vulnerability">Identifying the vulnerability<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerability">#</a></h2>
+<p>So, we need to find a string that has the <code>sum</code> of its ASCII characters equal to <code>13371337</code>. But that&rsquo;s quite a big number, isn&rsquo;t it? And we only have 127 bytes available.</p>
+<p>Chars go from <code>0-255</code>, so our best case scenario would be <code>127*255</code>, so <code>32385</code>. Not even close to <code>13371337</code> is it?</p>
+<p>We could either find a way to go into <code>easy_checker</code> instead, or find another way to raise our <code>sum</code>.</p>
+<p>Since the challenge hint was <em>Don&rsquo;t be so negative</em>, I&rsquo;m going to assume there&rsquo;s a way to integer overflow or something else to allow us to reach that number.</p>
+<hr>
+<p>One thing we haven&rsquo;t handled yet is the two numbers. What bothers me are these lines of code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> ( numbers <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">9</span> )
+</span></span><span style="display:flex;"><span>    fun[number1] <span style="color:#f92672">+=</span> v3;
+</span></span></code></pre></div><p>After trying with two numbers, (78 and 78), we can see they&rsquo;re still placed in the stack and the heap respectively (I thought the second one might&rsquo;ve ended up on the heap because I gave it too large a value, but it wasn&rsquo;t the case).</p>
+<hr>
+<h2 id="debugging-detour">Debugging Detour<a hidden class="anchor" aria-hidden="true" href="#debugging-detour">#</a></h2>
+<p>Before actually figuring out how to solve this challenge, I wasted a surprising amount of time due to a small mistake, which is that I kept using a string value for the second <code>%d</code> argument. Since <code>scanf(&quot;%d&quot;)</code> interprets 4-byte integers, my string <code>&quot;testing&quot;</code> became some random hex bytes that I misinterpreted as something hardcoded.</p>
+<p>Because of that, I spent a lot of time trying to find ways to overwrite the ASCII sum, manipulate the comparison instruction, overwrite .rodata, or patch return addresses, so a couple of hours in <code>gef</code> and a lot of SEGFAULTS. Turns out the specific hex value was literally just the second integer, which I had broken it myself by feeding it a string.</p>
+<p>And also the challenge had nothing to do with the heap either.</p>
+<p>So maybe the lesson to be learned is to be a lot more careful with &ldquo;testing&rdquo; input values.</p>
+<hr>
+<h2 id="the-exploit">The exploit<a hidden class="anchor" aria-hidden="true" href="#the-exploit">#</a></h2>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/functionoverwrite-writeup/pic8.png#center"></p>
+<p>Let&rsquo;s take a look at the assembly code for this <code>if</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>mov     eax, [ebp<span style="color:#f92672">+</span>number1] <span style="color:#75715e">#eax = number1</span>
+</span></span><span style="display:flex;"><span>mov     ecx, ds:(fun <span style="color:#f92672">-</span> <span style="color:#ae81ff">804</span>C000h)[ebx<span style="color:#f92672">+</span>eax<span style="color:#f92672">*</span><span style="color:#ae81ff">4</span>] <span style="color:#75715e">#ecx = fun[number1]</span>
+</span></span><span style="display:flex;"><span>mov     edx, [ebp<span style="color:#f92672">+</span>var_90] <span style="color:#75715e"># edx = number2</span>
+</span></span><span style="display:flex;"><span>mov     eax, [ebp<span style="color:#f92672">+</span>number1] <span style="color:#75715e"># eax = numbers</span>
+</span></span><span style="display:flex;"><span>add     edx, ecx <span style="color:#75715e"># edx += ecx</span>
+</span></span><span style="display:flex;"><span>mov     ds:(fun <span style="color:#f92672">-</span> <span style="color:#ae81ff">804</span>C000h)[ebx<span style="color:#f92672">+</span>eax<span style="color:#f92672">*</span><span style="color:#ae81ff">4</span>], edx <span style="color:#75715e"># fun[number1] = edx</span>
+</span></span></code></pre></div><p>Or more simply put,</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>fun_table[number1 <span style="color:#f92672">*</span> <span style="color:#ae81ff">4</span>] <span style="color:#f92672">+=</span> number2;
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/functionoverwrite-writeup/pic17.png#center"></p>
+<p>Here we can see <code>number2</code> getting loaded into <code>edx</code>. And <code>ebx + 0x80</code> is just the address of <code>fun</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/functionoverwrite-writeup/pic18.png#center"></p>
+<p>Here is <code>fun</code> in <code>.data</code>, located at <code>0804C080</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/functionoverwrite-writeup/pic16.png#center"></p>
+<p>Another interesting thing was how the <code>hard_checker</code> function was called:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>v0 <span style="color:#f92672">=</span> check;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">return</span> v0((int)input, input_size);
+</span></span></code></pre></div><p>Where check holds the address of <code>hard_checker</code>:
+<code>0x804c040 &lt;check&gt;: 0x08049436</code></p>
+<p>And guess what, <code>check</code> is, just like <code>fun</code>, located in the <code>.rodata</code>!</p>
+<p>Since the condition in <code>hard_checker</code> was <code>sum == 13371337</code>, which is impossibe to reach, and we have a similar function called <code>easy_checker</code> that presents us with a much more attainable <code>sum == 1337</code>, we can already guess we are supposed to somehow modify the address in check from <code>hard_checker</code> to <code>easy_checker</code>.</p>
+<p>Since we can choose a negative <code>[numbers]</code> index, we can modify data out of bounds to control the value of <code>check</code>.</p>
+<p>Double checking with <code>vmmap</code>, the area is <code>rw</code>, so we can modify values!</p>
+<p><code>0x0804c000 0x0804d000 0x00003000 rw- /home/kali/Downloads/vuln</code></p>
+<p>Okay, so</p>
+<p><code>fun - check</code> is  <code>0x804C080 - 0x804C040</code>,</p>
+<p>which is <code>0x40</code>.</p>
+<p>Since we need to modify <code>fun[-0x40]</code>, that means<code>number1*4</code> should be <code>-0x40</code> = <code>-64</code>.
+So we already figured out <code>number1</code> = <code>-16</code>.</p>
+<p>Taking care of the <code>sum</code>, our <em>inputexample</em> was already close to 1337.
+<code>1337 - 1308 = 29</code>, so instead of <code>e</code> (101 ASCII) I added two <code>A</code>&rsquo;s (<code>65+65</code> = <code>101 +29</code>).</p>
+<p>Now, to figure out <code>number2</code>, we just need to calculate the offset between <code>hard_checker</code> and <code>easy_checker</code>.</p>
+<p><code>hard_checker : 0x08049436</code></p>
+<p><code>easy_checker : 0x80492FC</code></p>
+<p>So out offset is <code>-0x13A</code>, <code>-314</code> in hex.</p>
+<p>And we&rsquo;re done!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/functionoverwrite-writeup/win.png#center"></p>
+<p>The rest of the code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/pico/functionoverwrite.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/picoctf/">PicoCTF</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/overflow/">Overflow</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

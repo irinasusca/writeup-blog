@@ -6,8 +6,22 @@
     <description>Recent content in Pwn on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 19 Nov 2025 21:09:36 +0200</lastBuildDate>
+    <lastBuildDate>Sun, 23 Nov 2025 21:08:35 +0200</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/tags/pwn/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Pico Function Overwrite Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/functionoverwrite-writeup/</link>
+      <pubDate>Sun, 23 Nov 2025 21:08:35 +0200</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/functionoverwrite-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Story telling class 2/2
+Additional details will be available after launching your &lt;strong&gt;&lt;a href=&#34;https://play.picoctf.org/practice/challenge/272&#34;&gt;challenge instance&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/functionoverwrite-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Upon a quick check, we see that the challenge is a &lt;code&gt;32-bit&lt;/code&gt; binary, and that we can trigger a &lt;code&gt;SEGFAULT&lt;/code&gt;. It might be a buffer overflow, but the challenge doesn&amp;rsquo;t necessarily hint that, so let&amp;rsquo;s inspect it further.&lt;/p&gt;
+&lt;p&gt;Also NX is enabled, so let&amp;rsquo;s keep that in mind.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/functionoverwrite-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The first input string is not susceptible to a buffer overflow, but something interesting happens on the second &lt;code&gt;scanf&lt;/code&gt;. We read two &lt;code&gt;%d&lt;/code&gt; (ints), but only one destination for them (&lt;code&gt;&amp;amp;number1&lt;/code&gt;).&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Pico Stack Cache Writeup</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/stackcache-writeup/</link>
