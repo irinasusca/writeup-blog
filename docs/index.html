@@ -178,6 +178,23 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico Ropfu Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview What’s ROP? Can you exploit the following program to get the flag?
+At first glance, the vuln looks like a 32-bit executable with a buffer overflow vulnerability.
+Identifying the vulnerabilities Analyzing the binary, it doesn’t look like anything special, just an ordinary buffer overflow.
+We don’t seem to have a /bin/sh in memory so this probably means we have to execute a ret2reg.
+That means we need to make our own bin/sh and point to it, and since the vuln returns the gets, that means eax will hold the gets return value. And the return value of gets is a pointer to the input value!
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-24 21:09:36 +0200 EET'>November 24, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Ropfu Writeup" href="https://irinasusca.github.io/writeup-blog/posts/ropfu-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Pico Function Overwrite Writeup
     </h2>
   </header>
