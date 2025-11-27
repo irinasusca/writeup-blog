@@ -20,9 +20,9 @@
 &lt;hr&gt;
 &lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
 &lt;p&gt;Analyzing the binary, it doesn&amp;rsquo;t look like anything special, just an ordinary buffer overflow.&lt;/p&gt;
-&lt;p&gt;We don&amp;rsquo;t seem to have a &amp;ldquo;/bin/sh&amp;rdquo; in memory so this probably means we have to execute a ret2reg.&lt;/p&gt;
+&lt;p&gt;We don&amp;rsquo;t seem to have a &lt;code&gt;/bin/sh&lt;/code&gt; in memory so this probably means we have to execute a ret2reg.&lt;/p&gt;
 &lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:1313/writeup-blog/posts/ropfu-writeup/pic3.png#center&#34;&gt;&lt;/p&gt;
-&lt;p&gt;That means we need to make our own &lt;code&gt;&#39;bin/sh&#39;&lt;/code&gt; and point to it, and since the &lt;code&gt;vuln&lt;/code&gt; &lt;em&gt;returns&lt;/em&gt; the &lt;code&gt;gets&lt;/code&gt;, that means &lt;code&gt;eax&lt;/code&gt; will hold the &lt;code&gt;gets&lt;/code&gt; return value. And the return value of &lt;code&gt;gets&lt;/code&gt; is a pointer to the input value!&lt;/p&gt;</description>
+&lt;p&gt;That means we need to make our own &lt;code&gt;bin/sh&lt;/code&gt; and point to it, and since the &lt;code&gt;vuln&lt;/code&gt; &lt;em&gt;returns&lt;/em&gt; the &lt;code&gt;gets&lt;/code&gt;, that means &lt;code&gt;eax&lt;/code&gt; will hold the &lt;code&gt;gets&lt;/code&gt; return value. And the return value of &lt;code&gt;gets&lt;/code&gt; is a pointer to the input value!&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
