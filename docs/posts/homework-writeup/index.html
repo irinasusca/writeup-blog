@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Pico Homework Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="picoCTF, pwn, buffer-overflow, PIE">
+<meta name="description" content="Challenge overview
+&ldquo;time to do some homework!&rdquo;
+At first glance, homework looks like a 64-bit executable, but we can&rsquo;t tell much about it.
+
+After using checksec, sadly, PIE is enabled and so is NX.
+
+We have a main function (picture above) and a step function.
+The step function uses and then modifies some variables declared/located in the .bss, so it would be good to see what they look like before execution starts.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/homework-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/homework-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/homework-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Pico Homework Writeup">
+  <meta property="og:description" content="Challenge overview “time to do some homework!”
+At first glance, homework looks like a 64-bit executable, but we can’t tell much about it.
+After using checksec, sadly, PIE is enabled and so is NX.
+We have a main function (picture above) and a step function. The step function uses and then modifies some variables declared/located in the .bss, so it would be good to see what they look like before execution starts.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-11-27T21:09:36+02:00">
+    <meta property="article:modified_time" content="2025-11-27T21:09:36+02:00">
+    <meta property="article:tag" content="PicoCTF">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="Buffer-Overflow">
+    <meta property="article:tag" content="PIE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pico Homework Writeup">
+<meta name="twitter:description" content="Challenge overview
+&ldquo;time to do some homework!&rdquo;
+At first glance, homework looks like a 64-bit executable, but we can&rsquo;t tell much about it.
+
+After using checksec, sadly, PIE is enabled and so is NX.
+
+We have a main function (picture above) and a step function.
+The step function uses and then modifies some variables declared/located in the .bss, so it would be good to see what they look like before execution starts.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Pico Homework Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/homework-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Pico Homework Writeup",
+  "name": "Pico Homework Writeup",
+  "description": "Challenge overview \u0026ldquo;time to do some homework!\u0026rdquo;\nAt first glance, homework looks like a 64-bit executable, but we can\u0026rsquo;t tell much about it.\nAfter using checksec, sadly, PIE is enabled and so is NX.\nWe have a main function (picture above) and a step function. The step function uses and then modifies some variables declared/located in the .bss, so it would be good to see what they look like before execution starts.\n",
+  "keywords": [
+    "picoCTF", "pwn", "buffer-overflow", "PIE"
+  ],
+  "articleBody": "Challenge overview “time to do some homework!”\nAt first glance, homework looks like a 64-bit executable, but we can’t tell much about it.\nAfter using checksec, sadly, PIE is enabled and so is NX.\nWe have a main function (picture above) and a step function. The step function uses and then modifies some variables declared/located in the .bss, so it would be good to see what they look like before execution starts.\nChar board[1100] is at offset 0x5260 from the first read-only section of the binary, int sn at 0x50A0, int stack[104] at 0x50C0, rows at 0x56AC, cols at 0x56B0, diry at 0x56B4, dirx a bit further at 0x5078.\nAs we can see, most of them begin as 0, except the cols and rows (same values as in main) and the dirx starting as 0x1.\nAlso, the flag is stored in the stack, so we might find a way to leak it.\nThe step function is a bit more complicated, with a switch for a lot of operands for the char at board[22 * pcy + pcx]. For each one, sn is checked against some conditions, and `__assert_fail()’ is used.\nAfter reading the function’s documentation, what it does is it aborts the program if the assertion is false, and all of these assertions are either checking sn \u003e= to 1, 2 or 3, or stack[sn-1] \u003c= rows \u0026\u0026 stack[sn-2] \u003c= cols.\nThen, most of them redirect to LABEL_76:\nThis relocates pcx (our x position in board, inside step) and our pcy (y position in board inside step).\ndirx and diry seem like regular matrix directions, with values from [-1, 0, 1].\nThen, for each iteration, it falls through to LABEL76, and for normal characters it just seems to iterate through board[], until it finds a special operand.\nHere is everything it does, simplified for a better understanding:\n'!': if(sn \u003c= 0) abort stack[sn - 1] = 1, if it was 0 stack[sn - 1] = 0, otherwise '$': if(sn \u003c= 0) abort --sn '%': if(sn \u003c= 1) abort stack[sn-2] %= stack[sn - 1] --sn '*': if(sn \u003c= 1) abort stack[sn-2] *= stack[sn-1] --sn '+': if(sn \u003c= 1) abort stack[sn-2] += stack[sn-1] --sn ',': if(sn \u003c= 0) abort putchar(stack[--sn]) #print a char at stack[--sn] '-': if(sn \u003c= 1) abort stack[sn-2] -= stack[sn-1] --sn '.': if(sn \u003c= 0) abort printf(%d, stack[--sn]) #this might help us leak stack! '/': if(sn \u003c= 1) abort stack[sn-2] /= stack[sn-1] --sn ':': if(sn \u003c=0 ) abort stack[sn] = stack[sn-1] ++sn '\\\\': if(sn\u003c=1) abort swap(stack[sn-1], stack[sn-2]) #xor swap '`': if(sn\u003c=1) abort stack[sn-2] = stack[sn-2] \u003e stack[sn-1] 'g': if(sn\u003c=1) abort if( 0 \u003c= stack[n-1] \u003c= rows \u0026\u0026 0 \u003c= stack[n-2] \u003c= cols) #bounds check stack[sn-2] = board[22 * stack[sn-1] + stack[sn-2]] #stack[sn-2] = board[stack[sn-1]][stack[sn-2]] --sn 'p': if(sn\u003c=2) abort if( 0 \u003c= stack[n-1] \u003c= rows \u0026\u0026 0 \u003c= stack[n-2] \u003c= cols) #bounds check board[22 * stack[sn-1] + stack[sn-2]] = stack[sn-3] #board[stack[sn-1]][stack[sn-2]] = stack[sn-3] sn-=3 '\u003c': dirx = -1 diry = 0 #go to the previous element in board array '\u003e': dirx = 1 diry = 0 #go to the next element in board array '^': dirx = 0 diry = -1 #move up a row in board 'v': dirx = 0 diry = 1 #move down a row in board '_': if(sn\u003c=0) abort if(stack[--sn] dirx= - 1 else dirx = 1 diry = 0 '|': if(sn\u003c=0) abort if(stack[--sn] diry = -1 else diry = 1 dirx = 0 '@': return 0; default: if(board[22* pcy + pcx] == '0']) if(sn\u003e99) abort v1 = sn++ stack[v1] = 0 LABEL_76: #update pcx and pcy based on dirx and diry return 1 Every case except the @ which returns 0, will step into LABEL_76.\nQuite a long function isn’t it?\nWe can conclude that pcx and pcy probably stand for player/position current x and y.\nThe case that seems the most interesting is the . since it does printf(%d, stack[--sn]. In .bss we have:\nstack[0]: 0x50C0\nflag: 0x56E0\nAnd so the offset between them is 0x620, or 1568 in decimal. Since int_size is 4 bytes, that means by accessing stack[392] we should reach flag’s .bss location.\nThe only cases that raise our sn are the : and default case, and they both only raise sn by 1.\nAnd, the 22*i byte of board is always 0.\nTo be fair, this solution seems too good to be true, but let’s explore it anyways.\nMy first Idea With the input 0::::::::::::::::::::::::::[and so on] we managed to raise sn so that stack[sn] overwrites some data.\nI also tried a loop \u003e\u003e:::\u003c\u003c that theoretically should’be incremented sn forever.\nBut this only gets us to sn = 110.\nFor some reason after sn reaches 110 it wont enter the : anymore whatsoever, but it won’t abort either, weird. So maybe that’s not the way to go with this…\nAt this point, I was starting to doubt modifying sn was the way to go, so I tried to find other any confirmation of this idea. The only two other writeups I found both overwrote the rows variable, which was directly after board on the .bss.\nBut I’m going to have a little faith in my idea so I will try to see if I can manage something before giving up.\nWhat I missed was that the stack was actually a stack (what a surprise, right?) and sn was the stack pointer.\nUnderstanding step and stack So almost every action was a pop() or a push(). It was very well explained in this writeup like this:\n0: push 0 to the top of the stack (also asserts if full) $: discard stack[top] !: logical NOT of top of stack (stack[top] = !stack[top]) `: sets stack[top-1] to result of stack[top] \u003c stack[top-1] (does not pop anything, which is kinda weird) %: pops top 2 elements and pushes stack[top-1] % stack[top] /: pops top 2 elements and pushes stack[top-1] / stack[top] *: pops top 2 elements and pushes stack[top-1] * stack[top] +: pops top 2 elements and pushes stack[top-1] + stack[top] -: pops top 2 elements and pushes stack[top-1] - stack[top] ,: pops and prints stack[top] as ascii character (putchar) .: pops and prints stack[top] as 32-bit number (printf(\"%d\")) :: duplicate stack[top] (NO BOUNDS CHECK!!!) \\: swap top 2 elements using XOR pc controls: \u003c: set pc direction to left \u003e: set pc direction to right ^: set pc direction to up v: set pc direction to down _: horizontal branch (pc goes right if stack[top]==0, left otherwise), pops stack[top] |: vertical branch (pc goes down if stack[top]==0, up otherwse), pops stack[top] @: stop program g: pushes board[stack[top]][stack[top-1]] onto stack top, pops top 2 elements p: sets board[stack[top]][stack[top-1]] = (char) stack[top-2], popping off all 3 elements Well, makes a lot more sense now!\nAnd look at this:\nWhen we reach sn = 109, after stack[sn] goes into the data immediately after stack which is board, so we overwrite board and fill the values with 0!!\nAnd we deleted our loop \u003e\u003e::::\u003c\u003c ourselves! Well, ideally, we would want to overwrite them with : instead of 0, right? and since we just duplicate the current top stack element and push it in the stack, if we manage to set the first character on the stack to be :, we might be able to avoid this!\nAdding numbers to stack First, to start summing/multiplicating numbers, we need to get two 1 values on the stack. The input we should give:\n0: push 0 on the stack\n!: pop; push 1;\n:: push 1;\nNow we have a stack that looks like [1, 1].\n+: pop a, pop b; push(a+b)\nNow stack looks like [2].\nSince in ASCII, : is 58, if we add a bunch of 2s, we can get stack[top] to become 58\nI’m thinking we duplicate the 2 using : and then multiply the first six ones, we reach 64. Then we can just decrement 2 another three times, and we get 58.\n:: push 2; stack = [2, 2]\n+: pop a,b; push a+b; stack = [4]\n:: push 4; stack = [4, 4]\n:: push 4; stack = [4, 4, 4]\n*: pop a,b; push a*b; stack = [4, 16]\n*: pop a,b; push a*b; stack = [64]\nNow, since the - pushes stack[top-1] - stack[top], we need to push a 6 above the 64 in the stack.\n0: push 0; stack = [64, 0]\n!: pop; push 1; stack = [64, 1]\n:: push 1; stack = [64, 1, 1]\n+: pop a, b; push a+b; stack = [64, 2]\n:: push 2; stack = [64, 2, 2]\n:: push 2; stack = [64, 2, 2, 2]\n+: pop a, b; push a+b; stack = [64, 2, 4]\n+: pop a, b; push a+b; stack = [64, 6]\n-: pop a, b; push b-a; stack = [58]\n,: pop a, putchar(a); stack = []\n@: return 0;\nSo our payload would be 0!:+:+::**0!:+::++-,@. And it worked!\nA sad realisation This is the situation I wanted to reach. In the second board drawing, the direction gets set back by the \u003c, and we repeat the : padding until we reach board[0] again. Theoretically, this should raise sn to ~277. Still not 392 but closer…\n(Note from the future - I didn’t understand how board was being parsed yet - but more on that later - without using ^ or v we cannot switch rows)\nSince can never really tell when we reached the correct sn, what if we just print the stack top in every loop? We know what the flag is supposed to look like, so we can find it between the printed garbage values.\nWell, in a \u003e.:\u003c sequence what happens is:\nstack = [...data1, data2, data3, data4] memory = [...data1, data2, data3, data4, data 5, data 6...] '.': stack = [...data1, data2, data3] print data4 memory = [...data1, data2, data3, data4, data 5, data 6...] ':': stack = [...data1, data2, data3, data3] memory = [...data1, data2, data3, data3, data 5, data 6...] '.': stack = [...data1, data2, data3] print data3 memory = [...data1, data2, data3, data3, data 5, data 6...] Well. Looks like we just overwrite the data, and we can only print data that we already overwrote. Would’ve been nice to realise this earlier.\nThe solution Since the most interesting/out-of-the-ordinary cases were\ng: pushes board[stack[top]][stack[top-1]] onto stack top, pops top 2 elements p: sets board[stack[top]][stack[top-1]] = (char) stack[top-2], popping off all 3 elements it’s most likely that we are going to have to use them to solve the chall.\nHowever, we have face a bounds check, that requires:\n0\u003c=stack[top]\u003c=rows\n0\u003c=stack[top-1]\u003c=cols.\nThat means, the command executes even for stack[top] == rows and stack[top-1] == cols; That means we can edit the data at board[50][22]. But board is indexed from starting from 0, so that means that we have an extra row at our disposal! (50*22 + 22 is 1122).\nIn .bss, the data immediately after board, aka the data we can and are going to overflow, is rows, cols, dirx and pcx.\nThe useful ones are rows and cols, because they can completely break us out of that bound check. So first, let’s get stack[top] to 50. Then we can figure out the value we need to insert starting after board[1100].\nSince modifying rows would mean having to flip through a couple of different rows to output the flag, I’d rather opt for modifying cols.\nThat means 4 bytes after rows (board[1100]), is cols, So we should set stack[top-1] to 4.\nThe sequence that gets us 50 is 0!::+:++::+*, so that would be stack[top].\nSo what should we change cols to? The best idea would be to use\ng: pushes board[stack[top]][stack[top-1]] onto stack top, pops top 2 elements\nWhere board[stack[top]*22] + stack[top-1]] would be the first character of the flag, then use , to print it, and do the same for the next n characters of the flag, probably around 45.\nLet’s calculate the offset from board to flag:\nboard: 0x5260\nflag: 0x56E0\nSo 0x480 = 1152. And that’s the beginning of flag, so we would reach around 1197. That would mean we would need cols should be at around 100.\nAlright, so to set cols to somewhere a bit more than 100 then.\nThat is 0!::+:++::** for 125 (better safe than sorry).\nAfter fiddling a lot with inputs, it looks like the way step reads our board is a lot like the snake game, so we need to redirect it and change directions every time we switch rows. And all of them should be close in column-lengths.\nAs a fun fact, apparently this is based on Befunge, and I quote, a two-dimensional esoteric programming language invented in 1993 by Chris Pressey with the goal of being as difficult to compile as possible.\nWe need two rows of input:\n0!::+:++::** 0!:+ v #push 125, push 2, go to next row\n*+::++:+::!0 +: \u003c #change movement to left, 2-\u003e4, push 50\nWhen we go down one row, we need to change the direction of reading, so the second row is read from right to left.\nSo now stack looks like [125, 4, 50]. Let’s check if it works, and we modify rows.\nIt does push 125 to the stack, but the other values? ({ is 125)\nAlright, getting somewhere!\nLooking great!! Finally, we get confirmation we modified cols.\nNow let’s move onto the next row. p popped all of our values, so we need to push new ones.\ng: pushes board[stack[top]][stack[top-1]] onto stack top, pops top 2 elements\nstack[top] needs to be 50, and stack[top-1] needs to iterate from 125 to 52.\nThe Loop We need to print from board[1100 + 52] for the first character to board[1100 + 125] to the last. So logically we would need a loop for that. So, let’s create one using this language. If we just pad a line to the right and to left with the same direction character, \u003e or \u003c, it will keep going back to the other side of the row.\n\u003e\u003e\u003e\u003e\u003e\u003e\u003eexecute\u003e\u003e\u003e\u003e\u003e\u003e\u003e\nor\n\u003c\u003c\u003c\u003c\u003c\u003c",
+  "wordCount" : "2575",
+  "inLanguage": "en",
+  "datePublished": "2025-11-27T21:09:36+02:00",
+  "dateModified": "2025-11-27T21:09:36+02:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/homework-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Pico Homework Writeup
+    </h1>
+    <div class="post-meta"><span title='2025-11-27 21:09:36 +0200 EET'>November 27, 2025</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#my-first-idea" aria-label="My first Idea">My first Idea</a></li>
+                <li>
+                    <a href="#understanding-step-and-stack" aria-label="Understanding step and stack">Understanding step and stack</a></li>
+                <li>
+                    <a href="#adding-numbers-to-stack" aria-label="Adding numbers to stack">Adding numbers to stack</a></li>
+                <li>
+                    <a href="#a-sad-realisation" aria-label="A sad realisation">A sad realisation</a></li>
+                <li>
+                    <a href="#the-solution" aria-label="The solution">The solution</a></li>
+                <li>
+                    <a href="#the-loop" aria-label="The Loop">The Loop</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>&ldquo;time to do some <strong><a href="https://play.picoctf.org/practice/challenge/217">homework</a></strong>!&rdquo;</p>
+<p>At first glance, <strong>homework</strong> looks like a 64-bit executable, but we can&rsquo;t tell much about it.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/homework-writeup/pic1.png#center"></p>
+<p>After using checksec, sadly, <code>PIE</code> is enabled and so is <code>NX</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/homework-writeup/pic2.png#center"></p>
+<p>We have a <code>main</code> function <em>(picture above)</em> and a <code>step</code> function.
+The <code>step</code> function uses and then modifies some variables declared/located in the <code>.bss</code>, so it would be good to see what they look like before execution starts.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/homework-writeup/pic3.png#center"></p>
+<p>Char <code>board[1100]</code> is at offset <code>0x5260</code> from the first read-only section of the binary, int <code>sn</code> at <code>0x50A0</code>, int <code>stack[104]</code> at <code>0x50C0</code>, <code>rows</code> at <code>0x56AC</code>, cols at <code>0x56B0</code>, <code>diry</code> at <code>0x56B4</code>, <code>dirx</code> a bit further at <code>0x5078</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/homework-writeup/pic4.png#center"></p>
+<p>As we can see, most of them begin as <code>0</code>, except the <code>cols</code> and <code>rows</code> (same values as in <code>main</code>) and the <code>dirx</code> starting as <code>0x1</code>.</p>
+<p>Also, the <code>flag</code> is stored in the stack, so we might find a way to leak it.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/homework-writeup/pic5.png#center"></p>
+<p>The <code>step</code> function is a bit more complicated, with a switch for a lot of operands for the char at <code>board[22 * pcy + pcx]</code>. For each one, <code>sn</code> is checked against some conditions, and `__assert_fail()&rsquo; is used.</p>
+<p>After reading the function&rsquo;s documentation, what it does is it aborts the program if the <code>assertion</code> is false, and all of these <em>assertions</em> are either checking <code>sn &gt;= </code> to 1, 2 or 3, or <code>stack[sn-1] &lt;= rows &amp;&amp; stack[sn-2] &lt;= cols</code>.</p>
+<p>Then, most of them redirect to <code>LABEL_76</code>:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/homework-writeup/pic6.png#center"></p>
+<p>This relocates pcx (our x position in <code>board</code>, inside <code>step</code>) and our <code>pcy</code> (y position in <code>board</code> inside <code>step</code>).</p>
+<p><code>dirx</code> and <code>diry</code> seem like regular matrix directions, with values from <code>[-1, 0, 1]</code>.</p>
+<p>Then, for each iteration, it falls through to <code>LABEL76</code>, and for normal characters it just seems to iterate through <code>board[]</code>, until it finds a special operand.</p>
+<p>Here is everything it does, simplified for a better understanding:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;!&#39;</span>: <span style="color:#66d9ef">if</span>(sn <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>) abort
+</span></span><span style="display:flex;"><span>     stack[sn <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, <span style="color:#66d9ef">if</span> it was <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>     stack[sn <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, otherwise
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;$&#39;</span>: <span style="color:#66d9ef">if</span>(sn <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>) abort
+</span></span><span style="display:flex;"><span>     <span style="color:#f92672">--</span>sn
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;%&#39;</span>: <span style="color:#66d9ef">if</span>(sn <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span>) abort
+</span></span><span style="display:flex;"><span>     stack[sn<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>] <span style="color:#f92672">%=</span> stack[sn <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>     <span style="color:#f92672">--</span>sn
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;*&#39;</span>: <span style="color:#66d9ef">if</span>(sn <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span>) abort
+</span></span><span style="display:flex;"><span>     stack[sn<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>] <span style="color:#f92672">*=</span> stack[sn<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>     <span style="color:#f92672">--</span>sn
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;+&#39;</span>: <span style="color:#66d9ef">if</span>(sn <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span>) abort
+</span></span><span style="display:flex;"><span>     stack[sn<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>] <span style="color:#f92672">+=</span> stack[sn<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>     <span style="color:#f92672">--</span>sn
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;,&#39;</span>: <span style="color:#66d9ef">if</span>(sn <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>) abort
+</span></span><span style="display:flex;"><span>     putchar(stack[<span style="color:#f92672">--</span>sn])
+</span></span><span style="display:flex;"><span>     <span style="color:#75715e">#print a char at stack[--sn]</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;-&#39;</span>: <span style="color:#66d9ef">if</span>(sn <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span>) abort
+</span></span><span style="display:flex;"><span>     stack[sn<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>] <span style="color:#f92672">-=</span> stack[sn<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>     <span style="color:#f92672">--</span>sn
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;.&#39;</span>: <span style="color:#66d9ef">if</span>(sn <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>) abort
+</span></span><span style="display:flex;"><span>     printf(<span style="color:#f92672">%</span>d, stack[<span style="color:#f92672">--</span>sn])
+</span></span><span style="display:flex;"><span>     <span style="color:#75715e">#this might help us leak stack!</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;/&#39;</span>: <span style="color:#66d9ef">if</span>(sn <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span>) abort
+</span></span><span style="display:flex;"><span>     stack[sn<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>] <span style="color:#f92672">/=</span> stack[sn<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>     <span style="color:#f92672">--</span>sn
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;:&#39;</span>: <span style="color:#66d9ef">if</span>(sn <span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">0</span> ) abort
+</span></span><span style="display:flex;"><span>     stack[sn] <span style="color:#f92672">=</span> stack[sn<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>     <span style="color:#f92672">++</span>sn
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">&#39;</span>: <span style="color:#66d9ef">if</span>(sn<span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">1</span>) abort
+</span></span><span style="display:flex;"><span>      swap(stack[sn<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>], stack[sn<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>])
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">#xor swap</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;`&#39;</span>:  <span style="color:#66d9ef">if</span>(sn<span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">1</span>) abort
+</span></span><span style="display:flex;"><span>      stack[sn<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>] <span style="color:#f92672">=</span> stack[sn<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>] <span style="color:#f92672">&gt;</span> stack[sn<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;g&#39;</span>:  <span style="color:#66d9ef">if</span>(sn<span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">1</span>) abort
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span>( <span style="color:#ae81ff">0</span> <span style="color:#f92672">&lt;=</span> stack[n<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">&lt;=</span> rows <span style="color:#f92672">&amp;&amp;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&lt;=</span> stack[n<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>] <span style="color:#f92672">&lt;=</span> cols)
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">#bounds check</span>
+</span></span><span style="display:flex;"><span>      stack[sn<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>] <span style="color:#f92672">=</span> board[<span style="color:#ae81ff">22</span> <span style="color:#f92672">*</span> stack[sn<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> stack[sn<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>]]
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">#stack[sn-2] = board[stack[sn-1]][stack[sn-2]]</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">--</span>sn
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;p&#39;</span>:  <span style="color:#66d9ef">if</span>(sn<span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">2</span>) abort
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span>( <span style="color:#ae81ff">0</span> <span style="color:#f92672">&lt;=</span> stack[n<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">&lt;=</span> rows <span style="color:#f92672">&amp;&amp;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&lt;=</span> stack[n<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>] <span style="color:#f92672">&lt;=</span> cols)
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">#bounds check</span>
+</span></span><span style="display:flex;"><span>      board[<span style="color:#ae81ff">22</span> <span style="color:#f92672">*</span> stack[sn<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> stack[sn<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>]] <span style="color:#f92672">=</span> stack[sn<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>]
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">#board[stack[sn-1]][stack[sn-2]] = stack[sn-3]</span>
+</span></span><span style="display:flex;"><span>      sn<span style="color:#f92672">-=</span><span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;&lt;&#39;</span>: dirx <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>     diry <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#75715e">#go to the previous element in board array</span>
+</span></span><span style="display:flex;"><span>   
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;&gt;&#39;</span>: dirx <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>     diry <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#75715e">#go to the next element in board array</span>
+</span></span><span style="display:flex;"><span>   
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;^&#39;</span>: dirx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>     diry <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#75715e">#move up a row in board</span>
+</span></span><span style="display:flex;"><span>   
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;v&#39;</span>: dirx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>     diry <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#75715e">#move down a row in board</span>
+</span></span><span style="display:flex;"><span>   
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;_&#39;</span>:  <span style="color:#66d9ef">if</span>(sn<span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">0</span>) abort
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span>(stack[<span style="color:#f92672">--</span>sn]
+</span></span><span style="display:flex;"><span>          dirx<span style="color:#f92672">=</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>          dirx <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>      diry <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;|&#39;</span>:  <span style="color:#66d9ef">if</span>(sn<span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">0</span>) abort
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span>(stack[<span style="color:#f92672">--</span>sn]
+</span></span><span style="display:flex;"><span>          diry <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>          diry <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>      dirx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>   
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;@&#39;</span>: <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>default:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span>(board[<span style="color:#ae81ff">22</span><span style="color:#f92672">*</span> pcy <span style="color:#f92672">+</span> pcx] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;0&#39;</span>])
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span>(sn<span style="color:#f92672">&gt;</span><span style="color:#ae81ff">99</span>) abort
+</span></span><span style="display:flex;"><span>        v1 <span style="color:#f92672">=</span> sn<span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>        stack[v1] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>LABEL_76:
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#update pcx and pcy based on dirx and diry</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    
+</span></span></code></pre></div><p>Every case except the <code>@</code> which returns 0, will step into <code>LABEL_76</code>.</p>
+<p>Quite a long function isn&rsquo;t it?</p>
+<p>We can conclude that <code>pcx</code> and <code>pcy</code> probably stand for player/position current x and y.</p>
+<p>The case that seems the most interesting is the <code>.</code> since it does <code>printf(%d, stack[--sn]</code>. In <code>.bss</code> we have:</p>
+<p><code>stack[0]: 0x50C0</code></p>
+<p><code>flag: 0x56E0</code></p>
+<p>And so the offset between them is <code>0x620</code>, or 1568 in decimal.
+Since int_size is 4 bytes, that means by accessing <code>stack[392]</code> we should reach <code>flag</code>&rsquo;s <code>.bss</code> location.</p>
+<p>The only cases that raise our <code>sn</code> are the <code>:</code> and <code>default</code> case, and they both only raise <code>sn</code> by 1.</p>
+<p>And, the <code>22*i</code> byte of <code>board</code> is always 0.</p>
+<p>To be fair, this solution seems too good to be true, but let&rsquo;s explore it anyways.</p>
+<hr>
+<h2 id="my-first-idea">My first Idea<a hidden class="anchor" aria-hidden="true" href="#my-first-idea">#</a></h2>
+<p>With the input <code>0::::::::::::::::::::::::::[and so on]</code> we managed to raise <code>sn</code> so that <code>stack[sn]</code> overwrites some data.</p>
+<p>I also tried a loop <code>&gt;&gt;:::&lt;&lt;</code> that theoretically should&rsquo;be incremented <code>sn</code> forever.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/homework-writeup/pic7.png#center"></p>
+<p>But this only gets us to <code>sn = 110</code>.</p>
+<p>For some reason after <code>sn</code> reaches 110 it wont enter the <code>:</code> anymore whatsoever, but it won&rsquo;t abort either, weird. So maybe that&rsquo;s not the way to go with this&hellip;</p>
+<p>At this point, I was starting to doubt modifying <code>sn</code> was the way to go, so I tried to find other any confirmation of this idea. The only two other writeups I found both overwrote the <code>rows</code> variable, which was directly after <code>board</code> on the <code>.bss</code>.</p>
+<p>But I&rsquo;m going to have a little faith in my idea so I will try to see if I can manage something before giving up.</p>
+<p>What I missed was that the <code>stack</code> was actually a stack (<em>what a surprise, right?</em>) and <code>sn</code> was the stack pointer.</p>
+<hr>
+<h2 id="understanding-step-and-stack">Understanding step and stack<a hidden class="anchor" aria-hidden="true" href="#understanding-step-and-stack">#</a></h2>
+<p>So almost every action was a <code>pop()</code> or a <code>push()</code>.
+It was very well explained in <strong><a href="https://hackmd.io/@nut/Hy7MtQDdd">this writeup</a></strong> like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ae81ff">0</span>: push <span style="color:#ae81ff">0</span> to the top of the stack (also asserts <span style="color:#66d9ef">if</span> full)
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">$</span>: discard stack[top]
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">!</span>: logical NOT of top of stack (stack[top] <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">!</span>stack[top])
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">`</span>: sets stack[top<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] to result of stack[top] <span style="color:#f92672">&lt;</span> stack[top<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] (does <span style="color:#f92672">not</span> pop anything, which <span style="color:#f92672">is</span> kinda weird)
+</span></span><span style="display:flex;"><span><span style="color:#f92672">%</span>: pops top <span style="color:#ae81ff">2</span> elements <span style="color:#f92672">and</span> pushes stack[top<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">%</span> stack[top]
+</span></span><span style="display:flex;"><span><span style="color:#f92672">/</span>: pops top <span style="color:#ae81ff">2</span> elements <span style="color:#f92672">and</span> pushes stack[top<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">/</span> stack[top]
+</span></span><span style="display:flex;"><span><span style="color:#f92672">*</span>: pops top <span style="color:#ae81ff">2</span> elements <span style="color:#f92672">and</span> pushes stack[top<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">*</span> stack[top]
+</span></span><span style="display:flex;"><span><span style="color:#f92672">+</span>: pops top <span style="color:#ae81ff">2</span> elements <span style="color:#f92672">and</span> pushes stack[top<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> stack[top]
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-</span>: pops top <span style="color:#ae81ff">2</span> elements <span style="color:#f92672">and</span> pushes stack[top<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">-</span> stack[top]
+</span></span><span style="display:flex;"><span>,: pops <span style="color:#f92672">and</span> prints stack[top] <span style="color:#66d9ef">as</span> ascii character (putchar)
+</span></span><span style="display:flex;"><span><span style="color:#f92672">.</span>: pops <span style="color:#f92672">and</span> prints stack[top] <span style="color:#66d9ef">as</span> <span style="color:#ae81ff">32</span><span style="color:#f92672">-</span>bit number (printf(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">%d</span><span style="color:#e6db74">&#34;</span>))
+</span></span><span style="display:flex;"><span>:: duplicate stack[top] (NO BOUNDS CHECK<span style="color:#960050;background-color:#1e0010">!!!</span>)
+</span></span><span style="display:flex;"><span>\: swap top <span style="color:#ae81ff">2</span> elements using XOR
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pc controls:
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;</span>: set pc direction to left
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;</span>: set pc direction to right
+</span></span><span style="display:flex;"><span><span style="color:#f92672">^</span>: set pc direction to up
+</span></span><span style="display:flex;"><span>v: set pc direction to down
+</span></span><span style="display:flex;"><span>_: horizontal branch (pc goes right <span style="color:#66d9ef">if</span> stack[top]<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>, left otherwise), pops stack[top]
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span>: vertical branch (pc goes down <span style="color:#66d9ef">if</span> stack[top]<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>, up otherwse), pops stack[top]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">@</span>: stop program
+</span></span><span style="display:flex;"><span>g: pushes board[stack[top]][stack[top<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]] onto stack top, pops top <span style="color:#ae81ff">2</span> elements
+</span></span><span style="display:flex;"><span>p: sets board[stack[top]][stack[top<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]] <span style="color:#f92672">=</span> (char) stack[top<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>], popping off all <span style="color:#ae81ff">3</span> elements
+</span></span></code></pre></div><p>Well, makes a lot more sense now!</p>
+<p>And look at this:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/homework-writeup/pic10.png#center"></p>
+<p>When we reach <code>sn = 109</code>, after <code>stack[sn]</code> goes into the data immediately after <code>stack</code> which is <code>board</code>, so we overwrite <code>board</code> and fill the values with <code>0</code>!!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/homework-writeup/pic11.png#center"></p>
+<p>And we deleted our loop <code>&gt;&gt;::::&lt;&lt;</code> ourselves! Well, ideally, we would want to overwrite them with <code>:</code> instead of <code>0</code>, right? and since we just duplicate the current top stack element and push it in the stack, if we manage to set the first character on the stack to  be <code>:</code>, we might be able to avoid this!</p>
+<hr>
+<h2 id="adding-numbers-to-stack">Adding numbers to stack<a hidden class="anchor" aria-hidden="true" href="#adding-numbers-to-stack">#</a></h2>
+<p>First, to start summing/multiplicating numbers, we need to get two <code>1</code> values on the stack. The input we should give:</p>
+<p><code>0</code>: push 0 on the stack</p>
+<p><code>!</code>: pop; push 1;</p>
+<p><code>:</code>: push 1;</p>
+<p>Now we have a <code>stack</code> that looks like <code>[1, 1]</code>.</p>
+<p><code>+</code>: pop a, pop b; push(a+b)</p>
+<p>Now <code>stack</code> looks like <code>[2]</code>.</p>
+<p>Since in ASCII, <code>:</code> is <code>58</code>, if we add a bunch of <code>2</code>s, we can get <code>stack[top]</code> to become <code>58</code></p>
+<p>I&rsquo;m thinking we duplicate the <code>2</code> using <code>:</code> and then multiply the first six ones, we reach <code>64</code>. Then we can just decrement <code>2</code> another three times, and we get <code>58</code>.</p>
+<p><code>:</code>: push 2; <code>stack = [2, 2]</code></p>
+<p><code>+</code>: pop a,b; push a+b; <code>stack = [4]</code></p>
+<p><code>:</code>: push 4; <code>stack = [4, 4]</code></p>
+<p><code>:</code>: push 4; <code>stack = [4, 4, 4]</code></p>
+<p><code>*</code>: pop a,b; push a*b; <code>stack = [4, 16]</code></p>
+<p><code>*</code>: pop a,b; push a*b; <code>stack = [64]</code></p>
+<p>Now, since the <code>-</code> pushes <code>stack[top-1]</code> - <code>stack[top]</code>, we need to push a <code>6</code> above the <code>64</code> in the <code>stack</code>.</p>
+<p><code>0</code>: push 0; <code>stack = [64, 0]</code></p>
+<p><code>!</code>: pop; push 1; <code>stack = [64, 1]</code></p>
+<p><code>:</code>: push 1; <code>stack = [64, 1, 1]</code></p>
+<p><code>+</code>: pop a, b; push a+b; <code>stack = [64, 2]</code></p>
+<p><code>:</code>: push 2; <code>stack = [64, 2, 2]</code></p>
+<p><code>:</code>: push 2; <code>stack = [64, 2, 2, 2]</code></p>
+<p><code>+</code>: pop a, b; push a+b; <code>stack = [64, 2, 4]</code></p>
+<p><code>+</code>: pop a, b; push a+b; <code>stack = [64, 6]</code></p>
+<p><code>-</code>: pop a, b; push b-a; <code>stack = [58]</code></p>
+<p><code>,</code>: pop a, putchar(a); <code>stack = []</code></p>
+<p><code>@</code>: return 0;</p>
+<p>So our payload would be <code>0!:+:+::**0!:+::++-,@</code>. And it worked!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/homework-writeup/pic12.png#center"></p>
+<hr>
+<h2 id="a-sad-realisation">A sad realisation<a hidden class="anchor" aria-hidden="true" href="#a-sad-realisation">#</a></h2>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/homework-writeup/pic13.png#center"></p>
+<p>This is the situation I wanted to reach. In the second board drawing, the direction gets set back by the <code>&lt;</code>, and we repeat the <code>:</code> padding until we reach <code>board[0]</code> again. Theoretically, this should raise <code>sn</code> to ~277. Still not 392 but closer&hellip;</p>
+<p><em>(Note from the future - I didn&rsquo;t understand how <code>board</code> was being parsed yet - but more on that later - without using <code>^</code> or <code>v</code> we cannot switch rows)</em></p>
+<p>Since can never really tell when we reached the correct <code>sn</code>, what if we just print the stack top in every loop? We know what the flag is supposed to look like, so we can find it between the printed garbage values.</p>
+<p>Well, in a <code>&gt;.:&lt;</code> sequence what happens is:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>stack <span style="color:#f92672">=</span> [<span style="color:#f92672">...</span>data1, data2, data3, data4]
+</span></span><span style="display:flex;"><span>memory <span style="color:#f92672">=</span> [<span style="color:#f92672">...</span>data1, data2, data3, data4, data <span style="color:#ae81ff">5</span>, data <span style="color:#ae81ff">6.</span><span style="color:#f92672">..</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;.&#39;</span>:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>stack <span style="color:#f92672">=</span> [<span style="color:#f92672">...</span>data1, data2, data3]
+</span></span><span style="display:flex;"><span>print data4
+</span></span><span style="display:flex;"><span>memory <span style="color:#f92672">=</span> [<span style="color:#f92672">...</span>data1, data2, data3, data4, data <span style="color:#ae81ff">5</span>, data <span style="color:#ae81ff">6.</span><span style="color:#f92672">..</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;:&#39;</span>:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>stack <span style="color:#f92672">=</span> [<span style="color:#f92672">...</span>data1, data2, data3, data3]
+</span></span><span style="display:flex;"><span>memory <span style="color:#f92672">=</span> [<span style="color:#f92672">...</span>data1, data2, data3, data3, data <span style="color:#ae81ff">5</span>, data <span style="color:#ae81ff">6.</span><span style="color:#f92672">..</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;.&#39;</span>:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>stack <span style="color:#f92672">=</span> [<span style="color:#f92672">...</span>data1, data2, data3]
+</span></span><span style="display:flex;"><span>print data3
+</span></span><span style="display:flex;"><span>memory <span style="color:#f92672">=</span> [<span style="color:#f92672">...</span>data1, data2, data3, data3, data <span style="color:#ae81ff">5</span>, data <span style="color:#ae81ff">6.</span><span style="color:#f92672">..</span>]
+</span></span></code></pre></div><p>Well. Looks like we just overwrite the data, and we can only print data that we already overwrote. Would&rsquo;ve been nice to realise this earlier.</p>
+<hr>
+<h2 id="the-solution">The solution<a hidden class="anchor" aria-hidden="true" href="#the-solution">#</a></h2>
+<p>Since the most interesting/out-of-the-ordinary cases were</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>g: pushes board[stack[top]][stack[top<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]] onto stack top, pops top <span style="color:#ae81ff">2</span> elements
+</span></span><span style="display:flex;"><span>p: sets board[stack[top]][stack[top<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]] <span style="color:#f92672">=</span> (char) stack[top<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>], popping off all <span style="color:#ae81ff">3</span> elements
+</span></span></code></pre></div><p>it&rsquo;s most likely that we are going to have to use them to solve the chall.</p>
+<p>However, we have face a bounds check, that requires:</p>
+<p><code>0&lt;=stack[top]&lt;=rows</code></p>
+<p><code>0&lt;=stack[top-1]&lt;=cols</code>.</p>
+<p>That means, the command executes even for <code>stack[top] == rows</code> and <code>stack[top-1] == cols</code>; That means we can edit the data at <code>board[50][22]</code>. But <code>board</code> is indexed from starting from 0, so that means that we have an extra row at our disposal!
+(50*22 + 22 is 1122).</p>
+<p>In <code>.bss</code>, the data immediately after <code>board</code>, aka the data we can and are going to overflow, is <code>rows</code>, <code>cols</code>, <code>dirx</code> and <code>pcx</code>.</p>
+<p>The useful ones are <code>rows</code> and <code>cols</code>, because they can completely break us out of that bound check. So first, let&rsquo;s get <code>stack[top]</code> to 50. Then we can figure out the value we need to insert starting after <code>board[1100]</code>.</p>
+<p>Since modifying <code>rows</code> would mean having to flip through a couple of different rows to output the flag, I&rsquo;d rather opt for modifying <code>cols</code>.</p>
+<p>That means 4 bytes after <code>rows</code> (<code>board[1100]</code>), is <code>cols</code>, So we should set <code>stack[top-1]</code> to 4.</p>
+<p>The sequence that gets us 50 is <code>0!::+:++::+*</code>, so that would be <code>stack[top]</code>.</p>
+<p>So what should we change <code>cols</code> to? The best idea would be to use</p>
+<p><code>g: pushes board[stack[top]][stack[top-1]] onto stack top, pops top 2 elements</code></p>
+<p>Where <code>board[stack[top]*22] + stack[top-1]]</code> would be the first character of the flag, then use <code>,</code> to print it, and do the same for the next <code>n</code> characters of the flag, probably around 45.</p>
+<p>Let&rsquo;s calculate the offset from <code>board</code> to <code>flag</code>:</p>
+<p><code>board: 0x5260</code></p>
+<p><code>flag: 0x56E0</code></p>
+<p>So <code>0x480 = 1152</code>. And that&rsquo;s the beginning of <code>flag</code>, so we would reach around <code>1197</code>. That would mean we would need <code>cols</code> should be at around 100.</p>
+<p>Alright, so to set <code>cols</code> to somewhere a bit more than 100 then.</p>
+<p>That is <code>0!::+:++::**</code> for 125 (better safe than sorry).</p>
+<p>After fiddling a lot with inputs, it looks like the way <code>step</code> reads our <code>board</code> is a lot like the snake game, so we need to redirect it and change directions every time we switch rows. And all of them should be close in column-lengths.</p>
+<p>As a fun fact, apparently this is based on <em>Befunge</em>, and I quote, <em>a two-dimensional esoteric programming language invented in 1993 by Chris Pressey with the goal of being as difficult to compile as possible</em>.</p>
+<p>We need two rows of input:</p>
+<p><code>0!::+:++::**</code> <code>0!:+</code> <code>v</code> #push 125, push 2, go to next row</p>
+<p><code>*+::++:+::!0</code> <code>+:</code> <code>&lt;</code>  #change movement to left, 2-&gt;4, push 50</p>
+<p>When we go down one row, we need to change the direction of reading, so the second row is read from right to left.</p>
+<p>So now <code>stack</code> looks like <code>[125, 4, 50]</code>. Let&rsquo;s check if it works, and we modify rows.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/homework-writeup/pic14.png#center"></p>
+<p>It does push <code>125</code> to the stack, but the other values? (<code>{</code> is 125)</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/homework-writeup/pic16.png#center"></p>
+<p>Alright, getting somewhere!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/homework-writeup/pic17.png#center"></p>
+<p>Looking great!! Finally, we get confirmation we modified <code>cols</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/homework-writeup/pic18.png#center"></p>
+<p>Now let&rsquo;s move onto the next row. <code>p</code> popped all of our values, so we need to push new ones.</p>
+<p><code>g: pushes board[stack[top]][stack[top-1]] onto stack top, pops top 2 elements</code></p>
+<p><code>stack[top]</code> needs to be 50, and <code>stack[top-1]</code> needs to iterate from 125 to 52.</p>
+<hr>
+<h2 id="the-loop">The Loop<a hidden class="anchor" aria-hidden="true" href="#the-loop">#</a></h2>
+<p>We need to print from <code>board[1100 + 52]</code> for the first character to <code>board[1100 + 125]</code> to the last. So logically we would need a loop for that. So, let&rsquo;s create one using this <em>language</em>. If we just pad a line to the right and to left with the same direction character, <code>&gt;</code> or <code>&lt;</code>, it will keep going back to the other side of the row.</p>
+<p><code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;execute&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code></p>
+<p>or</p>
+<p><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;execute&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code></p>
+<p>or something like</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;</span> code here <span style="color:#f92672">.........</span> v
+</span></span><span style="display:flex;"><span><span style="color:#f92672">^</span> other code here<span style="color:#f92672">....</span> <span style="color:#f92672">&lt;</span>
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/homework-writeup/pic19.jpg#center"></p>
+<p>This is my idea of solving this; But we would need to push a <code>50</code> to <code>board[0][0]</code> to have easy access to it later. The last thing we push in the stack in line 2 is a 50, so we might as well do it there.</p>
+<p>since <code>p: sets board[stack[top]][stack[top-1]] = (char) stack[top-2], popping off all 3</code>, and we want to keep the <code>50</code> in the stack to overwrite <code>cols</code>, we can do the following:</p>
+<p><code>:</code>: <code>[125, 4, 50, 50]</code></p>
+<p><code>00</code>: <code>[125, 4, 50, 50, 0, 0]</code></p>
+<p><code>p</code>: <code>[125, 4, 50]</code> and <code>board[0][0] = 50</code></p>
+<p>And after this we can resume overwriting <code>cols</code>.</p>
+<p><code>p</code>: <code>board[50][4] = 125</code></p>
+<p>Now, we can start using <code>g</code> to fetch <code>50</code> in our loop. For simplicity, lets start with the first col 51.</p>
+<p><code>00</code>: <code>[0, 0]</code></p>
+<p><code>g</code> : <code>board[0][0]=50</code></p>
+<p>Now we can officially start the loop.</p>
+<p><code>0!+</code>: <code>[51]</code> increment current stack top</p>
+<p><code>:</code>: <code>[51, 51]</code></p>
+<p><code>00</code>: <code>[51, 51, 0, 0]</code></p>
+<p><code>g</code>: <code>[51, 51, 50]</code>, <code>board[50][51]</code> -&gt; stack top</p>
+<p><code>g</code>: <code>[51, char]</code></p>
+<p><code>,</code>: <code>[51]</code> print(char)</p>
+<p>And now go back to increment.</p>
+<p>And I think I did it!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="pic20.jpg#center"></p>
+<p>Now testing remotely, fingers crossed&hellip;</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/homework-writeup/pic21.png#center"></p>
+<p>It actually worked! Yay! This is definitely my longest writeup yet, but I hope I covered everything on this, since it can definitely be very overwhelming for beginners.</p>
+<hr>
+<p>As always, the rest of the code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/pico/homework.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/picoctf/">PicoCTF</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/">Buffer-Overflow</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pie/">PIE</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
