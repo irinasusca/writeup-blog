@@ -3,7 +3,10 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://localhost:1313/writeup-blog/</loc>
-    <lastmod>2025-11-25T21:09:36+02:00</lastmod>
+    <lastmod>2025-11-28T21:09:36+02:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/writeup-blog/posts/</loc>
+    <lastmod>2025-11-28T21:09:36+02:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/writeup-blog/tags/buffer-overflow/</loc>
     <lastmod>2025-11-25T21:09:36+02:00</lastmod>
@@ -17,17 +20,11 @@
     <loc>http://localhost:1313/writeup-blog/tags/picoctf/</loc>
     <lastmod>2025-11-25T21:09:36+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/writeup-blog/posts/</loc>
-    <lastmod>2025-11-25T21:09:36+02:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/writeup-blog/tags/pwn/</loc>
     <lastmod>2025-11-25T21:09:36+02:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/writeup-blog/tags/</loc>
     <lastmod>2025-11-25T21:09:36+02:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/writeup-blog/posts/homework-writeup/</loc>
-    <lastmod>2025-11-24T21:09:36+02:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/writeup-blog/posts/ropfu-writeup/</loc>
     <lastmod>2025-11-24T21:09:36+02:00</lastmod>
