@@ -6,8 +6,22 @@
     <description>Recent content on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 27 Nov 2025 21:09:36 +0200</lastBuildDate>
+    <lastBuildDate>Sun, 30 Nov 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Pico Here&#39;s A LIBC Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/heresalibc-writeup/</link>
+      <pubDate>Sun, 30 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/heresalibc-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;I am once again asking for you to pwn this &lt;strong&gt;&lt;a href=&#34;https://play.picoctf.org/practice/challenge/179&#34;&gt;binary&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/heresalibc-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;At first glance, the &lt;strong&gt;vuln&lt;/strong&gt; looks like a 64-bit executable with a buffer overflow vulnerability. And since it&amp;rsquo;s hinted in the title, most probably a ret2libc challenge.&lt;/p&gt;
+&lt;p&gt;Upon checking, only &lt;code&gt;NX&lt;/code&gt; is enabled. So this should make things fairly easy for us.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;We can quickly check if there&amp;rsquo;s a &lt;code&gt;/bin/sh&lt;/code&gt; in memory, and there it is! Along with a &lt;code&gt;system&lt;/code&gt; and also &lt;code&gt;execve&lt;/code&gt;.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Pico Homework Writeup</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/homework-writeup/</link>

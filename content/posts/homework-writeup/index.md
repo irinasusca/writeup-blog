@@ -490,7 +490,7 @@ And now go back to increment.
 
 And I think I did it! 
 
-![challenge-screenshot](pic20.jpg#center)
+![challenge-screenshot](pic20.png#center)
 
 Now testing remotely, fingers crossed...
 

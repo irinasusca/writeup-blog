@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Pico Here&#39;s A LIBC Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="picoCTF, pwn, buffer-overflow">
+<meta name="description" content="Challenge overview
+I am once again asking for you to pwn this binary
+
+At first glance, the vuln looks like a 64-bit executable with a buffer overflow vulnerability. And since it&rsquo;s hinted in the title, most probably a ret2libc challenge.
+Upon checking, only NX is enabled. So this should make things fairly easy for us.
+
+Identifying the vulnerabilities
+We can quickly check if there&rsquo;s a /bin/sh in memory, and there it is! Along with a system and also execve.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/heresalibc-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/heresalibc-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/heresalibc-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Pico Here&#39;s A LIBC Writeup">
+  <meta property="og:description" content="Challenge overview I am once again asking for you to pwn this binary
+At first glance, the vuln looks like a 64-bit executable with a buffer overflow vulnerability. And since it’s hinted in the title, most probably a ret2libc challenge.
+Upon checking, only NX is enabled. So this should make things fairly easy for us.
+Identifying the vulnerabilities We can quickly check if there’s a /bin/sh in memory, and there it is! Along with a system and also execve.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-11-30T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-11-30T00:00:00+00:00">
+    <meta property="article:tag" content="PicoCTF">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="Buffer-Overflow">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pico Here&#39;s A LIBC Writeup">
+<meta name="twitter:description" content="Challenge overview
+I am once again asking for you to pwn this binary
+
+At first glance, the vuln looks like a 64-bit executable with a buffer overflow vulnerability. And since it&rsquo;s hinted in the title, most probably a ret2libc challenge.
+Upon checking, only NX is enabled. So this should make things fairly easy for us.
+
+Identifying the vulnerabilities
+We can quickly check if there&rsquo;s a /bin/sh in memory, and there it is! Along with a system and also execve.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Pico Here's A LIBC Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/heresalibc-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Pico Here's A LIBC Writeup",
+  "name": "Pico Here\u0027s A LIBC Writeup",
+  "description": "Challenge overview I am once again asking for you to pwn this binary\nAt first glance, the vuln looks like a 64-bit executable with a buffer overflow vulnerability. And since it\u0026rsquo;s hinted in the title, most probably a ret2libc challenge.\nUpon checking, only NX is enabled. So this should make things fairly easy for us.\nIdentifying the vulnerabilities We can quickly check if there\u0026rsquo;s a /bin/sh in memory, and there it is! Along with a system and also execve.\n",
+  "keywords": [
+    "picoCTF", "pwn", "buffer-overflow"
+  ],
+  "articleBody": "Challenge overview I am once again asking for you to pwn this binary\nAt first glance, the vuln looks like a 64-bit executable with a buffer overflow vulnerability. And since it’s hinted in the title, most probably a ret2libc challenge.\nUpon checking, only NX is enabled. So this should make things fairly easy for us.\nIdentifying the vulnerabilities We can quickly check if there’s a /bin/sh in memory, and there it is! Along with a system and also execve.\nNow, let’s analyze the binary; there’s some pretty weird variables in .rodata:\nThey’re used inside our do_stuff() loop, to calculate how much input is going to be read.\n%[^\\n] is a scan set; What is a scan set you might ask?\nWell, scan sets begin with %[ and ends with ]. The insides, in this case ^\\n, mean read everything except a newline. So basically, read everything until the first \\n and store it in s[112]. So, classic buffer overflow.\nAnd %c is probably just going to store that newline that we didn’t read.\nSo, since we’re working with 64-bit, let’s find a pop rdi; ret gadget with ropper. We have one at 0x400913.\nThe challenge includes a libc.so.6 to download, and a Makefile that specifies the binary will try to use the ./libc.so.6 before the system-wide libc. After installing it, and trying to run the binary, I stumbled upon this error:\n./vuln Inconsistency detected by ld.so: dl-call-libc-early-init.c: 37: _dl_call_libc_early_init: Assertion `sym != NULL' failed! Which meant that my dynamic loader wasn’t compatible with the challenge’s libc.so.6. And they didn’t give us a compatible dynamic loader to download.\nAfter inspecting the libc.so.6 with strings, and looking for GLIBC to see if we find any clues, we can find GNU C Library (Ubuntu GLIBC 2.27-3ubuntu1.2) stable release version 2.27..\nWhich is an older version of the system loader, the ld-2.27.so one, from ubuntu:18.04. I’m assuming this is a mistake in the challenge, but let’s see if we can still solve this challenge.\nFinding the correct system loader After some research, looks like we need to download both ld-2.27.so and ld-linux-x86-64.so.2 and place them in the same folder as vuln.\nI downloaded glib27 here found as libc6_2.27-3ubuntu1_amd64.deb glibc27 and did this, which got our chall working again:\nBecause we always need a specific command to run it using these libraries, we need to write this argument to p.process() in pwntools:\np = process([\"./ld-linux-x86-64.so.2\", \"--library-path\", \".\", \"./vuln\"])\nFinally, it worked! And, unsurprisingly, we get different locations for our /bin/sh and system every time we run the challenge (ASLR). I found the offsets:\nbinsh = libc + 0x1B40FA\nsystem = libc + 0x14B37\nSo first, we need to leak libc, the classic ret2plt way, puts(elf.got['puts'].\nThe Exploit Our s[112] input string starts at ebp - 128, so we start by adding 128*b'A'padding in our payload, then another 8 bytes for rbp, (since we’re on 64-bit; on 32-bit rbp is 4 bytes), then our pop rdi; ret gadget, elf.got['puts'] as our function parameter, then the elf.plt['puts'], the action function we call, and then the address of do_stuff to return to it once the function is finished.\np.sendline(b'A'*128 + b'\\x90'*8 + pop_rdi + p64(elf.got['puts']) + p64(elf.plt['puts']) + do_stuff) That looks like a libc.so.6 address! In this instance, puts is located at 0x7f89b2212787, and the address we print looks like 0x7f89b2280000, and they are clearly different, but that’s alright; We can just calculate the offset from libc to our leak with gef and problem solved.\nWe should use something like libc_puts = u64(leaked.ljust(10, b\"\\x00\")), but first get rid of the first two lines.\np.recvlines(2) leaked = p.recvline().strip().ljust(8, b\"\\x00\") leaked_puts = u64(leaked) print(hex(leaked_puts)) This however would pad it to the wrong side, and the leak would look like 0x0000007f89b228 instead of 0x007f89b2280000. So I replaced it with\np.recvlines(2) leaked = p.recvline().strip().rjust(6, b\"\\x00\").ljust(8, b\"\\x00\") leaked_puts = u64(leaked) print(hex(leaked_puts)) To add two x00s to the left, and two to the right, and we finally get the proper format for the leak.\nThe offset from libc is 0x80000, so we just subtract the offset from the leak, and we get libc!\nNow, we can calculate system and /bin/sh based on their offsets from libc, and add another payload that pops us a shell. The payload is essentially the same, but we change the function being called and its argument.\nWhat happened? Our rdi is correctly pointing to /bin/sh, but it looks like system isn’t working as expected… After closer inspection, the offset we found was to a string “system”. Oops. Let’s try looking for the actual libc function.\nThe correct way to search for a function, not a string, in gef is info functions system.\nSo the correct offset is at 0x4f4e0. But we get another EOF. Most probably, this is an alignment issue, so we can just add another ret; gadget before calling system.\nAnd we pop a shell!\nNow let’s connect remotely:\nWell… This is getting annoying, especially after having to manually look for and download the files they didn’t include and I doubt finding the missing linker was part of the challenge…\nI added a string = p.recvlines(2), print(string) to debug what’s happening, and it looks like unlike locally, the garbage data is only getting printed on the first line. So we can just change it to p.recvline() and it should be fine.\nAre you kidding me?! Since when are we working with a canary? And the address getting leaked looks like a different one than the one we were working with…\nAfter checking again, it’s because this time we get the full 8 bytes of the leak:\nSo we need to figure out what is actually getting printed, to calculate the correct offset. Some outputs are:\n0x7f3ed7b84a30\n0x7fe043473a30\n0x7fc96755ba30\n0x7f28f2774a30\n0x7fd633bf9a30\nWhat seems to be the offset here? They all seem to share the 0xa30 ending but the 4th byte differs.\nI printed the libc symbols for our libc.so.6:\nputs offset: 0x80a30 system offset: 0x4f4e0 /bin/sh offset: 0x1b40fa And would you look at that, it’s quite exactly puts’s offset - so this time it works properly, unlike when we were testing locally. So we calculate our libc based on that, but we still bump into the EOF error.\n0x7efd239b1a30 0x7efd23931000 [*] Switching to interactive mode timeout: the monitored command dumped core [*] Got EOF while reading in interactive Something’s missing; Most probably a stack alignment issue. At this point I felt like I was missing something else, and I tried to find the solution online, but everything I did appeared to be in order.\nSo what was missing? I printed the received line before every line of code, and turns out we were getting the timeout: the monitored command dumped core\\n before sending the system payload.\nFirst guess - we didn’t return into the right function, after the first payload. So let’s change it from do_stuff to main. And - finally - we did it!\nAs always, the full code can be found on my GitHub here.\n",
+  "wordCount" : "1159",
+  "inLanguage": "en",
+  "datePublished": "2025-11-30T00:00:00Z",
+  "dateModified": "2025-11-30T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/heresalibc-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Pico Here&#39;s A LIBC Writeup
+    </h1>
+    <div class="post-meta"><span title='2025-11-30 00:00:00 +0000 UTC'>November 30, 2025</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a></li>
+                <li>
+                    <a href="#finding-the-correct-system-loader" aria-label="Finding the correct system loader">Finding the correct system loader</a></li>
+                <li>
+                    <a href="#the-exploit" aria-label="The Exploit">The Exploit</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>I am once again asking for you to pwn this <strong><a href="https://play.picoctf.org/practice/challenge/179">binary</a></strong></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic1.png#center"></p>
+<p>At first glance, the <strong>vuln</strong> looks like a 64-bit executable with a buffer overflow vulnerability. And since it&rsquo;s hinted in the title, most probably a ret2libc challenge.</p>
+<p>Upon checking, only <code>NX</code> is enabled. So this should make things fairly easy for us.</p>
+<hr>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>We can quickly check if there&rsquo;s a <code>/bin/sh</code> in memory, and there it is! Along with a <code>system</code> and also <code>execve</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic2.png#center"></p>
+<p>Now, let&rsquo;s analyze the binary; there&rsquo;s some pretty weird variables in <code>.rodata</code>:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic3.png#center"></p>
+<p>They&rsquo;re used inside our <code>do_stuff()</code> loop, to calculate how much input is going to be read.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic4.png#center"></p>
+<p><code>%[^\n]</code> is a <em>scan set</em>; What is a <em>scan set</em> you might ask?</p>
+<p>Well, scan sets begin with <code>%[</code> and ends with <code>]</code>. The insides, in this case <code>^\n</code>, mean read everything except a newline. So basically, read everything until the first <code>\n</code> and store it in <code>s[112]</code>. So, classic buffer overflow.</p>
+<p>And <code>%c</code> is probably just going to store that newline that we didn&rsquo;t read.</p>
+<p>So, since we&rsquo;re working with 64-bit, let&rsquo;s find a <code>pop rdi; ret</code> gadget with <code>ropper</code>. We have one at <code>0x400913</code>.</p>
+<p>The challenge includes a <code>libc.so.6</code> to download, and a Makefile that specifies the binary will try to use the <code>./libc.so.6</code> before the system-wide libc. After installing it, and trying to run the binary, I stumbled upon this error:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">./</span>vuln
+</span></span><span style="display:flex;"><span>Inconsistency detected by ld<span style="color:#f92672">.</span>so: dl<span style="color:#f92672">-</span>call<span style="color:#f92672">-</span>libc<span style="color:#f92672">-</span>early<span style="color:#f92672">-</span>init<span style="color:#f92672">.</span>c: <span style="color:#ae81ff">37</span>: _dl_call_libc_early_init: Assertion <span style="color:#960050;background-color:#1e0010">`</span>sym <span style="color:#f92672">!=</span> NULL<span style="color:#e6db74">&#39; failed!</span>
+</span></span></code></pre></div><p>Which meant that my dynamic loader wasn&rsquo;t compatible with the challenge&rsquo;s <code>libc.so.6</code>. And they didn&rsquo;t give us a compatible dynamic loader to download.</p>
+<p>After inspecting the <code>libc.so.6</code> with <code>strings</code>, and looking for <code>GLIBC</code> to see if we find any clues, we can find <code>GNU C Library (Ubuntu GLIBC 2.27-3ubuntu1.2) stable release version 2.27.</code>.</p>
+<p>Which is an older version of the system loader, the <code>ld-2.27.so</code> one, from <code>ubuntu:18.04</code>. I&rsquo;m assuming this is a mistake in the challenge, but let&rsquo;s see if we can still solve this challenge.</p>
+<h2 id="finding-the-correct-system-loader">Finding the correct system loader<a hidden class="anchor" aria-hidden="true" href="#finding-the-correct-system-loader">#</a></h2>
+<p>After some research, looks like we need to download both <code>ld-2.27.so</code> and <code>ld-linux-x86-64.so.2</code> and place them in the same folder as <code>vuln</code>.</p>
+<p>I downloaded <code>glib27</code> <strong><a href="https://mirrors.edge.kernel.org/ubuntu/pool/main/g/glibc/">here</a></strong> found as <code>libc6_2.27-3ubuntu1_amd64.deb glibc27</code> and did this, which got our chall working again:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic5.png#center"></p>
+<p>Because we always need a specific command to run it using these libraries, we need to write this argument to <code>p.process()</code> in pwntools:</p>
+<p><code>p = process([&quot;./ld-linux-x86-64.so.2&quot;, &quot;--library-path&quot;, &quot;.&quot;, &quot;./vuln&quot;])</code></p>
+<p>Finally, it worked! And, unsurprisingly, we get different locations for our <code>/bin/sh</code> and <code>system</code> every time we run the challenge (<code>ASLR</code>). I found the offsets:</p>
+<p><code>binsh = libc + 0x1B40FA</code></p>
+<p><code>system = libc + 0x14B37</code></p>
+<p>So first, we need to leak <code>libc</code>, the classic ret2plt way, <code>puts(elf.got['puts']</code>.</p>
+<hr>
+<h2 id="the-exploit">The Exploit<a hidden class="anchor" aria-hidden="true" href="#the-exploit">#</a></h2>
+<p>Our <code>s[112]</code> input string starts at <code>ebp - 128</code>, so we start by adding <code>128*b'A'</code>padding in our payload, then another 8 bytes for <code>rbp</code>, (since we&rsquo;re on 64-bit; on 32-bit <code>rbp</code> is 4 bytes), then our <code>pop rdi; ret</code> gadget, <code>elf.got['puts']</code> as our function parameter, then the <code>elf.plt['puts']</code>, the action function we call, and then the address of <code>do_stuff</code> to return to it once the function is finished.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;A&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">128</span> 
+</span></span><span style="display:flex;"><span>         <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x90</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#f92672">+</span> pop_rdi 
+</span></span><span style="display:flex;"><span>         <span style="color:#f92672">+</span> p64(elf<span style="color:#f92672">.</span>got[<span style="color:#e6db74">&#39;puts&#39;</span>])
+</span></span><span style="display:flex;"><span>         <span style="color:#f92672">+</span> p64(elf<span style="color:#f92672">.</span>plt[<span style="color:#e6db74">&#39;puts&#39;</span>]) 
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">+</span> do_stuff)
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic6.png#center"></p>
+<p>That looks like a <code>libc.so.6</code> address! In this instance, <code>puts</code> is located at <code>0x7f89b2212787</code>, and the address we print looks like <code>0x7f89b2280000</code>, and they are clearly different, but that&rsquo;s alright; We can just calculate the offset from <code>libc</code> to our leak with <code>gef</code> and problem solved.</p>
+<p>We should use something like <code>libc_puts = u64(leaked.ljust(10, b&quot;\x00&quot;))</code>, but first get rid of the first two lines.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvlines(<span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>leaked <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recvline()<span style="color:#f92672">.</span>strip()<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">8</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>leaked_puts <span style="color:#f92672">=</span> u64(leaked)
+</span></span><span style="display:flex;"><span>print(hex(leaked_puts))
+</span></span></code></pre></div><p>This however would pad it to the wrong side, and the leak would look like <code>0x0000007f89b228</code> instead of <code>0x007f89b2280000</code>. So I replaced it with</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvlines(<span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>leaked <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recvline()<span style="color:#f92672">.</span>strip()<span style="color:#f92672">.</span>rjust(<span style="color:#ae81ff">6</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>)<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">8</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>leaked_puts <span style="color:#f92672">=</span> u64(leaked)
+</span></span><span style="display:flex;"><span>print(hex(leaked_puts))
+</span></span></code></pre></div><p>To add two <code>x00</code>s to the left, and two to the right, and we finally get the proper format for the leak.</p>
+<p>The offset from <code>libc</code> is <code>0x80000</code>, so we just subtract the offset from the leak, and we get <code>libc</code>!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic7.png#center"></p>
+<p>Now, we can calculate <code>system</code> and <code>/bin/sh</code> based on their offsets from <code>libc</code>, and add another payload that pops us a shell. The payload is essentially the same, but we change the function being called and its argument.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic8.png#center"></p>
+<p>What happened? Our <code>rdi</code> is correctly pointing to <code>/bin/sh</code>, but it looks like <code>system</code> isn&rsquo;t working as expected&hellip; After closer inspection, the offset we found was to a <em>string</em> &ldquo;system&rdquo;. Oops. Let&rsquo;s try looking for the actual <code>libc</code> function.</p>
+<p>The correct way to search for a <em>function</em>, not a string, in <code>gef</code> is <code>info functions system</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic9.png#center"></p>
+<p>So the correct offset is at <code>0x4f4e0</code>. But we get another <code>EOF</code>. Most probably, this is an alignment issue, so we can just add another <code>ret;</code> gadget before calling <code>system</code>.</p>
+<p>And we pop a shell!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic10.png#center"></p>
+<p>Now let&rsquo;s connect remotely:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic11.png#center"></p>
+<p>Well&hellip; This is getting annoying, especially after having to manually look for and download the files they didn&rsquo;t include and I doubt finding the missing linker was part of the challenge&hellip;</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic12.png#center"></p>
+<p>I added a <code>string = p.recvlines(2), print(string)</code> to debug what&rsquo;s happening, and it looks like unlike locally, the garbage data is only getting printed on the first line. So we can just change it to <code>p.recvline()</code> and it should be fine.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic13.png#center"></p>
+<p>Are you kidding me?! Since when are we working with a canary? And the address getting leaked looks like a different one than the one we were working with&hellip;</p>
+<p>After checking again, it&rsquo;s because this time we get the full 8 bytes of the leak:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic14.png#center"></p>
+<p>So we need to figure out what is actually getting printed, to calculate the correct offset. Some outputs are:</p>
+<p><code>0x7f3ed7b84a30</code></p>
+<p><code>0x7fe043473a30</code></p>
+<p><code>0x7fc96755ba30</code></p>
+<p><code>0x7f28f2774a30</code></p>
+<p><code>0x7fd633bf9a30</code></p>
+<p>What seems to be the offset here? They all seem to share the <code>0xa30</code> ending but the 4th byte differs.</p>
+<p>I printed the <code>libc</code> symbols for our <code>libc.so.6</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>puts offset: <span style="color:#ae81ff">0x80a30</span>
+</span></span><span style="display:flex;"><span>system offset: <span style="color:#ae81ff">0x4f4e0</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">/</span>bin<span style="color:#f92672">/</span>sh offset: <span style="color:#ae81ff">0x1b40fa</span>
+</span></span></code></pre></div><p>And would you look at that, it&rsquo;s quite exactly <code>puts</code>&rsquo;s offset - so this time it works properly, unlike when we were testing locally. So we calculate our <code>libc</code> based on that, but we still bump into the <code>EOF</code> error.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ae81ff">0x7efd239b1a30</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0x7efd23931000</span>
+</span></span><span style="display:flex;"><span>[<span style="color:#f92672">*</span>] Switching to interactive mode
+</span></span><span style="display:flex;"><span>timeout: the monitored command dumped core
+</span></span><span style="display:flex;"><span>[<span style="color:#f92672">*</span>] Got EOF <span style="color:#66d9ef">while</span> reading <span style="color:#f92672">in</span> interactive
+</span></span></code></pre></div><p>Something&rsquo;s missing; Most probably a stack alignment issue. At this point I felt like I was missing something else, and I tried to find the solution online, but everything I did appeared to be in order.</p>
+<p>So what <em>was</em> missing? I printed the received line before every line of code, and turns out we were getting the <code>timeout: the monitored command dumped core\n</code> <em>before</em> sending the <code>system</code> payload.</p>
+<p>First guess - we didn&rsquo;t return into the right function, after the first payload. So let&rsquo;s change it from <code>do_stuff</code> to <code>main</code>. And - <em>finally</em> - we did it!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic16.png#center"></p>
+<hr>
+<p>As always, the full code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/pico/heresalibc.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/picoctf/">PicoCTF</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/">Buffer-Overflow</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
