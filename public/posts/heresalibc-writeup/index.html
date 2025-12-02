@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto" data-theme="auto">
 
-<head><script src="/writeup-blog/livereload.js?mindelay=10&amp;v=2&amp;port=43425&amp;path=writeup-blog/livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><script src="/writeup-blog/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=writeup-blog/livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
 <title>Pico Here&#39;s A LIBC Writeup | Irina&#39;s CTF Writeups</title>
-<meta name="keywords" content="picoCTF, pwn, buffer-overflow">
+<meta name="keywords" content="picoCTF, pwn, buffer-overflow, ret2libc">
 <meta name="description" content="Challenge overview
 I am once again asking for you to pwn this binary
 
@@ -16,16 +16,16 @@ Upon checking, only NX is enabled. So this should make things fairly easy for us
 Identifying the vulnerabilities
 We can quickly check if there&rsquo;s a /bin/sh in memory, and there it is! Along with a system and also execve.">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:43425/writeup-blog/posts/heresalibc-writeup/">
+<link rel="canonical" href="http://localhost:1313/writeup-blog/posts/heresalibc-writeup/">
 <link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:43425/writeup-blog/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:43425/writeup-blog/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:43425/writeup-blog/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:43425/writeup-blog/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:43425/writeup-blog/safari-pinned-tab.svg">
+<link rel="icon" href="http://localhost:1313/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/writeup-blog/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:43425/writeup-blog/posts/heresalibc-writeup/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/writeup-blog/posts/heresalibc-writeup/">
 <noscript>
     <style>
         #theme-toggle,
@@ -83,7 +83,7 @@ We can quickly check if there&rsquo;s a /bin/sh in memory, and there it is! Alon
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:43425/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <a href="http://localhost:1313/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -109,17 +109,17 @@ We can quickly check if there&rsquo;s a /bin/sh in memory, and there it is! Alon
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:43425/writeup-blog/" title="Home">
+                <a href="http://localhost:1313/writeup-blog/" title="Home">
                     <span>Home</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:43425/writeup-blog/posts/" title="Posts">
+                <a href="http://localhost:1313/writeup-blog/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:43425/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="http://localhost:1313/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -160,17 +160,17 @@ We can quickly check if there&rsquo;s a /bin/sh in memory, and there it is! Alon
 
   <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
 <p>I am once again asking for you to pwn this <strong><a href="https://play.picoctf.org/practice/challenge/179">binary</a></strong></p>
-<p><img alt="challenge-screenshot" loading="lazy" src="pic1.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic1.png#center"></p>
 <p>At first glance, the <strong>vuln</strong> looks like a 64-bit executable with a buffer overflow vulnerability. And since it&rsquo;s hinted in the title, most probably a ret2libc challenge.</p>
 <p>Upon checking, only <code>NX</code> is enabled. So this should make things fairly easy for us.</p>
 <hr>
 <h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
 <p>We can quickly check if there&rsquo;s a <code>/bin/sh</code> in memory, and there it is! Along with a <code>system</code> and also <code>execve</code>.</p>
-<p><img alt="challenge-screenshot" loading="lazy" src="pic2.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic2.png#center"></p>
 <p>Now, let&rsquo;s analyze the binary; there&rsquo;s some pretty weird variables in <code>.rodata</code>:</p>
-<p><img alt="challenge-screenshot" loading="lazy" src="pic3.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic3.png#center"></p>
 <p>They&rsquo;re used inside our <code>do_stuff()</code> loop, to calculate how much input is going to be read.</p>
-<p><img alt="challenge-screenshot" loading="lazy" src="pic4.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic4.png#center"></p>
 <p><code>%[^\n]</code> is a <em>scan set</em>; What is a <em>scan set</em> you might ask?</p>
 <p>Well, scan sets begin with <code>%[</code> and ends with <code>]</code>. The insides, in this case <code>^\n</code>, mean read everything except a newline. So basically, read everything until the first <code>\n</code> and store it in <code>s[112]</code>. So, classic buffer overflow.</p>
 <p>And <code>%c</code> is probably just going to store that newline that we didn&rsquo;t read.</p>
@@ -184,7 +184,7 @@ We can quickly check if there&rsquo;s a /bin/sh in memory, and there it is! Alon
 <h2 id="finding-the-correct-system-loader">Finding the correct system loader<a hidden class="anchor" aria-hidden="true" href="#finding-the-correct-system-loader">#</a></h2>
 <p>After some research, looks like we need to download both <code>ld-2.27.so</code> and <code>ld-linux-x86-64.so.2</code> and place them in the same folder as <code>vuln</code>.</p>
 <p>I downloaded <code>glib27</code> <strong><a href="https://mirrors.edge.kernel.org/ubuntu/pool/main/g/glibc/">here</a></strong> found as <code>libc6_2.27-3ubuntu1_amd64.deb glibc27</code> and did this, which got our chall working again:</p>
-<p><img alt="challenge-screenshot" loading="lazy" src="pic5.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic5.png#center"></p>
 <p>Because we always need a specific command to run it using these libraries, we need to write this argument to <code>p.process()</code> in pwntools:</p>
 <p><code>p = process([&quot;./ld-linux-x86-64.so.2&quot;, &quot;--library-path&quot;, &quot;.&quot;, &quot;./vuln&quot;])</code></p>
 <p>Finally, it worked! And, unsurprisingly, we get different locations for our <code>/bin/sh</code> and <code>system</code> every time we run the challenge (<code>ASLR</code>). I found the offsets:</p>
@@ -200,7 +200,7 @@ We can quickly check if there&rsquo;s a /bin/sh in memory, and there it is! Alon
 </span></span><span style="display:flex;"><span>         <span style="color:#f92672">+</span> p64(elf<span style="color:#f92672">.</span>got[<span style="color:#e6db74">&#39;puts&#39;</span>])
 </span></span><span style="display:flex;"><span>         <span style="color:#f92672">+</span> p64(elf<span style="color:#f92672">.</span>plt[<span style="color:#e6db74">&#39;puts&#39;</span>]) 
 </span></span><span style="display:flex;"><span>        <span style="color:#f92672">+</span> do_stuff)
-</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="pic6.png#center"></p>
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic6.png#center"></p>
 <p>That looks like a <code>libc.so.6</code> address! In this instance, <code>puts</code> is located at <code>0x7f89b2212787</code>, and the address we print looks like <code>0x7f89b2280000</code>, and they are clearly different, but that&rsquo;s alright; We can just calculate the offset from <code>libc</code> to our leak with <code>gef</code> and problem solved.</p>
 <p>We should use something like <code>libc_puts = u64(leaked.ljust(10, b&quot;\x00&quot;))</code>, but first get rid of the first two lines.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
@@ -218,24 +218,24 @@ We can quickly check if there&rsquo;s a /bin/sh in memory, and there it is! Alon
 </span></span><span style="display:flex;"><span>print(hex(leaked_puts))
 </span></span></code></pre></div><p>To add two <code>x00</code>s to the left, and two to the right, and we finally get the proper format for the leak.</p>
 <p>The offset from <code>libc</code> is <code>0x80000</code>, so we just subtract the offset from the leak, and we get <code>libc</code>!</p>
-<p><img alt="challenge-screenshot" loading="lazy" src="pic7.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic7.png#center"></p>
 <p>Now, we can calculate <code>system</code> and <code>/bin/sh</code> based on their offsets from <code>libc</code>, and add another payload that pops us a shell. The payload is essentially the same, but we change the function being called and its argument.</p>
-<p><img alt="challenge-screenshot" loading="lazy" src="pic8.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic8.png#center"></p>
 <p>What happened? Our <code>rdi</code> is correctly pointing to <code>/bin/sh</code>, but it looks like <code>system</code> isn&rsquo;t working as expected&hellip; After closer inspection, the offset we found was to a <em>string</em> &ldquo;system&rdquo;. Oops. Let&rsquo;s try looking for the actual <code>libc</code> function.</p>
 <p>The correct way to search for a <em>function</em>, not a string, in <code>gef</code> is <code>info functions system</code>.</p>
-<p><img alt="challenge-screenshot" loading="lazy" src="pic9.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic9.png#center"></p>
 <p>So the correct offset is at <code>0x4f4e0</code>. But we get another <code>EOF</code>. Most probably, this is an alignment issue, so we can just add another <code>ret;</code> gadget before calling <code>system</code>.</p>
 <p>And we pop a shell!</p>
-<p><img alt="challenge-screenshot" loading="lazy" src="pic10.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic10.png#center"></p>
 <p>Now let&rsquo;s connect remotely:</p>
-<p><img alt="challenge-screenshot" loading="lazy" src="pic11.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic11.png#center"></p>
 <p>Well&hellip; This is getting annoying, especially after having to manually look for and download the files they didn&rsquo;t include and I doubt finding the missing linker was part of the challenge&hellip;</p>
-<p><img alt="challenge-screenshot" loading="lazy" src="pic12.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic12.png#center"></p>
 <p>I added a <code>string = p.recvlines(2), print(string)</code> to debug what&rsquo;s happening, and it looks like unlike locally, the garbage data is only getting printed on the first line. So we can just change it to <code>p.recvline()</code> and it should be fine.</p>
-<p><img alt="challenge-screenshot" loading="lazy" src="pic13.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic13.png#center"></p>
 <p>Are you kidding me?! Since when are we working with a canary? And the address getting leaked looks like a different one than the one we were working with&hellip;</p>
 <p>After checking again, it&rsquo;s because this time we get the full 8 bytes of the leak:</p>
-<p><img alt="challenge-screenshot" loading="lazy" src="pic14.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic14.png#center"></p>
 <p>So we need to figure out what is actually getting printed, to calculate the correct offset. Some outputs are:</p>
 <p><code>0x7f3ed7b84a30</code></p>
 <p><code>0x7fe043473a30</code></p>
@@ -256,7 +256,7 @@ We can quickly check if there&rsquo;s a /bin/sh in memory, and there it is! Alon
 </span></span></code></pre></div><p>Something&rsquo;s missing; Most probably a stack alignment issue. At this point I felt like I was missing something else, and I tried to find the solution online, but everything I did appeared to be in order.</p>
 <p>So what <em>was</em> missing? I printed the received line before every line of code, and turns out we were getting the <code>timeout: the monitored command dumped core\n</code> <em>before</em> sending the <code>system</code> payload.</p>
 <p>First guess - we didn&rsquo;t return into the right function, after the first payload. So let&rsquo;s change it from <code>do_stuff</code> to <code>main</code>. And - <em>finally</em> - we did it!</p>
-<p><img alt="challenge-screenshot" loading="lazy" src="pic16.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/heresalibc-writeup/pic16.png#center"></p>
 <hr>
 <p>As always, the full code can be found on my GitHub
 <strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/pico/heresalibc.py">here</a></strong>.</p>
@@ -266,16 +266,17 @@ We can quickly check if there&rsquo;s a /bin/sh in memory, and there it is! Alon
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:43425/writeup-blog/tags/picoctf/">PicoCTF</a></li>
-      <li><a href="http://localhost:43425/writeup-blog/tags/pwn/">Pwn</a></li>
-      <li><a href="http://localhost:43425/writeup-blog/tags/buffer-overflow/">Buffer-Overflow</a></li>
+      <li><a href="http://localhost:1313/writeup-blog/tags/picoctf/">PicoCTF</a></li>
+      <li><a href="http://localhost:1313/writeup-blog/tags/pwn/">Pwn</a></li>
+      <li><a href="http://localhost:1313/writeup-blog/tags/buffer-overflow/">Buffer-Overflow</a></li>
+      <li><a href="http://localhost:1313/writeup-blog/tags/ret2libc/">Ret2libc</a></li>
     </ul>
   </footer>
 </article>
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:43425/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+        <span>&copy; 2025 <a href="http://localhost:1313/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
 
     <span>
         Powered by

