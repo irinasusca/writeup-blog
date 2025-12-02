@@ -3,7 +3,7 @@ date = '2025-11-30'
 draft = false
 title = "Pico Here's A LIBC Writeup"
 ShowToc = true
-tags = ["picoCTF", "pwn", "buffer-overflow"]
+tags = ["picoCTF", "pwn", "buffer-overflow", "ret2libc"]
 +++
 
 ## Challenge overview

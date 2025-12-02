@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>CyberEdu on Irina&#39;s CTF Writeups</title>
+    <link>https://irinasusca.github.io/writeup-blog/tags/cyberedu/</link>
+    <description>Recent content in CyberEdu on Irina&#39;s CTF Writeups</description>
+    <generator>Hugo -- 0.146.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 02 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CyberEdu Bazooka Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/bazooka-writeup/</link>
+      <pubDate>Tue, 02 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/bazooka-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;We have a problem on the station on Mars, we suspect we would be attacked by some hackers so we put a little protection against them.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/ae81c600-347c-11eb-a2b9-a539e3b969ab?tenant=cyberedu&#34;&gt;The challenge&lt;/a&gt;&lt;/strong&gt; was proposed by BIT SENTINEL.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/bazooka-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;At first glance, the &lt;strong&gt;pwn_bazooka_bazooka&lt;/strong&gt; looks like a 64-bit executable, and I didn&amp;rsquo;t immediately notice any obvious buffer overflows or format strings. It takes a &lt;em&gt;message&lt;/em&gt; input and a &lt;em&gt;junk&lt;/em&gt; input. So let&amp;rsquo;s take a look at the binary.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
