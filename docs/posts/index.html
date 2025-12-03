@@ -152,6 +152,20 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu Buy-Cooffe Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview It’s early morning, and the caffeine hasn’t quite kicked in yet. As you sip your cup of coffee, you notice something odd – a mysterious program named cooffee is running on your system.
+At first glance, the chall looks like a 64-bit executable, and upon a buffer overflow the program immediately leaks us a libc address. We also get the libc-2.31.so to download, and that means this is the libc version our binary uses.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu Buy-Cooffe Writeup" href="https://irinasusca.github.io/writeup-blog/posts/buycooffe-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu Bazooka Writeup
     </h2>
   </header>
@@ -291,22 +305,12 @@ After analyzing the binary and renaming the variables, we notice we have a playe
   <footer class="entry-footer"><span title='2025-11-10 21:08:35 +0200 EET'>November 10, 2025</span></footer>
   <a class="entry-link" aria-label="post link to Pico Babygame03 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/babygame03-writeup/"></a>
 </article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Handoff Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview The first vuln we encounter in handoff is that it doesn’t disable NX. (Basically, this means that we can execute shellcode on the stack!)
-We are presented with a menu with 3 options:
-Add a recipient Send a message to a recipient Exit Upon trying to exit, we are prompted to give our feedback.
-Identifying the vulnerability Immediately after decompiling the binary, we notice a buffer overflow in its feedback buffer. We can also see that the value at feedback[7] gets turned to \0. However, the feedback buffer overflow is way too small for us to do anything with it, so our best bet is to find another buffer and jmp to it.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-10 21:08:35 +0200 EET'>November 10, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Handoff Writeup" href="https://irinasusca.github.io/writeup-blog/posts/handoff-writeup/"></a>
-</article>
+<footer class="page-footer">
+  <nav class="pagination">
+    <a class="next" href="https://irinasusca.github.io/writeup-blog/posts/page/2/">Next&nbsp;&nbsp;»
+    </a>
+  </nav>
+</footer>
     </main>
     
 <footer class="footer">
