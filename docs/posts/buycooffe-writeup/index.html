@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CyberEdu Buy-Cooffe Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, pwn, buffer-overflow, Ret2libc, Canary, PIE, ASLR">
+<meta name="description" content="Challenge overview
+It’s early morning, and the caffeine hasn’t quite kicked in yet. As you sip your cup of coffee, you notice something odd – a mysterious program named cooffee is running on your system.
+
+At first glance, the chall looks like a 64-bit executable, and upon a buffer overflow the program immediately leaks us a libc address. We also get the libc-2.31.so to download, and that means this is the libc version our binary uses.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/buycooffe-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/buycooffe-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/buycooffe-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="CyberEdu Buy-Cooffe Writeup">
+  <meta property="og:description" content="Challenge overview It’s early morning, and the caffeine hasn’t quite kicked in yet. As you sip your cup of coffee, you notice something odd – a mysterious program named cooffee is running on your system.
+At first glance, the chall looks like a 64-bit executable, and upon a buffer overflow the program immediately leaks us a libc address. We also get the libc-2.31.so to download, and that means this is the libc version our binary uses.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-12-03T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-12-03T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="Buffer-Overflow">
+    <meta property="article:tag" content="Ret2libc">
+    <meta property="article:tag" content="Canary">
+    <meta property="article:tag" content="PIE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CyberEdu Buy-Cooffe Writeup">
+<meta name="twitter:description" content="Challenge overview
+It’s early morning, and the caffeine hasn’t quite kicked in yet. As you sip your cup of coffee, you notice something odd – a mysterious program named cooffee is running on your system.
+
+At first glance, the chall looks like a 64-bit executable, and upon a buffer overflow the program immediately leaks us a libc address. We also get the libc-2.31.so to download, and that means this is the libc version our binary uses.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CyberEdu Buy-Cooffe Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/buycooffe-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CyberEdu Buy-Cooffe Writeup",
+  "name": "CyberEdu Buy-Cooffe Writeup",
+  "description": "Challenge overview It’s early morning, and the caffeine hasn’t quite kicked in yet. As you sip your cup of coffee, you notice something odd – a mysterious program named cooffee is running on your system.\nAt first glance, the chall looks like a 64-bit executable, and upon a buffer overflow the program immediately leaks us a libc address. We also get the libc-2.31.so to download, and that means this is the libc version our binary uses.\n",
+  "keywords": [
+    "CyberEdu", "pwn", "buffer-overflow", "Ret2libc", "Canary", "PIE", "ASLR"
+  ],
+  "articleBody": "Challenge overview It’s early morning, and the caffeine hasn’t quite kicked in yet. As you sip your cup of coffee, you notice something odd – a mysterious program named cooffee is running on your system.\nAt first glance, the chall looks like a 64-bit executable, and upon a buffer overflow the program immediately leaks us a libc address. We also get the libc-2.31.so to download, and that means this is the libc version our binary uses.\nNow, let’s take the look at the disassembled code. In main, we call coffee().\nAside from coffee(), we can see a lot functions with ROP derived names, to the left. And we can see the function getting leaked is printf.\nAnd we can see that both reads are vulnerable to buffer overflow, but printf getting leaked didn’t have anything to do with it, it was just hardcoded.\nAll the other functions seem to be empty, so they might’ve been added just so the binary has some gadgets for us to use. So we don’t even need to execute a ret2plt to leak anything, just take in the input and then calculate the right offsets.\nAfter a checksec, we find out that we have full RelRO, PIE, and NX. And most likely ALSR.\nIdentifying the vulnerabilities Since in coffee(), we have an unsanitized printf, we can also leak values from the stack with a format string vulnerability. Since we’re working with a canary, we might be able to leak it this way, and then continue on with our script.\nHere is our canary on the stack; All that’s left is to leak it in our program with a lot of %ps.\nAnd here it is! The LSB is shown in the next value, though. Now we just need to calculate the offset to it.\nSo the stack is split between the 155th value on the stack and the 156th. Let’s call the 155th value A, and the 156th value B.\nLet’s take an example so it’s easier to understand.\nA = 0x8b705c2f0bf0b500\nB = 0x8d64ecd3a212573e\ncanary = 3e8b705c2f0bf000\nAnd we consider that the first byte of A is 00, the first byte of B is 3e (little endian). What we need to do, is take A’s first byte, then skip the second (in this example, that b5), take all of the rest of its bytes (8b705c2f0bf0), and then add the first byte in B (3e).\nMy script for this was\nA = int(p.recv(18), 16) B = int(p.recv(18), 16) print(hex(A)) print(hex(B)) reconstructed = ( (B \u0026 0xff) \u003c\u003c 56 ) | ( (A \u003e\u003e 16) \u003c\u003c 8 ) | (A \u0026 0xff) #\u003c\u003c 56 -\u003e move it to bits 63-56 print(hex(reconstructed)) Here, we can see we the correct canary value, calculated from A and B! Now let’s see what the value of the canary is going to be like after we return and execute a ROP chain.\nThe exploit Before that, let’s calculate the offsets from libc to binsh and system. We might have to change them to the appropriate 2.31 versions, to solve the challenge remotely, but we’ll worry about that later.\nGreat! Now, let’s look for some pop rdi; ret gadgets, using ropper.\n0x0000000000001223: pop rdi; nop; pop rbp; ret; 0x00000000000013b3: pop rdi; ret; Oops, I forgot this chall had PIE enabled… I guess we will need to leak the binary position as well.\nLuckily, we easily stumble upon 0x55555555511e \u003c_start+46\u003e, as the 43rd value on the stack. Our pop rdi; ret gadget is at binary + 0x13b3, so at 0x55555555511e + 0x295. After double checking, it seems to check out, so we add this to our script:\nA = int(p.recv(18), 16) B = int(p.recv(18), 16) binary_leak = int(p.recv(14), 16) pop_rdi_ret = binary_leak + 0x295 print(hex(A)) print(hex(B)) print(hex(pop_rdi_ret)) Great; We might also need a ret for alignment, so let’s take care of that, just in case. The ret offset from the binary is 0x101a, so that’s 0x399 bytes off from our pop rdi; ret gadget. So we just add a ret = pop_rdi_ret - 0x399.\nNow, we can start working on our payload, and identifying where we need the canary to be placed.\nIf we look at the function again, it looks like v2 is the canary; Since it checks its content at the end of the function, and reads it from somewhere else. So the first 24 bytes are format’s, the next 8 is the canary, and then another 8 bytes for rbp. Since the fread reads 80 bytes, we need to add a bunch of nops at the end of our payload.\nAs predicted, a stack misalignment causes a SIGSEGV, so we just add another ret and…\npayload = (b'\\x90' * padding_to_canary + p64(canary) + b'\\x90' * 8 + p64(pop_rdi_ret) + p64(binsh) + p64(ret) + p64(system)) payload = payload.ljust(80, b'\\x90') We pop a shell! Now, let’s try remotely, and see what happens.\nWell, that’s not very good… Looks like their canary is at a different offset from ours. And probably so is the binary. I printed the first hundred values on the stack, and we find one inside the binary at 0x564ae94060f0. But it’s most probably a different one than what we found. And no sight of the canary yet.\nThe values I found for binary values are\n%87$p: 0x5b4de10ff0f0\n%77$p: 0x5d25d3fce040\nAnd clearly since they don’t end in the same byte as our locally discovered value, I have no clue what their offset might be. In the meantime, using blukat I found the 2.31 offsets for our ROP chain functions.\nSo all we need to do now is find the canary.\nAfter a bit more searching, we find the 11e ending binary value! At offset 39, so we can update that in our script.\nI also found some canary-looking variables this way: 0x3c9dbcb6f3282a00 0x3e5e2db58d462a00. They were both right next to each other, but I had no way of checking which one was the right one, and I felt like they were too early on. After a bit more time of searching, I found this:\nLooks familiar doesn’t it? I’m guessing it’s the same situation of the canary getting a little scrambled between the two variables, so I won’t change the logic just yet. The offsets were %113$p and %114$p.\nAnd would you look at that! It worked!\nAs always, the rest of the code can be found on my GitHub here.\n",
+  "wordCount" : "1060",
+  "inLanguage": "en",
+  "datePublished": "2025-12-03T00:00:00Z",
+  "dateModified": "2025-12-03T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/buycooffe-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      CyberEdu Buy-Cooffe Writeup
+    </h1>
+    <div class="post-meta"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a></li>
+                <li>
+                    <a href="#the-exploit" aria-label="The exploit">The exploit</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>It’s early morning, and the caffeine hasn’t quite kicked in yet. As you sip your cup of coffee, you notice something odd – a <strong><a href="https://app.cyber-edu.co/challenges/9d17bf99-ddd2-465c-b5f9-041ad6993053?tenant=cyberedu">mysterious program</a></strong> named cooffee is running on your system.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/buycooffe-writeup/pic1.png#center"></p>
+<p>At first glance, the <strong>chall</strong> looks like a 64-bit executable, and upon a buffer overflow the program immediately leaks us a <code>libc</code> address. We also get the <code>libc-2.31.so</code> to download, and that means this is the <code>libc</code> version our binary uses.</p>
+<p>Now, let&rsquo;s take the look at the disassembled code. In main, we call <code>coffee()</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/buycooffe-writeup/pic2.png#center"></p>
+<p>Aside from <code>coffee()</code>, we can see a lot functions with <code>ROP</code> derived names, to the left. And we can see the function getting leaked is <code>printf</code>.</p>
+<p>And we can see that both reads are vulnerable to buffer overflow, but <code>printf</code> getting leaked didn&rsquo;t have anything to do with it, it was just hardcoded.</p>
+<p>All the other functions seem to be empty, so they might&rsquo;ve been added just so the binary has some gadgets for us to use. So we don&rsquo;t even need to execute a <code>ret2plt</code> to leak anything, just take in the input and then calculate the right offsets.</p>
+<p>After a <code>checksec</code>, we find out that we have full <code>RelRO</code>, <code>PIE</code>, and <code>NX</code>. And most likely <code>ALSR</code>.</p>
+<hr>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>Since in <code>coffee()</code>, we have an unsanitized <code>printf</code>, we can also leak values from the stack with a format string vulnerability. Since we&rsquo;re working with a canary, we might be able to leak it this way, and then continue on with our script.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/buycooffe-writeup/pic4.png#center"></p>
+<p>Here is our canary on the stack; All that&rsquo;s left is to leak it in our program with a lot of <code>%p</code>s.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/buycooffe-writeup/pic5.png#center"></p>
+<p>And here it is! The LSB is shown in the next value, though. Now we just need to calculate the offset to it.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/buycooffe-writeup/pic6.png#center"></p>
+<p>So the stack is split between the 155th value on the stack and the 156th. Let&rsquo;s call the 155th value <code>A</code>, and the 156th value <code>B</code>.</p>
+<p>Let&rsquo;s take an example so it&rsquo;s easier to understand.</p>
+<p><code>A = 0x8b705c2f0bf0b500</code></p>
+<p><code>B = 0x8d64ecd3a212573e</code></p>
+<p><code>canary = 3e8b705c2f0bf000</code></p>
+<p>And we consider that the first byte of <code>A</code> is <code>00</code>, the first byte of <code>B</code> is <code>3e</code> (little endian). What we need to do, is take <code>A</code>&rsquo;s first byte, then skip the second (in this example, that <code>b5</code>), take all of the rest of its bytes (<code>8b705c2f0bf0</code>), and then add the first byte in <code>B</code> (<code>3e</code>).</p>
+<p>My script for this was</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>A <span style="color:#f92672">=</span> int(p<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">18</span>), <span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span>B <span style="color:#f92672">=</span> int(p<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">18</span>), <span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(hex(A))
+</span></span><span style="display:flex;"><span>print(hex(B))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>reconstructed <span style="color:#f92672">=</span> ( (B <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xff</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">56</span> ) <span style="color:#f92672">|</span> ( (A <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">16</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">8</span> ) <span style="color:#f92672">|</span> (A <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xff</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#&lt;&lt; 56 -&gt; move it to bits 63-56</span>
+</span></span><span style="display:flex;"><span>print(hex(reconstructed))
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/buycooffe-writeup/pic7.png#center"></p>
+<p>Here, we can see we the correct canary value, calculated from <code>A</code> and <code>B</code>!
+Now let&rsquo;s see what the value of the canary is going to be like after we return and execute a ROP chain.</p>
+<hr>
+<h2 id="the-exploit">The exploit<a hidden class="anchor" aria-hidden="true" href="#the-exploit">#</a></h2>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/buycooffe-writeup/pic8.png#center"></p>
+<p>Before that, let&rsquo;s calculate the offsets from <code>libc</code> to <code>binsh</code> and <code>system</code>. We might have to change them to the appropriate <code>2.31</code> versions, to solve the challenge remotely, but we&rsquo;ll worry about that later.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/buycooffe-writeup/pic9.png#center"></p>
+<p>Great! Now, let&rsquo;s look for some <code>pop rdi; ret</code> gadgets, using <code>ropper</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ae81ff">0x0000000000001223</span>: pop rdi; nop; pop rbp; ret; 
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0x00000000000013b3</span>: pop rdi; ret; 
+</span></span></code></pre></div><p>Oops, I forgot this chall had <code>PIE</code> enabled&hellip; I guess we will need to leak the binary position as well.</p>
+<p>Luckily, we easily stumble upon <code>0x55555555511e &lt;_start+46&gt;</code>, as the 43rd value on the stack. Our <code>pop rdi; ret</code> gadget is at binary + <code>0x13b3</code>, so at <code>0x55555555511e + 0x295</code>. After double checking, it seems to check out, so we add this to our script:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>A <span style="color:#f92672">=</span> int(p<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">18</span>), <span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span>B <span style="color:#f92672">=</span> int(p<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">18</span>), <span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span>binary_leak <span style="color:#f92672">=</span> int(p<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">14</span>), <span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span>pop_rdi_ret <span style="color:#f92672">=</span> binary_leak <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x295</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(hex(A))
+</span></span><span style="display:flex;"><span>print(hex(B))
+</span></span><span style="display:flex;"><span>print(hex(pop_rdi_ret))
+</span></span></code></pre></div><p>Great; We <em>might</em> also need a <code>ret</code> for alignment, so let&rsquo;s take care of that, just in case. The <code>ret</code> offset from the binary is <code>0x101a</code>, so that&rsquo;s <code>0x399</code> bytes off from our <code>pop rdi; ret</code> gadget. So we just add a <code>ret = pop_rdi_ret - 0x399</code>.</p>
+<p>Now, we can start working on our payload, and identifying where we need the canary to be placed.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/buycooffe-writeup/pic2.png#center"></p>
+<p>If we look at the function again, it looks like <code>v2</code> is the canary; Since it checks its content at the end of the function, and reads it from somewhere else. So the first 24 bytes are <code>format</code>&rsquo;s, the next 8 is the <code>canary</code>, and then another 8 bytes for <code>rbp</code>. Since the <code>fread</code> reads 80 bytes, we need to add a bunch of nops at the end of our payload.</p>
+<p>As predicted, a stack misalignment causes a <code>SIGSEGV</code>, so we just add another <code>ret</code> and&hellip;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> (<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x90</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">*</span> padding_to_canary <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>	   p64(canary) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>	   <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x90</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>	   p64(pop_rdi_ret) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>	   p64(binsh) <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>	   p64(ret) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>	   p64(system))
+</span></span><span style="display:flex;"><span>	   
+</span></span><span style="display:flex;"><span>	   
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> payload<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">80</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x90</span><span style="color:#e6db74">&#39;</span>)
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/buycooffe-writeup/pic10.png#center"></p>
+<p>We pop a shell! Now, let&rsquo;s try remotely, and see what happens.</p>
+<hr>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/buycooffe-writeup/pic11.png#center"></p>
+<p>Well, that&rsquo;s not very good&hellip; Looks like their canary is at a different offset from ours. And probably so is the binary. I printed the first hundred values on the stack, and we find one inside the binary at <code>0x564ae94060f0</code>. But it&rsquo;s most probably a different one than what we found. And no sight of the canary yet.</p>
+<p>The values I found for binary values are</p>
+<p><code>%87$p: 0x5b4de10ff0f0</code></p>
+<p><code>%77$p: 0x5d25d3fce040</code></p>
+<p>And clearly since they don&rsquo;t end in the same byte as our locally discovered value, I have no clue what their offset might be. In the meantime, using <strong><a href="https://libc.blukat.me/?q=_IO_printf%3Abc90&amp;l=libc6_2.31-0ubuntu9.10_amd64">blukat</a></strong> I found the <code>2.31</code> offsets for our ROP chain functions.</p>
+<p>So all we need to do now is find the canary.</p>
+<p>After a bit more searching, we find the <code>11e</code> ending binary value! At offset 39, so we can update that in our script.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/buycooffe-writeup/pic12.png#center"></p>
+<p>I also found some canary-looking variables this way: <code>0x3c9dbcb6f3282a00 0x3e5e2db58d462a00</code>. They were both right next to each other, but I had no way of checking which one was the right one, and I felt like they were too early on. After a bit more time of searching, I found this:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/buycooffe-writeup/pic13.png#center"></p>
+<p>Looks familiar doesn&rsquo;t it? I&rsquo;m guessing it&rsquo;s the same situation of the canary getting a little scrambled between the two variables, so I won&rsquo;t change the logic just yet. The offsets were <code>%113$p</code> and <code>%114$p</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/buycooffe-writeup/pic14.png#center"></p>
+<p>And would you look at that! It worked!</p>
+<hr>
+<p>As always, the rest of the code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/pico/buycooffe.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/">Buffer-Overflow</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/ret2libc/">Ret2libc</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/canary/">Canary</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pie/">PIE</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/aslr/">ASLR</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

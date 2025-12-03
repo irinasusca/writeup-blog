@@ -6,33 +6,54 @@
     <description>Recent content in Tags on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 02 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 03 Dec 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ASLR</title>
+      <link>https://irinasusca.github.io/writeup-blog/tags/aslr/</link>
+      <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/tags/aslr/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Buffer-Overflow</title>
       <link>https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/</link>
-      <pubDate>Tue, 02 Dec 2025 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
       <guid>https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Canary</title>
+      <link>https://irinasusca.github.io/writeup-blog/tags/canary/</link>
+      <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/tags/canary/</guid>
       <description></description>
     </item>
     <item>
       <title>CyberEdu</title>
       <link>https://irinasusca.github.io/writeup-blog/tags/cyberedu/</link>
-      <pubDate>Tue, 02 Dec 2025 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
       <guid>https://irinasusca.github.io/writeup-blog/tags/cyberedu/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>PIE</title>
+      <link>https://irinasusca.github.io/writeup-blog/tags/pie/</link>
+      <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/tags/pie/</guid>
       <description></description>
     </item>
     <item>
       <title>Pwn</title>
       <link>https://irinasusca.github.io/writeup-blog/tags/pwn/</link>
-      <pubDate>Tue, 02 Dec 2025 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
       <guid>https://irinasusca.github.io/writeup-blog/tags/pwn/</guid>
       <description></description>
     </item>
     <item>
       <title>Ret2libc</title>
       <link>https://irinasusca.github.io/writeup-blog/tags/ret2libc/</link>
-      <pubDate>Tue, 02 Dec 2025 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
       <guid>https://irinasusca.github.io/writeup-blog/tags/ret2libc/</guid>
       <description></description>
     </item>
@@ -41,20 +62,6 @@
       <link>https://irinasusca.github.io/writeup-blog/tags/picoctf/</link>
       <pubDate>Sun, 30 Nov 2025 00:00:00 +0000</pubDate>
       <guid>https://irinasusca.github.io/writeup-blog/tags/picoctf/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>PIE</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/pie/</link>
-      <pubDate>Thu, 27 Nov 2025 21:09:36 +0200</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/pie/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Canary</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/canary/</link>
-      <pubDate>Tue, 25 Nov 2025 21:09:36 +0200</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/canary/</guid>
       <description></description>
     </item>
     <item>

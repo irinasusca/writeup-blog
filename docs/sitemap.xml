@@ -8,22 +8,34 @@
     <loc>https://irinasusca.github.io/writeup-blog/posts/</loc>
     <lastmod>2025-12-10T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/aslr/</loc>
+    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/</loc>
-    <lastmod>2025-12-02T00:00:00+00:00</lastmod>
+    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/canary/</loc>
+    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/tags/cyberedu/</loc>
-    <lastmod>2025-12-02T00:00:00+00:00</lastmod>
+    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/posts/bazooka-writeup/</loc>
-    <lastmod>2025-12-02T00:00:00+00:00</lastmod>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/buycooffe-writeup/</loc>
+    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/pie/</loc>
+    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/tags/pwn/</loc>
-    <lastmod>2025-12-02T00:00:00+00:00</lastmod>
+    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/tags/ret2libc/</loc>
-    <lastmod>2025-12-02T00:00:00+00:00</lastmod>
+    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/tags/</loc>
+    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/bazooka-writeup/</loc>
     <lastmod>2025-12-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/posts/heresalibc-writeup/</loc>
@@ -34,12 +46,6 @@
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/posts/homework-writeup/</loc>
     <lastmod>2025-11-27T21:09:36+02:00</lastmod>
-  </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/tags/pie/</loc>
-    <lastmod>2025-11-27T21:09:36+02:00</lastmod>
-  </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/tags/canary/</loc>
-    <lastmod>2025-11-25T21:09:36+02:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/posts/bufferoverflow3-writeup/</loc>
     <lastmod>2025-11-25T21:09:36+02:00</lastmod>
