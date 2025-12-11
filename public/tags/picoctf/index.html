@@ -129,6 +129,27 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico Bizz Fuzz Writeup
+      <span class="entry-hint" title="Draft">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" fill="currentColor">
+          <path
+            d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z" />
+        </svg>
+      </span>
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview FizzBuzz was too easy, so I made something a little bit harder… There’s a buffer overflow in this problem, good luck finding it!
+At first glance, the vuln looks like a 32-bit executable, and the description hints that we are dealing with a buffer overflow vulnerability.
+Identifying the vulnerabilities Analyzing the binary, we can see the main function is made of a bunch of puts(&#34;buzz&#34;), puts(&#34;fizz&#34;), and a lot of function calls.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-10 00:00:00 +0000 UTC'>December 10, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Bizz Fuzz Writeup" href="http://localhost:1313/writeup-blog/posts/bizzfuzz-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Pico Here&#39;s A LIBC Writeup
     </h2>
   </header>

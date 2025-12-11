@@ -6,12 +6,12 @@
     <description>Recent content in ASLR on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 02 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 03 Dec 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/writeup-blog/tags/aslr/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>CyberEdu Buy-Cooffe Writeup</title>
       <link>http://localhost:1313/writeup-blog/posts/buycooffe-writeup/</link>
-      <pubDate>Tue, 02 Dec 2025 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/writeup-blog/posts/buycooffe-writeup/</guid>
       <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
 &lt;p&gt;It’s early morning, and the caffeine hasn’t quite kicked in yet. As you sip your cup of coffee, you notice something odd – a &lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/9d17bf99-ddd2-465c-b5f9-041ad6993053?tenant=cyberedu&#34;&gt;mysterious program&lt;/a&gt;&lt;/strong&gt; named cooffee is running on your system.&lt;/p&gt;

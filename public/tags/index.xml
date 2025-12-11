@@ -6,62 +6,76 @@
     <description>Recent content in Tags on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 02 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 10 Dec 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/writeup-blog/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Buffer-Overflow</title>
       <link>http://localhost:1313/writeup-blog/tags/buffer-overflow/</link>
-      <pubDate>Tue, 02 Dec 2025 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 10 Dec 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/writeup-blog/tags/buffer-overflow/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>CyberEdu</title>
-      <link>http://localhost:1313/writeup-blog/tags/cyberedu/</link>
-      <pubDate>Tue, 02 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/writeup-blog/tags/cyberedu/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Pwn</title>
-      <link>http://localhost:1313/writeup-blog/tags/pwn/</link>
-      <pubDate>Tue, 02 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/writeup-blog/tags/pwn/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Ret2libc</title>
-      <link>http://localhost:1313/writeup-blog/tags/ret2libc/</link>
-      <pubDate>Tue, 02 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/writeup-blog/tags/ret2libc/</guid>
       <description></description>
     </item>
     <item>
       <title>PicoCTF</title>
       <link>http://localhost:1313/writeup-blog/tags/picoctf/</link>
-      <pubDate>Sun, 30 Nov 2025 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 10 Dec 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/writeup-blog/tags/picoctf/</guid>
       <description></description>
     </item>
     <item>
-      <title>PIE</title>
-      <link>http://localhost:1313/writeup-blog/tags/pie/</link>
-      <pubDate>Thu, 27 Nov 2025 21:09:36 +0200</pubDate>
-      <guid>http://localhost:1313/writeup-blog/tags/pie/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Canary</title>
-      <link>http://localhost:1313/writeup-blog/tags/canary/</link>
-      <pubDate>Tue, 25 Nov 2025 21:09:36 +0200</pubDate>
-      <guid>http://localhost:1313/writeup-blog/tags/canary/</guid>
+      <title>Pwn</title>
+      <link>http://localhost:1313/writeup-blog/tags/pwn/</link>
+      <pubDate>Wed, 10 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/writeup-blog/tags/pwn/</guid>
       <description></description>
     </item>
     <item>
       <title>Rop</title>
       <link>http://localhost:1313/writeup-blog/tags/rop/</link>
-      <pubDate>Mon, 24 Nov 2025 21:09:36 +0200</pubDate>
+      <pubDate>Wed, 10 Dec 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/writeup-blog/tags/rop/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>ASLR</title>
+      <link>http://localhost:1313/writeup-blog/tags/aslr/</link>
+      <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/writeup-blog/tags/aslr/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Canary</title>
+      <link>http://localhost:1313/writeup-blog/tags/canary/</link>
+      <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/writeup-blog/tags/canary/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>CyberEdu</title>
+      <link>http://localhost:1313/writeup-blog/tags/cyberedu/</link>
+      <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/writeup-blog/tags/cyberedu/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>One-Gadget</title>
+      <link>http://localhost:1313/writeup-blog/tags/one-gadget/</link>
+      <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/writeup-blog/tags/one-gadget/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>PIE</title>
+      <link>http://localhost:1313/writeup-blog/tags/pie/</link>
+      <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/writeup-blog/tags/pie/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Ret2libc</title>
+      <link>http://localhost:1313/writeup-blog/tags/ret2libc/</link>
+      <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/writeup-blog/tags/ret2libc/</guid>
       <description></description>
     </item>
     <item>
