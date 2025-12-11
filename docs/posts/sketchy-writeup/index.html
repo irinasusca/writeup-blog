@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Nullctf 2025 Sketchy Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="pwn, buffer-overflow, Ret2libc, one-gadget">
+<meta name="description" content="Challenge overview
+This challenge was a part of the NullCTF 2025, made by tudor, with the description sketchy stuff going on here i&rsquo;m scared.
+Upon checking, we&rsquo;re dealing with NX, PIE and ALSR and no canary.
+Let&rsquo;s take a look at the binary. We have two interesting functions, main and handler.
+
+Inside main, firstly, we are given the address of main (located at PIE address &#43; 0x1265), so we don&rsquo;t need to bother with leaking it. Then, a pointer s gets assigned the string quite interesting stuff you&rsquo;re saying.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/sketchy-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/sketchy-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/sketchy-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Nullctf 2025 Sketchy Writeup">
+  <meta property="og:description" content="Challenge overview This challenge was a part of the NullCTF 2025, made by tudor, with the description sketchy stuff going on here i’m scared.
+Upon checking, we’re dealing with NX, PIE and ALSR and no canary.
+Let’s take a look at the binary. We have two interesting functions, main and handler.
+Inside main, firstly, we are given the address of main (located at PIE address &#43; 0x1265), so we don’t need to bother with leaking it. Then, a pointer s gets assigned the string quite interesting stuff you’re saying.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-12-11T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-12-11T00:00:00+00:00">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="Buffer-Overflow">
+    <meta property="article:tag" content="Ret2libc">
+    <meta property="article:tag" content="One-Gadget">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nullctf 2025 Sketchy Writeup">
+<meta name="twitter:description" content="Challenge overview
+This challenge was a part of the NullCTF 2025, made by tudor, with the description sketchy stuff going on here i&rsquo;m scared.
+Upon checking, we&rsquo;re dealing with NX, PIE and ALSR and no canary.
+Let&rsquo;s take a look at the binary. We have two interesting functions, main and handler.
+
+Inside main, firstly, we are given the address of main (located at PIE address &#43; 0x1265), so we don&rsquo;t need to bother with leaking it. Then, a pointer s gets assigned the string quite interesting stuff you&rsquo;re saying.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Nullctf 2025 Sketchy Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/sketchy-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Nullctf 2025 Sketchy Writeup",
+  "name": "Nullctf 2025 Sketchy Writeup",
+  "description": "Challenge overview This challenge was a part of the NullCTF 2025, made by tudor, with the description sketchy stuff going on here i\u0026rsquo;m scared.\nUpon checking, we\u0026rsquo;re dealing with NX, PIE and ALSR and no canary.\nLet\u0026rsquo;s take a look at the binary. We have two interesting functions, main and handler.\nInside main, firstly, we are given the address of main (located at PIE address + 0x1265), so we don\u0026rsquo;t need to bother with leaking it. Then, a pointer s gets assigned the string quite interesting stuff you\u0026rsquo;re saying.\n",
+  "keywords": [
+    "pwn", "buffer-overflow", "Ret2libc", "one-gadget"
+  ],
+  "articleBody": "Challenge overview This challenge was a part of the NullCTF 2025, made by tudor, with the description sketchy stuff going on here i’m scared.\nUpon checking, we’re dealing with NX, PIE and ALSR and no canary.\nLet’s take a look at the binary. We have two interesting functions, main and handler.\nInside main, firstly, we are given the address of main (located at PIE address + 0x1265), so we don’t need to bother with leaking it. Then, a pointer s gets assigned the string quite interesting stuff you’re saying.\nThen, we get to write 58 bytes into buf, which, QWORD buf[6], stores 48 bytes. So we have a 10 byte buffer overflow.\nNext, buf is searched for its first \\n and modifies it into a null byte. Afterwards, it’s checked whether the string inside buf is longer than 50 bytes, which calls a sys_exit.\nThen, puts(s) is called, and we get to write a long hexadecimal address in v6 via scanf. If the address is before printf’s address, we get to write 5 bytes in the address we chose for v6 with fgets.\nWhat handler does is just start a 100 second timer when connection is established, and when the 100 seconds pass, call puts(\"challenge timed out\") and sys_exit.\nThe exploit First of all, let’s calculate the base of our PIE.\np.recvuntil(b': ') main = int(p.recv(14), 16) So since the next move is probably leaking libc, it would be great to somehow make that puts(s) turn into a puts(putsgot). Our best bet is the 10 byte buffer overflow we have at our disposal, our of which the v8 eats 8, so that leaves us with 2 bytes.\nThe string quite interesting stuff you’re saying is located in the .rodata, as is the puts got. Since we get to overwrite only two of the LSB in s, that means the distance between the string and got isn’t that far.\nBasically, since s is a pointer to a .rodata address, we can modify it to point to another address in .rodata as long as they share everything except the last 2 bytes we can modify.\nThe only problem for now is the buffer overflow verification after that; but since it only checks for the first newline, and it turns it into a null byte aka string terminator, we can trick it into thinking our string ends early by adding a random newline inside our payload.\nHere, we can see by modifying the last byte to 0x20, we end up printing another string in the .rodata. Now let’s actually calculate the PIE offset to puts got and get that libc puts_IO!\nputsgot = PIE_base + elf.got['puts'] #we can modify the last two bytes -\u003e since the dif to got is only two bytes we get got payload = (b'\\x00'*16+b'\\n'+b'\\x00'*39 + #padding to *p p64(putsgot)[:2] ) Great! Now we can parse it and calculate our actual libc base.\nleak = p.recvn(6) puts_leak = u64(leak.ljust(8, b'\\x00')) print(hex(puts_leak)) #local puts_offset = 0x585a0 system_offset = 0x2b110 #2.40 puts_offset=0x080be0 system_offset=0x51c30 #apparently it was 2.28 puts_offset=0x87be0 I struggled a little with finding the correct version of libc, I assumed it was 2.39 for a long time but apparently it was 2.28.\nThe secret to actually solving this challenge was overwriting the right thing. Because of all the sys_exit(0) calls everywhere, and since after our v6 overwrite no function was actually being called, we can think of two things: first, we can probably use our handler function, which calls puts, and second, overwrite the puts got in a way that we can pop a shell.\nMy first idea was overwriting puts got with system, but the problem was the argument of the function would be challenge timed out, not /bin/sh. Same thing with execve. The solution here was using a one_gadget. We can look for one in our given libc.so.6 like so:\nThe one I went with was 0xef4ce, since it seemed like the most promising. So since it’s basically like a gadget except for libc, the actual address of it would be libc base + one_gadget.\nAlright, but after modifying the address with our gadget, the binary immediately calls sys_exit and we don’t get that puts caused by the time out, so what can we do?\nWell, since the program will wait until our full fgets input to actually call the sys_exit in main, we can do both at the same time.\nBy this I mean that if we only give some of the 5 bytes in fgets, let’s say 3 is enough, and then we wait until the alarm starts, it will end our fgets early, make that overwrite with the 3 bytes we gave it (should be enough, since puts and our gadget share the same first 5 bytes), and call puts (now our shell).\naddr_putsgot = hex(putsgot)[2:].encode() print(addr_putsgot) p.sendline(addr_putsgot) execve = 0xef4ce #execve = 0xef52b one_gadget = libc + execve low3 = p64(one_gadget)[:3] p.send(low3) #now just wait for the alarm After waiting 100 seconds, we pop a shell, and we get the flag!\nAs always, the full code can be found on my GitHub here.\n",
+  "wordCount" : "849",
+  "inLanguage": "en",
+  "datePublished": "2025-12-11T00:00:00Z",
+  "dateModified": "2025-12-11T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/sketchy-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Nullctf 2025 Sketchy Writeup
+    </h1>
+    <div class="post-meta"><span title='2025-12-11 00:00:00 +0000 UTC'>December 11, 2025</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#the-exploit" aria-label="The exploit">The exploit</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>This challenge was a part of the NullCTF 2025, made by tudor, with the description <em>sketchy stuff going on here i&rsquo;m scared</em>.</p>
+<p>Upon checking, we&rsquo;re dealing with <code>NX</code>, <code>PIE</code> and <code>ALSR</code> and no canary.</p>
+<p>Let&rsquo;s take a look at the binary. We have two interesting functions, <code>main</code> and <code>handler</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/sketchy-writeup/pic1.png#center"></p>
+<p>Inside <code>main</code>, firstly, we are given the address of <code>main</code> (located at PIE address + <code>0x1265</code>), so we don&rsquo;t need to bother with leaking it. Then, a pointer <code>s</code> gets assigned the string <em>quite interesting stuff you&rsquo;re saying</em>.</p>
+<p>Then, we  get to write 58 bytes into <code>buf</code>, which, <code>QWORD buf[6]</code>, stores 48 bytes. So we have a 10 byte buffer overflow.</p>
+<p>Next, <code>buf</code> is searched for its first <code>\n</code> and modifies it into a null byte. Afterwards, it&rsquo;s checked whether the string inside <code>buf</code> is longer than 50 bytes, which calls a <code>sys_exit</code>.</p>
+<p>Then, <code>puts(s)</code> is called, and we get to write a long hexadecimal address in <code>v6</code> via <code>scanf</code>. If the address is before <code>printf</code>&rsquo;s address, we get to write 5 bytes in the address we chose for <code>v6</code> with <code>fgets</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/sketchy-writeup/pic2.png#center"></p>
+<p>What <code>handler</code> does is just start a 100 second timer when connection is established, and when the 100 seconds pass, call <code>puts(&quot;challenge timed out&quot;)</code> and <code>sys_exit</code>.</p>
+<hr>
+<h2 id="the-exploit">The exploit<a hidden class="anchor" aria-hidden="true" href="#the-exploit">#</a></h2>
+<p>First of all, let&rsquo;s calculate the base of our PIE.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;: &#39;</span>)
+</span></span><span style="display:flex;"><span>main <span style="color:#f92672">=</span> int(p<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">14</span>), <span style="color:#ae81ff">16</span>)
+</span></span></code></pre></div><p>So since the next move is probably leaking <code>libc</code>, it would be great to somehow make that <code>puts(s)</code> turn into a <code>puts(putsgot)</code>. Our best bet is the 10 byte buffer overflow we have at our disposal, our of which the <code>v8</code> eats 8, so that leaves us with 2 bytes.</p>
+<p>The string <em>quite interesting stuff you&rsquo;re saying</em> is located in the <code>.rodata</code>, as is the puts got. Since we get to overwrite only two of the LSB in <code>s</code>, that means the distance between the string and got isn&rsquo;t that far.</p>
+<p>Basically, since <code>s</code> is a pointer to a <code>.rodata</code> address, we can modify it to point to another address in <code>.rodata</code> as long as they share everything except the last 2 bytes we can modify.</p>
+<p>The only problem for now is the buffer overflow verification after that; but since it only checks for the first newline, and it turns it into a null byte aka string terminator, we can trick it into thinking our string ends early by adding a random newline inside our payload.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/sketchy-writeup/pic3.png#center"></p>
+<p>Here, we can see by modifying the last byte to <code>0x20</code>, we end up printing another string in the <code>.rodata</code>. Now let&rsquo;s actually calculate the PIE offset to puts got and get that libc <code>puts_IO</code>!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>putsgot <span style="color:#f92672">=</span> PIE_base <span style="color:#f92672">+</span> elf<span style="color:#f92672">.</span>got[<span style="color:#e6db74">&#39;puts&#39;</span>]
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#we can modify the last two bytes -&gt; since the dif to got is only two bytes we get got</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> (<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">16</span><span style="color:#f92672">+</span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">+</span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">39</span> <span style="color:#f92672">+</span> <span style="color:#75715e">#padding to *p</span>
+</span></span><span style="display:flex;"><span>		p64(putsgot)[:<span style="color:#ae81ff">2</span>] )
+</span></span></code></pre></div><p>Great! Now we can parse it and calculate our actual libc base.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>leak <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recvn(<span style="color:#ae81ff">6</span>)
+</span></span><span style="display:flex;"><span>puts_leak <span style="color:#f92672">=</span> u64(leak<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">8</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#39;</span>))
+</span></span><span style="display:flex;"><span>print(hex(puts_leak))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#local</span>
+</span></span><span style="display:flex;"><span>puts_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x585a0</span>
+</span></span><span style="display:flex;"><span>system_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x2b110</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#2.40</span>
+</span></span><span style="display:flex;"><span>puts_offset<span style="color:#f92672">=</span><span style="color:#ae81ff">0x080be0</span>
+</span></span><span style="display:flex;"><span>system_offset<span style="color:#f92672">=</span><span style="color:#ae81ff">0x51c30</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#apparently it was 2.28</span>
+</span></span><span style="display:flex;"><span>puts_offset<span style="color:#f92672">=</span><span style="color:#ae81ff">0x87be0</span>
+</span></span></code></pre></div><p>I struggled a little with finding the correct version of libc, I assumed it was 2.39 for a long time but apparently it was 2.28.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/sketchy-writeup/pic4.png#center"></p>
+<hr>
+<p>The secret to actually solving this challenge was overwriting the right thing. Because of all the <code>sys_exit(0)</code> calls everywhere, and since after our <code>v6</code> overwrite no function was actually being called, we can think of two things: first, we can probably use our <code>handler</code> function, which calls <code>puts</code>, and second, overwrite the puts got in a way that we can pop a shell.</p>
+<p>My first idea was overwriting puts got with <code>system</code>, but the problem was the argument of the function would be <em>challenge timed out</em>, not <em>/bin/sh</em>. Same thing with <code>execve.</code> The solution here was using a <code>one_gadget</code>. We can look for one in our given <code>libc.so.6</code> like so:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/sketchy-writeup/pic5.png#center"></p>
+<p>The one I went with was <code>0xef4ce</code>, since it seemed like the most promising. So since it&rsquo;s basically like a gadget except for libc, the actual address of it would be libc base + one_gadget.</p>
+<p>Alright, but after modifying the address with our gadget, the binary immediately calls <code>sys_exit</code> and we don&rsquo;t get that <code>puts</code> caused by the time out, so what can we do?</p>
+<p>Well, since the program will wait until our full <code>fgets</code> input to actually call the <code>sys_exit</code> in main, we can do both at the same time.</p>
+<p>By this I mean that if we only give some of the 5 bytes in <code>fgets</code>, let&rsquo;s say 3 is enough, and then we wait until the alarm starts, it will end our <code>fgets</code> early, make that overwrite with the 3 bytes we gave it (should be enough, since <code>puts</code> and our gadget share the same first 5 bytes), and call <code>puts</code> (now our shell).</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>addr_putsgot <span style="color:#f92672">=</span> hex(putsgot)[<span style="color:#ae81ff">2</span>:]<span style="color:#f92672">.</span>encode()
+</span></span><span style="display:flex;"><span>print(addr_putsgot)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(addr_putsgot)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>execve <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xef4ce</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#execve = 0xef52b</span>
+</span></span><span style="display:flex;"><span>one_gadget <span style="color:#f92672">=</span> libc <span style="color:#f92672">+</span> execve
+</span></span><span style="display:flex;"><span>low3 <span style="color:#f92672">=</span> p64(one_gadget)[:<span style="color:#ae81ff">3</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>send(low3)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#now just wait for the alarm</span>
+</span></span></code></pre></div><p>After waiting 100 seconds, we pop a shell, and we get the flag!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/sketchy-writeup/win.png#center"></p>
+<hr>
+<p>As always, the full code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/nullctf2025/sketchy.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/">Buffer-Overflow</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/ret2libc/">Ret2libc</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/one-gadget/">One-Gadget</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

@@ -1,5 +1,5 @@
 +++
-date = '2025-12-10'
+date = '2026-12-10'
 draft = true
 title = 'Pico Bizz Fuzz Writeup'
 ShowToc = true

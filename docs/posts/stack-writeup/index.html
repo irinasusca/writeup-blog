@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CyberEdu Stack Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, pwn">
+<meta name="description" content="Challenge overview
+You can&rsquo;t run shellcode if all registers are 0, right?
+
+Our binary main is a 64-bit executable with an obvious buffer overflow vulnerability. Let&rsquo;s take a look at it using a disassembler.
+
+We only have one function, main, which mmaps dest, copies 3 bytes of what&rsquo;s inside &amp;unk_2027 into dest, then lets us write 0x1000 bytes into dest&#43;3. That means our buffer overflow is only 3 bytes, though.  Afterwards, it executes this assembly shellcode:">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/stack-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/stack-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/stack-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="CyberEdu Stack Writeup">
+  <meta property="og:description" content="Challenge overview You can’t run shellcode if all registers are 0, right?
+Our binary main is a 64-bit executable with an obvious buffer overflow vulnerability. Let’s take a look at it using a disassembler.
+We only have one function, main, which mmaps dest, copies 3 bytes of what’s inside &amp;unk_2027 into dest, then lets us write 0x1000 bytes into dest&#43;3. That means our buffer overflow is only 3 bytes, though. Afterwards, it executes this assembly shellcode:">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-12-03T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-12-03T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Pwn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CyberEdu Stack Writeup">
+<meta name="twitter:description" content="Challenge overview
+You can&rsquo;t run shellcode if all registers are 0, right?
+
+Our binary main is a 64-bit executable with an obvious buffer overflow vulnerability. Let&rsquo;s take a look at it using a disassembler.
+
+We only have one function, main, which mmaps dest, copies 3 bytes of what&rsquo;s inside &amp;unk_2027 into dest, then lets us write 0x1000 bytes into dest&#43;3. That means our buffer overflow is only 3 bytes, though.  Afterwards, it executes this assembly shellcode:">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CyberEdu Stack Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/stack-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CyberEdu Stack Writeup",
+  "name": "CyberEdu Stack Writeup",
+  "description": "Challenge overview You can\u0026rsquo;t run shellcode if all registers are 0, right?\nOur binary main is a 64-bit executable with an obvious buffer overflow vulnerability. Let\u0026rsquo;s take a look at it using a disassembler.\nWe only have one function, main, which mmaps dest, copies 3 bytes of what\u0026rsquo;s inside \u0026amp;unk_2027 into dest, then lets us write 0x1000 bytes into dest+3. That means our buffer overflow is only 3 bytes, though. Afterwards, it executes this assembly shellcode:\n",
+  "keywords": [
+    "CyberEdu", "pwn"
+  ],
+  "articleBody": "Challenge overview You can’t run shellcode if all registers are 0, right?\nOur binary main is a 64-bit executable with an obvious buffer overflow vulnerability. Let’s take a look at it using a disassembler.\nWe only have one function, main, which mmaps dest, copies 3 bytes of what’s inside \u0026unk_2027 into dest, then lets us write 0x1000 bytes into dest+3. That means our buffer overflow is only 3 bytes, though. Afterwards, it executes this assembly shellcode:\n__asm { vpxord zmm0, zmm0, zmm0 vmovdqa64 zmm1, zmm0 vmovdqa64 zmm2, zmm0 vmovdqa64 zmm3, zmm0 vmovdqa64 zmm4, zmm0 vmovdqa64 zmm5, zmm0 vmovdqa64 zmm6, zmm0 vmovdqa64 zmm7, zmm0 vmovdqa64 zmm8, zmm0 vmovdqa64 zmm9, zmm0 vmovdqa64 zmm10, zmm0 vmovdqa64 zmm11, zmm0 vmovdqa64 zmm12, zmm0 vmovdqa64 zmm13, zmm0 vmovdqa64 zmm14, zmm0 vmovdqa64 zmm15, zmm0 vmovdqa64 zmm16, zmm0 vmovdqa64 zmm17, zmm0 vmovdqa64 zmm18, zmm0 vmovdqa64 zmm19, zmm0 vmovdqa64 zmm20, zmm0 vmovdqa64 zmm21, zmm0 vmovdqa64 zmm22, zmm0 vmovdqa64 zmm23, zmm0 vmovdqa64 zmm24, zmm0 vmovdqa64 zmm25, zmm0 vmovdqa64 zmm26, zmm0 vmovdqa64 zmm27, zmm0 vmovdqa64 zmm28, zmm0 vmovdqa64 zmm29, zmm0 vmovdqa64 zmm30, zmm0 vmovdqa64 zmm31, zmm0 jmp rax } What this chunk of shellcode does is, as the challenge description suggests, clears all the zmm registers. So, basically, turn everything to 0.\nIdentifying the vulnerabilities We don’t need to worry about a canary, but the binary does have NX and PIE enabled.\nThe value at \u0026unk_2027 is 0xc03148, after inspecting with gdb.\nOkay, so what seems interesting is the jmp rax at the end of the asm instructions. Most likely, the return of read will be stored in rax, after the read. So let’s set a breakpoint inside main, before the asm code, to see what rax looks like.\nInteresting! This looks like dest, the 3 bytes inside \u0026unk_2027, and the rest of our string! So jmp rax will jump to dest, to our input - problem is, it has to look like 0xa.....c03148. So what can we do with this? It’s already pretty bad, the a really ruins it (the newline).\nWhat’s more, the program terminates with SIGILL before we even reach the jmp rax. This might be an us-problem though.\nI found that we can get rid of the a in our payload by completely ljusting the dest (4096 bytes) with null bytes, which causes the a to be appended in those 3 bytes that aren’t a part of dest. So that solves the newline problem.\nAs expected, their program doesn’t crash, and probably executes the jmp rax. That’s settled, so let’s go back to debugging.\nSomething important - dest is stored in rwx data - this means we can execute code inside dest. And since my program crashes really early on, it’s possible that the rax we see to not be accurate, so that it might not point to dest in the actual remote binary.\nAlright, so that means that these bytes - 0xc03148 - are actually being interpreted as shellcode! And 0xc03148 - 48 31 c0 - as opcode is xor rax, rax! Looks right! So we just need to add a payload here. Unfortunately, we can’t really test locally, so we can’t debug properly.\nMy idea was a payload like this:\nshellcode = b'\\x90'*8+ asm(shellcraft.sh()) payload = shellcode.ljust(4096, b'\\x90') print(payload) But remotely, we keep getting EOF. After a bit of research, turns out the challenge is broken, and the solution was something along these lines.\n",
+  "wordCount" : "559",
+  "inLanguage": "en",
+  "datePublished": "2025-12-03T00:00:00Z",
+  "dateModified": "2025-12-03T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/stack-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      CyberEdu Stack Writeup
+    </h1>
+    <div class="post-meta"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>You can&rsquo;t run shellcode if all registers are 0, <strong><a href="https://app.cyber-edu.co/challenges/cd88b0e0-44a2-11ed-8a0d-17ff1fb32f1f?tenant=cyberedu">right</a></strong>?</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/stack-writeup/pic1.png#center"></p>
+<p>Our binary <strong>main</strong> is a 64-bit executable with an obvious buffer overflow vulnerability. Let&rsquo;s take a look at it using a disassembler.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/stack-writeup/pic2.png#center"></p>
+<p>We only have one function, <code>main</code>, which <code>mmap</code>s <code>dest</code>, copies 3 bytes of what&rsquo;s inside <code>&amp;unk_2027</code> into <code>dest</code>, then lets us write 0x1000 bytes into <code>dest+3</code>. That means our buffer overflow is only 3 bytes, though.  Afterwards, it executes this assembly shellcode:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>__asm
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    vpxord  zmm0, zmm0, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm1, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm2, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm3, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm4, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm5, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm6, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm7, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm8, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm9, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm10, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm11, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm12, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm13, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm14, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm15, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm16, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm17, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm18, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm19, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm20, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm21, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm22, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm23, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm24, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm25, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm26, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm27, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm28, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm29, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm30, zmm0
+</span></span><span style="display:flex;"><span>    vmovdqa64 zmm31, zmm0
+</span></span><span style="display:flex;"><span>    jmp     rax
+</span></span><span style="display:flex;"><span>  }
+</span></span></code></pre></div><p>What this chunk of shellcode does is, as the challenge description suggests, <em>clears all the zmm registers</em>. So, basically, turn everything to 0.</p>
+<hr>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>We don&rsquo;t need to worry about a canary, but the binary does have <code>NX</code> and <code>PIE</code> enabled.</p>
+<p>The value at <code>&amp;unk_2027</code> is <code>0xc03148</code>, after inspecting with <code>gdb</code>.</p>
+<p>Okay, so what seems interesting is the <code>jmp rax</code> at the end of the asm instructions. Most likely, the return of <code>read</code> will be stored in <code>rax</code>, after the <code>read</code>. So let&rsquo;s set a breakpoint inside <code>main</code>, before the asm code, to see what <code>rax</code> looks like.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/stack-writeup/pic3.png#center"></p>
+<p>Interesting! This looks like <code>dest</code>, the 3 bytes inside <code>&amp;unk_2027</code>, and the rest of our string! So <code>jmp rax</code> will jump to <code>dest</code>, to our input - problem is, it has to look like
+<code>0xa.....c03148</code>. So what can we do with this? It&rsquo;s already pretty bad, the <code>a</code> really ruins it (the newline).</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/stack-writeup/pic4.png#center"></p>
+<p>What&rsquo;s more, the program terminates with <code>SIGILL</code> before we even reach the <code>jmp rax</code>. This might be an us-problem though.</p>
+<p>I found that we can get rid of the <code>a</code> in our payload by completely <code>ljusting</code> the <code>dest</code> (4096 bytes) with null bytes, which causes the <code>a</code> to be appended <em>in</em> those 3 bytes that aren&rsquo;t a part of <code>dest</code>. So that solves the newline problem.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/stack-writeup/pic5.png#center"></p>
+<p>As expected, their program doesn&rsquo;t crash, and probably executes the <code>jmp rax</code>. That&rsquo;s settled, so let&rsquo;s go back to debugging.</p>
+<p>Something important - <code>dest</code> is stored in <code>rwx</code> data - this means we can execute code inside <code>dest</code>. And since my program crashes really early on, it&rsquo;s possible that the <code>rax</code> we see to not be accurate, so that it might not point to <code>dest</code> in the actual remote binary.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/stack-writeup/pic6.png#center"></p>
+<p>Alright, so that means that these bytes - <code>0xc03148</code> - are actually being interpreted as shellcode! And <code>0xc03148</code> - <code>48 31 c0</code> - as opcode is <code>xor rax, rax</code>! Looks right! So we just need to add a payload here. Unfortunately, we can&rsquo;t really test locally, so we can&rsquo;t debug properly.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/stack-writeup/pic7.png#center"></p>
+<p>My idea was a payload like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>shellcode <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x90</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span><span style="color:#f92672">+</span> asm(shellcraft<span style="color:#f92672">.</span>sh())
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> shellcode<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">4096</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x90</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>print(payload)
+</span></span></code></pre></div><p>But remotely, we keep getting <code>EOF</code>. After a bit of research, turns out the challenge is broken, and the solution was something along these lines.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

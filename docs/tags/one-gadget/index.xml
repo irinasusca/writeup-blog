@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>One-Gadget on Irina&#39;s CTF Writeups</title>
+    <link>https://irinasusca.github.io/writeup-blog/tags/one-gadget/</link>
+    <description>Recent content in One-Gadget on Irina&#39;s CTF Writeups</description>
+    <generator>Hugo -- 0.146.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 11 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://irinasusca.github.io/writeup-blog/tags/one-gadget/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Nullctf 2025 Sketchy Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/sketchy-writeup/</link>
+      <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/sketchy-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;This challenge was a part of the NullCTF 2025, made by tudor, with the description &lt;em&gt;sketchy stuff going on here i&amp;rsquo;m scared&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Upon checking, we&amp;rsquo;re dealing with &lt;code&gt;NX&lt;/code&gt;, &lt;code&gt;PIE&lt;/code&gt; and &lt;code&gt;ALSR&lt;/code&gt; and no canary.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s take a look at the binary. We have two interesting functions, &lt;code&gt;main&lt;/code&gt; and &lt;code&gt;handler&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/sketchy-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Inside &lt;code&gt;main&lt;/code&gt;, firstly, we are given the address of &lt;code&gt;main&lt;/code&gt; (located at PIE address + &lt;code&gt;0x1265&lt;/code&gt;), so we don&amp;rsquo;t need to bother with leaking it. Then, a pointer &lt;code&gt;s&lt;/code&gt; gets assigned the string &lt;em&gt;quite interesting stuff you&amp;rsquo;re saying&lt;/em&gt;.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
