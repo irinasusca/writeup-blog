@@ -9,7 +9,28 @@
     <lastmod>2026-12-10T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/</loc>
-    <lastmod>2025-12-11T00:00:00+00:00</lastmod>
+    <lastmod>2025-12-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/cyberedu/</loc>
+    <lastmod>2025-12-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/canyoujump-writeup/</loc>
+    <lastmod>2025-12-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/jop/</loc>
+    <lastmod>2025-12-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/pwn/</loc>
+    <lastmod>2025-12-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/ret2libc/</loc>
+    <lastmod>2025-12-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/</loc>
+    <lastmod>2025-12-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/vianuctf-writeup/</loc>
+    <lastmod>2025-12-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/posts/sketchy-writeup/</loc>
     <lastmod>2025-12-11T00:00:00+00:00</lastmod>
@@ -17,22 +38,10 @@
     <loc>https://irinasusca.github.io/writeup-blog/tags/one-gadget/</loc>
     <lastmod>2025-12-11T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/tags/pwn/</loc>
-    <lastmod>2025-12-11T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/tags/ret2libc/</loc>
-    <lastmod>2025-12-11T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/tags/</loc>
-    <lastmod>2025-12-11T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/tags/aslr/</loc>
     <lastmod>2025-12-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/tags/canary/</loc>
-    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/tags/cyberedu/</loc>
     <lastmod>2025-12-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/posts/buycooffe-writeup/</loc>

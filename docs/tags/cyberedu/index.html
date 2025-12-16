@@ -137,6 +137,38 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu can-you-jump Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview How far can you jump?
+Our binary, can-you-jump, is a 64-bit executable with no protections except NX. The challenge also gives us libc-2.27.so to use.
+Alright, pretty nice, we get a libc leak for printf, and immediately stumble upon a buffer overflow.
+Identifying the vulnerabilities Let’s take a look at the binary next.
+Pretty straight-forward, the address of printf is printed, using dlsym (a function that just returns the address of a symbol, this case printf). Then, the function returns a read in buf[56] of 256 bytes, so that’s a 200 byte buffer overflow. I’m guessing we can find a /bin/sh and system in our libc. Since I can’t be bothered to install the .so, we can just test remotely and find the offsets online.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-16 00:00:00 +0000 UTC'>December 16, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu can-you-jump Writeup" href="https://irinasusca.github.io/writeup-blog/posts/canyoujump-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">VianuCTF 2025
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Introduction This is my writeup for the challenges I solved during the VianuCTF 2025 edition, big thank you to the challenge writers, organizers and everyone else involved in this! Was a fun ctf overall, unluckily overlapping with the math finals simulation, so I only had about three hours left to try solving some challenges.
+Enough talking, here is what I solved:
+Christmas PIE - pwn As spoiled by the title, we’re dealing with a 64-bit PIE, and we get the address of main upon running the binary.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-16 00:00:00 +0000 UTC'>December 16, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to VianuCTF 2025" href="https://irinasusca.github.io/writeup-blog/posts/vianuctf-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu Buy-Cooffe Writeup
     </h2>
   </header>
