@@ -3,7 +3,7 @@ date = '2025-12-16'
 draft = false
 title = "VianuCTF 2025"
 ShowToc = true
-tags = ["CyberEdu", "pwn", "buffer-overflow", "Ret2libc", "JOP"]
+tags = ["pwn", "buffer-overflow", "FSOP", "ctf"]
 +++
 
 ## Introduction
