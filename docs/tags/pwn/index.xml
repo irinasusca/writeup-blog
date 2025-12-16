@@ -6,8 +6,36 @@
     <description>Recent content in Pwn on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 11 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 16 Dec 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/tags/pwn/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CyberEdu can-you-jump Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/canyoujump-writeup/</link>
+      <pubDate>Tue, 16 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/canyoujump-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;How far can you &lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/d9e1d410-0719-11ec-a889-9149e5df5aaf?tenant=cyberedu&#34;&gt;jump?&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Our binary, &lt;strong&gt;can-you-jump&lt;/strong&gt;, is a 64-bit executable with no protections except &lt;code&gt;NX&lt;/code&gt;. The challenge also gives us &lt;code&gt;libc-2.27.so&lt;/code&gt; to use.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/canyoujump-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Alright, pretty nice, we get a &lt;code&gt;libc&lt;/code&gt; leak for &lt;code&gt;printf&lt;/code&gt;, and immediately stumble upon a buffer overflow.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;Let&amp;rsquo;s take a look at the binary next.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/canyoujump-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Pretty straight-forward, the address of &lt;code&gt;printf&lt;/code&gt; is printed, using &lt;code&gt;dlsym&lt;/code&gt; (a function that just returns the address of a symbol, this case &lt;code&gt;printf&lt;/code&gt;). Then, the function returns a &lt;code&gt;read&lt;/code&gt; in &lt;code&gt;buf[56]&lt;/code&gt; of 256 bytes, so that&amp;rsquo;s a 200 byte buffer overflow. I&amp;rsquo;m guessing we can find a &lt;code&gt;/bin/sh&lt;/code&gt; and &lt;code&gt;system&lt;/code&gt; in our &lt;code&gt;libc&lt;/code&gt;. Since I can&amp;rsquo;t be bothered to install the &lt;code&gt;.so&lt;/code&gt;, we can just test remotely and find the offsets online.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>VianuCTF 2025</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/vianuctf-writeup/</link>
+      <pubDate>Tue, 16 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/vianuctf-writeup/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;This is my writeup for the challenges I solved during the VianuCTF 2025 edition, big thank you to the challenge writers, organizers and everyone else involved in this! Was a fun ctf overall, unluckily overlapping with the math finals simulation, so I only had about three hours left to try solving some challenges.&lt;/p&gt;
+&lt;p&gt;Enough talking, here is what I solved:&lt;/p&gt;
+&lt;h2 id=&#34;christmas-pie---pwn&#34;&gt;Christmas PIE - pwn&lt;/h2&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/vianuctf-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;As spoiled by the title, we&amp;rsquo;re dealing with a 64-bit PIE, and we get the address of &lt;code&gt;main&lt;/code&gt; upon running the binary.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Nullctf 2025 Sketchy Writeup</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/sketchy-writeup/</link>

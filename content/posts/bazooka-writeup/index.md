@@ -147,4 +147,4 @@ It worked, first try! I'm just glad we didn't have to go through 5 different lib
 
 
 As always, the rest of the code can be found on my GitHub 
-**[here](https://github.com/irinasusca/ctf-writeups/blob/main/pico/bazooka.py)**.
+**[here](https://github.com/irinasusca/ctf-writeups/blob/main/cyberedu/bazooka.py)**.

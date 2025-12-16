@@ -169,4 +169,4 @@ And would you look at that! It worked!
 ---
 
 As always, the rest of the code can be found on my GitHub 
-**[here](https://github.com/irinasusca/ctf-writeups/blob/main/pico/buycooffe.py)**.
+**[here](https://github.com/irinasusca/ctf-writeups/blob/main/cyberedu/buycooffe.py)**.
