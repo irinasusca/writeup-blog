@@ -8,13 +8,25 @@
     <loc>https://irinasusca.github.io/writeup-blog/posts/</loc>
     <lastmod>2026-12-10T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/cyberedu/</loc>
+    <lastmod>2025-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/functioncheck-writeup/</loc>
+    <lastmod>2025-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/format-string/</loc>
+    <lastmod>2025-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/pwn/</loc>
+    <lastmod>2025-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/</loc>
+    <lastmod>2025-12-21T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/</loc>
     <lastmod>2025-12-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/tags/ctf/</loc>
-    <lastmod>2025-12-16T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/tags/cyberedu/</loc>
     <lastmod>2025-12-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/posts/canyoujump-writeup/</loc>
@@ -26,13 +38,7 @@
     <loc>https://irinasusca.github.io/writeup-blog/tags/jop/</loc>
     <lastmod>2025-12-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/tags/pwn/</loc>
-    <lastmod>2025-12-16T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/tags/ret2libc/</loc>
-    <lastmod>2025-12-16T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/tags/</loc>
     <lastmod>2025-12-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/posts/vianuctf-writeup/</loc>
