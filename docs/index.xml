@@ -6,8 +6,32 @@
     <description>Recent content on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 21 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 23 Dec 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CyberEdu aptssh Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/aptssh-writeup/</link>
+      <pubDate>Tue, 23 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/aptssh-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Someone backdoored us with a strange PAM module, and now anyone can &lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/9d17be93-349a-4de8-acb8-045c03fe7b5b?tenant=cyberedu&#34;&gt;log in&lt;/a&gt;&lt;/strong&gt; with aptssh:aptssh. I think they were able to get our flag.&lt;/p&gt;
+&lt;p&gt;First of all, what is a &lt;em&gt;PAM module&lt;/em&gt;? Well, PAM stands for Pluggable Authentification Modules, and it&amp;rsquo;s how Linux decides how we can log in, how passwords are checked, and so on.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/aptssh-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;So, nc isn&amp;rsquo;t going to be how we solve this. Instead, we&amp;rsquo;re going to login using &lt;code&gt;ssh&lt;/code&gt; like so:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu Ropper Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/ropper-writeup/</link>
+      <pubDate>Mon, 22 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/ropper-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Your message is at maximum two stages from the flag. Find the bugs in &lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/55a544a0-7f21-11ea-8a5d-9b7c67823f77?tenant=cyberedu&#34;&gt;this binary&lt;/a&gt;&lt;/strong&gt; file and you will know what to do.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/ropper-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;As the name &lt;em&gt;ropper&lt;/em&gt; suggests, and the buffer overflow shown in the image above, we&amp;rsquo;re dealing with a ret2something here.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s take a look at the binary. We have a &lt;code&gt;main&lt;/code&gt; and another secondary function being used here.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/ropper-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;main&lt;/code&gt; calls the second functions and passes, as arguments, the string getting printed and 0.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>CyberEdu function-check Writeup</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/functioncheck-writeup/</link>

