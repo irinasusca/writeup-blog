@@ -8,13 +8,25 @@
     <loc>https://irinasusca.github.io/writeup-blog/posts/</loc>
     <lastmod>2026-12-10T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/tags/cyberedu/</loc>
-    <lastmod>2025-12-23T00:00:00+00:00</lastmod>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/</loc>
+    <lastmod>2025-12-26T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/posts/aptssh-writeup/</loc>
-    <lastmod>2025-12-23T00:00:00+00:00</lastmod>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/cyberedu/</loc>
+    <lastmod>2025-12-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/babyfmt-writeup/</loc>
+    <lastmod>2025-12-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/format-string/</loc>
+    <lastmod>2025-12-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/tags/pwn/</loc>
+    <lastmod>2025-12-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/</loc>
+    <lastmod>2025-12-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/aptssh-writeup/</loc>
     <lastmod>2025-12-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/tags/reverse-engineering/</loc>
@@ -23,12 +35,6 @@
     <loc>https://irinasusca.github.io/writeup-blog/tags/ssh/</loc>
     <lastmod>2025-12-23T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/tags/</loc>
-    <lastmod>2025-12-23T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/</loc>
-    <lastmod>2025-12-22T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/posts/ropper-writeup/</loc>
     <lastmod>2025-12-22T00:00:00+00:00</lastmod>
   </url><url>
@@ -36,9 +42,6 @@
     <lastmod>2025-12-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/posts/functioncheck-writeup/</loc>
-    <lastmod>2025-12-21T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/tags/format-string/</loc>
     <lastmod>2025-12-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/tags/ctf/</loc>

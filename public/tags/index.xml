@@ -2,129 +2,129 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Tags on Irina&#39;s CTF Writeups</title>
-    <link>http://localhost:35669/writeup-blog/tags/</link>
+    <link>http://localhost:40737/writeup-blog/tags/</link>
     <description>Recent content in Tags on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 22 Dec 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:35669/writeup-blog/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 26 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:40737/writeup-blog/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Buffer-Overflow</title>
-      <link>http://localhost:35669/writeup-blog/tags/buffer-overflow/</link>
-      <pubDate>Mon, 22 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:35669/writeup-blog/tags/buffer-overflow/</guid>
+      <link>http://localhost:40737/writeup-blog/tags/buffer-overflow/</link>
+      <pubDate>Fri, 26 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:40737/writeup-blog/tags/buffer-overflow/</guid>
       <description></description>
     </item>
     <item>
       <title>CyberEdu</title>
-      <link>http://localhost:35669/writeup-blog/tags/cyberedu/</link>
-      <pubDate>Mon, 22 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:35669/writeup-blog/tags/cyberedu/</guid>
+      <link>http://localhost:40737/writeup-blog/tags/cyberedu/</link>
+      <pubDate>Fri, 26 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:40737/writeup-blog/tags/cyberedu/</guid>
       <description></description>
     </item>
     <item>
       <title>Pwn</title>
-      <link>http://localhost:35669/writeup-blog/tags/pwn/</link>
-      <pubDate>Mon, 22 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:35669/writeup-blog/tags/pwn/</guid>
+      <link>http://localhost:40737/writeup-blog/tags/pwn/</link>
+      <pubDate>Fri, 26 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:40737/writeup-blog/tags/pwn/</guid>
       <description></description>
     </item>
     <item>
       <title>Ret2libc</title>
-      <link>http://localhost:35669/writeup-blog/tags/ret2libc/</link>
-      <pubDate>Mon, 22 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:35669/writeup-blog/tags/ret2libc/</guid>
+      <link>http://localhost:40737/writeup-blog/tags/ret2libc/</link>
+      <pubDate>Fri, 26 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:40737/writeup-blog/tags/ret2libc/</guid>
       <description></description>
     </item>
     <item>
       <title>Reverse-Engineering</title>
-      <link>http://localhost:35669/writeup-blog/tags/reverse-engineering/</link>
-      <pubDate>Mon, 22 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:35669/writeup-blog/tags/reverse-engineering/</guid>
+      <link>http://localhost:40737/writeup-blog/tags/reverse-engineering/</link>
+      <pubDate>Tue, 23 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:40737/writeup-blog/tags/reverse-engineering/</guid>
       <description></description>
     </item>
     <item>
       <title>Ssh</title>
-      <link>http://localhost:35669/writeup-blog/tags/ssh/</link>
-      <pubDate>Mon, 22 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:35669/writeup-blog/tags/ssh/</guid>
+      <link>http://localhost:40737/writeup-blog/tags/ssh/</link>
+      <pubDate>Tue, 23 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:40737/writeup-blog/tags/ssh/</guid>
       <description></description>
     </item>
     <item>
       <title>Format-String</title>
-      <link>http://localhost:35669/writeup-blog/tags/format-string/</link>
+      <link>http://localhost:40737/writeup-blog/tags/format-string/</link>
       <pubDate>Sun, 21 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:35669/writeup-blog/tags/format-string/</guid>
+      <guid>http://localhost:40737/writeup-blog/tags/format-string/</guid>
       <description></description>
     </item>
     <item>
       <title>Ctf</title>
-      <link>http://localhost:35669/writeup-blog/tags/ctf/</link>
+      <link>http://localhost:40737/writeup-blog/tags/ctf/</link>
       <pubDate>Tue, 16 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:35669/writeup-blog/tags/ctf/</guid>
+      <guid>http://localhost:40737/writeup-blog/tags/ctf/</guid>
       <description></description>
     </item>
     <item>
       <title>FSOP</title>
-      <link>http://localhost:35669/writeup-blog/tags/fsop/</link>
+      <link>http://localhost:40737/writeup-blog/tags/fsop/</link>
       <pubDate>Tue, 16 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:35669/writeup-blog/tags/fsop/</guid>
+      <guid>http://localhost:40737/writeup-blog/tags/fsop/</guid>
       <description></description>
     </item>
     <item>
       <title>JOP</title>
-      <link>http://localhost:35669/writeup-blog/tags/jop/</link>
+      <link>http://localhost:40737/writeup-blog/tags/jop/</link>
       <pubDate>Tue, 16 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:35669/writeup-blog/tags/jop/</guid>
+      <guid>http://localhost:40737/writeup-blog/tags/jop/</guid>
       <description></description>
     </item>
     <item>
       <title>One-Gadget</title>
-      <link>http://localhost:35669/writeup-blog/tags/one-gadget/</link>
+      <link>http://localhost:40737/writeup-blog/tags/one-gadget/</link>
       <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:35669/writeup-blog/tags/one-gadget/</guid>
+      <guid>http://localhost:40737/writeup-blog/tags/one-gadget/</guid>
       <description></description>
     </item>
     <item>
       <title>ASLR</title>
-      <link>http://localhost:35669/writeup-blog/tags/aslr/</link>
+      <link>http://localhost:40737/writeup-blog/tags/aslr/</link>
       <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:35669/writeup-blog/tags/aslr/</guid>
+      <guid>http://localhost:40737/writeup-blog/tags/aslr/</guid>
       <description></description>
     </item>
     <item>
       <title>Canary</title>
-      <link>http://localhost:35669/writeup-blog/tags/canary/</link>
+      <link>http://localhost:40737/writeup-blog/tags/canary/</link>
       <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:35669/writeup-blog/tags/canary/</guid>
+      <guid>http://localhost:40737/writeup-blog/tags/canary/</guid>
       <description></description>
     </item>
     <item>
       <title>PIE</title>
-      <link>http://localhost:35669/writeup-blog/tags/pie/</link>
+      <link>http://localhost:40737/writeup-blog/tags/pie/</link>
       <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:35669/writeup-blog/tags/pie/</guid>
+      <guid>http://localhost:40737/writeup-blog/tags/pie/</guid>
       <description></description>
     </item>
     <item>
       <title>PicoCTF</title>
-      <link>http://localhost:35669/writeup-blog/tags/picoctf/</link>
+      <link>http://localhost:40737/writeup-blog/tags/picoctf/</link>
       <pubDate>Sun, 30 Nov 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:35669/writeup-blog/tags/picoctf/</guid>
+      <guid>http://localhost:40737/writeup-blog/tags/picoctf/</guid>
       <description></description>
     </item>
     <item>
       <title>Rop</title>
-      <link>http://localhost:35669/writeup-blog/tags/rop/</link>
+      <link>http://localhost:40737/writeup-blog/tags/rop/</link>
       <pubDate>Mon, 24 Nov 2025 21:09:36 +0200</pubDate>
-      <guid>http://localhost:35669/writeup-blog/tags/rop/</guid>
+      <guid>http://localhost:40737/writeup-blog/tags/rop/</guid>
       <description></description>
     </item>
     <item>
       <title>Overflow</title>
-      <link>http://localhost:35669/writeup-blog/tags/overflow/</link>
+      <link>http://localhost:40737/writeup-blog/tags/overflow/</link>
       <pubDate>Sun, 23 Nov 2025 21:08:35 +0200</pubDate>
-      <guid>http://localhost:35669/writeup-blog/tags/overflow/</guid>
+      <guid>http://localhost:40737/writeup-blog/tags/overflow/</guid>
       <description></description>
     </item>
   </channel>

@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>PicoCTF on Irina&#39;s CTF Writeups</title>
-    <link>http://localhost:35669/writeup-blog/tags/picoctf/</link>
+    <link>http://localhost:40737/writeup-blog/tags/picoctf/</link>
     <description>Recent content in PicoCTF on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 30 Nov 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:35669/writeup-blog/tags/picoctf/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:40737/writeup-blog/tags/picoctf/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Pico Here&#39;s A LIBC Writeup</title>
-      <link>http://localhost:35669/writeup-blog/posts/heresalibc-writeup/</link>
+      <link>http://localhost:40737/writeup-blog/posts/heresalibc-writeup/</link>
       <pubDate>Sun, 30 Nov 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:35669/writeup-blog/posts/heresalibc-writeup/</guid>
+      <guid>http://localhost:40737/writeup-blog/posts/heresalibc-writeup/</guid>
       <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
 &lt;p&gt;I am once again asking for you to pwn this &lt;strong&gt;&lt;a href=&#34;https://play.picoctf.org/practice/challenge/179&#34;&gt;binary&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:35669/writeup-blog/posts/heresalibc-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:40737/writeup-blog/posts/heresalibc-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;At first glance, the &lt;strong&gt;vuln&lt;/strong&gt; looks like a 64-bit executable with a buffer overflow vulnerability. And since it&amp;rsquo;s hinted in the title, most probably a ret2libc challenge.&lt;/p&gt;
 &lt;p&gt;Upon checking, only &lt;code&gt;NX&lt;/code&gt; is enabled. So this should make things fairly easy for us.&lt;/p&gt;
 &lt;hr&gt;
@@ -24,107 +24,107 @@
     </item>
     <item>
       <title>Pico Homework Writeup</title>
-      <link>http://localhost:35669/writeup-blog/posts/homework-writeup/</link>
+      <link>http://localhost:40737/writeup-blog/posts/homework-writeup/</link>
       <pubDate>Thu, 27 Nov 2025 21:09:36 +0200</pubDate>
-      <guid>http://localhost:35669/writeup-blog/posts/homework-writeup/</guid>
+      <guid>http://localhost:40737/writeup-blog/posts/homework-writeup/</guid>
       <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
 &lt;p&gt;&amp;ldquo;time to do some &lt;strong&gt;&lt;a href=&#34;https://play.picoctf.org/practice/challenge/217&#34;&gt;homework&lt;/a&gt;&lt;/strong&gt;!&amp;rdquo;&lt;/p&gt;
 &lt;p&gt;At first glance, &lt;strong&gt;homework&lt;/strong&gt; looks like a 64-bit executable, but we can&amp;rsquo;t tell much about it.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:35669/writeup-blog/posts/homework-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:40737/writeup-blog/posts/homework-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;After using checksec, sadly, &lt;code&gt;PIE&lt;/code&gt; is enabled and so is &lt;code&gt;NX&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:35669/writeup-blog/posts/homework-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:40737/writeup-blog/posts/homework-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We have a &lt;code&gt;main&lt;/code&gt; function &lt;em&gt;(picture above)&lt;/em&gt; and a &lt;code&gt;step&lt;/code&gt; function.
 The &lt;code&gt;step&lt;/code&gt; function uses and then modifies some variables declared/located in the &lt;code&gt;.bss&lt;/code&gt;, so it would be good to see what they look like before execution starts.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Pico Buffer Overflow 3 Writeup</title>
-      <link>http://localhost:35669/writeup-blog/posts/bufferoverflow3-writeup/</link>
+      <link>http://localhost:40737/writeup-blog/posts/bufferoverflow3-writeup/</link>
       <pubDate>Tue, 25 Nov 2025 21:09:36 +0200</pubDate>
-      <guid>http://localhost:35669/writeup-blog/posts/bufferoverflow3-writeup/</guid>
+      <guid>http://localhost:40737/writeup-blog/posts/bufferoverflow3-writeup/</guid>
       <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
 &lt;p&gt;Do you think you can bypass the protection and get the flag? It looks like Dr. Oswal added a stack canary to &lt;strong&gt;&lt;a href=&#34;https://play.picoctf.org/practice/challenge/306&#34;&gt;this program&lt;/a&gt;&lt;/strong&gt; to protect against buffer overflows.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:35669/writeup-blog/posts/bufferoverflow3-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:40737/writeup-blog/posts/bufferoverflow3-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;At first glance, the &lt;strong&gt;vuln&lt;/strong&gt; looks like a 32-bit executable, probably with a buffer overflow vulnerability.&lt;/p&gt;
 &lt;p&gt;We are first prompted to create a canary.txt file, and the binary runs after that.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:35669/writeup-blog/posts/bufferoverflow3-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:40737/writeup-blog/posts/bufferoverflow3-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Analyzing the binary, first, the &lt;code&gt;read_canary()&lt;/code&gt; function is called, and then we go into &lt;code&gt;vuln&lt;/code&gt;.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Pico Ropfu Writeup</title>
-      <link>http://localhost:35669/writeup-blog/posts/ropfu-writeup/</link>
+      <link>http://localhost:40737/writeup-blog/posts/ropfu-writeup/</link>
       <pubDate>Mon, 24 Nov 2025 21:09:36 +0200</pubDate>
-      <guid>http://localhost:35669/writeup-blog/posts/ropfu-writeup/</guid>
+      <guid>http://localhost:40737/writeup-blog/posts/ropfu-writeup/</guid>
       <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
 &lt;p&gt;What&amp;rsquo;s ROP? Can you exploit the following &lt;strong&gt;&lt;a href=&#34;https://play.picoctf.org/practice/challenge/292&#34;&gt;program&lt;/a&gt;&lt;/strong&gt; to get the flag?&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:35669/writeup-blog/posts/ropfu-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:40737/writeup-blog/posts/ropfu-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;At first glance, the &lt;strong&gt;vuln&lt;/strong&gt; looks like a 32-bit executable with a buffer overflow vulnerability.&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
 &lt;p&gt;Analyzing the binary, it doesn&amp;rsquo;t look like anything special, just an ordinary buffer overflow.&lt;/p&gt;
 &lt;p&gt;We don&amp;rsquo;t seem to have a &lt;code&gt;/bin/sh&lt;/code&gt; in memory so this probably means we have to execute a ret2reg.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:35669/writeup-blog/posts/ropfu-writeup/pic3.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:40737/writeup-blog/posts/ropfu-writeup/pic3.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;That means we need to make our own &lt;code&gt;bin/sh&lt;/code&gt; and point to it, and since the &lt;code&gt;vuln&lt;/code&gt; &lt;em&gt;returns&lt;/em&gt; the &lt;code&gt;gets&lt;/code&gt;, that means &lt;code&gt;eax&lt;/code&gt; will hold the &lt;code&gt;gets&lt;/code&gt; return value. And the return value of &lt;code&gt;gets&lt;/code&gt; is a pointer to the input value!&lt;/p&gt;</description>
     </item>
     <item>
       <title>Pico Function Overwrite Writeup</title>
-      <link>http://localhost:35669/writeup-blog/posts/functionoverwrite-writeup/</link>
+      <link>http://localhost:40737/writeup-blog/posts/functionoverwrite-writeup/</link>
       <pubDate>Sun, 23 Nov 2025 21:08:35 +0200</pubDate>
-      <guid>http://localhost:35669/writeup-blog/posts/functionoverwrite-writeup/</guid>
+      <guid>http://localhost:40737/writeup-blog/posts/functionoverwrite-writeup/</guid>
       <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
 &lt;p&gt;Story telling class 2/2
 Additional details will be available after launching your &lt;strong&gt;&lt;a href=&#34;https://play.picoctf.org/practice/challenge/272&#34;&gt;challenge instance&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:35669/writeup-blog/posts/functionoverwrite-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:40737/writeup-blog/posts/functionoverwrite-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Upon a quick check, we see that the challenge is a &lt;code&gt;32-bit&lt;/code&gt; binary, and that we can trigger a &lt;code&gt;SEGFAULT&lt;/code&gt;. It might be a buffer overflow, but the challenge doesn&amp;rsquo;t necessarily hint that, so let&amp;rsquo;s inspect it further.&lt;/p&gt;
 &lt;p&gt;Also NX is enabled, so let&amp;rsquo;s keep that in mind.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:35669/writeup-blog/posts/functionoverwrite-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:40737/writeup-blog/posts/functionoverwrite-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The first input string is not susceptible to a buffer overflow, but something interesting happens on the second &lt;code&gt;scanf&lt;/code&gt;. We read two &lt;code&gt;%d&lt;/code&gt; (ints), but only one destination for them (&lt;code&gt;&amp;amp;number1&lt;/code&gt;).&lt;/p&gt;</description>
     </item>
     <item>
       <title>Pico Stack Cache Writeup</title>
-      <link>http://localhost:35669/writeup-blog/posts/stackcache-writeup/</link>
+      <link>http://localhost:40737/writeup-blog/posts/stackcache-writeup/</link>
       <pubDate>Wed, 19 Nov 2025 21:09:36 +0200</pubDate>
-      <guid>http://localhost:35669/writeup-blog/posts/stackcache-writeup/</guid>
+      <guid>http://localhost:40737/writeup-blog/posts/stackcache-writeup/</guid>
       <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
 &lt;p&gt;Undefined behaviours are fun. It looks like Dr. Oswal allowed buffer overflows again. Analyse &lt;strong&gt;&lt;a href=&#34;https://play.picoctf.org/practice/challenge/306&#34;&gt;this program&lt;/a&gt;&lt;/strong&gt; to identify how you can get to the flag.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:35669/writeup-blog/posts/stackcache-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:40737/writeup-blog/posts/stackcache-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;At first glance, the &lt;strong&gt;vuln&lt;/strong&gt; looks like a 32-bit executable with a buffer overflow vulnerability.&lt;/p&gt;
 &lt;p&gt;Analyzing the binary, we come across some interesting funtions, &lt;code&gt;UnderConstruction&lt;/code&gt; and &lt;code&gt;win&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:35669/writeup-blog/posts/stackcache-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:40737/writeup-blog/posts/stackcache-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;After a quick &lt;code&gt;checksec&lt;/code&gt;, we find vuln has both NX and a stack canary enabled.
 So we can probably find a way to leak the stack canary using the &lt;code&gt;UnderConstruction&lt;/code&gt; function.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Pico Babygame02 Writeup</title>
-      <link>http://localhost:35669/writeup-blog/posts/babygame02-writeup/</link>
+      <link>http://localhost:40737/writeup-blog/posts/babygame02-writeup/</link>
       <pubDate>Wed, 19 Nov 2025 21:08:35 +0200</pubDate>
-      <guid>http://localhost:35669/writeup-blog/posts/babygame02-writeup/</guid>
+      <guid>http://localhost:40737/writeup-blog/posts/babygame02-writeup/</guid>
       <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
 &lt;p&gt;Break the game and get the flag. Welcome to &lt;strong&gt;&lt;a href=&#34;https://play.picoctf.org/practice/challenge/346&#34;&gt;BabyGame 02&lt;/a&gt;&lt;/strong&gt;! Navigate around the map and see what you can find!&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:35669/writeup-blog/posts/babygame02-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:40737/writeup-blog/posts/babygame02-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;After analyzing the binary and renaming the variables, we notice we have a &lt;strong&gt;player struct/array&lt;/strong&gt; consisting of the &lt;strong&gt;player y&lt;/strong&gt;, &lt;strong&gt;player x&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Immediately after that, we have the &lt;strong&gt;map matrix&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:35669/writeup-blog/posts/babygame02-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:40737/writeup-blog/posts/babygame02-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;From the &lt;code&gt;main&lt;/code&gt; function, by solving the puzzle, which can be easily achieved by using the special command &lt;code&gt;p&lt;/code&gt; we &amp;ldquo;win&amp;rdquo;. And with the special command &lt;code&gt;l&lt;/code&gt; we can replace the &lt;code&gt;@&lt;/code&gt; player character with a char (spoiler, it can be any byte of our liking, not necessarily a char).&lt;/p&gt;</description>
     </item>
     <item>
       <title>Pico Babygame03 Writeup</title>
-      <link>http://localhost:35669/writeup-blog/posts/babygame03-writeup/</link>
+      <link>http://localhost:40737/writeup-blog/posts/babygame03-writeup/</link>
       <pubDate>Mon, 10 Nov 2025 21:08:35 +0200</pubDate>
-      <guid>http://localhost:35669/writeup-blog/posts/babygame03-writeup/</guid>
+      <guid>http://localhost:40737/writeup-blog/posts/babygame03-writeup/</guid>
       <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
 &lt;p&gt;Break the game and get the flag. Welcome to &lt;strong&gt;&lt;a href=&#34;https://play.picoctf.org/practice/challenge/446&#34;&gt;BabyGame 03&lt;/a&gt;&lt;/strong&gt;! Navigate around the map and see what you can find! Be careful, you don&amp;rsquo;t have many moves. There are obstacles that instantly end the game on collision. The game is available to download here. There is no source available, so you&amp;rsquo;ll have to figure your way around the map.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:35669/writeup-blog/posts/babygame03-writeup/baby-1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:40737/writeup-blog/posts/babygame03-writeup/baby-1.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;After analyzing the binary and renaming the variables, we notice we have a &lt;strong&gt;player struct/array&lt;/strong&gt; consisting of the &lt;strong&gt;player y&lt;/strong&gt;, &lt;strong&gt;player x&lt;/strong&gt; and &lt;strong&gt;player lives&lt;/strong&gt;.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Pico Handoff Writeup</title>
-      <link>http://localhost:35669/writeup-blog/posts/handoff-writeup/</link>
+      <link>http://localhost:40737/writeup-blog/posts/handoff-writeup/</link>
       <pubDate>Mon, 10 Nov 2025 21:08:35 +0200</pubDate>
-      <guid>http://localhost:35669/writeup-blog/posts/handoff-writeup/</guid>
+      <guid>http://localhost:40737/writeup-blog/posts/handoff-writeup/</guid>
       <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
 &lt;p&gt;The first vuln we encounter in &lt;strong&gt;&lt;a href=&#34;https://play.picoctf.org/practice/challenge/486&#34;&gt;handoff&lt;/a&gt;&lt;/strong&gt; is that it doesn&amp;rsquo;t disable NX.
 (Basically, this means that we can execute shellcode on the stack!)&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:35669/writeup-blog/posts/handoff-writeup/handoff-1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:40737/writeup-blog/posts/handoff-writeup/handoff-1.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We are presented with a menu with 3 options:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Add a recipient&lt;/li&gt;

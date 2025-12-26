@@ -6,8 +6,22 @@
     <description>Recent content in Buffer-Overflow on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 22 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 26 Dec 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CyberEdu baby-fmt Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/babyfmt-writeup/</link>
+      <pubDate>Fri, 26 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/babyfmt-writeup/</guid>
+      <description>&lt;p&gt;Merry Christmas everyone! 🎄&lt;/p&gt;
+&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/3d3ef3d0-94fb-11ea-93fe-e7b039c31d38?tenant=cyberedu&#34;&gt;This&lt;/a&gt;&lt;/strong&gt; is should be a basic pwn challenge but please be aware that time is not your friend.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/babyfmt-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s check out the restrictions we&amp;rsquo;re dealing with.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/babyfmt-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;re working with a 64-bit binary with NX and PIE enabled, and as the name suggests, probably a format string vulnerability. Let&amp;rsquo;s take a look at the disassembled binary.&lt;/p&gt;
+&lt;p&gt;We have a function called by &lt;code&gt;main&lt;/code&gt;, let&amp;rsquo;s call it &lt;code&gt;vuln&lt;/code&gt;.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>CyberEdu Ropper Writeup</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/ropper-writeup/</link>
