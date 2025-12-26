@@ -6,19 +6,33 @@
     <description>Recent content in Tags on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 23 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 26 Dec 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Buffer-Overflow</title>
+      <link>https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/</link>
+      <pubDate>Fri, 26 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/</guid>
+      <description></description>
+    </item>
     <item>
       <title>CyberEdu</title>
       <link>https://irinasusca.github.io/writeup-blog/tags/cyberedu/</link>
-      <pubDate>Tue, 23 Dec 2025 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 26 Dec 2025 00:00:00 +0000</pubDate>
       <guid>https://irinasusca.github.io/writeup-blog/tags/cyberedu/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Format-String</title>
+      <link>https://irinasusca.github.io/writeup-blog/tags/format-string/</link>
+      <pubDate>Fri, 26 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/tags/format-string/</guid>
       <description></description>
     </item>
     <item>
       <title>Pwn</title>
       <link>https://irinasusca.github.io/writeup-blog/tags/pwn/</link>
-      <pubDate>Tue, 23 Dec 2025 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 26 Dec 2025 00:00:00 +0000</pubDate>
       <guid>https://irinasusca.github.io/writeup-blog/tags/pwn/</guid>
       <description></description>
     </item>
@@ -37,24 +51,10 @@
       <description></description>
     </item>
     <item>
-      <title>Buffer-Overflow</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/</link>
-      <pubDate>Mon, 22 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Ret2libc</title>
       <link>https://irinasusca.github.io/writeup-blog/tags/ret2libc/</link>
       <pubDate>Mon, 22 Dec 2025 00:00:00 +0000</pubDate>
       <guid>https://irinasusca.github.io/writeup-blog/tags/ret2libc/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Format-String</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/format-string/</link>
-      <pubDate>Sun, 21 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/format-string/</guid>
       <description></description>
     </item>
     <item>

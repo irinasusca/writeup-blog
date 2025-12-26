@@ -137,6 +137,23 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu baby-fmt Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Merry Christmas everyone! 🎄
+Challenge overview This is should be a basic pwn challenge but please be aware that time is not your friend.
+Let’s check out the restrictions we’re dealing with.
+We’re working with a 64-bit binary with NX and PIE enabled, and as the name suggests, probably a format string vulnerability. Let’s take a look at the disassembled binary.
+We have a function called by main, let’s call it vuln.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-26 00:00:00 +0000 UTC'>December 26, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu baby-fmt Writeup" href="https://irinasusca.github.io/writeup-blog/posts/babyfmt-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu aptssh Writeup
     </h2>
   </header>
@@ -273,21 +290,6 @@ Taking a look at main, we can see the flag getting copied into a dest buffer. Ou
   </div>
   <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
   <a class="entry-link" aria-label="post link to CyberEdu Lost Writeup" href="https://irinasusca.github.io/writeup-blog/posts/lost-writeup/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu Stack Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview You can’t run shellcode if all registers are 0, right?
-Our binary main is a 64-bit executable with an obvious buffer overflow vulnerability. Let’s take a look at it using a disassembler.
-We only have one function, main, which mmaps dest, copies 3 bytes of what’s inside &amp;unk_2027 into dest, then lets us write 0x1000 bytes into dest&#43;3. That means our buffer overflow is only 3 bytes, though. Afterwards, it executes this assembly shellcode:
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu Stack Writeup" href="https://irinasusca.github.io/writeup-blog/posts/stack-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
