@@ -6,8 +6,65 @@
     <description>Recent content in CyberEdu on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 26 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 28 Dec 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CyberEdu offensive-honeypot Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/offensivehoneypot-writeup/</link>
+      <pubDate>Sun, 28 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/offensivehoneypot-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Just another &lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/559cb970-7f21-11ea-a99e-2f006e8673c3?tenant=cyberedu&#34;&gt;pwn challenge&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/offensivehoneypot-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;re dealing with a little game, and a canary.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/offensivehoneypot-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The win condition is that we beat the game, by killing the &lt;em&gt;hacker&lt;/em&gt; player.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/offensivehoneypot-writeup/pic3.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The vulnerability here is that we can calculate the &lt;em&gt;random&lt;/em&gt; number ourselves, very similarly to another challenge I wrote the writeup for &lt;strong&gt;&lt;a href=&#34;https://irinasusca.github.io/writeup-blog/posts/babyfmt-writeup/&#34;&gt;here&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Since we know the seed ourselves, we can get the same value for &lt;code&gt;rand()&lt;/code&gt; that the game gets.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu darkmagic Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/darkmagic-writeup/</link>
+      <pubDate>Sat, 27 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/darkmagic-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;In a distant land a dark magical power lay. &lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/676b3ac0-347c-11eb-bc7f-b5898cb45fdc?tenant=cyberedu&#34;&gt;We need a hero&lt;/a&gt;&lt;/strong&gt; to defeat these dark forces.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/darkmagic-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;re working with a 64-bit binary with NX and Canary enabled, and a format string vulnerability. Let&amp;rsquo;s take a look at the binary.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/darkmagic-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This is the &lt;code&gt;vuln&lt;/code&gt; function, along which we have a &lt;code&gt;getshell&lt;/code&gt; function that we need to redirect to. We can deduct that &lt;code&gt;v5&lt;/code&gt; is our canary being checked.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu get-access Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/getaccess-writeup/</link>
+      <pubDate>Sat, 27 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/getaccess-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Can you pwn &lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/559a5a60-7f21-11ea-81ac-cdbbeaa73a14?tenant=cyberedu&#34;&gt;this&lt;/a&gt;&lt;/strong&gt;?&lt;/p&gt;
+&lt;p&gt;Very interestingly, this challenge doesn&amp;rsquo;t come with any source files, and we just get a &lt;em&gt;Username&lt;/em&gt; and &lt;em&gt;Password&lt;/em&gt; prompt.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/getaccess-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;The first thing I thought about was a buffer overflow.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/getaccess-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The &lt;em&gt;Username&lt;/em&gt; seemed to read a specific amount of bytes, and the overflow would go into password, and password just didn&amp;rsquo;t crash anything, so it might&amp;rsquo;ve been the same situation.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu nulle Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/nulle-writeup/</link>
+      <pubDate>Sat, 27 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/nulle-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/9fc63e6a-404f-447c-b041-ec2ab0a1d450?tenant=cyberedu&#34;&gt;Our&lt;/a&gt;&lt;/strong&gt; developer got a bit too clever with C structs. They decided that if two structs have the same fields, just in a different order, it’s fine to cast between them.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s look at our binary, &lt;strong&gt;main&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/nulle-writeup/pic6.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;In our &lt;code&gt;main&lt;/code&gt; function, we get to write into a &lt;code&gt;aIsYour&lt;/code&gt; string, after which a function I named &lt;code&gt;call_param&lt;/code&gt; that looks like this is called:&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/nulle-writeup/pic7.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This function essentially calls the function at address &lt;code&gt;a1&lt;/code&gt; (its parameter), passing the value located at &lt;code&gt;a1+1&lt;/code&gt; (immediately after a1) as a parameter to the &lt;code&gt;a1()&lt;/code&gt; function.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>CyberEdu baby-fmt Writeup</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/babyfmt-writeup/</link>
