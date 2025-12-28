@@ -137,6 +137,38 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu offensive-honeypot Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Just another pwn challenge.
+We’re dealing with a little game, and a canary.
+The win condition is that we beat the game, by killing the hacker player.
+Identifying the vulnerabilities The vulnerability here is that we can calculate the random number ourselves, very similarly to another challenge I wrote the writeup for here.
+Since we know the seed ourselves, we can get the same value for rand() that the game gets.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-28 00:00:00 +0000 UTC'>December 28, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu offensive-honeypot Writeup" href="https://irinasusca.github.io/writeup-blog/posts/offensivehoneypot-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu darkmagic Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview In a distant land a dark magical power lay. We need a hero to defeat these dark forces.
+We’re working with a 64-bit binary with NX and Canary enabled, and a format string vulnerability. Let’s take a look at the binary.
+This is the vuln function, along which we have a getshell function that we need to redirect to. We can deduct that v5 is our canary being checked.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-27 00:00:00 +0000 UTC'>December 27, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu darkmagic Writeup" href="https://irinasusca.github.io/writeup-blog/posts/darkmagic-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu baby-fmt Writeup
     </h2>
   </header>
@@ -259,38 +291,6 @@ At first glance, the pwn_bazooka_bazooka looks like a 64-bit executable, and I d
   </div>
   <footer class="entry-footer"><span title='2025-12-02 00:00:00 +0000 UTC'>December 2, 2025</span></footer>
   <a class="entry-link" aria-label="post link to CyberEdu Bazooka Writeup" href="https://irinasusca.github.io/writeup-blog/posts/bazooka-writeup/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Here&#39;s A LIBC Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview I am once again asking for you to pwn this binary
-At first glance, the vuln looks like a 64-bit executable with a buffer overflow vulnerability. And since it’s hinted in the title, most probably a ret2libc challenge.
-Upon checking, only NX is enabled. So this should make things fairly easy for us.
-Identifying the vulnerabilities We can quickly check if there’s a /bin/sh in memory, and there it is! Along with a system and also execve.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-30 00:00:00 +0000 UTC'>November 30, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Here&#39;s A LIBC Writeup" href="https://irinasusca.github.io/writeup-blog/posts/heresalibc-writeup/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Homework Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview “time to do some homework!”
-At first glance, homework looks like a 64-bit executable, but we can’t tell much about it.
-After using checksec, sadly, PIE is enabled and so is NX.
-We have a main function (picture above) and a step function. The step function uses and then modifies some variables declared/located in the .bss, so it would be good to see what they look like before execution starts.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-27 21:09:36 +0200 EET'>November 27, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Homework Writeup" href="https://irinasusca.github.io/writeup-blog/posts/homework-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

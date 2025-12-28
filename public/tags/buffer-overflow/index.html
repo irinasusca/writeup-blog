@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto" data-theme="auto">
 
-<head><script src="/writeup-blog/livereload.js?mindelay=10&amp;v=2&amp;port=40737&amp;path=writeup-blog/livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><script src="/writeup-blog/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=writeup-blog/livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
@@ -9,17 +9,17 @@
 <meta name="keywords" content="">
 <meta name="description" content="">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:40737/writeup-blog/tags/buffer-overflow/">
+<link rel="canonical" href="http://localhost:1313/writeup-blog/tags/buffer-overflow/">
 <link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:40737/writeup-blog/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:40737/writeup-blog/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:40737/writeup-blog/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:40737/writeup-blog/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:40737/writeup-blog/safari-pinned-tab.svg">
+<link rel="icon" href="http://localhost:1313/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/writeup-blog/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" type="application/rss+xml" href="http://localhost:40737/writeup-blog/tags/buffer-overflow/index.xml" title="rss">
-<link rel="alternate" hreflang="en" href="http://localhost:40737/writeup-blog/tags/buffer-overflow/">
+<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/writeup-blog/tags/buffer-overflow/index.xml" title="rss">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/writeup-blog/tags/buffer-overflow/">
 <noscript>
     <style>
         #theme-toggle,
@@ -77,7 +77,7 @@
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:40737/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <a href="http://localhost:1313/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -103,17 +103,17 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:40737/writeup-blog/" title="Home">
+                <a href="http://localhost:1313/writeup-blog/" title="Home">
                     <span>Home</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:40737/writeup-blog/posts/" title="Posts">
+                <a href="http://localhost:1313/writeup-blog/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:40737/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="http://localhost:1313/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -129,19 +129,51 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu darkmagic Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview In a distant land a dark magical power lay. We need a hero to defeat these dark forces.
+We’re working with a 64-bit binary with NX and Canary enabled, and a format string vulnerability. Let’s take a look at the binary.
+This is the vuln function, along which we have a getshell function that we need to redirect to. We can deduct that v5 is our canary being checked.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-27 00:00:00 +0000 UTC'>December 27, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu darkmagic Writeup" href="http://localhost:1313/writeup-blog/posts/darkmagic-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu offensive-honeypot Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Just another pwn challenge.
+We’re dealing with a little game, and a canary.
+The win condition is that we beat the game, by killing the hacker player.
+Identifying the vulnerabilities The vulnerability here is that we can calculate the random number ourselves, very similarly to another challenge I wrote the writeup for here.
+Since we know the seed ourselves, we can get the same value for rand() that the game gets.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-27 00:00:00 +0000 UTC'>December 27, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu offensive-honeypot Writeup" href="http://localhost:1313/writeup-blog/posts/offensivehoneypot-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu baby-fmt Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Merry Christmas everyone!
+    <p>Merry Christmas everyone! 🎄
 Challenge overview This is should be a basic pwn challenge but please be aware that time is not your friend.
+Let’s check out the restrictions we’re dealing with.
 We’re working with a 64-bit binary with NX and PIE enabled, and as the name suggests, probably a format string vulnerability. Let’s take a look at the disassembled binary.
 We have a function called by main, let’s call it vuln.
-Then, a win function.
 ...</p>
   </div>
   <footer class="entry-footer"><span title='2025-12-26 00:00:00 +0000 UTC'>December 26, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu baby-fmt Writeup" href="http://localhost:40737/writeup-blog/posts/babyfmt-writeup/"></a>
+  <a class="entry-link" aria-label="post link to CyberEdu baby-fmt Writeup" href="http://localhost:1313/writeup-blog/posts/babyfmt-writeup/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
@@ -157,7 +189,7 @@ main calls the second functions and passes, as arguments, the string getting pri
 ...</p>
   </div>
   <footer class="entry-footer"><span title='2025-12-22 00:00:00 +0000 UTC'>December 22, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu Ropper Writeup" href="http://localhost:40737/writeup-blog/posts/ropper-writeup/"></a>
+  <a class="entry-link" aria-label="post link to CyberEdu Ropper Writeup" href="http://localhost:1313/writeup-blog/posts/ropper-writeup/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
@@ -174,7 +206,7 @@ Pretty straight-forward, the address of printf is printed, using dlsym (a functi
 ...</p>
   </div>
   <footer class="entry-footer"><span title='2025-12-16 00:00:00 +0000 UTC'>December 16, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu can-you-jump Writeup" href="http://localhost:40737/writeup-blog/posts/canyoujump-writeup/"></a>
+  <a class="entry-link" aria-label="post link to CyberEdu can-you-jump Writeup" href="http://localhost:1313/writeup-blog/posts/canyoujump-writeup/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
@@ -189,7 +221,7 @@ Christmas PIE - pwn As spoiled by the title, we’re dealing with a 64-bit PIE, 
 ...</p>
   </div>
   <footer class="entry-footer"><span title='2025-12-16 00:00:00 +0000 UTC'>December 16, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to VianuCTF 2025" href="http://localhost:40737/writeup-blog/posts/vianuctf-writeup/"></a>
+  <a class="entry-link" aria-label="post link to VianuCTF 2025" href="http://localhost:1313/writeup-blog/posts/vianuctf-writeup/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
@@ -205,7 +237,7 @@ Inside main, firstly, we are given the address of main (located at PIE address &
 ...</p>
   </div>
   <footer class="entry-footer"><span title='2025-12-11 00:00:00 +0000 UTC'>December 11, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Nullctf 2025 Sketchy Writeup" href="http://localhost:40737/writeup-blog/posts/sketchy-writeup/"></a>
+  <a class="entry-link" aria-label="post link to Nullctf 2025 Sketchy Writeup" href="http://localhost:1313/writeup-blog/posts/sketchy-writeup/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
@@ -219,7 +251,7 @@ At first glance, the chall looks like a 64-bit executable, and upon a buffer ove
 ...</p>
   </div>
   <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu Buy-Cooffe Writeup" href="http://localhost:40737/writeup-blog/posts/buycooffe-writeup/"></a>
+  <a class="entry-link" aria-label="post link to CyberEdu Buy-Cooffe Writeup" href="http://localhost:1313/writeup-blog/posts/buycooffe-writeup/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
@@ -235,7 +267,7 @@ We have a main function that calls login, and we can already see some interestin
 ...</p>
   </div>
   <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu ftp-console Writeup" href="http://localhost:40737/writeup-blog/posts/ftpconsole-writeup/"></a>
+  <a class="entry-link" aria-label="post link to CyberEdu ftp-console Writeup" href="http://localhost:1313/writeup-blog/posts/ftpconsole-writeup/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
@@ -250,50 +282,18 @@ At first glance, the pwn_bazooka_bazooka looks like a 64-bit executable, and I d
 ...</p>
   </div>
   <footer class="entry-footer"><span title='2025-12-02 00:00:00 +0000 UTC'>December 2, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu Bazooka Writeup" href="http://localhost:40737/writeup-blog/posts/bazooka-writeup/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Here&#39;s A LIBC Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview I am once again asking for you to pwn this binary
-At first glance, the vuln looks like a 64-bit executable with a buffer overflow vulnerability. And since it’s hinted in the title, most probably a ret2libc challenge.
-Upon checking, only NX is enabled. So this should make things fairly easy for us.
-Identifying the vulnerabilities We can quickly check if there’s a /bin/sh in memory, and there it is! Along with a system and also execve.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-30 00:00:00 +0000 UTC'>November 30, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Here&#39;s A LIBC Writeup" href="http://localhost:40737/writeup-blog/posts/heresalibc-writeup/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Homework Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview “time to do some homework!”
-At first glance, homework looks like a 64-bit executable, but we can’t tell much about it.
-After using checksec, sadly, PIE is enabled and so is NX.
-We have a main function (picture above) and a step function. The step function uses and then modifies some variables declared/located in the .bss, so it would be good to see what they look like before execution starts.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-27 21:09:36 +0200 EET'>November 27, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Homework Writeup" href="http://localhost:40737/writeup-blog/posts/homework-writeup/"></a>
+  <a class="entry-link" aria-label="post link to CyberEdu Bazooka Writeup" href="http://localhost:1313/writeup-blog/posts/bazooka-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
-    <a class="next" href="http://localhost:40737/writeup-blog/tags/buffer-overflow/page/2/">Next&nbsp;&nbsp;»
+    <a class="next" href="http://localhost:1313/writeup-blog/tags/buffer-overflow/page/2/">Next&nbsp;&nbsp;»
     </a>
   </nav>
 </footer>
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:40737/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+        <span>&copy; 2025 <a href="http://localhost:1313/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
 
     <span>
         Powered by
