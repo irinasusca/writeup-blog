@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CyberEdu travel Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, pwn, buffer-overflow, Format-String">
+<meta name="description" content="Happy New Year! 🎇
+Challenge overview
+Travel agency as a service
+
+We&rsquo;re given a libc.so.6 and a main 64-bit binary, with NX, PIE and a canary enabled. We immediately bump into a format string vulnerability.
+
+We only have one function, main, and a buffer overflow along the format string. So we can start trying to leak the canary, PIE base and libc.
+So, PIE ret2libc with a canary.
+
+Identifying the vulnerabilities
+There&rsquo;s a little problem though. The canary was at offset %33$p, the PIE base at %37$p, the maybe-libc at %35$p. From the first input, we can find out two addresses, and from the second input, the remaining one; but that&rsquo;s when we send out payload, and we need to know all three of them for a successful payload.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/travel-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/travel-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/travel-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="CyberEdu travel Writeup">
+  <meta property="og:description" content="Happy New Year! 🎇
+Challenge overview Travel agency as a service
+We’re given a libc.so.6 and a main 64-bit binary, with NX, PIE and a canary enabled. We immediately bump into a format string vulnerability.
+We only have one function, main, and a buffer overflow along the format string. So we can start trying to leak the canary, PIE base and libc.
+So, PIE ret2libc with a canary.
+Identifying the vulnerabilities There’s a little problem though. The canary was at offset %33$p, the PIE base at %37$p, the maybe-libc at %35$p. From the first input, we can find out two addresses, and from the second input, the remaining one; but that’s when we send out payload, and we need to know all three of them for a successful payload.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-01-03T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-01-03T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="Buffer-Overflow">
+    <meta property="article:tag" content="Format-String">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CyberEdu travel Writeup">
+<meta name="twitter:description" content="Happy New Year! 🎇
+Challenge overview
+Travel agency as a service
+
+We&rsquo;re given a libc.so.6 and a main 64-bit binary, with NX, PIE and a canary enabled. We immediately bump into a format string vulnerability.
+
+We only have one function, main, and a buffer overflow along the format string. So we can start trying to leak the canary, PIE base and libc.
+So, PIE ret2libc with a canary.
+
+Identifying the vulnerabilities
+There&rsquo;s a little problem though. The canary was at offset %33$p, the PIE base at %37$p, the maybe-libc at %35$p. From the first input, we can find out two addresses, and from the second input, the remaining one; but that&rsquo;s when we send out payload, and we need to know all three of them for a successful payload.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CyberEdu travel Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/travel-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CyberEdu travel Writeup",
+  "name": "CyberEdu travel Writeup",
+  "description": "Happy New Year! 🎇\nChallenge overview Travel agency as a service\nWe\u0026rsquo;re given a libc.so.6 and a main 64-bit binary, with NX, PIE and a canary enabled. We immediately bump into a format string vulnerability.\nWe only have one function, main, and a buffer overflow along the format string. So we can start trying to leak the canary, PIE base and libc.\nSo, PIE ret2libc with a canary.\nIdentifying the vulnerabilities There\u0026rsquo;s a little problem though. The canary was at offset %33$p, the PIE base at %37$p, the maybe-libc at %35$p. From the first input, we can find out two addresses, and from the second input, the remaining one; but that\u0026rsquo;s when we send out payload, and we need to know all three of them for a successful payload.\n",
+  "keywords": [
+    "CyberEdu", "pwn", "buffer-overflow", "Format-String"
+  ],
+  "articleBody": "Happy New Year! 🎇\nChallenge overview Travel agency as a service\nWe’re given a libc.so.6 and a main 64-bit binary, with NX, PIE and a canary enabled. We immediately bump into a format string vulnerability.\nWe only have one function, main, and a buffer overflow along the format string. So we can start trying to leak the canary, PIE base and libc.\nSo, PIE ret2libc with a canary.\nIdentifying the vulnerabilities There’s a little problem though. The canary was at offset %33$p, the PIE base at %37$p, the maybe-libc at %35$p. From the first input, we can find out two addresses, and from the second input, the remaining one; but that’s when we send out payload, and we need to know all three of them for a successful payload.\nSo to do this, we can first find the canary and the PIE base, use them to go back to main, and only then figure out libc. Problem is, we didn’t know the offset from libc to these values we were leaking.\nAnother problem, no pop rdi; ret gadgets!\nWe do have a ret one at PIE + 0x101a though.\nSo I thought, why not try a one_gadget here? libc also had some pop rdi gadgets, but we still need libc for that. So to use libc we need to know an address, and to find an address we need to know libc. In the end I scrapped that one_gadget idea.\nHere is the glibc version with proof. I tried some of its functions ending it 040, because the second time we enter main, the libc address gets shifted to %43$p on the stack and looks like 0x7d15d0291040 or 0x786173b35040. But none of them worked, so we really do have to guess it.\nI tried bruteforcing up to five bytes, but it didn’t work. Wanna guess why? Because for some fucking reason these offsets were dynamic. So they weren’t really offsets. Good thing I figured that out a couple of hours later, after running three different brute scripts.\nThe reason I could actually look at the offsets is I ran it locally, and to get accurate results, I had to use their version of libc. They did give us the libc.so.6, but to actually test stuff, we needed the loader as well, which I managed to download pretty quickly using this command:\nwget http://security.ubuntu.com/ubuntu/pool/main/g/glibc/libc6_2.35-0ubuntu3_amd64.deb (Thanks ChatGPT)\nThen, I looked for the loader, and looked for the libc.so.6 as well, to compare the checksum of the challenge libc.so.6 to this version’s, just to check if they were the same. They were! Great success.\nI added this to my pwntools script and I was ready for testing:\np = process( [\"./ld-linux-x86-64.so.2\", elf.path], env={\"LD_LIBRARY_PATH\": \".\"} ) Back to the issue. So this was a complete pain, because now we really have no way of finding libc. Stil, I told myself that there’s no way we can do this without libc, and looked up to %100$p and found offsets looking like this:\n# for 43 value looks like 0x7d15d0291040 #\t0x786173b35040 # for 53: libc leak: 0x7940ccfeee40 # 0x79d460eece40 # 0x7a3b95a43e40 # for 56: 0x7e89e8a592e0 #\t0x7eb5607302e0 But none of them seemed stable enough. I left the problem alone for a couple of days, because of New Year stuff, and went at it again today, and I really had no clue why I didn’t start looking at offsets from %1$p and instead started at 30 or something.\nAnother thing, they were indeed different from the first time we looked at them (to find the canary and PIE, if you remember), everything was shifted. Eventually I found this at %3$p, looking very promising:\nAt this point I was crossing all my fingers hoping I would get a stable offset, and somehow - I did!\nlibc = libc_leak - 0x114a37 We already know the version, as we are testing on it, and here we can see the gadgets we needed, in libc:\nMy kali has so little ram running the first command crashed my entire vm at first, actually\nThe exploit Brace yourself because this was truly, and I mean truly horrible (for me, at least).\nAs I said, the one_gadget didn’t work, so I used these offsets:\npop_rdi_ret = libc + 0x2a3e5 ret = libc + 0x2a3e6 system = libc + 0x50d60 binsh = libc + 0x1d8698 I settled with this ret, the one after the pop rdi, but the others might work too, no clue. This was my payload:\npayload = (b\"a\"*200 + #v5 p64(canary) + b\"r\"*8 + #rbp p64(pop_rdi_ret) + #main after push rbp p64(binsh) + p64(ret) + p64(system) + p64(0x0) ) Seemed correct, right? But for some reason unbeknownst to me, the system was getting pushed and popped as only its last byte, testing locally.\nI spent at least two hours trying to debug this, and, as you know, debugging PIEs is annoying in itself, doing everything, finding four alternative ret gadgets, moving them around between every line in the payload, trying padding of every size on every part of system, just grueling stuff.\nThen I thought to myself there’s no way this payload is wrong, and “errors” like these on local files have happened before. So I tested it remotely. And yeah.\nAs always, the full code can be found on my GitHub here.\n",
+  "wordCount" : "882",
+  "inLanguage": "en",
+  "datePublished": "2026-01-03T00:00:00Z",
+  "dateModified": "2026-01-03T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/travel-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      CyberEdu travel Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-01-03 00:00:00 +0000 UTC'>January 3, 2026</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a></li>
+                <li>
+                    <a href="#the-exploit" aria-label="The exploit">The exploit</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>Happy New Year! 🎇</p>
+<h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>Travel agency as a <strong><a href="https://app.cyber-edu.co/challenges/05090610-44a4-11ed-ba64-0fbb056be1da?tenant=cyberedu">service</a></strong></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/travel-writeup/pic1.png#center"></p>
+<p>We&rsquo;re given a <code>libc.so.6</code> and a <strong>main</strong> 64-bit binary, with <code>NX</code>, <code>PIE</code> and a canary enabled. We immediately bump into a format string vulnerability.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/travel-writeup/pic2.png#center"></p>
+<p>We only have one function, <code>main</code>, and a buffer overflow along the format string. So we can start trying to leak the canary, PIE base and libc.</p>
+<p>So, PIE ret2libc with a canary.</p>
+<hr>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>There&rsquo;s a little problem though. The canary was at offset <code>%33$p</code>, the PIE base at <code>%37$p</code>, the maybe-libc at <code>%35$p</code>. From the first input, we can find out two addresses, and from the second input, the remaining one; but that&rsquo;s when we send out payload, and we need to know all three of them for a successful payload.</p>
+<p>So to do this, we can first find the canary and the PIE base, use them to go back to <code>main</code>, and only <em>then</em> figure out libc. Problem is, we didn&rsquo;t know the offset from libc to these values we were leaking.</p>
+<p>Another problem, no <code>pop rdi; ret</code> gadgets!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/travel-writeup/pic3.png#center"></p>
+<p>We do have a <code>ret</code> one at <code>PIE + 0x101a</code> though.</p>
+<p>So I thought, why not try a <code>one_gadget</code> here? <code>libc</code> also had some pop rdi gadgets, but we still need <code>libc</code> for that. So to use <code>libc</code> we need to know an address, and to find an address we need to know <code>libc</code>. <em>In the end I scrapped that one_gadget idea</em>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/travel-writeup/pic4.png#center"></p>
+<p>Here is the <code>glibc</code> version with proof. I tried some of its functions ending it <code>040</code>, because the second time we enter main, the <code>libc</code> address gets shifted to <code>%43$p</code> on the stack and looks like <code>0x7d15d0291040</code> or <code>0x786173b35040</code>. But none of them worked, so we really do have to guess it.</p>
+<p>I tried bruteforcing up to five bytes, but it didn&rsquo;t work. Wanna guess why? Because for some <em>fucking</em> reason these offsets were <em>dynamic</em>. So they weren&rsquo;t <em>really</em> offsets. Good thing I figured that out a couple of hours later, after running three different brute scripts.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/travel-writeup/off1.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/travel-writeup/off2.png#center"></p>
+<p>The reason I could actually look at the offsets is I ran it locally, and to get accurate results, I had to use their version of <code>libc</code>. They did give us the <code>libc.so.6</code>, but to actually test stuff, we needed the loader as well, which I managed to download pretty quickly using this command:</p>
+<p><code>wget http://security.ubuntu.com/ubuntu/pool/main/g/glibc/libc6_2.35-0ubuntu3_amd64.deb</code> (Thanks ChatGPT)</p>
+<p>Then, I looked for the loader, and looked for the libc.so.6 as well, to compare the checksum of the challenge libc.so.6 to this version&rsquo;s, just to check if they were the same. They were! Great success.</p>
+<p>I added this to my pwntools script and I was ready for testing:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>p <span style="color:#f92672">=</span> process(
+</span></span><span style="display:flex;"><span>    [<span style="color:#e6db74">&#34;./ld-linux-x86-64.so.2&#34;</span>, elf<span style="color:#f92672">.</span>path],
+</span></span><span style="display:flex;"><span>    env<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#34;LD_LIBRARY_PATH&#34;</span>: <span style="color:#e6db74">&#34;.&#34;</span>}
+</span></span><span style="display:flex;"><span>    )
+</span></span></code></pre></div><p>Back to the issue. So this was a complete pain, because now we really have no way of finding libc. Stil, I told myself that there&rsquo;s no way we can do this without libc, and looked up to <code>%100$p</code> and found offsets looking like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># for 43 value looks like 0x7d15d0291040</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#		                  0x786173b35040</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># for 53: libc leak: 0x7940ccfeee40</span>
+</span></span><span style="display:flex;"><span>		        <span style="color:#75715e">#    0x79d460eece40</span>
+</span></span><span style="display:flex;"><span>		        <span style="color:#75715e">#    0x7a3b95a43e40</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># for 56:   0x7e89e8a592e0</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#	        0x7eb5607302e0</span>
+</span></span></code></pre></div><p>But none of them seemed <em>stable</em> enough. I left the problem alone for a couple of days, because of New Year stuff, and went at it again today, and I really had no clue why I didn&rsquo;t start looking at offsets from <code>%1$p</code> and instead started at 30 or something.</p>
+<p>Another thing, they were indeed different from the first time we looked at them (to find the canary and PIE, if you remember), everything was shifted. Eventually I found this at <code>%3$p</code>, looking very promising:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/travel-writeup/lucky.png#center"></p>
+<p>At this point I was crossing all my fingers hoping I would get a stable offset, and somehow - I did!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>libc <span style="color:#f92672">=</span> libc_leak <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x114a37</span>
+</span></span></code></pre></div><p>We already know the version, as we are testing on it, and here we can see the gadgets we needed, in libc:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/travel-writeup/rop.png#center"></p>
+<p><del>My kali has so little ram running the first command crashed my entire vm at first, actually</del></p>
+<hr>
+<h2 id="the-exploit">The exploit<a hidden class="anchor" aria-hidden="true" href="#the-exploit">#</a></h2>
+<p>Brace yourself because this was truly, and I mean truly horrible (for me, at least).</p>
+<p>As I said, the one_gadget didn&rsquo;t work, so I used these offsets:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>pop_rdi_ret <span style="color:#f92672">=</span> libc <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x2a3e5</span>
+</span></span><span style="display:flex;"><span>ret <span style="color:#f92672">=</span> libc <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x2a3e6</span>
+</span></span><span style="display:flex;"><span>system <span style="color:#f92672">=</span> libc <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x50d60</span> 
+</span></span><span style="display:flex;"><span>binsh <span style="color:#f92672">=</span> libc <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x1d8698</span>
+</span></span></code></pre></div><p>I settled with this <code>ret</code>, the one after the <code>pop rdi</code>, but the others might work too, no clue. This was my payload:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> (<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;a&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">200</span> <span style="color:#f92672">+</span> <span style="color:#75715e">#v5</span>
+</span></span><span style="display:flex;"><span>	   p64(canary) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>	   <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;r&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span> <span style="color:#75715e">#rbp</span>
+</span></span><span style="display:flex;"><span>	   p64(pop_rdi_ret) <span style="color:#f92672">+</span> <span style="color:#75715e">#main after push rbp</span>
+</span></span><span style="display:flex;"><span>	   p64(binsh) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>	   p64(ret) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>	   p64(system) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>	   p64(<span style="color:#ae81ff">0x0</span>) 
+</span></span><span style="display:flex;"><span>	   )
+</span></span></code></pre></div><p>Seemed correct, right? But for some reason unbeknownst to me, the <code>system</code> was getting pushed and popped as only its last byte, testing locally.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/travel-writeup/crap2.png#center"></p>
+<p>I spent at least two hours trying to debug this, and, as you know, debugging PIEs is annoying in itself, doing everything, finding four alternative <code>ret</code> gadgets, moving them around between every line in the payload, trying padding of every size on every part of system, just grueling stuff.</p>
+<p>Then I thought to myself there&rsquo;s no way this payload is wrong, and &ldquo;errors&rdquo; like these on local files <em>have</em> happened before. So I tested it remotely. And yeah.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/travel-writeup/flag.png#center"></p>
+<hr>
+<p>As always, the full code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/cyberedu/travel.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/">Buffer-Overflow</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/format-string/">Format-String</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

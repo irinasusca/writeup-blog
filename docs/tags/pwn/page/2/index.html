@@ -137,6 +137,38 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu can-you-jump Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview How far can you jump?
+Our binary, can-you-jump, is a 64-bit executable with no protections except NX. The challenge also gives us libc-2.27.so to use.
+Alright, pretty nice, we get a libc leak for printf, and immediately stumble upon a buffer overflow.
+Identifying the vulnerabilities Let’s take a look at the binary next.
+Pretty straight-forward, the address of printf is printed, using dlsym (a function that just returns the address of a symbol, this case printf). Then, the function returns a read in buf[56] of 256 bytes, so that’s a 200 byte buffer overflow. I’m guessing we can find a /bin/sh and system in our libc. Since I can’t be bothered to install the .so, we can just test remotely and find the offsets online.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-16 00:00:00 +0000 UTC'>December 16, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu can-you-jump Writeup" href="https://irinasusca.github.io/writeup-blog/posts/canyoujump-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">VianuCTF 2025
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Introduction This is my writeup for the challenges I solved during the VianuCTF 2025 edition, big thank you to the challenge writers, organizers and everyone else involved in this! Was a fun ctf overall, unluckily overlapping with the math finals simulation, so I only had about three hours left to try solving some challenges.
+Enough talking, here is what I solved:
+Christmas PIE - pwn As spoiled by the title, we’re dealing with a 64-bit PIE, and we get the address of main upon running the binary.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-16 00:00:00 +0000 UTC'>December 16, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to VianuCTF 2025" href="https://irinasusca.github.io/writeup-blog/posts/vianuctf-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Nullctf 2025 Sketchy Writeup
     </h2>
   </header>
@@ -257,39 +289,6 @@ We have a main function (picture above) and a step function. The step function u
   <footer class="entry-footer"><span title='2025-11-27 21:09:36 +0200 EET'>November 27, 2025</span></footer>
   <a class="entry-link" aria-label="post link to Pico Homework Writeup" href="https://irinasusca.github.io/writeup-blog/posts/homework-writeup/"></a>
 </article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Buffer Overflow 3 Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Do you think you can bypass the protection and get the flag? It looks like Dr. Oswal added a stack canary to this program to protect against buffer overflows.
-At first glance, the vuln looks like a 32-bit executable, probably with a buffer overflow vulnerability.
-We are first prompted to create a canary.txt file, and the binary runs after that.
-Analyzing the binary, first, the read_canary() function is called, and then we go into vuln.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-25 21:09:36 +0200 EET'>November 25, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Buffer Overflow 3 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/bufferoverflow3-writeup/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Ropfu Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview What’s ROP? Can you exploit the following program to get the flag?
-At first glance, the vuln looks like a 32-bit executable with a buffer overflow vulnerability.
-Identifying the vulnerabilities Analyzing the binary, it doesn’t look like anything special, just an ordinary buffer overflow.
-We don’t seem to have a /bin/sh in memory so this probably means we have to execute a ret2reg.
-That means we need to make our own bin/sh and point to it, and since the vuln returns the gets, that means eax will hold the gets return value. And the return value of gets is a pointer to the input value!
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-24 21:09:36 +0200 EET'>November 24, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Ropfu Writeup" href="https://irinasusca.github.io/writeup-blog/posts/ropfu-writeup/"></a>
-</article>
 <footer class="page-footer">
   <nav class="pagination">
     <a class="prev" href="https://irinasusca.github.io/writeup-blog/tags/pwn/">
@@ -302,7 +301,7 @@ That means we need to make our own bin/sh and point to it, and since the vuln re
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
 
     <span>
         Powered by

@@ -3,7 +3,7 @@ date = '2025-12-26'
 draft = false
 title = 'CyberEdu baby-fmt Writeup'
 ShowToc = true
-tags = ["CyberEdu", "pwn", "buffer-overflow", "Format-String"]
+tags = ["CyberEdu", "pwn", "buffer-overflow", "Format-String", "Random"]
 +++
 
 
