@@ -6,8 +6,41 @@
     <description>Recent content in Buffer-Overflow on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 03 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 04 Jan 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CyberEdu cookies Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/cookies-writeup/</link>
+      <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/cookies-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/d20b73b0-5357-11ec-9eab-1912e4e08bd5?tenant=cyberedu&#34;&gt;Cookies&lt;/a&gt;&lt;/strong&gt; for my friends.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/cookies-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;ve got a 64-bit binary, 100% format string vulnerability, canary and NX enabled.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/cookies-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This loop happens exactly twice, to leak something then for us to exploit the buffer overflow.&lt;/p&gt;
+&lt;p&gt;We even have a &lt;code&gt;getshell&lt;/code&gt; function, so this really won&amp;rsquo;t be that complicated; We&amp;rsquo;re not even dealing with PIE.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/cookies-writeup/pic3.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We get the gadgets in our binary, we can start looking for the canary now! Let&amp;rsquo;s just look remotely straight away, so we don&amp;rsquo;t bother with trying to do it twice, since the offsets are going to differ.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu off Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/off-writeup/</link>
+      <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/off-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/55a1cea0-7f21-11ea-ad6a-498299d28f9e?tenant=cyberedu&#34;&gt;This application&lt;/a&gt;&lt;/strong&gt; is here just to serve your team. When you are done, you can try to exploit it. We hope is going to be much more fun.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/off-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We also have canary and NX enabled.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Let&amp;rsquo;s look at the functions here. First we have a &lt;code&gt;main&lt;/code&gt; which forks every time it&amp;rsquo;s ran:&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/off-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Then, this function is looped:&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/off-writeup/pic4.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;It calls some weird functions on the string:&lt;/p&gt;</description>
+    </item>
     <item>
       <title>CyberEdu travel Writeup</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/travel-writeup/</link>

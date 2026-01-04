@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Shellcode on Irina&#39;s CTF Writeups</title>
+    <link>https://irinasusca.github.io/writeup-blog/tags/shellcode/</link>
+    <description>Recent content in Shellcode on Irina&#39;s CTF Writeups</description>
+    <generator>Hugo -- 0.146.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 04 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://irinasusca.github.io/writeup-blog/tags/shellcode/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CyberEdu threadz Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/threadz-writeup/</link>
+      <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/threadz-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Threads are so cool! And secure! So secure that I store all my &lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/8f45b420-44a3-11ed-8fdf-1ba87180e9f3?tenant=cyberedu&#34;&gt;secrets&lt;/a&gt;&lt;/strong&gt; there&lt;/p&gt;
+&lt;p&gt;Note 1: The flag is broken into chunks of 4 characters, like this: volatile __thread unsigned int flag1 = &amp;lsquo;{CFT&amp;rsquo;;&lt;/p&gt;
+&lt;p&gt;The letters in the chunks are reversed for your convenience, and the chunks are defined in order&lt;/p&gt;
+&lt;p&gt;Note 2: The binary is intentionally not given.&lt;/p&gt;
+&lt;p&gt;Note 3: The program will read 0x1000 bytes of shellcode, stored into a mmap-ed region with RWX permissions&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

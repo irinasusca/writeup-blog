@@ -6,34 +6,62 @@
     <description>Recent content in Tags on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 03 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 04 Jan 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Buffer-Overflow</title>
       <link>https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/</link>
-      <pubDate>Sat, 03 Jan 2026 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
       <guid>https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Chat</title>
+      <link>https://irinasusca.github.io/writeup-blog/tags/chat/</link>
+      <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/tags/chat/</guid>
       <description></description>
     </item>
     <item>
       <title>CyberEdu</title>
       <link>https://irinasusca.github.io/writeup-blog/tags/cyberedu/</link>
-      <pubDate>Sat, 03 Jan 2026 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
       <guid>https://irinasusca.github.io/writeup-blog/tags/cyberedu/</guid>
       <description></description>
     </item>
     <item>
       <title>Format-String</title>
       <link>https://irinasusca.github.io/writeup-blog/tags/format-string/</link>
-      <pubDate>Sat, 03 Jan 2026 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
       <guid>https://irinasusca.github.io/writeup-blog/tags/format-string/</guid>
       <description></description>
     </item>
     <item>
       <title>Pwn</title>
       <link>https://irinasusca.github.io/writeup-blog/tags/pwn/</link>
-      <pubDate>Sat, 03 Jan 2026 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
       <guid>https://irinasusca.github.io/writeup-blog/tags/pwn/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Shellcode</title>
+      <link>https://irinasusca.github.io/writeup-blog/tags/shellcode/</link>
+      <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/tags/shellcode/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Threads</title>
+      <link>https://irinasusca.github.io/writeup-blog/tags/threads/</link>
+      <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/tags/threads/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vm</title>
+      <link>https://irinasusca.github.io/writeup-blog/tags/vm/</link>
+      <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/tags/vm/</guid>
       <description></description>
     </item>
     <item>
