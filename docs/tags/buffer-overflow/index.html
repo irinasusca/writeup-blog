@@ -137,6 +137,40 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu cookies Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Cookies for my friends.
+We’ve got a 64-bit binary, 100% format string vulnerability, canary and NX enabled.
+This loop happens exactly twice, to leak something then for us to exploit the buffer overflow.
+We even have a getshell function, so this really won’t be that complicated; We’re not even dealing with PIE.
+Identifying the vulnerabilities We get the gadgets in our binary, we can start looking for the canary now! Let’s just look remotely straight away, so we don’t bother with trying to do it twice, since the offsets are going to differ.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-04 00:00:00 +0000 UTC'>January 4, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu cookies Writeup" href="https://irinasusca.github.io/writeup-blog/posts/cookies-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu off Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview This application is here just to serve your team. When you are done, you can try to exploit it. We hope is going to be much more fun.
+We also have canary and NX enabled.
+Let’s look at the functions here. First we have a main which forks every time it’s ran:
+Then, this function is looped:
+It calls some weird functions on the string:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-04 00:00:00 +0000 UTC'>January 4, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu off Writeup" href="https://irinasusca.github.io/writeup-blog/posts/off-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu travel Writeup
     </h2>
   </header>
@@ -266,36 +300,6 @@ Inside main, firstly, we are given the address of main (located at PIE address &
   </div>
   <footer class="entry-footer"><span title='2025-12-11 00:00:00 +0000 UTC'>December 11, 2025</span></footer>
   <a class="entry-link" aria-label="post link to Nullctf 2025 Sketchy Writeup" href="https://irinasusca.github.io/writeup-blog/posts/sketchy-writeup/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu Buy-Cooffe Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview It’s early morning, and the caffeine hasn’t quite kicked in yet. As you sip your cup of coffee, you notice something odd – a mysterious program named cooffee is running on your system.
-At first glance, the chall looks like a 64-bit executable, and upon a buffer overflow the program immediately leaks us a libc address. We also get the libc-2.31.so to download, and that means this is the libc version our binary uses.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu Buy-Cooffe Writeup" href="https://irinasusca.github.io/writeup-blog/posts/buycooffe-writeup/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu ftp-console Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview We got a very strange ftp console? Can you retrive the flag?
-At first glance, the ftp_server looks like a 32-bit executable, and as hinted by the name, a FTP (File Transfer Protocol) server mockup.
-Upon checking, every protection is disabled, so that’s nice! Now let’s take a look at the binary.
-We have a main function that calls login, and we can already see some interesting things going on.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu ftp-console Writeup" href="https://irinasusca.github.io/writeup-blog/posts/ftpconsole-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

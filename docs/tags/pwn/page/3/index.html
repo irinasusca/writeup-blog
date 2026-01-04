@@ -137,6 +137,53 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu Bazooka Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview We have a problem on the station on Mars, we suspect we would be attacked by some hackers so we put a little protection against them.
+The challenge was proposed by BIT SENTINEL.
+At first glance, the pwn_bazooka_bazooka looks like a 64-bit executable, and I didn’t immediately notice any obvious buffer overflows or format strings. It takes a message input and a junk input. So let’s take a look at the binary.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-02 00:00:00 +0000 UTC'>December 2, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu Bazooka Writeup" href="https://irinasusca.github.io/writeup-blog/posts/bazooka-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico Here&#39;s A LIBC Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview I am once again asking for you to pwn this binary
+At first glance, the vuln looks like a 64-bit executable with a buffer overflow vulnerability. And since it’s hinted in the title, most probably a ret2libc challenge.
+Upon checking, only NX is enabled. So this should make things fairly easy for us.
+Identifying the vulnerabilities We can quickly check if there’s a /bin/sh in memory, and there it is! Along with a system and also execve.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-30 00:00:00 +0000 UTC'>November 30, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Here&#39;s A LIBC Writeup" href="https://irinasusca.github.io/writeup-blog/posts/heresalibc-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico Homework Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview “time to do some homework!”
+At first glance, homework looks like a 64-bit executable, but we can’t tell much about it.
+After using checksec, sadly, PIE is enabled and so is NX.
+We have a main function (picture above) and a step function. The step function uses and then modifies some variables declared/located in the .bss, so it would be good to see what they look like before execution starts.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-27 21:09:36 +0200 EET'>November 27, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Homework Writeup" href="https://irinasusca.github.io/writeup-blog/posts/homework-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Pico Buffer Overflow 3 Writeup
     </h2>
   </header>

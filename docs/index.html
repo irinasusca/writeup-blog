@@ -178,6 +178,71 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu cookies Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Cookies for my friends.
+We’ve got a 64-bit binary, 100% format string vulnerability, canary and NX enabled.
+This loop happens exactly twice, to leak something then for us to exploit the buffer overflow.
+We even have a getshell function, so this really won’t be that complicated; We’re not even dealing with PIE.
+Identifying the vulnerabilities We get the gadgets in our binary, we can start looking for the canary now! Let’s just look remotely straight away, so we don’t bother with trying to do it twice, since the offsets are going to differ.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-04 00:00:00 +0000 UTC'>January 4, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu cookies Writeup" href="https://irinasusca.github.io/writeup-blog/posts/cookies-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu off Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview This application is here just to serve your team. When you are done, you can try to exploit it. We hope is going to be much more fun.
+We also have canary and NX enabled.
+Let’s look at the functions here. First we have a main which forks every time it’s ran:
+Then, this function is looped:
+It calls some weird functions on the string:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-04 00:00:00 +0000 UTC'>January 4, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu off Writeup" href="https://irinasusca.github.io/writeup-blog/posts/off-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu threadz Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Threads are so cool! And secure! So secure that I store all my secrets there
+Note 1: The flag is broken into chunks of 4 characters, like this: volatile __thread unsigned int flag1 = ‘{CFT’;
+The letters in the chunks are reversed for your convenience, and the chunks are defined in order
+Note 2: The binary is intentionally not given.
+Note 3: The program will read 0x1000 bytes of shellcode, stored into a mmap-ed region with RWX permissions
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-04 00:00:00 +0000 UTC'>January 4, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu threadz Writeup" href="https://irinasusca.github.io/writeup-blog/posts/threadz-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">VMs
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Why I decided to make a post about VMs and things that I didn’t see people talk much about, especially because of my past experiences with them. I will be talking about Windows and Linux machines, what worked for me and what didn’t, how to set up and all that crap.
+Windows My first attempt at a “cybersecurity” Kali VM was on Oracle VirtualBox, on my old Windows Laptop (with 16GB of ram and 400GB of space), which didn’t leave much for the VM, maybe four cores and 8GB RAM at best.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-04 00:00:00 +0000 UTC'>January 4, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to VMs" href="https://irinasusca.github.io/writeup-blog/posts/vm-specs/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu travel Writeup
     </h2>
   </header>
@@ -275,70 +340,6 @@ This function essentially calls the function at address a1 (its parameter), pass
   </div>
   <footer class="entry-footer"><span title='2025-12-27 00:00:00 +0000 UTC'>December 27, 2025</span></footer>
   <a class="entry-link" aria-label="post link to CyberEdu nulle Writeup" href="https://irinasusca.github.io/writeup-blog/posts/nulle-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu baby-fmt Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Merry Christmas everyone! 🎄
-Challenge overview This is should be a basic pwn challenge but please be aware that time is not your friend.
-Let’s check out the restrictions we’re dealing with.
-We’re working with a 64-bit binary with NX and PIE enabled, and as the name suggests, probably a format string vulnerability. Let’s take a look at the disassembled binary.
-We have a function called by main, let’s call it vuln.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-26 00:00:00 +0000 UTC'>December 26, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu baby-fmt Writeup" href="https://irinasusca.github.io/writeup-blog/posts/babyfmt-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu aptssh Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Someone backdoored us with a strange PAM module, and now anyone can log in with aptssh:aptssh. I think they were able to get our flag.
-First of all, what is a PAM module? Well, PAM stands for Pluggable Authentification Modules, and it’s how Linux decides how we can log in, how passwords are checked, and so on.
-So, nc isn’t going to be how we solve this. Instead, we’re going to login using ssh like so:
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-23 00:00:00 +0000 UTC'>December 23, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu aptssh Writeup" href="https://irinasusca.github.io/writeup-blog/posts/aptssh-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu Ropper Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Your message is at maximum two stages from the flag. Find the bugs in this binary file and you will know what to do.
-As the name ropper suggests, and the buffer overflow shown in the image above, we’re dealing with a ret2something here.
-Let’s take a look at the binary. We have a main and another secondary function being used here.
-main calls the second functions and passes, as arguments, the string getting printed and 0.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-22 00:00:00 +0000 UTC'>December 22, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu Ropper Writeup" href="https://irinasusca.github.io/writeup-blog/posts/ropper-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu function-check Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview We need a master to manipulate the syntax of a program.
-At first glance, the format looks like a 32-bit executable, and it doesn’t really look like it’s going to be fun to test locally, so let’s just try it remotely right away.
-Upon checking, every protection is disabled, so that’s nice! Now let’s take a look at the binary.
-Pretty straight forward, we have a main function and a printFlag function. As the binary name suggests, a fmtstr vulnerability, and a value demo_3187 we’re supposed to overwrite.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-21 00:00:00 +0000 UTC'>December 21, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu function-check Writeup" href="https://irinasusca.github.io/writeup-blog/posts/functioncheck-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

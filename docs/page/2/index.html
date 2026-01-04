@@ -147,6 +147,70 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu baby-fmt Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Merry Christmas everyone! 🎄
+Challenge overview This is should be a basic pwn challenge but please be aware that time is not your friend.
+Let’s check out the restrictions we’re dealing with.
+We’re working with a 64-bit binary with NX and PIE enabled, and as the name suggests, probably a format string vulnerability. Let’s take a look at the disassembled binary.
+We have a function called by main, let’s call it vuln.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-26 00:00:00 +0000 UTC'>December 26, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu baby-fmt Writeup" href="https://irinasusca.github.io/writeup-blog/posts/babyfmt-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu aptssh Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Someone backdoored us with a strange PAM module, and now anyone can log in with aptssh:aptssh. I think they were able to get our flag.
+First of all, what is a PAM module? Well, PAM stands for Pluggable Authentification Modules, and it’s how Linux decides how we can log in, how passwords are checked, and so on.
+So, nc isn’t going to be how we solve this. Instead, we’re going to login using ssh like so:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-23 00:00:00 +0000 UTC'>December 23, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu aptssh Writeup" href="https://irinasusca.github.io/writeup-blog/posts/aptssh-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu Ropper Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Your message is at maximum two stages from the flag. Find the bugs in this binary file and you will know what to do.
+As the name ropper suggests, and the buffer overflow shown in the image above, we’re dealing with a ret2something here.
+Let’s take a look at the binary. We have a main and another secondary function being used here.
+main calls the second functions and passes, as arguments, the string getting printed and 0.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-22 00:00:00 +0000 UTC'>December 22, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu Ropper Writeup" href="https://irinasusca.github.io/writeup-blog/posts/ropper-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu function-check Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview We need a master to manipulate the syntax of a program.
+At first glance, the format looks like a 32-bit executable, and it doesn’t really look like it’s going to be fun to test locally, so let’s just try it remotely right away.
+Upon checking, every protection is disabled, so that’s nice! Now let’s take a look at the binary.
+Pretty straight forward, we have a main function and a printFlag function. As the binary name suggests, a fmtstr vulnerability, and a value demo_3187 we’re supposed to overwrite.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-21 00:00:00 +0000 UTC'>December 21, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu function-check Writeup" href="https://irinasusca.github.io/writeup-blog/posts/functioncheck-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu can-you-jump Writeup
     </h2>
   </header>
@@ -236,68 +300,6 @@ Taking a look at main, we can see the flag getting copied into a dest buffer. Ou
   </div>
   <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
   <a class="entry-link" aria-label="post link to CyberEdu Lost Writeup" href="https://irinasusca.github.io/writeup-blog/posts/lost-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu Stack Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview You can’t run shellcode if all registers are 0, right?
-Our binary main is a 64-bit executable with an obvious buffer overflow vulnerability. Let’s take a look at it using a disassembler.
-We only have one function, main, which mmaps dest, copies 3 bytes of what’s inside &amp;unk_2027 into dest, then lets us write 0x1000 bytes into dest&#43;3. That means our buffer overflow is only 3 bytes, though. Afterwards, it executes this assembly shellcode:
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu Stack Writeup" href="https://irinasusca.github.io/writeup-blog/posts/stack-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu Bazooka Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview We have a problem on the station on Mars, we suspect we would be attacked by some hackers so we put a little protection against them.
-The challenge was proposed by BIT SENTINEL.
-At first glance, the pwn_bazooka_bazooka looks like a 64-bit executable, and I didn’t immediately notice any obvious buffer overflows or format strings. It takes a message input and a junk input. So let’s take a look at the binary.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-02 00:00:00 +0000 UTC'>December 2, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu Bazooka Writeup" href="https://irinasusca.github.io/writeup-blog/posts/bazooka-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Here&#39;s A LIBC Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview I am once again asking for you to pwn this binary
-At first glance, the vuln looks like a 64-bit executable with a buffer overflow vulnerability. And since it’s hinted in the title, most probably a ret2libc challenge.
-Upon checking, only NX is enabled. So this should make things fairly easy for us.
-Identifying the vulnerabilities We can quickly check if there’s a /bin/sh in memory, and there it is! Along with a system and also execve.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-30 00:00:00 +0000 UTC'>November 30, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Here&#39;s A LIBC Writeup" href="https://irinasusca.github.io/writeup-blog/posts/heresalibc-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Homework Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview “time to do some homework!”
-At first glance, homework looks like a 64-bit executable, but we can’t tell much about it.
-After using checksec, sadly, PIE is enabled and so is NX.
-We have a main function (picture above) and a step function. The step function uses and then modifies some variables declared/located in the .bss, so it would be good to see what they look like before execution starts.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-27 21:09:36 +0200 EET'>November 27, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Homework Writeup" href="https://irinasusca.github.io/writeup-blog/posts/homework-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
