@@ -6,8 +6,42 @@
     <description>Recent content on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 04 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 09 Jan 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CyberEdu jargon Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/jargon-writeup/</link>
+      <pubDate>Fri, 09 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/jargon-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;This ticketing platform looks like it was built back in the late ’90s, yet somehow it’s still running in 2025. Many of the flaws it carries are relics of an older era of the web. The question is: can you still exploit &lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/9fc6276f-ba87-4bc0-8277-b9640c3ce3de?tenant=cyberedu&#34;&gt;these outdated systems&lt;/a&gt;&lt;/strong&gt; today, or has old-school web exploitation become harder in the modern landscape?&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;We can look at &lt;code&gt;/tickets?user=admin&lt;/code&gt; by clicking tickets. Here we&amp;rsquo;re given some hints:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Serialization and Deserialization</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/serialization/</link>
+      <pubDate>Thu, 08 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/serialization/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;I decided to get more into this subject because of the challenge &lt;strong&gt;&lt;a href=&#34;irinasusca.github.io/writeup-blog/posts/jargon-writeup/&#34;&gt;jargon&lt;/a&gt;&lt;/strong&gt;. I was struggling with AIs and it was really getting on my nerves, because I felt I didn&amp;rsquo;t &lt;em&gt;really&lt;/em&gt; understand what was going on. So I decided to write a little article about this, to make myself fully grasp serialization, deserialization and the subset of vulnerabilities that may come with them. So, let&amp;rsquo;s get into it.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu reccon Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/reccon-writeup/</link>
+      <pubDate>Wed, 07 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/reccon-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;I heard you like memes, so we had a &lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/723d67c0-03f9-11ec-9975-d157ab5ef7a5?tenant=cyberedu&#34;&gt;surprise&lt;/a&gt;&lt;/strong&gt; for you. Enjoy !!&lt;/p&gt;
+&lt;p&gt;Today is a big day. Finally solving a non-pwn challenge! Let&amp;rsquo;s see if I can still remember how burpsuite works.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;First I ran &lt;code&gt;ffuf -u http://34.159.240.221:31548/FUZZ -w /usr/share/wordlists/dirb/common.txt&lt;/code&gt;, but only found .hta, .htaccess, .htpasswd and index.php.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/reccon-writeup/stupid.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This is all. I ffufed for /images_FUZZ too, but nothing.&lt;/p&gt;
+&lt;p&gt;I did &lt;code&gt;exiftool&lt;/code&gt;, &lt;code&gt;strings&lt;/code&gt;, looked at it in hex, &lt;code&gt;steghide&lt;/code&gt;, &lt;code&gt;stegseek&lt;/code&gt;, just about everything.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>CyberEdu cookies Writeup</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/cookies-writeup/</link>

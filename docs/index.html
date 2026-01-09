@@ -178,6 +178,50 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu jargon Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview This ticketing platform looks like it was built back in the late ’90s, yet somehow it’s still running in 2025. Many of the flaws it carries are relics of an older era of the web. The question is: can you still exploit these outdated systems today, or has old-school web exploitation become harder in the modern landscape?
+Identifying the vulnerabilities We can look at /tickets?user=admin by clicking tickets. Here we’re given some hints:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-09 00:00:00 +0000 UTC'>January 9, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu jargon Writeup" href="https://irinasusca.github.io/writeup-blog/posts/jargon-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Serialization and Deserialization
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Why I decided to get more into this subject because of the challenge jargon. I was struggling with AIs and it was really getting on my nerves, because I felt I didn’t really understand what was going on. So I decided to write a little article about this, to make myself fully grasp serialization, deserialization and the subset of vulnerabilities that may come with them. So, let’s get into it.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-08 00:00:00 +0000 UTC'>January 8, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to Serialization and Deserialization" href="https://irinasusca.github.io/writeup-blog/posts/serialization/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu reccon Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview I heard you like memes, so we had a surprise for you. Enjoy !!
+Today is a big day. Finally solving a non-pwn challenge! Let’s see if I can still remember how burpsuite works.
+Identifying the vulnerabilities First I ran ffuf -u http://34.159.240.221:31548/FUZZ -w /usr/share/wordlists/dirb/common.txt, but only found .hta, .htaccess, .htpasswd and index.php.
+This is all. I ffufed for /images_FUZZ too, but nothing.
+I did exiftool, strings, looked at it in hex, steghide, stegseek, just about everything.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-07 00:00:00 +0000 UTC'>January 7, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu reccon Writeup" href="https://irinasusca.github.io/writeup-blog/posts/reccon-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu cookies Writeup
     </h2>
   </header>
@@ -293,53 +337,6 @@ Since we know the seed ourselves, we can get the same value for rand() that the 
   </div>
   <footer class="entry-footer"><span title='2025-12-28 00:00:00 +0000 UTC'>December 28, 2025</span></footer>
   <a class="entry-link" aria-label="post link to CyberEdu offensive-honeypot Writeup" href="https://irinasusca.github.io/writeup-blog/posts/offensivehoneypot-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu darkmagic Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview In a distant land a dark magical power lay. We need a hero to defeat these dark forces.
-We’re working with a 64-bit binary with NX and Canary enabled, and a format string vulnerability. Let’s take a look at the binary.
-This is the vuln function, along which we have a getshell function that we need to redirect to. We can deduct that v5 is our canary being checked.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-27 00:00:00 +0000 UTC'>December 27, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu darkmagic Writeup" href="https://irinasusca.github.io/writeup-blog/posts/darkmagic-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu get-access Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Can you pwn this?
-Very interestingly, this challenge doesn’t come with any source files, and we just get a Username and Password prompt.
-Identifying the vulnerabilities The first thing I thought about was a buffer overflow.
-The Username seemed to read a specific amount of bytes, and the overflow would go into password, and password just didn’t crash anything, so it might’ve been the same situation.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-27 00:00:00 +0000 UTC'>December 27, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu get-access Writeup" href="https://irinasusca.github.io/writeup-blog/posts/getaccess-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu nulle Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Our developer got a bit too clever with C structs. They decided that if two structs have the same fields, just in a different order, it’s fine to cast between them.
-Let’s look at our binary, main.
-In our main function, we get to write into a aIsYour string, after which a function I named call_param that looks like this is called:
-This function essentially calls the function at address a1 (its parameter), passing the value located at a1&#43;1 (immediately after a1) as a parameter to the a1() function.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-27 00:00:00 +0000 UTC'>December 27, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu nulle Writeup" href="https://irinasusca.github.io/writeup-blog/posts/nulle-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

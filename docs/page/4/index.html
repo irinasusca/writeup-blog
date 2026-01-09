@@ -147,6 +147,52 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico Stack Cache Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Undefined behaviours are fun. It looks like Dr. Oswal allowed buffer overflows again. Analyse this program to identify how you can get to the flag.
+At first glance, the vuln looks like a 32-bit executable with a buffer overflow vulnerability.
+Analyzing the binary, we come across some interesting funtions, UnderConstruction and win.
+After a quick checksec, we find vuln has both NX and a stack canary enabled. So we can probably find a way to leak the stack canary using the UnderConstruction function.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-19 21:09:36 +0200 EET'>November 19, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Stack Cache Writeup" href="https://irinasusca.github.io/writeup-blog/posts/stackcache-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico Babygame02 Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Break the game and get the flag. Welcome to BabyGame 02! Navigate around the map and see what you can find!
+After analyzing the binary and renaming the variables, we notice we have a player struct/array consisting of the player y, player x.
+Immediately after that, we have the map matrix.
+From the main function, by solving the puzzle, which can be easily achieved by using the special command p we “win”. And with the special command l we can replace the @ player character with a char (spoiler, it can be any byte of our liking, not necessarily a char).
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-19 21:08:35 +0200 EET'>November 19, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Babygame02 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/babygame02-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico Babygame03 Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Break the game and get the flag. Welcome to BabyGame 03! Navigate around the map and see what you can find! Be careful, you don’t have many moves. There are obstacles that instantly end the game on collision. The game is available to download here. There is no source available, so you’ll have to figure your way around the map.
+After analyzing the binary and renaming the variables, we notice we have a player struct/array consisting of the player y, player x and player lives.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-10 21:08:35 +0200 EET'>November 10, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Babygame03 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/babygame03-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Pico Handoff Writeup
     </h2>
   </header>

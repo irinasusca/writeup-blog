@@ -8,13 +8,31 @@
     <loc>https://irinasusca.github.io/writeup-blog/posts/</loc>
     <lastmod>2026-12-10T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/cyberedu/</loc>
+    <lastmod>2026-01-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/jargon-writeup/</loc>
+    <lastmod>2026-01-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/</loc>
+    <lastmod>2026-01-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/web/</loc>
+    <lastmod>2026-01-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/materials/</loc>
+    <lastmod>2026-01-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/serialization/</loc>
+    <lastmod>2026-01-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/reccon-writeup/</loc>
+    <lastmod>2026-01-07T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/</loc>
     <lastmod>2026-01-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/tags/chat/</loc>
-    <lastmod>2026-01-04T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/tags/cyberedu/</loc>
     <lastmod>2026-01-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/posts/cookies-writeup/</loc>
@@ -33,9 +51,6 @@
     <lastmod>2026-01-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/tags/shellcode/</loc>
-    <lastmod>2026-01-04T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/tags/</loc>
     <lastmod>2026-01-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/tags/threads/</loc>

