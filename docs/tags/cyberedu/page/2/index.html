@@ -137,6 +137,39 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu nulle Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Our developer got a bit too clever with C structs. They decided that if two structs have the same fields, just in a different order, it’s fine to cast between them.
+Let’s look at our binary, main.
+In our main function, we get to write into a aIsYour string, after which a function I named call_param that looks like this is called:
+This function essentially calls the function at address a1 (its parameter), passing the value located at a1&#43;1 (immediately after a1) as a parameter to the a1() function.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-27 00:00:00 +0000 UTC'>December 27, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu nulle Writeup" href="https://irinasusca.github.io/writeup-blog/posts/nulle-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu baby-fmt Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Merry Christmas everyone! 🎄
+Challenge overview This is should be a basic pwn challenge but please be aware that time is not your friend.
+Let’s check out the restrictions we’re dealing with.
+We’re working with a 64-bit binary with NX and PIE enabled, and as the name suggests, probably a format string vulnerability. Let’s take a look at the disassembled binary.
+We have a function called by main, let’s call it vuln.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-26 00:00:00 +0000 UTC'>December 26, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu baby-fmt Writeup" href="https://irinasusca.github.io/writeup-blog/posts/babyfmt-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu aptssh Writeup
     </h2>
   </header>
@@ -258,25 +291,12 @@ We only have one function, main, which mmaps dest, copies 3 bytes of what’s in
   <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
   <a class="entry-link" aria-label="post link to CyberEdu Stack Writeup" href="https://irinasusca.github.io/writeup-blog/posts/stack-writeup/"></a>
 </article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu Bazooka Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview We have a problem on the station on Mars, we suspect we would be attacked by some hackers so we put a little protection against them.
-The challenge was proposed by BIT SENTINEL.
-At first glance, the pwn_bazooka_bazooka looks like a 64-bit executable, and I didn’t immediately notice any obvious buffer overflows or format strings. It takes a message input and a junk input. So let’s take a look at the binary.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-02 00:00:00 +0000 UTC'>December 2, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu Bazooka Writeup" href="https://irinasusca.github.io/writeup-blog/posts/bazooka-writeup/"></a>
-</article>
 <footer class="page-footer">
   <nav class="pagination">
     <a class="prev" href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">
       «&nbsp;Prev&nbsp;
+    </a>
+    <a class="next" href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/page/3/">Next&nbsp;&nbsp;»
     </a>
   </nav>
 </footer>

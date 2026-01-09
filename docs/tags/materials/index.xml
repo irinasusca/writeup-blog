@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Materials on Irina&#39;s CTF Writeups</title>
+    <link>https://irinasusca.github.io/writeup-blog/tags/materials/</link>
+    <description>Recent content in Materials on Irina&#39;s CTF Writeups</description>
+    <generator>Hugo -- 0.146.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 08 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://irinasusca.github.io/writeup-blog/tags/materials/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Serialization and Deserialization</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/serialization/</link>
+      <pubDate>Thu, 08 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/serialization/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;I decided to get more into this subject because of the challenge &lt;strong&gt;&lt;a href=&#34;irinasusca.github.io/writeup-blog/posts/jargon-writeup/&#34;&gt;jargon&lt;/a&gt;&lt;/strong&gt;. I was struggling with AIs and it was really getting on my nerves, because I felt I didn&amp;rsquo;t &lt;em&gt;really&lt;/em&gt; understand what was going on. So I decided to write a little article about this, to make myself fully grasp serialization, deserialization and the subset of vulnerabilities that may come with them. So, let&amp;rsquo;s get into it.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

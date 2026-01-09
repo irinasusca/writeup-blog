@@ -2,41 +2,56 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Format-String on Irina&#39;s CTF Writeups</title>
-    <link>http://localhost:43595/writeup-blog/tags/format-string/</link>
+    <link>http://localhost:36479/writeup-blog/tags/format-string/</link>
     <description>Recent content in Format-String on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 04 Jan 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:43595/writeup-blog/tags/format-string/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:36479/writeup-blog/tags/format-string/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>CyberEdu cookies Writeup</title>
-      <link>http://localhost:43595/writeup-blog/posts/cookies-writeup/</link>
+      <link>http://localhost:36479/writeup-blog/posts/cookies-writeup/</link>
       <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:43595/writeup-blog/posts/cookies-writeup/</guid>
-      <description>&lt;p&gt;Merry Christmas everyone! 🎄&lt;/p&gt;
-&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+      <guid>http://localhost:36479/writeup-blog/posts/cookies-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/d20b73b0-5357-11ec-9eab-1912e4e08bd5?tenant=cyberedu&#34;&gt;Cookies&lt;/a&gt;&lt;/strong&gt; for my friends.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:43595/writeup-blog/posts/cookies-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:36479/writeup-blog/posts/cookies-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We&amp;rsquo;ve got a 64-bit binary, 100% format string vulnerability, canary and NX enabled.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:43595/writeup-blog/posts/cookies-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:36479/writeup-blog/posts/cookies-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;This loop happens exactly twice, to leak something then for us to exploit the buffer overflow.&lt;/p&gt;
 &lt;p&gt;We even have a &lt;code&gt;getshell&lt;/code&gt; function, so this really won&amp;rsquo;t be that complicated; We&amp;rsquo;re not even dealing with PIE.&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:43595/writeup-blog/posts/cookies-writeup/pic3.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:36479/writeup-blog/posts/cookies-writeup/pic3.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We get the gadgets in our binary, we can start looking for the canary now! Let&amp;rsquo;s just look remotely straight away, so we don&amp;rsquo;t bother with trying to do it twice, since the offsets are going to differ.&lt;/p&gt;</description>
     </item>
     <item>
+      <title>CyberEdu off Writeup</title>
+      <link>http://localhost:36479/writeup-blog/posts/off-writeup/</link>
+      <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:36479/writeup-blog/posts/off-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/55a1cea0-7f21-11ea-ad6a-498299d28f9e?tenant=cyberedu&#34;&gt;This application&lt;/a&gt;&lt;/strong&gt; is here just to serve your team. When you are done, you can try to exploit it. We hope is going to be much more fun.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:36479/writeup-blog/posts/off-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We also have canary and NX enabled.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Let&amp;rsquo;s look at the functions here. First we have a &lt;code&gt;main&lt;/code&gt; which forks every time it&amp;rsquo;s ran:&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:36479/writeup-blog/posts/off-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Then, this function is looped:&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:36479/writeup-blog/posts/off-writeup/pic4.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;It calls some weird functions on the string:&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>CyberEdu travel Writeup</title>
-      <link>http://localhost:43595/writeup-blog/posts/travel-writeup/</link>
+      <link>http://localhost:36479/writeup-blog/posts/travel-writeup/</link>
       <pubDate>Sat, 03 Jan 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:43595/writeup-blog/posts/travel-writeup/</guid>
+      <guid>http://localhost:36479/writeup-blog/posts/travel-writeup/</guid>
       <description>&lt;p&gt;Happy New Year! 🎇&lt;/p&gt;
 &lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
 &lt;p&gt;Travel agency as a &lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/05090610-44a4-11ed-ba64-0fbb056be1da?tenant=cyberedu&#34;&gt;service&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:43595/writeup-blog/posts/travel-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:36479/writeup-blog/posts/travel-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We&amp;rsquo;re given a &lt;code&gt;libc.so.6&lt;/code&gt; and a &lt;strong&gt;main&lt;/strong&gt; 64-bit binary, with &lt;code&gt;NX&lt;/code&gt;, &lt;code&gt;PIE&lt;/code&gt; and a canary enabled. We immediately bump into a format string vulnerability.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:43595/writeup-blog/posts/travel-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:36479/writeup-blog/posts/travel-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We only have one function, &lt;code&gt;main&lt;/code&gt;, and a buffer overflow along the format string. So we can start trying to leak the canary, PIE base and libc.&lt;/p&gt;
 &lt;p&gt;So, PIE ret2libc with a canary.&lt;/p&gt;
 &lt;hr&gt;
@@ -45,17 +60,17 @@
     </item>
     <item>
       <title>CyberEdu secret Writeup</title>
-      <link>http://localhost:43595/writeup-blog/posts/secret-writeup/</link>
+      <link>http://localhost:36479/writeup-blog/posts/secret-writeup/</link>
       <pubDate>Tue, 30 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:43595/writeup-blog/posts/secret-writeup/</guid>
+      <guid>http://localhost:36479/writeup-blog/posts/secret-writeup/</guid>
       <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
 &lt;p&gt;Just another pwn &lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/559e4ec0-7f21-11ea-b4cb-3db05c1cfb77?tenant=cyberedu&#34;&gt;challenge&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:43595/writeup-blog/posts/secret-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:36479/writeup-blog/posts/secret-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Straight away, we&amp;rsquo;re dealing with a 64-bit PIE with canary enabled, and a format string vulnerability, and a &lt;code&gt;gets(v1)&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;The format string vulnerability is in &lt;code&gt;main&lt;/code&gt;:&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:43595/writeup-blog/posts/secret-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:36479/writeup-blog/posts/secret-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;And here is the &lt;code&gt;gets(v1)&lt;/code&gt; that allows us to buffer overflow:&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:43595/writeup-blog/posts/secret-writeup/pic3.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:36479/writeup-blog/posts/secret-writeup/pic3.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;So, ret2libc with a canary.&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;the-exploit&#34;&gt;The exploit&lt;/h2&gt;
@@ -112,56 +127,56 @@
     </item>
     <item>
       <title>CyberEdu darkmagic Writeup</title>
-      <link>http://localhost:43595/writeup-blog/posts/darkmagic-writeup/</link>
+      <link>http://localhost:36479/writeup-blog/posts/darkmagic-writeup/</link>
       <pubDate>Sat, 27 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:43595/writeup-blog/posts/darkmagic-writeup/</guid>
+      <guid>http://localhost:36479/writeup-blog/posts/darkmagic-writeup/</guid>
       <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
 &lt;p&gt;In a distant land a dark magical power lay. &lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/676b3ac0-347c-11eb-bc7f-b5898cb45fdc?tenant=cyberedu&#34;&gt;We need a hero&lt;/a&gt;&lt;/strong&gt; to defeat these dark forces.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:43595/writeup-blog/posts/darkmagic-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:36479/writeup-blog/posts/darkmagic-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We&amp;rsquo;re working with a 64-bit binary with NX and Canary enabled, and a format string vulnerability. Let&amp;rsquo;s take a look at the binary.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:43595/writeup-blog/posts/darkmagic-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:36479/writeup-blog/posts/darkmagic-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;This is the &lt;code&gt;vuln&lt;/code&gt; function, along which we have a &lt;code&gt;getshell&lt;/code&gt; function that we need to redirect to. We can deduct that &lt;code&gt;v5&lt;/code&gt; is our canary being checked.&lt;/p&gt;</description>
     </item>
     <item>
       <title>CyberEdu get-access Writeup</title>
-      <link>http://localhost:43595/writeup-blog/posts/getaccess-writeup/</link>
+      <link>http://localhost:36479/writeup-blog/posts/getaccess-writeup/</link>
       <pubDate>Sat, 27 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:43595/writeup-blog/posts/getaccess-writeup/</guid>
+      <guid>http://localhost:36479/writeup-blog/posts/getaccess-writeup/</guid>
       <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
 &lt;p&gt;Can you pwn &lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/559a5a60-7f21-11ea-81ac-cdbbeaa73a14?tenant=cyberedu&#34;&gt;this&lt;/a&gt;&lt;/strong&gt;?&lt;/p&gt;
 &lt;p&gt;Very interestingly, this challenge doesn&amp;rsquo;t come with any source files, and we just get a &lt;em&gt;Username&lt;/em&gt; and &lt;em&gt;Password&lt;/em&gt; prompt.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:43595/writeup-blog/posts/getaccess-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:36479/writeup-blog/posts/getaccess-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
 &lt;p&gt;The first thing I thought about was a buffer overflow.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:43595/writeup-blog/posts/getaccess-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:36479/writeup-blog/posts/getaccess-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The &lt;em&gt;Username&lt;/em&gt; seemed to read a specific amount of bytes, and the overflow would go into password, and password just didn&amp;rsquo;t crash anything, so it might&amp;rsquo;ve been the same situation.&lt;/p&gt;</description>
     </item>
     <item>
       <title>CyberEdu baby-fmt Writeup</title>
-      <link>http://localhost:43595/writeup-blog/posts/babyfmt-writeup/</link>
+      <link>http://localhost:36479/writeup-blog/posts/babyfmt-writeup/</link>
       <pubDate>Fri, 26 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:43595/writeup-blog/posts/babyfmt-writeup/</guid>
+      <guid>http://localhost:36479/writeup-blog/posts/babyfmt-writeup/</guid>
       <description>&lt;p&gt;Merry Christmas everyone! 🎄&lt;/p&gt;
 &lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/3d3ef3d0-94fb-11ea-93fe-e7b039c31d38?tenant=cyberedu&#34;&gt;This&lt;/a&gt;&lt;/strong&gt; is should be a basic pwn challenge but please be aware that time is not your friend.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:43595/writeup-blog/posts/babyfmt-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:36479/writeup-blog/posts/babyfmt-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s check out the restrictions we&amp;rsquo;re dealing with.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:43595/writeup-blog/posts/babyfmt-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:36479/writeup-blog/posts/babyfmt-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We&amp;rsquo;re working with a 64-bit binary with NX and PIE enabled, and as the name suggests, probably a format string vulnerability. Let&amp;rsquo;s take a look at the disassembled binary.&lt;/p&gt;
 &lt;p&gt;We have a function called by &lt;code&gt;main&lt;/code&gt;, let&amp;rsquo;s call it &lt;code&gt;vuln&lt;/code&gt;.&lt;/p&gt;</description>
     </item>
     <item>
       <title>CyberEdu function-check Writeup</title>
-      <link>http://localhost:43595/writeup-blog/posts/functioncheck-writeup/</link>
+      <link>http://localhost:36479/writeup-blog/posts/functioncheck-writeup/</link>
       <pubDate>Sun, 21 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:43595/writeup-blog/posts/functioncheck-writeup/</guid>
+      <guid>http://localhost:36479/writeup-blog/posts/functioncheck-writeup/</guid>
       <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
 &lt;p&gt;We need a master to manipulate the syntax of a &lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/08ef6340-c1e4-11eb-9b9f-6bd8e9c6de87?tenant=cyberedu&#34;&gt;program&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:43595/writeup-blog/posts/functioncheck-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:36479/writeup-blog/posts/functioncheck-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;At first glance, the &lt;strong&gt;format&lt;/strong&gt; looks like a 32-bit executable, and it doesn&amp;rsquo;t really look like it&amp;rsquo;s going to be fun to test locally, so let&amp;rsquo;s just try it remotely right away.&lt;/p&gt;
 &lt;p&gt;Upon checking, every protection is disabled, so that&amp;rsquo;s nice! Now let&amp;rsquo;s take a look at the binary.&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:43595/writeup-blog/posts/functioncheck-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:36479/writeup-blog/posts/functioncheck-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Pretty straight forward, we have a &lt;code&gt;main&lt;/code&gt; function and a &lt;code&gt;printFlag&lt;/code&gt; function. As the binary name suggests, a fmtstr vulnerability, and a value &lt;code&gt;demo_3187&lt;/code&gt; we&amp;rsquo;re supposed to overwrite.&lt;/p&gt;</description>
     </item>
   </channel>

