@@ -82,7 +82,8 @@ I guess there's a lesson to be learned here, which is read everything thrice.
 
 ---
 
-
+As always, the full code can be found on my GitHub 
+**[here](https://github.com/irinasusca/ctf-writeups/blob/main/cyberedu/brokenlogin.py)**.
 
 
 

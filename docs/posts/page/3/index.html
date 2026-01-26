@@ -152,6 +152,118 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu offensive-honeypot Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Just another pwn challenge.
+We’re dealing with a little game, and a canary.
+The win condition is that we beat the game, by killing the hacker player.
+Identifying the vulnerabilities The vulnerability here is that we can calculate the random number ourselves, very similarly to another challenge I wrote the writeup for here.
+Since we know the seed ourselves, we can get the same value for rand() that the game gets.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-28 00:00:00 +0000 UTC'>December 28, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu offensive-honeypot Writeup" href="https://irinasusca.github.io/writeup-blog/posts/offensivehoneypot-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu darkmagic Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview In a distant land a dark magical power lay. We need a hero to defeat these dark forces.
+We’re working with a 64-bit binary with NX and Canary enabled, and a format string vulnerability. Let’s take a look at the binary.
+This is the vuln function, along which we have a getshell function that we need to redirect to. We can deduct that v5 is our canary being checked.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-27 00:00:00 +0000 UTC'>December 27, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu darkmagic Writeup" href="https://irinasusca.github.io/writeup-blog/posts/darkmagic-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu get-access Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Can you pwn this?
+Very interestingly, this challenge doesn’t come with any source files, and we just get a Username and Password prompt.
+Identifying the vulnerabilities The first thing I thought about was a buffer overflow.
+The Username seemed to read a specific amount of bytes, and the overflow would go into password, and password just didn’t crash anything, so it might’ve been the same situation.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-27 00:00:00 +0000 UTC'>December 27, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu get-access Writeup" href="https://irinasusca.github.io/writeup-blog/posts/getaccess-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu nulle Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Our developer got a bit too clever with C structs. They decided that if two structs have the same fields, just in a different order, it’s fine to cast between them.
+Let’s look at our binary, main.
+In our main function, we get to write into a aIsYour string, after which a function I named call_param that looks like this is called:
+This function essentially calls the function at address a1 (its parameter), passing the value located at a1&#43;1 (immediately after a1) as a parameter to the a1() function.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-27 00:00:00 +0000 UTC'>December 27, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu nulle Writeup" href="https://irinasusca.github.io/writeup-blog/posts/nulle-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu baby-fmt Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Merry Christmas everyone! 🎄
+Challenge overview This is should be a basic pwn challenge but please be aware that time is not your friend.
+Let’s check out the restrictions we’re dealing with.
+We’re working with a 64-bit binary with NX and PIE enabled, and as the name suggests, probably a format string vulnerability. Let’s take a look at the disassembled binary.
+We have a function called by main, let’s call it vuln.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-26 00:00:00 +0000 UTC'>December 26, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu baby-fmt Writeup" href="https://irinasusca.github.io/writeup-blog/posts/babyfmt-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu aptssh Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Someone backdoored us with a strange PAM module, and now anyone can log in with aptssh:aptssh. I think they were able to get our flag.
+First of all, what is a PAM module? Well, PAM stands for Pluggable Authentification Modules, and it’s how Linux decides how we can log in, how passwords are checked, and so on.
+So, nc isn’t going to be how we solve this. Instead, we’re going to login using ssh like so:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-23 00:00:00 +0000 UTC'>December 23, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu aptssh Writeup" href="https://irinasusca.github.io/writeup-blog/posts/aptssh-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu Ropper Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Your message is at maximum two stages from the flag. Find the bugs in this binary file and you will know what to do.
+As the name ropper suggests, and the buffer overflow shown in the image above, we’re dealing with a ret2something here.
+Let’s take a look at the binary. We have a main and another secondary function being used here.
+main calls the second functions and passes, as arguments, the string getting printed and 0.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-22 00:00:00 +0000 UTC'>December 22, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu Ropper Writeup" href="https://irinasusca.github.io/writeup-blog/posts/ropper-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu function-check Writeup
     </h2>
   </header>
@@ -196,113 +308,6 @@ Christmas PIE - pwn As spoiled by the title, we’re dealing with a 64-bit PIE, 
   </div>
   <footer class="entry-footer"><span title='2025-12-16 00:00:00 +0000 UTC'>December 16, 2025</span></footer>
   <a class="entry-link" aria-label="post link to VianuCTF 2025" href="https://irinasusca.github.io/writeup-blog/posts/vianuctf-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Nullctf 2025 Sketchy Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview This challenge was a part of the NullCTF 2025, made by tudor, with the description sketchy stuff going on here i’m scared.
-Upon checking, we’re dealing with NX, PIE and ALSR and no canary.
-Let’s take a look at the binary. We have two interesting functions, main and handler.
-Inside main, firstly, we are given the address of main (located at PIE address &#43; 0x1265), so we don’t need to bother with leaking it. Then, a pointer s gets assigned the string quite interesting stuff you’re saying.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-11 00:00:00 +0000 UTC'>December 11, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Nullctf 2025 Sketchy Writeup" href="https://irinasusca.github.io/writeup-blog/posts/sketchy-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu Buy-Cooffe Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview It’s early morning, and the caffeine hasn’t quite kicked in yet. As you sip your cup of coffee, you notice something odd – a mysterious program named cooffee is running on your system.
-At first glance, the chall looks like a 64-bit executable, and upon a buffer overflow the program immediately leaks us a libc address. We also get the libc-2.31.so to download, and that means this is the libc version our binary uses.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu Buy-Cooffe Writeup" href="https://irinasusca.github.io/writeup-blog/posts/buycooffe-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu ftp-console Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview We got a very strange ftp console? Can you retrive the flag?
-At first glance, the ftp_server looks like a 32-bit executable, and as hinted by the name, a FTP (File Transfer Protocol) server mockup.
-Upon checking, every protection is disabled, so that’s nice! Now let’s take a look at the binary.
-We have a main function that calls login, and we can already see some interesting things going on.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu ftp-console Writeup" href="https://irinasusca.github.io/writeup-blog/posts/ftpconsole-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu Lost Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Oh no! I lost my flag somewhere in memory. Can you help me find it, please? Make sure to do it quickly!
-Upon trying to run the binary, we are greeted by a so version mismatch, but I won’t bother downloading it myself, so let’s see if we can solve it remotely. We can see it is a 32-bit binary though.
-Taking a look at main, we can see the flag getting copied into a dest buffer. Our input is stored into buf.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu Lost Writeup" href="https://irinasusca.github.io/writeup-blog/posts/lost-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu Stack Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview You can’t run shellcode if all registers are 0, right?
-Our binary main is a 64-bit executable with an obvious buffer overflow vulnerability. Let’s take a look at it using a disassembler.
-We only have one function, main, which mmaps dest, copies 3 bytes of what’s inside &amp;unk_2027 into dest, then lets us write 0x1000 bytes into dest&#43;3. That means our buffer overflow is only 3 bytes, though. Afterwards, it executes this assembly shellcode:
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu Stack Writeup" href="https://irinasusca.github.io/writeup-blog/posts/stack-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu Bazooka Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview We have a problem on the station on Mars, we suspect we would be attacked by some hackers so we put a little protection against them.
-The challenge was proposed by BIT SENTINEL.
-At first glance, the pwn_bazooka_bazooka looks like a 64-bit executable, and I didn’t immediately notice any obvious buffer overflows or format strings. It takes a message input and a junk input. So let’s take a look at the binary.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-02 00:00:00 +0000 UTC'>December 2, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu Bazooka Writeup" href="https://irinasusca.github.io/writeup-blog/posts/bazooka-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Here&#39;s A LIBC Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview I am once again asking for you to pwn this binary
-At first glance, the vuln looks like a 64-bit executable with a buffer overflow vulnerability. And since it’s hinted in the title, most probably a ret2libc challenge.
-Upon checking, only NX is enabled. So this should make things fairly easy for us.
-Identifying the vulnerabilities We can quickly check if there’s a /bin/sh in memory, and there it is! Along with a system and also execve.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-30 00:00:00 +0000 UTC'>November 30, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Here&#39;s A LIBC Writeup" href="https://irinasusca.github.io/writeup-blog/posts/heresalibc-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
