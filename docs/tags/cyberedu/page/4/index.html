@@ -137,6 +137,132 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu baby-fmt Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Merry Christmas everyone! 🎄
+Challenge overview This is should be a basic pwn challenge but please be aware that time is not your friend.
+Let’s check out the restrictions we’re dealing with.
+We’re working with a 64-bit binary with NX and PIE enabled, and as the name suggests, probably a format string vulnerability. Let’s take a look at the disassembled binary.
+We have a function called by main, let’s call it vuln.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-26 00:00:00 +0000 UTC'>December 26, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu baby-fmt Writeup" href="https://irinasusca.github.io/writeup-blog/posts/babyfmt-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu aptssh Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Someone backdoored us with a strange PAM module, and now anyone can log in with aptssh:aptssh. I think they were able to get our flag.
+First of all, what is a PAM module? Well, PAM stands for Pluggable Authentification Modules, and it’s how Linux decides how we can log in, how passwords are checked, and so on.
+So, nc isn’t going to be how we solve this. Instead, we’re going to login using ssh like so:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-23 00:00:00 +0000 UTC'>December 23, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu aptssh Writeup" href="https://irinasusca.github.io/writeup-blog/posts/aptssh-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu Ropper Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Your message is at maximum two stages from the flag. Find the bugs in this binary file and you will know what to do.
+As the name ropper suggests, and the buffer overflow shown in the image above, we’re dealing with a ret2something here.
+Let’s take a look at the binary. We have a main and another secondary function being used here.
+main calls the second functions and passes, as arguments, the string getting printed and 0.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-22 00:00:00 +0000 UTC'>December 22, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu Ropper Writeup" href="https://irinasusca.github.io/writeup-blog/posts/ropper-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu function-check Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview We need a master to manipulate the syntax of a program.
+At first glance, the format looks like a 32-bit executable, and it doesn’t really look like it’s going to be fun to test locally, so let’s just try it remotely right away.
+Upon checking, every protection is disabled, so that’s nice! Now let’s take a look at the binary.
+Pretty straight forward, we have a main function and a printFlag function. As the binary name suggests, a fmtstr vulnerability, and a value demo_3187 we’re supposed to overwrite.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-21 00:00:00 +0000 UTC'>December 21, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu function-check Writeup" href="https://irinasusca.github.io/writeup-blog/posts/functioncheck-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu can-you-jump Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview How far can you jump?
+Our binary, can-you-jump, is a 64-bit executable with no protections except NX. The challenge also gives us libc-2.27.so to use.
+Alright, pretty nice, we get a libc leak for printf, and immediately stumble upon a buffer overflow.
+Identifying the vulnerabilities Let’s take a look at the binary next.
+Pretty straight-forward, the address of printf is printed, using dlsym (a function that just returns the address of a symbol, this case printf). Then, the function returns a read in buf[56] of 256 bytes, so that’s a 200 byte buffer overflow. I’m guessing we can find a /bin/sh and system in our libc. Since I can’t be bothered to install the .so, we can just test remotely and find the offsets online.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-16 00:00:00 +0000 UTC'>December 16, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu can-you-jump Writeup" href="https://irinasusca.github.io/writeup-blog/posts/canyoujump-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu Buy-Cooffe Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview It’s early morning, and the caffeine hasn’t quite kicked in yet. As you sip your cup of coffee, you notice something odd – a mysterious program named cooffee is running on your system.
+At first glance, the chall looks like a 64-bit executable, and upon a buffer overflow the program immediately leaks us a libc address. We also get the libc-2.31.so to download, and that means this is the libc version our binary uses.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu Buy-Cooffe Writeup" href="https://irinasusca.github.io/writeup-blog/posts/buycooffe-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu ftp-console Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview We got a very strange ftp console? Can you retrive the flag?
+At first glance, the ftp_server looks like a 32-bit executable, and as hinted by the name, a FTP (File Transfer Protocol) server mockup.
+Upon checking, every protection is disabled, so that’s nice! Now let’s take a look at the binary.
+We have a main function that calls login, and we can already see some interesting things going on.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu ftp-console Writeup" href="https://irinasusca.github.io/writeup-blog/posts/ftpconsole-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu Lost Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Oh no! I lost my flag somewhere in memory. Can you help me find it, please? Make sure to do it quickly!
+Upon trying to run the binary, we are greeted by a so version mismatch, but I won’t bother downloading it myself, so let’s see if we can solve it remotely. We can see it is a 32-bit binary though.
+Taking a look at main, we can see the flag getting copied into a dest buffer. Our input is stored into buf.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu Lost Writeup" href="https://irinasusca.github.io/writeup-blog/posts/lost-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu Stack Writeup
     </h2>
   </header>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>requests library | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="Materials, web">
+<meta name="description" content="Why
+Since I actually (sadly) have to learn python myself for the OSC since AIs got banned, I decided it&rsquo;s time to lay down the foundation of the requests library instead of letting an AI slave do the dirty python work for me. That means it&rsquo;s time to learn the requests library.
+It really wasn&rsquo;t as difficult as I thought, and I really wish I&rsquo;d done this sooner. Who would&rsquo;ve ever guessed learning is really useful?">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/requests/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/requests/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/requests/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="requests library">
+  <meta property="og:description" content="Why Since I actually (sadly) have to learn python myself for the OSC since AIs got banned, I decided it’s time to lay down the foundation of the requests library instead of letting an AI slave do the dirty python work for me. That means it’s time to learn the requests library.
+It really wasn’t as difficult as I thought, and I really wish I’d done this sooner. Who would’ve ever guessed learning is really useful?">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-01-30T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-01-30T00:00:00+00:00">
+    <meta property="article:tag" content="Materials">
+    <meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="requests library">
+<meta name="twitter:description" content="Why
+Since I actually (sadly) have to learn python myself for the OSC since AIs got banned, I decided it&rsquo;s time to lay down the foundation of the requests library instead of letting an AI slave do the dirty python work for me. That means it&rsquo;s time to learn the requests library.
+It really wasn&rsquo;t as difficult as I thought, and I really wish I&rsquo;d done this sooner. Who would&rsquo;ve ever guessed learning is really useful?">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "requests library",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/requests/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "requests library",
+  "name": "requests library",
+  "description": "Why Since I actually (sadly) have to learn python myself for the OSC since AIs got banned, I decided it\u0026rsquo;s time to lay down the foundation of the requests library instead of letting an AI slave do the dirty python work for me. That means it\u0026rsquo;s time to learn the requests library.\nIt really wasn\u0026rsquo;t as difficult as I thought, and I really wish I\u0026rsquo;d done this sooner. Who would\u0026rsquo;ve ever guessed learning is really useful?\n",
+  "keywords": [
+    "Materials", "web"
+  ],
+  "articleBody": "Why Since I actually (sadly) have to learn python myself for the OSC since AIs got banned, I decided it’s time to lay down the foundation of the requests library instead of letting an AI slave do the dirty python work for me. That means it’s time to learn the requests library.\nIt really wasn’t as difficult as I thought, and I really wish I’d done this sooner. Who would’ve ever guessed learning is really useful?\nRequests Alright, let’s actually get into it. The docs I used for this are here.\nThe format of making a request is this:\nimport requests data = { \"username\":\"test\", \"password\":\"test\" } res = requests.post(url, data = data) Of course we can make all kinds of requests, requests.get, requests.options, you get the idea.\nWe can also send parameters in a similar way:\npayload = { \"param1\": \"val1\", \"param2\": [\"val2\", \"val3\"] } res = requests.get(url, params=payload) To check the url created by requests, just print(res.url). To view the response content, just print res.text.\nWe can also modify the encoding, and view through r.encoding (automatically utf-8).\nTo add our own headers, done similarly to data:\nheaders = { \"Cookie\": \"test123\", \"Host\": \"127.0.0.1\" } res = requests.get(url, headers=headers) We can also send a file like so:\nfiles = {'file': ('report.xls', open('report.xls', 'rb'), 'application/vnd.ms-excel')} #here, rb stands for read binary. just how python opens files. #the application type is optional. res = requests.post(url, files=files) Or more files!\nfiles = [ ('images', ('foo.png', open('foo.png', 'rb'), 'image/png')), ('images', ('bar.png', open('bar.png', 'rb'), 'image/png')) ] res = requests.post(url, files=files) And stream an upload:\nwith open('massive-body', 'rb') as f: requests.post(url, data=f) Difference is, this is a way to upload larger files, as the raw body.\nWe can check status code by res.status_code. We may test them like res.status_code == requests.codes.ok if we’re too uncultured to recognize status codes.\nTo view the response headers just use r.headers. A specific one by r.headers['Content-Type'] or r.headers.get('content-type'). Capitalization not important.\nThere’s also a allow_redirects param (True or False), and a timeout (if no response in that time, just pack it up).\nHooks We can add hooks, so functions that are called whenever a response happens. Say we have this function we want to hook:\ndef print_url(r, *args, **kwargs): print(r.url) #the args and kwargs are there just in case the response decides to throw some args in there internally. requests.get(url, hooks = {'response' : print_url}) The response is passed as an argument to the hook function. We can stack hooks, like hooks = {'response': [hook1, hook2]}.\nThe string ‘response’ needs to be respected since it’s the library name for an event. And apparently the only event.\nSessions If we want to use a single session, like a normal user would, without having to write all those annoying cookies and headers every time, we can use requests.Session().\ns = requests.Session() s.headers.update({ 'x-test': 'true', 'Host': '127.0.0.1' }) To add a session hook, we need to do s.hooks['response'].append(print_url).\nSo instead of params to requests functions, we pass them as attributes of the Session object.\nAnd we’re done with this library!\n",
+  "wordCount" : "508",
+  "inLanguage": "en",
+  "datePublished": "2026-01-30T00:00:00Z",
+  "dateModified": "2026-01-30T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/requests/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      requests library
+    </h1>
+    <div class="post-meta"><span title='2026-01-30 00:00:00 +0000 UTC'>January 30, 2026</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#why" aria-label="Why">Why</a></li>
+                <li>
+                    <a href="#requests" aria-label="Requests">Requests</a></li>
+                <li>
+                    <a href="#hooks" aria-label="Hooks">Hooks</a></li>
+                <li>
+                    <a href="#sessions" aria-label="Sessions">Sessions</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="why">Why<a hidden class="anchor" aria-hidden="true" href="#why">#</a></h2>
+<p>Since I actually (sadly) have to learn python myself for the OSC since AIs got banned, I decided it&rsquo;s time to lay down the foundation of the requests library instead of letting an AI slave do the dirty python work for me. That means it&rsquo;s time to learn the requests library.</p>
+<p>It really wasn&rsquo;t as difficult as I thought, and I really wish I&rsquo;d done this sooner. Who would&rsquo;ve ever guessed learning is really useful?</p>
+<hr>
+<h2 id="requests">Requests<a hidden class="anchor" aria-hidden="true" href="#requests">#</a></h2>
+<p>Alright, let&rsquo;s actually get into it. The docs I used for this are <a href="https://requests.readthedocs.io/en/latest/user/quickstart/">here</a>.</p>
+<p>The format of making a request is this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> requests
+</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;username&#34;</span>:<span style="color:#e6db74">&#34;test&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;password&#34;</span>:<span style="color:#e6db74">&#34;test&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>res <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(url, data <span style="color:#f92672">=</span> data)
+</span></span></code></pre></div><p>Of course we can make all kinds of requests, <code>requests.get</code>, <code>requests.options</code>, you get the idea.</p>
+<p>We can also send parameters in a similar way:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;param1&#34;</span>: <span style="color:#e6db74">&#34;val1&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;param2&#34;</span>: [<span style="color:#e6db74">&#34;val2&#34;</span>, <span style="color:#e6db74">&#34;val3&#34;</span>]
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>res <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(url, params<span style="color:#f92672">=</span>payload)
+</span></span></code></pre></div><p>To check the url created by requests, just <code>print(res.url)</code>. To view the response content, just print <code>res.text</code>.</p>
+<p>We can also modify the encoding, and view through <code>r.encoding</code> (automatically utf-8).</p>
+<p>To add our own headers, done similarly to data:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>headers <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;Cookie&#34;</span>: <span style="color:#e6db74">&#34;test123&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;Host&#34;</span>: <span style="color:#e6db74">&#34;127.0.0.1&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>res <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(url, headers<span style="color:#f92672">=</span>headers)
+</span></span></code></pre></div><p>We can also send a file like so:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>files <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;file&#39;</span>: (<span style="color:#e6db74">&#39;report.xls&#39;</span>, open(<span style="color:#e6db74">&#39;report.xls&#39;</span>, <span style="color:#e6db74">&#39;rb&#39;</span>), <span style="color:#e6db74">&#39;application/vnd.ms-excel&#39;</span>)}
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#here, rb stands for read binary. just how python opens files.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#the application type is optional.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>res <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(url, files<span style="color:#f92672">=</span>files)
+</span></span></code></pre></div><p>Or more files!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>files <span style="color:#f92672">=</span> [
+</span></span><span style="display:flex;"><span>    (<span style="color:#e6db74">&#39;images&#39;</span>, (<span style="color:#e6db74">&#39;foo.png&#39;</span>, open(<span style="color:#e6db74">&#39;foo.png&#39;</span>, <span style="color:#e6db74">&#39;rb&#39;</span>), <span style="color:#e6db74">&#39;image/png&#39;</span>)),
+</span></span><span style="display:flex;"><span>    (<span style="color:#e6db74">&#39;images&#39;</span>, (<span style="color:#e6db74">&#39;bar.png&#39;</span>, open(<span style="color:#e6db74">&#39;bar.png&#39;</span>, <span style="color:#e6db74">&#39;rb&#39;</span>), <span style="color:#e6db74">&#39;image/png&#39;</span>))
+</span></span><span style="display:flex;"><span>]
+</span></span><span style="display:flex;"><span>res <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(url, files<span style="color:#f92672">=</span>files)
+</span></span></code></pre></div><p>And stream an upload:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#39;massive-body&#39;</span>, <span style="color:#e6db74">&#39;rb&#39;</span>) <span style="color:#66d9ef">as</span> f:
+</span></span><span style="display:flex;"><span>    requests<span style="color:#f92672">.</span>post(url, data<span style="color:#f92672">=</span>f)
+</span></span></code></pre></div><p>Difference is, this is a way to upload larger files, as the raw body.</p>
+<p>We can check status code by <code>res.status_code</code>. We may test them like <code>res.status_code == requests.codes.ok</code> if we&rsquo;re too uncultured to recognize status codes.</p>
+<p>To view the response headers just use <code>r.headers</code>. A specific one by <code>r.headers['Content-Type']</code> or <code>r.headers.get('content-type')</code>. Capitalization not important.</p>
+<p>There&rsquo;s also a <code>allow_redirects</code> param (True or False), and a <code>timeout</code> (if no response in that time, just pack it up).</p>
+<h2 id="hooks">Hooks<a hidden class="anchor" aria-hidden="true" href="#hooks">#</a></h2>
+<p>We can add hooks, so functions that are called whenever a response happens. Say we have this function we want to hook:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">print_url</span>(r, <span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
+</span></span><span style="display:flex;"><span>    print(r<span style="color:#f92672">.</span>url)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#the args and kwargs are there just in case the response decides to throw some args in there internally.</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>requests<span style="color:#f92672">.</span>get(url, hooks <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;response&#39;</span> : print_url})
+</span></span></code></pre></div><p>The response is passed as an argument to the hook function. We can stack hooks, like <code>hooks = {'response': [hook1, hook2]}</code>.</p>
+<p>The string &lsquo;response&rsquo; needs to be respected since it&rsquo;s the library name for an event. And apparently the <em>only</em> event.</p>
+<h2 id="sessions">Sessions<a hidden class="anchor" aria-hidden="true" href="#sessions">#</a></h2>
+<p>If we want to use a single session, like a normal user would, without having to write all those annoying cookies and headers every time, we can use <code>requests.Session()</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>s <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>Session()
+</span></span><span style="display:flex;"><span>s<span style="color:#f92672">.</span>headers<span style="color:#f92672">.</span>update({
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;x-test&#39;</span>: <span style="color:#e6db74">&#39;true&#39;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;Host&#39;</span>: <span style="color:#e6db74">&#39;127.0.0.1&#39;</span>
+</span></span><span style="display:flex;"><span>})
+</span></span></code></pre></div><p>To add a session hook, we need to do <code>s.hooks['response'].append(print_url)</code>.</p>
+<p>So instead of params to requests functions, we pass them as attributes of the Session object.</p>
+<hr>
+<p>And we&rsquo;re done with this library!</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/materials/">Materials</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/web/">Web</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

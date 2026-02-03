@@ -6,8 +6,172 @@
     <description>Recent content in Posts on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 26 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 02 Feb 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CyberEdu dumb-discord Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/dumbdiscord-writeup/</link>
+      <pubDate>Mon, 02 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/dumbdiscord-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Well here is an example of a funny discord bot.&lt;/p&gt;
+&lt;p&gt;_PS: Please note that the IP:PORT received is not needed to solve the challenge and nothing will answer there. _&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;The script, decompiled:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Decompiled with PyLingual (https://pylingual.io)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Internal filename: server.py&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Bytecode version: 3.6rc1 (3379)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Source timestamp: 2020-12-02 02:30:35 UTC (1606876235)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; discord.ext &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; commands
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; discord
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; json
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; discord.utils &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; get
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;obfuscate&lt;/span&gt;(byt):
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    mask &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;ctf&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{tryharderdontstring}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    lmask &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; len(mask)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; bytes((c &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; mask[i &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; lmask] &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i, c &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; enumerate(byt)))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;test&lt;/span&gt;(s):
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    data &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; obfuscate(s&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;encode())
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; data
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;intents &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; discord&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Intents&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;default()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;intents&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;members &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;True&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cfg &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; open(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;config.json&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;r&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;tmpconfig &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; cfg&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;read()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cfg&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;close()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;config &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; json&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;loads(tmpconfig)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;token &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; config[test(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x17\x1b\r\x1e\x1a&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;decode()]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;client &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; commands&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Bot(command_prefix&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@client.event&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;on_ready&lt;/span&gt;():
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Connected to bot: &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;format(client&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;user&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;name))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Bot ID: &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;format(client&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;user&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;id))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@client.command&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;getflag&lt;/span&gt;(ctx):
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; ctx&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(test(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x13\x1b\x08\x1c&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;decode())
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@client.event&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;on_message&lt;/span&gt;(message):
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; client&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;process_commands(message)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; test(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;B&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x04\x0f\x15\x13&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;decode() &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; message&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;lower():
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; message&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;channel&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(test(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x13\x1b\x08\x1c&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;decode())
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; test(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;L&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x13\x03\x0f\x12\x1e\x18\x0f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;decode() &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; message&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;lower() &lt;span style=&#34;color:#f92672&#34;&gt;and&lt;/span&gt; message&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;author&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;id &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;783473293554352141&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        role &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; discord&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;utils&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;get(message&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;author&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;guild&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;roles, name&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;test(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x07\x17\x12\x1d&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;FBKXO&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x11\x1d\x07\x17\x16\n\n\x01&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;]&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x06\x1d&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;decode())
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        member &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; discord&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;utils&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;get(message&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;author&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;guild&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;members, id&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;message&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;author&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;id)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; role &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; member&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;roles:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; message&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;channel&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(test(config[test(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x05\x18\x07\x1c&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;decode()]))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; test(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;L&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x1c\x03\x17\x04&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;decode() &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; message&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;lower():
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; message&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;channel&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(test(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;7&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x06\x1f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;[&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x1c\x13\x0b\x0c\x04\x00&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;E&amp;#39;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;decode())
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/s基ay&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; message&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;lower():
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; message&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;channel&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(message&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;replace(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/s基ay&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;replace(test(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;L&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x13\x03\x0f\x12\x1e\x18\x0f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;decode(), &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;client&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;run(token)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I ran the bot locally to decode those strings, and here is the less obfuscated stuff:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu formula1 Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/formula1-writeup/</link>
+      <pubDate>Mon, 02 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/formula1-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Only a champion can win this race. Enter the secret pit stop and claim your flag!&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;We&amp;rsquo;re confronted with a login page, with two fields, &lt;code&gt;Only for F1 champions. Enter your first name and pit code to start your engine&lt;/code&gt;. Entering a random username and random password would give an &lt;code&gt;Invalid username&lt;/code&gt; error, but sending &lt;em&gt;max&lt;/em&gt; (for Max Verstappen) would give an &lt;code&gt;Invalid pit code&lt;/code&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Wireshark &amp; Tshark</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/wireshark/</link>
+      <pubDate>Sun, 01 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/wireshark/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;Since this is, sadly, something that needs to be done in order to score points in ctfs, I&amp;rsquo;m going to cover some things that &lt;em&gt;I&lt;/em&gt; feel  are important in this category.&lt;/p&gt;
+&lt;p&gt;I have done quite a few forensics challenges, but I never really mastered &lt;code&gt;grep&lt;/code&gt; and &lt;code&gt;tshark&lt;/code&gt; to their full potential. And I forgot most of my Wireshark expertise from last year, so I&amp;rsquo;ll include what I feel is important or non-intuitive about that as well.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu imagine-that Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/imaginethat-writeup/</link>
+      <pubDate>Sat, 31 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/imaginethat-writeup/</guid>
+      <description>&lt;p&gt;This challenge is part of one of the Unbreakable python labs, and I decided to solve the challenge myself instead of just reading about it. And since it&amp;rsquo;s pwn, should be fun!&lt;/p&gt;
+&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Imagine that we are using socat for this one.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;We get a server to connect to, with &lt;code&gt;socat&lt;/code&gt;, and we&amp;rsquo;re prompted to give a starting point twice. This however refers to the starting point first and then the ending point, and it prints out the bytes between the two offsets, then asks us for a password. We can only enter numbers from 1 to 10.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu digikey Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/digikey-writeup/</link>
+      <pubDate>Fri, 30 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/digikey-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;This challenge contains the extracted ELF data from a compiled atTiny85 avr chip The device was automatically being detected as a keyboard and inputs in a loop the ctf flag as string.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;We receive an Atmel AVR 8-bit file, which is the code for a microcontroller, so we can&amp;rsquo;t run it locally on our kali (since it&amp;rsquo;s COMPILED). So we need a decompiler, but of course IDA Pro is too expensive and ghidra looks absolutely awful, so we have to look for one online.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu mountain Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/mountain-writeup/</link>
+      <pubDate>Fri, 30 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/mountain-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Take a look at those mountains!&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;We get a zip file I ran &lt;code&gt;binwalk -Me --dd=&amp;quot;.*&amp;quot;&lt;/code&gt; filename on (just does it recursively). We get a PNG file which has a barely visible flag in the top left which I noticed waay to late;  I opened a web version of gimp, turned off the green and blue, and the flag became just visible enough to be transcribed.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/mountain-writeup/flag.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Here it is: &lt;code&gt;DCTF{157d2d840f229720e7f8082dd4468a8583fb348ebf2cb38456147dc046ff942d}&lt;/code&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu pawn-shop Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/pawnshop-writeup/</link>
+      <pubDate>Fri, 30 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/pawnshop-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Se spune ca fericirea nu poate fi cumparata. Acesta este cazul si pentru acest magazin. Trebuie sa gasesti o vulnerabilitate in aceasta aplicatie si sa recuperezi secretul.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;This was one of the challenges from OSC 2025 county phase, I remember it, so let&amp;rsquo;s quickly solve this.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;Trying to access the flag, we get this response:&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/pawnshop-writeup/req.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Adding the allowed Origin as a HTTP Header, we get the flag.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>requests library</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/requests/</link>
+      <pubDate>Fri, 30 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/requests/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;Since I actually (sadly) have to learn python myself for the OSC since AIs got banned, I decided it&amp;rsquo;s time to lay down the foundation of the requests library instead of letting an AI slave do the dirty python work for me. That means it&amp;rsquo;s time to learn the requests library.&lt;/p&gt;
+&lt;p&gt;It really wasn&amp;rsquo;t as difficult as I thought, and I really wish I&amp;rsquo;d done this sooner. Who would&amp;rsquo;ve ever guessed learning is really useful?&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu ast-tree Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/asttree-writeup/</link>
+      <pubDate>Thu, 29 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/asttree-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;A careless developer left behind some code that reads sensitive files directly from disk.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;We&amp;rsquo;re prompted with a &amp;ldquo;Paste your AST-Grep YAML rule here&amp;rdquo; and an option to run it. &lt;code&gt;ast-grep&lt;/code&gt; is a code tool for structural search and replace, like syntax-aware grep.&lt;/p&gt;
+&lt;p&gt;We can also use jQuery like utility methods to traverse syntax tree nodes.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;Upon entering an invalid file, we get this ChatGPT written error:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu password Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/password-writeup/</link>
+      <pubDate>Wed, 28 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/password-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Can you find the password? I am asking for a friend.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;We&amp;rsquo;re given a &lt;code&gt;.pyc&lt;/code&gt; (python bytecode) file. So what we need to do is find a python bytecode decompiler compatible with python version 2.7.&lt;/p&gt;
+&lt;p&gt;After a bunch of googling I found &lt;a href=&#34;https://twy.name/Tools/pyc/&#34;&gt;this one&lt;/a&gt;. Here is the relevant part of the decompiled code:&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/password-writeup/flag.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The flag is constructed as such: &lt;code&gt;flag = a + b + c + d + e + f + g + h&lt;/code&gt;. But the chunks are given to us in another order, so we just need to select and concatenate the chunks alphabetically.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>CyberEdu ultra-crawl Writeup</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/ultracrawl-writeup/</link>

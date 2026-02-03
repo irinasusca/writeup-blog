@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Misc | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/tags/misc/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="https://irinasusca.github.io/writeup-blog/tags/misc/index.xml" title="rss">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/tags/misc/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/tags/misc/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Misc">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Misc">
+<meta name="twitter:description" content="">
+
+</head>
+<body class="list" id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header">
+  <h1>
+    Misc
+  </h1>
+</header>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu dumb-discord Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Well here is an example of a funny discord bot.
+_PS: Please note that the IP:PORT received is not needed to solve the challenge and nothing will answer there. _
+Identifying the vulnerabilities The script, decompiled:
+# Decompiled with PyLingual (https://pylingual.io) # Internal filename: server.py # Bytecode version: 3.6rc1 (3379) # Source timestamp: 2020-12-02 02:30:35 UTC (1606876235) from discord.ext import commands import discord import json from discord.utils import get def obfuscate(byt): mask = b&#39;ctf{tryharderdontstring}&#39; lmask = len(mask) return bytes((c ^ mask[i % lmask] for i, c in enumerate(byt))) def test(s): data = obfuscate(s.encode()) return data intents = discord.Intents.default() intents.members = True cfg = open(&#39;config.json&#39;, &#39;r&#39;) tmpconfig = cfg.read() cfg.close() config = json.loads(tmpconfig) token = config[test(&#39;\x17\x1b\r\x1e\x1a&#39;).decode()] client = commands.Bot(command_prefix=&#39;/&#39;) @client.event async def on_ready(): print(&#39;Connected to bot: {}&#39;.format(client.user.name)) print(&#39;Bot ID: {}&#39;.format(client.user.id)) @client.command() async def getflag(ctx): await ctx.send(test(&#39;\x13\x1b\x08\x1c&#39;).decode()) @client.event async def on_message(message): await client.process_commands(message) if test(&#39;B\x04\x0f\x15\x13&#39;).decode() in message.content.lower(): await message.channel.send(test(&#39;\x13\x1b\x08\x1c&#39;).decode()) if test(&#39;L\x13\x03\x0f\x12\x1e\x18\x0f&#39;).decode() in message.content.lower() and message.author.id == 783473293554352141: role = discord.utils.get(message.author.guild.roles, name=test(&#39;\x07\x17\x12\x1dFBKXO\x11\x1d\x07\x17\x16\n\n\x01]\x06\x1d&#39;).decode()) member = discord.utils.get(message.author.guild.members, id=message.author.id) if role in member.roles: await message.channel.send(test(config[test(&#39;\x05\x18\x07\x1c&#39;).decode()])) if test(&#39;L\x1c\x03\x17\x04&#39;).decode() in message.content.lower(): await message.channel.send(test(&#39;7\x06\x1f[\x1c\x13\x0b\x0c\x04\x00E&#39;).decode()) if &#39;/s基ay&#39; in message.content.lower(): await message.channel.send(message.content.replace(&#39;/s基ay&#39;, &#39;&#39;).replace(test(&#39;L\x13\x03\x0f\x12\x1e\x18\x0f&#39;).decode(), &#39;&#39;)) client.run(token) I ran the bot locally to decode those strings, and here is the less obfuscated stuff:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-02 00:00:00 +0000 UTC'>February 2, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu dumb-discord Writeup" href="https://irinasusca.github.io/writeup-blog/posts/dumbdiscord-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu imagine-that Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>This challenge is part of one of the Unbreakable python labs, and I decided to solve the challenge myself instead of just reading about it. And since it’s pwn, should be fun!
+Challenge overview Imagine that we are using socat for this one.
+We get a server to connect to, with socat, and we’re prompted to give a starting point twice. This however refers to the starting point first and then the ending point, and it prints out the bytes between the two offsets, then asks us for a password. We can only enter numbers from 1 to 10.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-31 00:00:00 +0000 UTC'>January 31, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu imagine-that Writeup" href="https://irinasusca.github.io/writeup-blog/posts/imaginethat-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu digikey Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview This challenge contains the extracted ELF data from a compiled atTiny85 avr chip The device was automatically being detected as a keyboard and inputs in a loop the ctf flag as string.
+We receive an Atmel AVR 8-bit file, which is the code for a microcontroller, so we can’t run it locally on our kali (since it’s COMPILED). So we need a decompiler, but of course IDA Pro is too expensive and ghidra looks absolutely awful, so we have to look for one online.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-30 00:00:00 +0000 UTC'>January 30, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu digikey Writeup" href="https://irinasusca.github.io/writeup-blog/posts/digikey-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu mountain Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Take a look at those mountains!
+We get a zip file I ran binwalk -Me --dd=&#34;.*&#34; filename on (just does it recursively). We get a PNG file which has a barely visible flag in the top left which I noticed waay to late; I opened a web version of gimp, turned off the green and blue, and the flag became just visible enough to be transcribed.
+Here it is: DCTF{157d2d840f229720e7f8082dd4468a8583fb348ebf2cb38456147dc046ff942d}
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-30 00:00:00 +0000 UTC'>January 30, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu mountain Writeup" href="https://irinasusca.github.io/writeup-blog/posts/mountain-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu pawn-shop Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Se spune ca fericirea nu poate fi cumparata. Acesta este cazul si pentru acest magazin. Trebuie sa gasesti o vulnerabilitate in aceasta aplicatie si sa recuperezi secretul.
+This was one of the challenges from OSC 2025 county phase, I remember it, so let’s quickly solve this.
+Identifying the vulnerabilities Trying to access the flag, we get this response:
+Adding the allowed Origin as a HTTP Header, we get the flag.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-30 00:00:00 +0000 UTC'>January 30, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu pawn-shop Writeup" href="https://irinasusca.github.io/writeup-blog/posts/pawnshop-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu ast-tree Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview A careless developer left behind some code that reads sensitive files directly from disk.
+We’re prompted with a “Paste your AST-Grep YAML rule here” and an option to run it. ast-grep is a code tool for structural search and replace, like syntax-aware grep.
+We can also use jQuery like utility methods to traverse syntax tree nodes.
+Identifying the vulnerabilities Upon entering an invalid file, we get this ChatGPT written error:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-29 00:00:00 +0000 UTC'>January 29, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu ast-tree Writeup" href="https://irinasusca.github.io/writeup-blog/posts/asttree-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu password Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Can you find the password? I am asking for a friend.
+We’re given a .pyc (python bytecode) file. So what we need to do is find a python bytecode decompiler compatible with python version 2.7.
+After a bunch of googling I found this one. Here is the relevant part of the decompiled code:
+The flag is constructed as such: flag = a &#43; b &#43; c &#43; d &#43; e &#43; f &#43; g &#43; h. But the chunks are given to us in another order, so we just need to select and concatenate the chunks alphabetically.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-28 00:00:00 +0000 UTC'>January 28, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu password Writeup" href="https://irinasusca.github.io/writeup-blog/posts/password-writeup/"></a>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

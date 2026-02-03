@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CyberEdu dumb-discord Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, misc">
+<meta name="description" content="Challenge overview
+Well here is an example of a funny discord bot.
+_PS: Please note that the IP:PORT received is not needed to solve the challenge and nothing will answer there. _
+Identifying the vulnerabilities
+The script, decompiled:
+# Decompiled with PyLingual (https://pylingual.io)
+# Internal filename: server.py
+# Bytecode version: 3.6rc1 (3379)
+# Source timestamp: 2020-12-02 02:30:35 UTC (1606876235)
+
+from discord.ext import commands
+import discord
+import json
+from discord.utils import get
+
+def obfuscate(byt):
+    mask = b&#39;ctf{tryharderdontstring}&#39;
+    lmask = len(mask)
+    return bytes((c ^ mask[i % lmask] for i, c in enumerate(byt)))
+
+def test(s):
+    data = obfuscate(s.encode())
+    return data
+intents = discord.Intents.default()
+intents.members = True
+cfg = open(&#39;config.json&#39;, &#39;r&#39;)
+tmpconfig = cfg.read()
+cfg.close()
+config = json.loads(tmpconfig)
+token = config[test(&#39;\x17\x1b\r\x1e\x1a&#39;).decode()]
+client = commands.Bot(command_prefix=&#39;/&#39;)
+
+@client.event
+async def on_ready():
+    print(&#39;Connected to bot: {}&#39;.format(client.user.name))
+    print(&#39;Bot ID: {}&#39;.format(client.user.id))
+
+@client.command()
+async def getflag(ctx):
+    await ctx.send(test(&#39;\x13\x1b\x08\x1c&#39;).decode())
+
+@client.event
+async def on_message(message):
+    await client.process_commands(message)
+    if test(&#39;B\x04\x0f\x15\x13&#39;).decode() in message.content.lower():
+        await message.channel.send(test(&#39;\x13\x1b\x08\x1c&#39;).decode())
+    if test(&#39;L\x13\x03\x0f\x12\x1e\x18\x0f&#39;).decode() in message.content.lower() and message.author.id == 783473293554352141:
+        role = discord.utils.get(message.author.guild.roles, name=test(&#39;\x07\x17\x12\x1dFBKXO\x11\x1d\x07\x17\x16\n\n\x01]\x06\x1d&#39;).decode())
+        member = discord.utils.get(message.author.guild.members, id=message.author.id)
+        if role in member.roles:
+            await message.channel.send(test(config[test(&#39;\x05\x18\x07\x1c&#39;).decode()]))
+    if test(&#39;L\x1c\x03\x17\x04&#39;).decode() in message.content.lower():
+        await message.channel.send(test(&#39;7\x06\x1f[\x1c\x13\x0b\x0c\x04\x00E&#39;).decode())
+    if &#39;/s基ay&#39; in message.content.lower():
+        await message.channel.send(message.content.replace(&#39;/s基ay&#39;, &#39;&#39;).replace(test(&#39;L\x13\x03\x0f\x12\x1e\x18\x0f&#39;).decode(), &#39;&#39;))
+client.run(token)
+I ran the bot locally to decode those strings, and here is the less obfuscated stuff:">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/dumbdiscord-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/dumbdiscord-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/dumbdiscord-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="CyberEdu dumb-discord Writeup">
+  <meta property="og:description" content="Challenge overview Well here is an example of a funny discord bot.
+_PS: Please note that the IP:PORT received is not needed to solve the challenge and nothing will answer there. _
+Identifying the vulnerabilities The script, decompiled:
+# Decompiled with PyLingual (https://pylingual.io) # Internal filename: server.py # Bytecode version: 3.6rc1 (3379) # Source timestamp: 2020-12-02 02:30:35 UTC (1606876235) from discord.ext import commands import discord import json from discord.utils import get def obfuscate(byt): mask = b&#39;ctf{tryharderdontstring}&#39; lmask = len(mask) return bytes((c ^ mask[i % lmask] for i, c in enumerate(byt))) def test(s): data = obfuscate(s.encode()) return data intents = discord.Intents.default() intents.members = True cfg = open(&#39;config.json&#39;, &#39;r&#39;) tmpconfig = cfg.read() cfg.close() config = json.loads(tmpconfig) token = config[test(&#39;\x17\x1b\r\x1e\x1a&#39;).decode()] client = commands.Bot(command_prefix=&#39;/&#39;) @client.event async def on_ready(): print(&#39;Connected to bot: {}&#39;.format(client.user.name)) print(&#39;Bot ID: {}&#39;.format(client.user.id)) @client.command() async def getflag(ctx): await ctx.send(test(&#39;\x13\x1b\x08\x1c&#39;).decode()) @client.event async def on_message(message): await client.process_commands(message) if test(&#39;B\x04\x0f\x15\x13&#39;).decode() in message.content.lower(): await message.channel.send(test(&#39;\x13\x1b\x08\x1c&#39;).decode()) if test(&#39;L\x13\x03\x0f\x12\x1e\x18\x0f&#39;).decode() in message.content.lower() and message.author.id == 783473293554352141: role = discord.utils.get(message.author.guild.roles, name=test(&#39;\x07\x17\x12\x1dFBKXO\x11\x1d\x07\x17\x16\n\n\x01]\x06\x1d&#39;).decode()) member = discord.utils.get(message.author.guild.members, id=message.author.id) if role in member.roles: await message.channel.send(test(config[test(&#39;\x05\x18\x07\x1c&#39;).decode()])) if test(&#39;L\x1c\x03\x17\x04&#39;).decode() in message.content.lower(): await message.channel.send(test(&#39;7\x06\x1f[\x1c\x13\x0b\x0c\x04\x00E&#39;).decode()) if &#39;/s基ay&#39; in message.content.lower(): await message.channel.send(message.content.replace(&#39;/s基ay&#39;, &#39;&#39;).replace(test(&#39;L\x13\x03\x0f\x12\x1e\x18\x0f&#39;).decode(), &#39;&#39;)) client.run(token) I ran the bot locally to decode those strings, and here is the less obfuscated stuff:">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-02T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-02-02T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Misc">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CyberEdu dumb-discord Writeup">
+<meta name="twitter:description" content="Challenge overview
+Well here is an example of a funny discord bot.
+_PS: Please note that the IP:PORT received is not needed to solve the challenge and nothing will answer there. _
+Identifying the vulnerabilities
+The script, decompiled:
+# Decompiled with PyLingual (https://pylingual.io)
+# Internal filename: server.py
+# Bytecode version: 3.6rc1 (3379)
+# Source timestamp: 2020-12-02 02:30:35 UTC (1606876235)
+
+from discord.ext import commands
+import discord
+import json
+from discord.utils import get
+
+def obfuscate(byt):
+    mask = b&#39;ctf{tryharderdontstring}&#39;
+    lmask = len(mask)
+    return bytes((c ^ mask[i % lmask] for i, c in enumerate(byt)))
+
+def test(s):
+    data = obfuscate(s.encode())
+    return data
+intents = discord.Intents.default()
+intents.members = True
+cfg = open(&#39;config.json&#39;, &#39;r&#39;)
+tmpconfig = cfg.read()
+cfg.close()
+config = json.loads(tmpconfig)
+token = config[test(&#39;\x17\x1b\r\x1e\x1a&#39;).decode()]
+client = commands.Bot(command_prefix=&#39;/&#39;)
+
+@client.event
+async def on_ready():
+    print(&#39;Connected to bot: {}&#39;.format(client.user.name))
+    print(&#39;Bot ID: {}&#39;.format(client.user.id))
+
+@client.command()
+async def getflag(ctx):
+    await ctx.send(test(&#39;\x13\x1b\x08\x1c&#39;).decode())
+
+@client.event
+async def on_message(message):
+    await client.process_commands(message)
+    if test(&#39;B\x04\x0f\x15\x13&#39;).decode() in message.content.lower():
+        await message.channel.send(test(&#39;\x13\x1b\x08\x1c&#39;).decode())
+    if test(&#39;L\x13\x03\x0f\x12\x1e\x18\x0f&#39;).decode() in message.content.lower() and message.author.id == 783473293554352141:
+        role = discord.utils.get(message.author.guild.roles, name=test(&#39;\x07\x17\x12\x1dFBKXO\x11\x1d\x07\x17\x16\n\n\x01]\x06\x1d&#39;).decode())
+        member = discord.utils.get(message.author.guild.members, id=message.author.id)
+        if role in member.roles:
+            await message.channel.send(test(config[test(&#39;\x05\x18\x07\x1c&#39;).decode()]))
+    if test(&#39;L\x1c\x03\x17\x04&#39;).decode() in message.content.lower():
+        await message.channel.send(test(&#39;7\x06\x1f[\x1c\x13\x0b\x0c\x04\x00E&#39;).decode())
+    if &#39;/s基ay&#39; in message.content.lower():
+        await message.channel.send(message.content.replace(&#39;/s基ay&#39;, &#39;&#39;).replace(test(&#39;L\x13\x03\x0f\x12\x1e\x18\x0f&#39;).decode(), &#39;&#39;))
+client.run(token)
+I ran the bot locally to decode those strings, and here is the less obfuscated stuff:">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CyberEdu dumb-discord Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/dumbdiscord-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CyberEdu dumb-discord Writeup",
+  "name": "CyberEdu dumb-discord Writeup",
+  "description": "Challenge overview Well here is an example of a funny discord bot.\n_PS: Please note that the IP:PORT received is not needed to solve the challenge and nothing will answer there. _\nIdentifying the vulnerabilities The script, decompiled:\n# Decompiled with PyLingual (https://pylingual.io) # Internal filename: server.py # Bytecode version: 3.6rc1 (3379) # Source timestamp: 2020-12-02 02:30:35 UTC (1606876235) from discord.ext import commands import discord import json from discord.utils import get def obfuscate(byt): mask = b\u0026#39;ctf{tryharderdontstring}\u0026#39; lmask = len(mask) return bytes((c ^ mask[i % lmask] for i, c in enumerate(byt))) def test(s): data = obfuscate(s.encode()) return data intents = discord.Intents.default() intents.members = True cfg = open(\u0026#39;config.json\u0026#39;, \u0026#39;r\u0026#39;) tmpconfig = cfg.read() cfg.close() config = json.loads(tmpconfig) token = config[test(\u0026#39;\\x17\\x1b\\r\\x1e\\x1a\u0026#39;).decode()] client = commands.Bot(command_prefix=\u0026#39;/\u0026#39;) @client.event async def on_ready(): print(\u0026#39;Connected to bot: {}\u0026#39;.format(client.user.name)) print(\u0026#39;Bot ID: {}\u0026#39;.format(client.user.id)) @client.command() async def getflag(ctx): await ctx.send(test(\u0026#39;\\x13\\x1b\\x08\\x1c\u0026#39;).decode()) @client.event async def on_message(message): await client.process_commands(message) if test(\u0026#39;B\\x04\\x0f\\x15\\x13\u0026#39;).decode() in message.content.lower(): await message.channel.send(test(\u0026#39;\\x13\\x1b\\x08\\x1c\u0026#39;).decode()) if test(\u0026#39;L\\x13\\x03\\x0f\\x12\\x1e\\x18\\x0f\u0026#39;).decode() in message.content.lower() and message.author.id == 783473293554352141: role = discord.utils.get(message.author.guild.roles, name=test(\u0026#39;\\x07\\x17\\x12\\x1dFBKXO\\x11\\x1d\\x07\\x17\\x16\\n\\n\\x01]\\x06\\x1d\u0026#39;).decode()) member = discord.utils.get(message.author.guild.members, id=message.author.id) if role in member.roles: await message.channel.send(test(config[test(\u0026#39;\\x05\\x18\\x07\\x1c\u0026#39;).decode()])) if test(\u0026#39;L\\x1c\\x03\\x17\\x04\u0026#39;).decode() in message.content.lower(): await message.channel.send(test(\u0026#39;7\\x06\\x1f[\\x1c\\x13\\x0b\\x0c\\x04\\x00E\u0026#39;).decode()) if \u0026#39;/s基ay\u0026#39; in message.content.lower(): await message.channel.send(message.content.replace(\u0026#39;/s基ay\u0026#39;, \u0026#39;\u0026#39;).replace(test(\u0026#39;L\\x13\\x03\\x0f\\x12\\x1e\\x18\\x0f\u0026#39;).decode(), \u0026#39;\u0026#39;)) client.run(token) I ran the bot locally to decode those strings, and here is the less obfuscated stuff:\n",
+  "keywords": [
+    "CyberEdu", "misc"
+  ],
+  "articleBody": "Challenge overview Well here is an example of a funny discord bot.\n_PS: Please note that the IP:PORT received is not needed to solve the challenge and nothing will answer there. _\nIdentifying the vulnerabilities The script, decompiled:\n# Decompiled with PyLingual (https://pylingual.io) # Internal filename: server.py # Bytecode version: 3.6rc1 (3379) # Source timestamp: 2020-12-02 02:30:35 UTC (1606876235) from discord.ext import commands import discord import json from discord.utils import get def obfuscate(byt): mask = b'ctf{tryharderdontstring}' lmask = len(mask) return bytes((c ^ mask[i % lmask] for i, c in enumerate(byt))) def test(s): data = obfuscate(s.encode()) return data intents = discord.Intents.default() intents.members = True cfg = open('config.json', 'r') tmpconfig = cfg.read() cfg.close() config = json.loads(tmpconfig) token = config[test('\\x17\\x1b\\r\\x1e\\x1a').decode()] client = commands.Bot(command_prefix='/') @client.event async def on_ready(): print('Connected to bot: {}'.format(client.user.name)) print('Bot ID: {}'.format(client.user.id)) @client.command() async def getflag(ctx): await ctx.send(test('\\x13\\x1b\\x08\\x1c').decode()) @client.event async def on_message(message): await client.process_commands(message) if test('B\\x04\\x0f\\x15\\x13').decode() in message.content.lower(): await message.channel.send(test('\\x13\\x1b\\x08\\x1c').decode()) if test('L\\x13\\x03\\x0f\\x12\\x1e\\x18\\x0f').decode() in message.content.lower() and message.author.id == 783473293554352141: role = discord.utils.get(message.author.guild.roles, name=test('\\x07\\x17\\x12\\x1dFBKXO\\x11\\x1d\\x07\\x17\\x16\\n\\n\\x01]\\x06\\x1d').decode()) member = discord.utils.get(message.author.guild.members, id=message.author.id) if role in member.roles: await message.channel.send(test(config[test('\\x05\\x18\\x07\\x1c').decode()])) if test('L\\x1c\\x03\\x17\\x04').decode() in message.content.lower(): await message.channel.send(test('7\\x06\\x1f[\\x1c\\x13\\x0b\\x0c\\x04\\x00E').decode()) if '/s基ay' in message.content.lower(): await message.channel.send(message.content.replace('/s基ay', '').replace(test('L\\x13\\x03\\x0f\\x12\\x1e\\x18\\x0f').decode(), '')) client.run(token) I ran the bot locally to decode those strings, and here is the less obfuscated stuff:\ndef obfuscate(byt): mask = b'ctf{tryharderdontstring}' lmask = len(mask) return bytes((c ^ mask[i % lmask] for i, c in enumerate(byt))) def test(s): data = obfuscate(s.encode()) return data intents = discord.Intents.default() intents.members = True #cfg = open('config.json', 'r') #tmpconfig = cfg.read() #cfg.close() #config = json.loads(tmpconfig) #token = config[token.decode()] token = 'haha' client = commands.Bot(command_prefix='/') @client.event async def on_ready(): print('Connected to bot: {}'.format(client.user.name)) print('Bot ID: {}'.format(client.user.id)) @client.command() async def getflag(ctx): await ctx.send('pong') @client.event async def on_message(message): await client.process_commands(message) if '!ping' in message.content.lower(): await message.channel.send('pong probabil') if '/getflag' in message.content.lower() and message.author.id == 783473293554352141: role = discord.utils.get(message.author.guild.roles, name='dctf2020.cyberedu.ro') member = discord.utils.get(message.author.guild.members, id=message.author.id) if role in member.roles: await message.channel.send('ctf{real_flag}') if 'help' in message.content.lower(): await message.channel.send('try harder!') if '/s基ay' in message.content.lower(): await message.channel.send(message.content.replace('/s基ay', '').replace('/getflag', '')) client.run(token) I tried looking up for the bot based on the user id message.author.id included, and I found this:\nI couldn’t add it to my friends list or find it in any app directories, and what worked was using the oauth2 discord bot invite through this link, which allows us to add a bot based on its id, not username: https://discord.com/oauth2/authorize?client_id=783473293554352141\u0026permissions=8\u0026scope=bot. (Permission = 8 means administrator).\nTo get the bot online, we launch the instance on Cyberedu.\nI tried adding it to a server and adding all the proper roles, but it just wouldn’t respond. Instead, it would reply to dms. I got really upset until and after I figured out you need to tag the bot before you send the message, even if it has administrator permissions. Where was that in the code we got, genuinely?\nAnyways, we need to add the role dctf2020.cyberedu.ro to our bot, and get it to say /getflag.\nif '/s基ay' in message.content.lower(): await message.channel.send(message.content.replace('/s基ay', '').replace('/getflag', '')) This line especially, repeats our message if it contains /s基ay and removes the /s基ay and /getflag. But the command is not case sensitive, while the blacklist is. So writing /get/s基ayFlag, will remove the /say and keep the /getFlag as a message. So would /s基ay/Getflag or anything like that.\nWe get back the encoded bytes b'\\x00\\x00\\x00\\x00E\\x10A\\x0e\\x00E\\x02VA\\x00\\x0eXC\\x17\\x12\\x17\\x0b_\\x03H\\x05C_CAB\\x1d\\x0b\\x07CWSAT\\r[AEG\\x17PVRKU\\x16\\x00L\\x16EOZYC\\x00QB]\\x0bYFK\\x17D\\x14' that we can decode with the python script.\nThat’s it!\n",
+  "wordCount" : "548",
+  "inLanguage": "en",
+  "datePublished": "2026-02-02T00:00:00Z",
+  "dateModified": "2026-02-02T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/dumbdiscord-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      CyberEdu dumb-discord Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-02-02 00:00:00 +0000 UTC'>February 2, 2026</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>Well here is an example of a funny discord bot.</p>
+<p>_PS: Please note that the IP:PORT received is not needed to solve the challenge and nothing will answer there. _</p>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>The script, decompiled:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># Decompiled with PyLingual (https://pylingual.io)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Internal filename: server.py</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Bytecode version: 3.6rc1 (3379)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Source timestamp: 2020-12-02 02:30:35 UTC (1606876235)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> discord.ext <span style="color:#f92672">import</span> commands
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> discord
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> json
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> discord.utils <span style="color:#f92672">import</span> get
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">obfuscate</span>(byt):
+</span></span><span style="display:flex;"><span>    mask <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;ctf</span><span style="color:#e6db74">{tryharderdontstring}</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span>    lmask <span style="color:#f92672">=</span> len(mask)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> bytes((c <span style="color:#f92672">^</span> mask[i <span style="color:#f92672">%</span> lmask] <span style="color:#66d9ef">for</span> i, c <span style="color:#f92672">in</span> enumerate(byt)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test</span>(s):
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> obfuscate(s<span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> data
+</span></span><span style="display:flex;"><span>intents <span style="color:#f92672">=</span> discord<span style="color:#f92672">.</span>Intents<span style="color:#f92672">.</span>default()
+</span></span><span style="display:flex;"><span>intents<span style="color:#f92672">.</span>members <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>cfg <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#39;config.json&#39;</span>, <span style="color:#e6db74">&#39;r&#39;</span>)
+</span></span><span style="display:flex;"><span>tmpconfig <span style="color:#f92672">=</span> cfg<span style="color:#f92672">.</span>read()
+</span></span><span style="display:flex;"><span>cfg<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span>config <span style="color:#f92672">=</span> json<span style="color:#f92672">.</span>loads(tmpconfig)
+</span></span><span style="display:flex;"><span>token <span style="color:#f92672">=</span> config[test(<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x17\x1b\r\x1e\x1a</span><span style="color:#e6db74">&#39;</span>)<span style="color:#f92672">.</span>decode()]
+</span></span><span style="display:flex;"><span>client <span style="color:#f92672">=</span> commands<span style="color:#f92672">.</span>Bot(command_prefix<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;/&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@client.event</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">on_ready</span>():
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;Connected to bot: </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(client<span style="color:#f92672">.</span>user<span style="color:#f92672">.</span>name))
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;Bot ID: </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(client<span style="color:#f92672">.</span>user<span style="color:#f92672">.</span>id))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@client.command</span>()
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">getflag</span>(ctx):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">await</span> ctx<span style="color:#f92672">.</span>send(test(<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x13\x1b\x08\x1c</span><span style="color:#e6db74">&#39;</span>)<span style="color:#f92672">.</span>decode())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@client.event</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">on_message</span>(message):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">await</span> client<span style="color:#f92672">.</span>process_commands(message)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> test(<span style="color:#e6db74">&#39;B</span><span style="color:#ae81ff">\x04\x0f\x15\x13</span><span style="color:#e6db74">&#39;</span>)<span style="color:#f92672">.</span>decode() <span style="color:#f92672">in</span> message<span style="color:#f92672">.</span>content<span style="color:#f92672">.</span>lower():
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">await</span> message<span style="color:#f92672">.</span>channel<span style="color:#f92672">.</span>send(test(<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x13\x1b\x08\x1c</span><span style="color:#e6db74">&#39;</span>)<span style="color:#f92672">.</span>decode())
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> test(<span style="color:#e6db74">&#39;L</span><span style="color:#ae81ff">\x13\x03\x0f\x12\x1e\x18\x0f</span><span style="color:#e6db74">&#39;</span>)<span style="color:#f92672">.</span>decode() <span style="color:#f92672">in</span> message<span style="color:#f92672">.</span>content<span style="color:#f92672">.</span>lower() <span style="color:#f92672">and</span> message<span style="color:#f92672">.</span>author<span style="color:#f92672">.</span>id <span style="color:#f92672">==</span> <span style="color:#ae81ff">783473293554352141</span>:
+</span></span><span style="display:flex;"><span>        role <span style="color:#f92672">=</span> discord<span style="color:#f92672">.</span>utils<span style="color:#f92672">.</span>get(message<span style="color:#f92672">.</span>author<span style="color:#f92672">.</span>guild<span style="color:#f92672">.</span>roles, name<span style="color:#f92672">=</span>test(<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x07\x17\x12\x1d</span><span style="color:#e6db74">FBKXO</span><span style="color:#ae81ff">\x11\x1d\x07\x17\x16\n\n\x01</span><span style="color:#e6db74">]</span><span style="color:#ae81ff">\x06\x1d</span><span style="color:#e6db74">&#39;</span>)<span style="color:#f92672">.</span>decode())
+</span></span><span style="display:flex;"><span>        member <span style="color:#f92672">=</span> discord<span style="color:#f92672">.</span>utils<span style="color:#f92672">.</span>get(message<span style="color:#f92672">.</span>author<span style="color:#f92672">.</span>guild<span style="color:#f92672">.</span>members, id<span style="color:#f92672">=</span>message<span style="color:#f92672">.</span>author<span style="color:#f92672">.</span>id)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> role <span style="color:#f92672">in</span> member<span style="color:#f92672">.</span>roles:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">await</span> message<span style="color:#f92672">.</span>channel<span style="color:#f92672">.</span>send(test(config[test(<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x05\x18\x07\x1c</span><span style="color:#e6db74">&#39;</span>)<span style="color:#f92672">.</span>decode()]))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> test(<span style="color:#e6db74">&#39;L</span><span style="color:#ae81ff">\x1c\x03\x17\x04</span><span style="color:#e6db74">&#39;</span>)<span style="color:#f92672">.</span>decode() <span style="color:#f92672">in</span> message<span style="color:#f92672">.</span>content<span style="color:#f92672">.</span>lower():
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">await</span> message<span style="color:#f92672">.</span>channel<span style="color:#f92672">.</span>send(test(<span style="color:#e6db74">&#39;7</span><span style="color:#ae81ff">\x06\x1f</span><span style="color:#e6db74">[</span><span style="color:#ae81ff">\x1c\x13\x0b\x0c\x04\x00</span><span style="color:#e6db74">E&#39;</span>)<span style="color:#f92672">.</span>decode())
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;/s基ay&#39;</span> <span style="color:#f92672">in</span> message<span style="color:#f92672">.</span>content<span style="color:#f92672">.</span>lower():
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">await</span> message<span style="color:#f92672">.</span>channel<span style="color:#f92672">.</span>send(message<span style="color:#f92672">.</span>content<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#39;/s基ay&#39;</span>, <span style="color:#e6db74">&#39;&#39;</span>)<span style="color:#f92672">.</span>replace(test(<span style="color:#e6db74">&#39;L</span><span style="color:#ae81ff">\x13\x03\x0f\x12\x1e\x18\x0f</span><span style="color:#e6db74">&#39;</span>)<span style="color:#f92672">.</span>decode(), <span style="color:#e6db74">&#39;&#39;</span>))
+</span></span><span style="display:flex;"><span>client<span style="color:#f92672">.</span>run(token)
+</span></span></code></pre></div><p>I ran the bot locally to decode those strings, and here is the less obfuscated stuff:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">obfuscate</span>(byt):
+</span></span><span style="display:flex;"><span>    mask <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;ctf</span><span style="color:#e6db74">{tryharderdontstring}</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span>    lmask <span style="color:#f92672">=</span> len(mask)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> bytes((c <span style="color:#f92672">^</span> mask[i <span style="color:#f92672">%</span> lmask] <span style="color:#66d9ef">for</span> i, c <span style="color:#f92672">in</span> enumerate(byt)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test</span>(s):
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> obfuscate(s<span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> data
+</span></span><span style="display:flex;"><span>intents <span style="color:#f92672">=</span> discord<span style="color:#f92672">.</span>Intents<span style="color:#f92672">.</span>default()
+</span></span><span style="display:flex;"><span>intents<span style="color:#f92672">.</span>members <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#cfg = open(&#39;config.json&#39;, &#39;r&#39;)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#tmpconfig = cfg.read()</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#cfg.close()</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#config = json.loads(tmpconfig)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#token = config[token.decode()]</span>
+</span></span><span style="display:flex;"><span>token <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;haha&#39;</span>
+</span></span><span style="display:flex;"><span>client <span style="color:#f92672">=</span> commands<span style="color:#f92672">.</span>Bot(command_prefix<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;/&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@client.event</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">on_ready</span>():
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;Connected to bot: </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(client<span style="color:#f92672">.</span>user<span style="color:#f92672">.</span>name))
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;Bot ID: </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#39;</span><span style="color:#f92672">.</span>format(client<span style="color:#f92672">.</span>user<span style="color:#f92672">.</span>id))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@client.command</span>()
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">getflag</span>(ctx):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">await</span> ctx<span style="color:#f92672">.</span>send(<span style="color:#e6db74">&#39;pong&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@client.event</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">on_message</span>(message):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">await</span> client<span style="color:#f92672">.</span>process_commands(message)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;!ping&#39;</span> <span style="color:#f92672">in</span> message<span style="color:#f92672">.</span>content<span style="color:#f92672">.</span>lower():
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">await</span> message<span style="color:#f92672">.</span>channel<span style="color:#f92672">.</span>send(<span style="color:#e6db74">&#39;pong probabil&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;/getflag&#39;</span> <span style="color:#f92672">in</span> message<span style="color:#f92672">.</span>content<span style="color:#f92672">.</span>lower() <span style="color:#f92672">and</span> message<span style="color:#f92672">.</span>author<span style="color:#f92672">.</span>id <span style="color:#f92672">==</span> <span style="color:#ae81ff">783473293554352141</span>:
+</span></span><span style="display:flex;"><span>        role <span style="color:#f92672">=</span> discord<span style="color:#f92672">.</span>utils<span style="color:#f92672">.</span>get(message<span style="color:#f92672">.</span>author<span style="color:#f92672">.</span>guild<span style="color:#f92672">.</span>roles, name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;dctf2020.cyberedu.ro&#39;</span>)
+</span></span><span style="display:flex;"><span>        member <span style="color:#f92672">=</span> discord<span style="color:#f92672">.</span>utils<span style="color:#f92672">.</span>get(message<span style="color:#f92672">.</span>author<span style="color:#f92672">.</span>guild<span style="color:#f92672">.</span>members, id<span style="color:#f92672">=</span>message<span style="color:#f92672">.</span>author<span style="color:#f92672">.</span>id)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> role <span style="color:#f92672">in</span> member<span style="color:#f92672">.</span>roles:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">await</span> message<span style="color:#f92672">.</span>channel<span style="color:#f92672">.</span>send(<span style="color:#e6db74">&#39;ctf</span><span style="color:#e6db74">{real_flag}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;help&#39;</span> <span style="color:#f92672">in</span> message<span style="color:#f92672">.</span>content<span style="color:#f92672">.</span>lower():
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">await</span> message<span style="color:#f92672">.</span>channel<span style="color:#f92672">.</span>send(<span style="color:#e6db74">&#39;try harder!&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;/s基ay&#39;</span> <span style="color:#f92672">in</span> message<span style="color:#f92672">.</span>content<span style="color:#f92672">.</span>lower():
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">await</span> message<span style="color:#f92672">.</span>channel<span style="color:#f92672">.</span>send(message<span style="color:#f92672">.</span>content<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#39;/s基ay&#39;</span>, <span style="color:#e6db74">&#39;&#39;</span>)<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#39;/getflag&#39;</span>, <span style="color:#e6db74">&#39;&#39;</span>))
+</span></span><span style="display:flex;"><span>client<span style="color:#f92672">.</span>run(token)
+</span></span></code></pre></div><p>I tried looking up for the bot based on the <em>user id</em> message.author.id included, and I found this:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/dumbdiscord-writeup/user.png#center"></p>
+<p>I couldn&rsquo;t add it to my friends list or find it in any app directories, and what worked was using the oauth2 discord bot invite through this link, which allows us to add a bot based on its id, not username: <code>https://discord.com/oauth2/authorize?client_id=783473293554352141&amp;permissions=8&amp;scope=bot</code>. (Permission = 8 means administrator).</p>
+<p>To get the bot online, we launch the instance on Cyberedu.</p>
+<p>I tried adding it to a server and adding all the proper roles, but it just wouldn&rsquo;t respond. Instead, it would reply to dms. I got really upset until and after I figured out you need to tag the bot before you send the message, <em>even if it has administrator permissions</em>. Where was that in the code we got, genuinely?</p>
+<p>Anyways, we need to add the role <code>dctf2020.cyberedu.ro</code> to our bot, and get it to say <code>/getflag</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;/s基ay&#39;</span> <span style="color:#f92672">in</span> message<span style="color:#f92672">.</span>content<span style="color:#f92672">.</span>lower():
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">await</span> message<span style="color:#f92672">.</span>channel<span style="color:#f92672">.</span>send(message<span style="color:#f92672">.</span>content<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#39;/s基ay&#39;</span>, <span style="color:#e6db74">&#39;&#39;</span>)<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#39;/getflag&#39;</span>, <span style="color:#e6db74">&#39;&#39;</span>))
+</span></span></code></pre></div><p>This line especially, repeats our message if it contains <code>/s基ay</code> and removes the <code>/s基ay</code> and <code>/getflag</code>. But the command is not case sensitive, while the blacklist is. So writing <code>/get/s基ayFlag</code>, will remove the /say and keep the <code>/getFlag</code> as a message. So would <code>/s基ay/Getflag</code> or anything like that.</p>
+<p>We get back the encoded bytes <code>b'\x00\x00\x00\x00E\x10A\x0e\x00E\x02VA\x00\x0eXC\x17\x12\x17\x0b_\x03H\x05C_CAB\x1d\x0b\x07CWSAT\r[AEG\x17PVRKU\x16\x00L\x16EOZYC\x00QB]\x0bYFK\x17D\x14'</code> that we can decode with the python script.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/dumbdiscord-writeup/flag.png#center"></p>
+<p>That&rsquo;s it!</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/misc/">Misc</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

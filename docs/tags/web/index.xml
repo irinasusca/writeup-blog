@@ -6,8 +6,36 @@
     <description>Recent content in Web on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 26 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 02 Feb 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/tags/web/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CyberEdu formula1 Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/formula1-writeup/</link>
+      <pubDate>Mon, 02 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/formula1-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Only a champion can win this race. Enter the secret pit stop and claim your flag!&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;We&amp;rsquo;re confronted with a login page, with two fields, &lt;code&gt;Only for F1 champions. Enter your first name and pit code to start your engine&lt;/code&gt;. Entering a random username and random password would give an &lt;code&gt;Invalid username&lt;/code&gt; error, but sending &lt;em&gt;max&lt;/em&gt; (for Max Verstappen) would give an &lt;code&gt;Invalid pit code&lt;/code&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Wireshark &amp; Tshark</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/wireshark/</link>
+      <pubDate>Sun, 01 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/wireshark/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;Since this is, sadly, something that needs to be done in order to score points in ctfs, I&amp;rsquo;m going to cover some things that &lt;em&gt;I&lt;/em&gt; feel  are important in this category.&lt;/p&gt;
+&lt;p&gt;I have done quite a few forensics challenges, but I never really mastered &lt;code&gt;grep&lt;/code&gt; and &lt;code&gt;tshark&lt;/code&gt; to their full potential. And I forgot most of my Wireshark expertise from last year, so I&amp;rsquo;ll include what I feel is important or non-intuitive about that as well.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>requests library</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/requests/</link>
+      <pubDate>Fri, 30 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/requests/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;Since I actually (sadly) have to learn python myself for the OSC since AIs got banned, I decided it&amp;rsquo;s time to lay down the foundation of the requests library instead of letting an AI slave do the dirty python work for me. That means it&amp;rsquo;s time to learn the requests library.&lt;/p&gt;
+&lt;p&gt;It really wasn&amp;rsquo;t as difficult as I thought, and I really wish I&amp;rsquo;d done this sooner. Who would&amp;rsquo;ve ever guessed learning is really useful?&lt;/p&gt;</description>
+    </item>
     <item>
       <title>CyberEdu ultra-crawl Writeup</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/ultracrawl-writeup/</link>

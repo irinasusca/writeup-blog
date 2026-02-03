@@ -152,85 +152,165 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Function Overwrite Writeup
+    <h2 class="entry-hint-parent">Nullctf 2025 Sketchy Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Story telling class 2/2 Additional details will be available after launching your challenge instance.
-Upon a quick check, we see that the challenge is a 32-bit binary, and that we can trigger a SEGFAULT. It might be a buffer overflow, but the challenge doesn’t necessarily hint that, so let’s inspect it further.
-Also NX is enabled, so let’s keep that in mind.
-The first input string is not susceptible to a buffer overflow, but something interesting happens on the second scanf. We read two %d (ints), but only one destination for them (&amp;number1).
+    <p>Challenge overview This challenge was a part of the NullCTF 2025, made by tudor, with the description sketchy stuff going on here i’m scared.
+Upon checking, we’re dealing with NX, PIE and ALSR and no canary.
+Let’s take a look at the binary. We have two interesting functions, main and handler.
+Inside main, firstly, we are given the address of main (located at PIE address &#43; 0x1265), so we don’t need to bother with leaking it. Then, a pointer s gets assigned the string quite interesting stuff you’re saying.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-23 21:08:35 +0200 EET'>November 23, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Function Overwrite Writeup" href="https://irinasusca.github.io/writeup-blog/posts/functionoverwrite-writeup/"></a>
+  <footer class="entry-footer"><span title='2025-12-11 00:00:00 +0000 UTC'>December 11, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to Nullctf 2025 Sketchy Writeup" href="https://irinasusca.github.io/writeup-blog/posts/sketchy-writeup/"></a>
 </article>
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Stack Cache Writeup
+    <h2 class="entry-hint-parent">CyberEdu Buy-Cooffe Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Undefined behaviours are fun. It looks like Dr. Oswal allowed buffer overflows again. Analyse this program to identify how you can get to the flag.
+    <p>Challenge overview It’s early morning, and the caffeine hasn’t quite kicked in yet. As you sip your cup of coffee, you notice something odd – a mysterious program named cooffee is running on your system.
+At first glance, the chall looks like a 64-bit executable, and upon a buffer overflow the program immediately leaks us a libc address. We also get the libc-2.31.so to download, and that means this is the libc version our binary uses.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu Buy-Cooffe Writeup" href="https://irinasusca.github.io/writeup-blog/posts/buycooffe-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu ftp-console Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview We got a very strange ftp console? Can you retrive the flag?
+At first glance, the ftp_server looks like a 32-bit executable, and as hinted by the name, a FTP (File Transfer Protocol) server mockup.
+Upon checking, every protection is disabled, so that’s nice! Now let’s take a look at the binary.
+We have a main function that calls login, and we can already see some interesting things going on.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu ftp-console Writeup" href="https://irinasusca.github.io/writeup-blog/posts/ftpconsole-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu Lost Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Oh no! I lost my flag somewhere in memory. Can you help me find it, please? Make sure to do it quickly!
+Upon trying to run the binary, we are greeted by a so version mismatch, but I won’t bother downloading it myself, so let’s see if we can solve it remotely. We can see it is a 32-bit binary though.
+Taking a look at main, we can see the flag getting copied into a dest buffer. Our input is stored into buf.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu Lost Writeup" href="https://irinasusca.github.io/writeup-blog/posts/lost-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu Stack Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview You can’t run shellcode if all registers are 0, right?
+Our binary main is a 64-bit executable with an obvious buffer overflow vulnerability. Let’s take a look at it using a disassembler.
+We only have one function, main, which mmaps dest, copies 3 bytes of what’s inside &amp;unk_2027 into dest, then lets us write 0x1000 bytes into dest&#43;3. That means our buffer overflow is only 3 bytes, though. Afterwards, it executes this assembly shellcode:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu Stack Writeup" href="https://irinasusca.github.io/writeup-blog/posts/stack-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu Bazooka Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview We have a problem on the station on Mars, we suspect we would be attacked by some hackers so we put a little protection against them.
+The challenge was proposed by BIT SENTINEL.
+At first glance, the pwn_bazooka_bazooka looks like a 64-bit executable, and I didn’t immediately notice any obvious buffer overflows or format strings. It takes a message input and a junk input. So let’s take a look at the binary.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-02 00:00:00 +0000 UTC'>December 2, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu Bazooka Writeup" href="https://irinasusca.github.io/writeup-blog/posts/bazooka-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico Here&#39;s A LIBC Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview I am once again asking for you to pwn this binary
+At first glance, the vuln looks like a 64-bit executable with a buffer overflow vulnerability. And since it’s hinted in the title, most probably a ret2libc challenge.
+Upon checking, only NX is enabled. So this should make things fairly easy for us.
+Identifying the vulnerabilities We can quickly check if there’s a /bin/sh in memory, and there it is! Along with a system and also execve.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-30 00:00:00 +0000 UTC'>November 30, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Here&#39;s A LIBC Writeup" href="https://irinasusca.github.io/writeup-blog/posts/heresalibc-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico Homework Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview “time to do some homework!”
+At first glance, homework looks like a 64-bit executable, but we can’t tell much about it.
+After using checksec, sadly, PIE is enabled and so is NX.
+We have a main function (picture above) and a step function. The step function uses and then modifies some variables declared/located in the .bss, so it would be good to see what they look like before execution starts.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-27 21:09:36 +0200 EET'>November 27, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Homework Writeup" href="https://irinasusca.github.io/writeup-blog/posts/homework-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico Buffer Overflow 3 Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Do you think you can bypass the protection and get the flag? It looks like Dr. Oswal added a stack canary to this program to protect against buffer overflows.
+At first glance, the vuln looks like a 32-bit executable, probably with a buffer overflow vulnerability.
+We are first prompted to create a canary.txt file, and the binary runs after that.
+Analyzing the binary, first, the read_canary() function is called, and then we go into vuln.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-25 21:09:36 +0200 EET'>November 25, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Buffer Overflow 3 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/bufferoverflow3-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico Ropfu Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview What’s ROP? Can you exploit the following program to get the flag?
 At first glance, the vuln looks like a 32-bit executable with a buffer overflow vulnerability.
-Analyzing the binary, we come across some interesting funtions, UnderConstruction and win.
-After a quick checksec, we find vuln has both NX and a stack canary enabled. So we can probably find a way to leak the stack canary using the UnderConstruction function.
+Identifying the vulnerabilities Analyzing the binary, it doesn’t look like anything special, just an ordinary buffer overflow.
+We don’t seem to have a /bin/sh in memory so this probably means we have to execute a ret2reg.
+That means we need to make our own bin/sh and point to it, and since the vuln returns the gets, that means eax will hold the gets return value. And the return value of gets is a pointer to the input value!
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-19 21:09:36 +0200 EET'>November 19, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Stack Cache Writeup" href="https://irinasusca.github.io/writeup-blog/posts/stackcache-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Babygame02 Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Break the game and get the flag. Welcome to BabyGame 02! Navigate around the map and see what you can find!
-After analyzing the binary and renaming the variables, we notice we have a player struct/array consisting of the player y, player x.
-Immediately after that, we have the map matrix.
-From the main function, by solving the puzzle, which can be easily achieved by using the special command p we “win”. And with the special command l we can replace the @ player character with a char (spoiler, it can be any byte of our liking, not necessarily a char).
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-19 21:08:35 +0200 EET'>November 19, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Babygame02 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/babygame02-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Babygame03 Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Break the game and get the flag. Welcome to BabyGame 03! Navigate around the map and see what you can find! Be careful, you don’t have many moves. There are obstacles that instantly end the game on collision. The game is available to download here. There is no source available, so you’ll have to figure your way around the map.
-After analyzing the binary and renaming the variables, we notice we have a player struct/array consisting of the player y, player x and player lives.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-10 21:08:35 +0200 EET'>November 10, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Babygame03 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/babygame03-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Handoff Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview The first vuln we encounter in handoff is that it doesn’t disable NX. (Basically, this means that we can execute shellcode on the stack!)
-We are presented with a menu with 3 options:
-Add a recipient Send a message to a recipient Exit Upon trying to exit, we are prompted to give our feedback.
-Identifying the vulnerability Immediately after decompiling the binary, we notice a buffer overflow in its feedback buffer. We can also see that the value at feedback[7] gets turned to \0. However, the feedback buffer overflow is way too small for us to do anything with it, so our best bet is to find another buffer and jmp to it.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-10 21:08:35 +0200 EET'>November 10, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Handoff Writeup" href="https://irinasusca.github.io/writeup-blog/posts/handoff-writeup/"></a>
+  <footer class="entry-footer"><span title='2025-11-24 21:09:36 +0200 EET'>November 24, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Ropfu Writeup" href="https://irinasusca.github.io/writeup-blog/posts/ropfu-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
     <a class="prev" href="https://irinasusca.github.io/writeup-blog/posts/page/4/">
       «&nbsp;Prev&nbsp;
+    </a>
+    <a class="next" href="https://irinasusca.github.io/writeup-blog/posts/page/6/">Next&nbsp;&nbsp;»
     </a>
   </nav>
 </footer>

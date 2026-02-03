@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CyberEdu digikey Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, misc">
+<meta name="description" content="Challenge overview
+This challenge contains the extracted ELF data from a compiled atTiny85 avr chip The device was automatically being detected as a keyboard and inputs in a loop the ctf flag as string.
+
+We receive an Atmel AVR 8-bit file, which is the code for a microcontroller, so we can&rsquo;t run it locally on our kali (since it&rsquo;s COMPILED). So we need a decompiler, but of course IDA Pro is too expensive and ghidra looks absolutely awful, so we have to look for one online.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/digikey-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/digikey-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/digikey-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="CyberEdu digikey Writeup">
+  <meta property="og:description" content="Challenge overview This challenge contains the extracted ELF data from a compiled atTiny85 avr chip The device was automatically being detected as a keyboard and inputs in a loop the ctf flag as string.
+We receive an Atmel AVR 8-bit file, which is the code for a microcontroller, so we can’t run it locally on our kali (since it’s COMPILED). So we need a decompiler, but of course IDA Pro is too expensive and ghidra looks absolutely awful, so we have to look for one online.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-01-30T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-01-30T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Misc">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CyberEdu digikey Writeup">
+<meta name="twitter:description" content="Challenge overview
+This challenge contains the extracted ELF data from a compiled atTiny85 avr chip The device was automatically being detected as a keyboard and inputs in a loop the ctf flag as string.
+
+We receive an Atmel AVR 8-bit file, which is the code for a microcontroller, so we can&rsquo;t run it locally on our kali (since it&rsquo;s COMPILED). So we need a decompiler, but of course IDA Pro is too expensive and ghidra looks absolutely awful, so we have to look for one online.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CyberEdu digikey Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/digikey-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CyberEdu digikey Writeup",
+  "name": "CyberEdu digikey Writeup",
+  "description": "Challenge overview This challenge contains the extracted ELF data from a compiled atTiny85 avr chip The device was automatically being detected as a keyboard and inputs in a loop the ctf flag as string.\nWe receive an Atmel AVR 8-bit file, which is the code for a microcontroller, so we can\u0026rsquo;t run it locally on our kali (since it\u0026rsquo;s COMPILED). So we need a decompiler, but of course IDA Pro is too expensive and ghidra looks absolutely awful, so we have to look for one online.\n",
+  "keywords": [
+    "CyberEdu", "misc"
+  ],
+  "articleBody": "Challenge overview This challenge contains the extracted ELF data from a compiled atTiny85 avr chip The device was automatically being detected as a keyboard and inputs in a loop the ctf flag as string.\nWe receive an Atmel AVR 8-bit file, which is the code for a microcontroller, so we can’t run it locally on our kali (since it’s COMPILED). So we need a decompiler, but of course IDA Pro is too expensive and ghidra looks absolutely awful, so we have to look for one online.\nFirst I tried strings, and we get this flag that doesn’t work: ctf{x4978aef327x5064ab48xa1cx8x34x7eea6ffc121fe0e17b0c47b5680b13x98b}. A lot of weird x characters for a flag.\nI tried a bunch of decompilers, ghidra and avr ones (simavr, avr-objdump), but it didn’t work so I thought I’d give the dog decompiler a chance.\nvoid FUN_code_00029b(void) { byte bVar1; char cVar2; byte bVar3; char cVar4; char *pcVar5; undefined2 unaff_Y; char *pcVar6; char *pcVar7; byte bVar8; bool bVar9; bool bVar10; bool bVar11; char in_Hflg; char cVar12; char in_Tflg; char cVar13; char in_Iflg; char cVar14; undefined1 uStack_2; undefined1 uStack_1; uStack_1 = (undefined1)((uint)unaff_Y \u003e\u003e 8); bVar3 = (byte)\u0026uStack_2; bVar8 = (byte)((uint)\u0026uStack_2 \u003e\u003e 8); bVar1 = bVar3 + 0xba; bVar9 = bVar3 \u003c 0x46; cVar2 = bVar8 - bVar9; pcVar7 = (char *)CONCAT11(cVar2,bVar1); cVar12 = in_Hflg == '\\x01'; cVar13 = in_Tflg == '\\x01'; cVar14 = in_Iflg == '\\x01'; SREG = bVar8 \u003c bVar9 | (bVar1 == 0 \u0026\u0026 cVar2 == '\\0') \u003c\u003c 1 | (cVar2 \u003c '\\0') \u003c\u003c 2 | SBORROW1(bVar8,bVar9) \u003c\u003c 3 | ((char)bVar8 \u003c bVar9) \u003c\u003c 4 | cVar12 \u003c\u003c 5 | cVar13 \u003c\u003c 6 | cVar14 \u003c\u003c 7; cVar4 = 'F'; pcVar6 = \u0026DAT_mem_008b; pcVar5 = pcVar7; do { pcVar5 = pcVar5 + 1; *pcVar5 = *pcVar6; cVar4 = cVar4 + -1; pcVar6 = pcVar6 + 1; } while (cVar4 != '\\0'); while( true ) { pcVar7 = pcVar7 + 1; if (*pcVar7 == '\\0') break; if (*pcVar7 == 'x') { *pcVar7 = 'd'; } } *(undefined3 *)(CONCAT11(cVar2,bVar1) + -2) = 0x2c0; FUN_code_00049e(0xdc,CONCAT11(cVar2 - ((bVar1 != 0xff) + -1),bVar3 + 0xbb)); bVar9 = bVar1 \u003c 0xba; bVar11 = SBORROW1(cVar2,-1) != SBORROW1(cVar2 + 1U,bVar9); bVar10 = (char)(cVar2 - (bVar9 + -1)) \u003c '\\0'; SREG = (cVar2 != -1 || (byte)(cVar2 + 1U) \u003c bVar9) | (bVar1 == 0xba \u0026\u0026 cVar2 == (char)(bVar9 + -1)) \u003c\u003c 1 | bVar10 \u003c\u003c 2 | bVar11 \u003c\u003c 3 | (bVar10 != bVar11) \u003c\u003c 4 | (cVar12 == '\\x01') \u003c\u003c 5 | (cVar13 == '\\x01') \u003c\u003c 6 | (cVar14 == '\\x01') \u003c\u003c 7; return; } This function looked particularly interesting, especially this part:\nwhile( true ) { pcVar7 = pcVar7 + 1; if (*pcVar7 == '\\0') break; if (*pcVar7 == 'x') { *pcVar7 = 'd'; } } It looks like iterating trough a string, replacing each x occurrence with a d. I didn’t think it would work but gave it a shot anyways, but, the flag worked!\nHere it is: ctf{d4978aef327d5064ab48da1cd8d34d7eea6ffc121fe0e17b0c47b5680b13d98b}\n",
+  "wordCount" : "484",
+  "inLanguage": "en",
+  "datePublished": "2026-01-30T00:00:00Z",
+  "dateModified": "2026-01-30T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/digikey-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      CyberEdu digikey Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-01-30 00:00:00 +0000 UTC'>January 30, 2026</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>This challenge contains the extracted ELF data from a compiled atTiny85 avr chip The device was automatically being detected as a keyboard and inputs in a loop the ctf flag as string.</p>
+<hr>
+<p>We receive an Atmel AVR 8-bit file, which is the code for a microcontroller, so we can&rsquo;t run it locally on our kali (since it&rsquo;s COMPILED). So we need a decompiler, but of course IDA Pro is too expensive and ghidra looks absolutely awful, so we have to look for one online.</p>
+<p>First I tried <code>strings</code>, and we get this flag that doesn&rsquo;t work: <code>ctf{x4978aef327x5064ab48xa1cx8x34x7eea6ffc121fe0e17b0c47b5680b13x98b}</code>. A lot of weird <code>x</code> characters for a flag.</p>
+<p>I tried a bunch of decompilers, ghidra and avr ones (simavr, avr-objdump), but it didn&rsquo;t work so I thought I&rsquo;d give the <a href="https://dogbolt.org/?id=70c23fbe-f882-413f-9aa5-aa46b22fc015#Hex-Rays=1&amp;Ghidra=873">dog decompiler</a> a chance.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">FUN_code_00029b</span>(<span style="color:#66d9ef">void</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  byte bVar1;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">char</span> cVar2;
+</span></span><span style="display:flex;"><span>  byte bVar3;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">char</span> cVar4;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>pcVar5;
+</span></span><span style="display:flex;"><span>  undefined2 unaff_Y;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>pcVar6;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>pcVar7;
+</span></span><span style="display:flex;"><span>  byte bVar8;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">bool</span> bVar9;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">bool</span> bVar10;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">bool</span> bVar11;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">char</span> in_Hflg;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">char</span> cVar12;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">char</span> in_Tflg;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">char</span> cVar13;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">char</span> in_Iflg;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">char</span> cVar14;
+</span></span><span style="display:flex;"><span>  undefined1 uStack_2;
+</span></span><span style="display:flex;"><span>  undefined1 uStack_1;
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  uStack_1 <span style="color:#f92672">=</span> (undefined1)((uint)unaff_Y <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">8</span>);
+</span></span><span style="display:flex;"><span>  bVar3 <span style="color:#f92672">=</span> (byte)<span style="color:#f92672">&amp;</span>uStack_2;
+</span></span><span style="display:flex;"><span>  bVar8 <span style="color:#f92672">=</span> (byte)((uint)<span style="color:#f92672">&amp;</span>uStack_2 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">8</span>);
+</span></span><span style="display:flex;"><span>  bVar1 <span style="color:#f92672">=</span> bVar3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">0xba</span>;
+</span></span><span style="display:flex;"><span>  bVar9 <span style="color:#f92672">=</span> bVar3 <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x46</span>;
+</span></span><span style="display:flex;"><span>  cVar2 <span style="color:#f92672">=</span> bVar8 <span style="color:#f92672">-</span> bVar9;
+</span></span><span style="display:flex;"><span>  pcVar7 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#a6e22e">CONCAT11</span>(cVar2,bVar1);
+</span></span><span style="display:flex;"><span>  cVar12 <span style="color:#f92672">=</span> in_Hflg <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;\x01&#39;</span>;
+</span></span><span style="display:flex;"><span>  cVar13 <span style="color:#f92672">=</span> in_Tflg <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;\x01&#39;</span>;
+</span></span><span style="display:flex;"><span>  cVar14 <span style="color:#f92672">=</span> in_Iflg <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;\x01&#39;</span>;
+</span></span><span style="display:flex;"><span>  SREG <span style="color:#f92672">=</span> bVar8 <span style="color:#f92672">&lt;</span> bVar9 <span style="color:#f92672">|</span> (bVar1 <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> cVar2 <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;\0&#39;</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">|</span> (cVar2 <span style="color:#f92672">&lt;</span> <span style="color:#e6db74">&#39;\0&#39;</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">SBORROW1</span>(bVar8,bVar9) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">|</span> ((<span style="color:#66d9ef">char</span>)bVar8 <span style="color:#f92672">&lt;</span> bVar9) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">|</span> cVar12 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">5</span> <span style="color:#f92672">|</span> cVar13 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">6</span> <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span>         cVar14 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">7</span>;
+</span></span><span style="display:flex;"><span>  cVar4 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;F&#39;</span>;
+</span></span><span style="display:flex;"><span>  pcVar6 <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>DAT_mem_008b;
+</span></span><span style="display:flex;"><span>  pcVar5 <span style="color:#f92672">=</span> pcVar7;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">do</span> {
+</span></span><span style="display:flex;"><span>    pcVar5 <span style="color:#f92672">=</span> pcVar5 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>pcVar5 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>pcVar6;
+</span></span><span style="display:flex;"><span>    cVar4 <span style="color:#f92672">=</span> cVar4 <span style="color:#f92672">+</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    pcVar6 <span style="color:#f92672">=</span> pcVar6 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">while</span> (cVar4 <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;\0&#39;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">while</span>( true ) {
+</span></span><span style="display:flex;"><span>    pcVar7 <span style="color:#f92672">=</span> pcVar7 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">*</span>pcVar7 <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;\0&#39;</span>) <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">*</span>pcVar7 <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;x&#39;</span>) {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">*</span>pcVar7 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;d&#39;</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">*</span>(undefined3 <span style="color:#f92672">*</span>)(<span style="color:#a6e22e">CONCAT11</span>(cVar2,bVar1) <span style="color:#f92672">+</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>) <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x2c0</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">FUN_code_00049e</span>(<span style="color:#ae81ff">0xdc</span>,<span style="color:#a6e22e">CONCAT11</span>(cVar2 <span style="color:#f92672">-</span> ((bVar1 <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0xff</span>) <span style="color:#f92672">+</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>),bVar3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">0xbb</span>));
+</span></span><span style="display:flex;"><span>  bVar9 <span style="color:#f92672">=</span> bVar1 <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0xba</span>;
+</span></span><span style="display:flex;"><span>  bVar11 <span style="color:#f92672">=</span> <span style="color:#a6e22e">SBORROW1</span>(cVar2,<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">!=</span> <span style="color:#a6e22e">SBORROW1</span>(cVar2 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1U</span>,bVar9);
+</span></span><span style="display:flex;"><span>  bVar10 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span>)(cVar2 <span style="color:#f92672">-</span> (bVar9 <span style="color:#f92672">+</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)) <span style="color:#f92672">&lt;</span> <span style="color:#e6db74">&#39;\0&#39;</span>;
+</span></span><span style="display:flex;"><span>  SREG <span style="color:#f92672">=</span> (cVar2 <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">||</span> (byte)(cVar2 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1U</span>) <span style="color:#f92672">&lt;</span> bVar9) <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span>         (bVar1 <span style="color:#f92672">==</span> <span style="color:#ae81ff">0xba</span> <span style="color:#f92672">&amp;&amp;</span> cVar2 <span style="color:#f92672">==</span> (<span style="color:#66d9ef">char</span>)(bVar9 <span style="color:#f92672">+</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">|</span> bVar10 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">|</span> bVar11 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span>         (bVar10 <span style="color:#f92672">!=</span> bVar11) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">|</span> (cVar12 <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;\x01&#39;</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">5</span> <span style="color:#f92672">|</span> (cVar13 <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;\x01&#39;</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">6</span> <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span>         (cVar14 <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;\x01&#39;</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">7</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This function looked particularly interesting, especially this part:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">while</span>( true ) {
+</span></span><span style="display:flex;"><span>    pcVar7 <span style="color:#f92672">=</span> pcVar7 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">*</span>pcVar7 <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;\0&#39;</span>) <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">*</span>pcVar7 <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;x&#39;</span>) {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">*</span>pcVar7 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;d&#39;</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span></code></pre></div><p>It looks like iterating trough a string, replacing each <code>x</code> occurrence with a <code>d</code>. I didn&rsquo;t think it would work but gave it a shot anyways, but, the flag worked!</p>
+<p>Here it is: <code>ctf{d4978aef327d5064ab48da1cd8d34d7eea6ffc121fe0e17b0c47b5680b13d98b}</code></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/misc/">Misc</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
