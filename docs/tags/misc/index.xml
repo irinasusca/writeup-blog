@@ -6,8 +6,40 @@
     <description>Recent content in Misc on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 02 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 10 Feb 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/tags/misc/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CyberEdu universe Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/universe-writeup/</link>
+      <pubDate>Tue, 10 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/universe-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;What is the technique name? What is the flag?&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;I took a bunch of images with all the steps while solving this challenge, so I&amp;rsquo;ll just let those speak for me. (Also, for the stereogram - stegsolve):&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/universe-writeup/p1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/universe-writeup/p12.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/universe-writeup/p22.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;sed &#39;s/%20/\n/g&#39; part2.txt -i&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/universe-writeup/p2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Felt really smart for figuring out it was b32.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/universe-writeup/p23.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Here is that stegsolve stereogram solver I mentioned.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/universe-writeup/p3.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;And the full flag is ctf{6da4a51e2ee5437bece4699edf7728ae26e6684abe8711b85b034902a920a775}!&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu cross-or-zero Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/crossorzero-writeup/</link>
+      <pubDate>Thu, 05 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/crossorzero-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Can you find the key and the flag? I bet. It is not an encryption. It is ZERO.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;The code we&amp;rsquo;re given is a perfectly normal string xor alg (I found one on Medium):&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/crossorzero-writeup/tutty.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The challenge actually gives us a big hint as to what the key is (ZERO). Yeah, it&amp;rsquo;s literally &amp;ldquo;0&amp;rdquo;. I converted the base64 to bytes to hex, and used it in an online XOR calculator with the ASCII for &amp;ldquo;0&amp;rdquo;.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>CyberEdu dumb-discord Writeup</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/dumbdiscord-writeup/</link>

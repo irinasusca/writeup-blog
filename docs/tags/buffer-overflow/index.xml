@@ -6,8 +6,19 @@
     <description>Recent content in Buffer-Overflow on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 04 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 10 Feb 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CyberEdu merry-cemetery Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/merrycemetery-writeup/</link>
+      <pubDate>Tue, 10 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/merrycemetery-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;After doing exactly &lt;em&gt;two&lt;/em&gt; web challenges, I remembered just how much better pwn is, and if I don&amp;rsquo;t sprinkle in at least another actually fun chall this blog won&amp;rsquo;t last too long. Enough prologue, let&amp;rsquo;s get started.&lt;/p&gt;
+&lt;p&gt;Rest In Peace Read More: &lt;a href=&#34;https://en.wikipedia.org/wiki/Merry_Cemetery&#34;&gt;https://en.wikipedia.org/wiki/Merry_Cemetery&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;The &lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/23bd9680-abd7-11ea-9682-bf805593105b?tenant=cyberedu&#34;&gt;challenge&lt;/a&gt;&lt;/strong&gt; was initially published at HackTM Quals 2020, organized by WreckTheLine.&lt;/p&gt;
+&lt;p&gt;This is a reference to Cimitirul Vesel I guess. We&amp;rsquo;re given two files, a &lt;code&gt;.js&lt;/code&gt; and a &lt;code&gt;.wasm&lt;/code&gt;, more interestingly. That just means &lt;em&gt;web assembly&lt;/em&gt;, and it&amp;rsquo;s a sort of binary format.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>CyberEdu cookies Writeup</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/cookies-writeup/</link>

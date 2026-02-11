@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CyberEdu asmadventure Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, pwn, rev">
+<meta name="description" content="Challenge overview
+Because it&rsquo;s a reverse engineering chall I&rsquo;m including the link.
+
+Ieri seară am primit o alertă privind un shellcode executat de un binar suspicios.
+Poți analiza ce se întâmplă și să descoperi parola infractorului?
+
+We receive a main binary. Very strangely, looking at this in IDA, it doesn&rsquo;t look like anything.
+
+This is literally it. All of it.
+It allocates a rwx memory region of 559 bytes with 0.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/asmadventure-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/asmadventure-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/asmadventure-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="CyberEdu asmadventure Writeup">
+  <meta property="og:description" content="Challenge overview Because it’s a reverse engineering chall I’m including the link.
+Ieri seară am primit o alertă privind un shellcode executat de un binar suspicios.
+Poți analiza ce se întâmplă și să descoperi parola infractorului?
+We receive a main binary. Very strangely, looking at this in IDA, it doesn’t look like anything.
+This is literally it. All of it.
+It allocates a rwx memory region of 559 bytes with 0.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-04T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-02-04T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="Rev">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CyberEdu asmadventure Writeup">
+<meta name="twitter:description" content="Challenge overview
+Because it&rsquo;s a reverse engineering chall I&rsquo;m including the link.
+
+Ieri seară am primit o alertă privind un shellcode executat de un binar suspicios.
+Poți analiza ce se întâmplă și să descoperi parola infractorului?
+
+We receive a main binary. Very strangely, looking at this in IDA, it doesn&rsquo;t look like anything.
+
+This is literally it. All of it.
+It allocates a rwx memory region of 559 bytes with 0.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CyberEdu asmadventure Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/asmadventure-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CyberEdu asmadventure Writeup",
+  "name": "CyberEdu asmadventure Writeup",
+  "description": "Challenge overview Because it\u0026rsquo;s a reverse engineering chall I\u0026rsquo;m including the link.\nIeri seară am primit o alertă privind un shellcode executat de un binar suspicios.\nPoți analiza ce se întâmplă și să descoperi parola infractorului?\nWe receive a main binary. Very strangely, looking at this in IDA, it doesn\u0026rsquo;t look like anything.\nThis is literally it. All of it.\nIt allocates a rwx memory region of 559 bytes with 0.\n",
+  "keywords": [
+    "CyberEdu", "pwn", "rev"
+  ],
+  "articleBody": "Challenge overview Because it’s a reverse engineering chall I’m including the link.\nIeri seară am primit o alertă privind un shellcode executat de un binar suspicios.\nPoți analiza ce se întâmplă și să descoperi parola infractorului?\nWe receive a main binary. Very strangely, looking at this in IDA, it doesn’t look like anything.\nThis is literally it. All of it.\nIt allocates a rwx memory region of 559 bytes with 0.\nIt xors each byte of unk_4020 with ‘A’, moves it into v5, then makes the last 8 bytes of v5 become unk_4247.\nIt does a bunch of weird stuff in that qmemcpy we’ll get to in a moment, and then calls the function v5 points to. And that’s all of the code.\nIdentifying the vulnerabilities Let’s look at the qmemcpy. We know that it should look like memcpy(\u0026dest, \u0026addr, numBytesToCopy).\nThe dest: (void *)(((unsigned __int64)v5 + 8) \u0026 0xFFFFFFFFFFFFFFF8LL); it takes (v5+8) and zeros the last three bits. Essentially this aligns this for a 64-bit system, making it divisible by 8. Basically value - value % 8 is what’s happening. Then it casts that to a pointer. Equivalent to v5+8 - v5%8.\nThe data: (const void *)(\u0026unk_4020 - (_UNKNOWN *)((char *)v5 - (((unsigned __int64)v5 + 8) \u0026 0xFFFFFFFFFFFFFFF8LL))); We’re back at working with our unk_4020, and we’re extracting v5 - addr. So that would be unk_4020 - (v5%8 - 8).\nThe length: - 8LL * ((((_DWORD)v5 - (((_DWORD)v5 + 8) \u0026 0xFFFFFFF8) + 559) \u0026 0xFFFFFFF8) \u003e\u003e 3));: First, the \u003e\u003e3 (divide by 8) and multiplicate by 8 just cancel each other out, so let’s omit bothering with it. The middle part - v5 - (v5+8 - (v5+8)%8) +559 = v5 - v5 - 8 + v5%8 +559 = (551 + v5 % 8). Then we \u0026-8 that as well. The \u0026-8 always gives something \u003c= number, the biggest number divisible by 8, smaller than our number. And if the v5%8 is bigger than 0, that number becomes 552. Otherwise, it’s 544.\nLet’s rewrite this memcpy:\nmemcpy( v5 + 8 - v5%8, pie + 4020 + (8 - v5%8) 552 ); That was annoying! (And note from the future, absolutely unnecessary! I still left this in, greatly reduced maths, so you can see how long this took).\nNow let’s examine the binary behaviour with gef. I put a breakpoint on main and just followed it, and at the end, it called the v5 I assume, leading us to 0x7ffff7fb7000. There, I saw our first syscall - 0x9. Looking that up in a syscall table, that’s mmap.\nThen, it syscall-ed again, this time with rax 0, so that’s read. But what does it read from? From what file descriptor? It’s in one of the parameter registers, more exactly rdi. Which is 0, aka stdin. And rdx is the count, in this case 0x100, so I pasted 0x100*'a' and it continued assemblying.\nSo now we can respond to this question about the syscall:\nI kept looking through the assembly, and at some point rax became a pointer to a string “unix:path=/run/user/1000/bus”. This is supposed to be malware, I think. Good thing I’ve been running it for an hour now! Luckily I haven’t got any money.\nProblem is, I’ve no clue how I managed to stumble upon it. I was just going step-into-to-step-into, and setting all the registers getting checked in je’s to zeros, to continue the process.\nI changed a bunch of random values again to satisfy some random conditions, whenever I felt like it. Genuinely. Then, when I saw it was trying to kill me, I changed the syscall rax from 60 to 39 (a syscall that does nothing), so I can stay, and…\nPrinting the stack in this state:\n0x7fffffffe0fe: \"COMMAND_NOT_FOUND_INSTALL_PROMPT=1\" 0x7fffffffe121: \"DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus\" 0x7fffffffe157: \"DESKTOP_SESSION=lightdm-xsession\" 0x7fffffffe178: \"DISPLAY=:0.0\" 0x7fffffffe185: \"DOTNET_CLI_TELEMETRY_OPTOUT=1\" 0x7fffffffe1a3: \"GDMSESSION=lightdm-xsession\" 0x7fffffffe1bf: \"HOME=/home/kali\" 0x7fffffffe1cf: \"LANG=en_US.UTF-8\" 0x7fffffffe1e0: \"LANGUAGE=\" 0x7fffffffe1ea: \"LOGNAME=kali\" 0x7fffffffe1f7: \"NMAP_PRIVILEGED=\" 0x7fffffffe208: \"PANEL_GDK_CORE_DEVICE_EVENTS=0\" 0x7fffffffe227: \"PATH=/home/kali/.local/share/gem/ruby/3.3.0/bin:/home/kali/.pyenv/plugins/pyenv-virtualenv/shims:/home/kali/.pyenv/shims:/home/kali/.pyenv/bin:/home/kali/.local/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/home/kali/.dotnet/tools\" 0x7fffffffe33e: \"POWERSHELL_TELEMETRY_OPTOUT=1\" 0x7fffffffe35c: \"POWERSHELL_UPDATECHECK=Off\" 0x7fffffffe377: \"PWD=/home/kali/Downloads\" 0x7fffffffe390: \"QT_ACCESSIBILITY=1\" 0x7fffffffe3a3: \"QT_AUTO_SCREEN_SCALE_FACTOR=0\" 0x7fffffffe3c1: \"QT_QPA_PLATFORMTHEME=qt5ct\" 0x7fffffffe3dc: \"SESSION_MANAGER=local/kali:@/tmp/.ICE-unix/896,unix/kali:/tmp/.ICE-unix/896\" 0x7fffffffe428: \"SHELL=/usr/bin/zsh\" 0x7fffffffe43b: \"SHLVL=1\" 0x7fffffffe443: \"SSH_AGENT_PID=1003\" 0x7fffffffe456: \"SSH_AUTH_SOCK=/home/kali/.ssh/agent/s.RDJpj98jBr.agent.53nQ35rQUj\" 0x7fffffffe498: \"TERM=xterm-256color\" 0x7fffffffe4ac: \"USER=kali\" 0x7fffffffe4b6: \"WINDOWID=0\" 0x7fffffffe4c1: \"XAUTHORITY=/home/kali/.Xauthority\" 0x7fffffffe4e3: \"XDG_CACHE_HOME=/home/kali/.cache\" 0x7fffffffe504: \"XDG_CONFIG_DIRS=/etc/xdg\" 0x7fffffffe51d: \"XDG_CONFIG_HOME=/home/kali/.config\" 0x7fffffffe540: \"XDG_CURRENT_DESKTOP=XFCE\" 0x7fffffffe559: \"XDG_DATA_DIRS=/usr/share/xfce4:/usr/local/share/:/usr/share/:/usr/share\" 0x7fffffffe5a1: \"XDG_GREETER_DATA_DIR=/var/lib/lightdm/data/kali\" 0x7fffffffe5d1: \"XDG_MENU_PREFIX=xfce-\" 0x7fffffffe5e7: \"XDG_RUNTIME_DIR=/run/user/1000\" 0x7fffffffe606: \"XDG_SEAT=seat0\" 0x7fffffffe615: \"XDG_SEAT_PATH=/org/freedesktop/DisplayManager/Seat0\" 0x7fffffffe649: \"XDG_SESSION_CLASS=user\" 0x7fffffffe660: \"XDG_SESSION_DESKTOP=lightdm-xsession\" 0x7fffffffe685: \"XDG_SESSION_ID=2\" 0x7fffffffe696: \"XDG_SESSION_PATH=/org/freedesktop/DisplayManager/Session0\" 0x7fffffffe6d0: \"XDG_SESSION_TYPE=x11\" 0x7fffffffe6e5: \"XDG_VTNR=7\" 0x7fffffffe6f0: \"OLDPWD=/home/kali/Downloads\" 0x7fffffffe70c: \"PYENV_ROOT=/home/kali/.pyenv\" But this isn’t extremely useful. I started using my brain a little bit, and my conclusion was that the following:\nThe memory at unk_4020 becomes actual assembly instructions after that xor with ‘A’; That’s the weird shellcode being executed. So if we break after that xor, we can view the actual shellcode.\nAnd here it is:\nxor rdi,rdi push 0x100 pop rsi mov rdx,0x3 mov r10,0x22 mov r8,0xffffffffffffffff xor r9,r9 mov rax,0x9 syscall mov rsi,rax sub rax,rax push 0x100 pop rdx syscall mov rbp,rsi mov r15,rsi mov rax,0x50 add rbp,rax add r15,0x4 mov rdx,0x22 mov r12,rbp and r12,0xff xor rdx,r12 xor dl,BYTE PTR [r15] test dl,dl je 0x555555558089 jmp 0x55555555808c inc BYTE PTR [rbp+0x0] inc rbp inc r15 xor rax,rax mov bl,0x30 mov al,bl sub al,0x33 test al,al je 0x5555555580a3 inc bl jmp 0x555555558097 sub bl,BYTE PTR [r15] test bl,bl je 0x5555555580ac jmp 0x5555555580af inc BYTE PTR [rbp+0x0] inc rbp inc r15 push 0x10000 pop rax shr eax,1 and eax,0xffff xor eax,0xdf76 mov bx,WORD PTR [r15] xor rax,rbx or rax,rax je 0x5555555580d5 jmp 0x5555555580db inc BYTE PTR [rbp+0x0] inc BYTE PTR [rbp+0x1] add rbp,0x2 add r15,0x2 movabs rax,0xffb2a25b948b4475 xor rbx,rbx mov rcx,0x8 mov rdx,rax mov rsi,0x0 mov r8,rdx and r8,0xff mov r9,rsi add r9,0x1 shl r9,0x3 sub r8,r9 mov r10,rbx shl r10,0x8 or r10,r8 mov rbx,r10 shr rdx,0x8 inc rsi loop 0x555555558101 bswap rbx mov rax,QWORD PTR [r15] shl rax,0x8 shl rbx,0x8 sub rax,rbx cmp rax,0x0 je 0x555555558148 jmp 0x555555558163 mov rcx,0x7 mov r10,0x0 inc BYTE PTR [rbp+r10*1+0x0] inc r10 dec rcx jne 0x555555558156 add r15,0x7 add rbp,0x7 cmp BYTE PTR [r15],0x7d je 0x555555558173 jmp 0x555555558176 inc BYTE PTR [rbp+0x0] sub rbp,0xf sub r15,0xf push 0x1000 pop rax shl rax,0x10 imul rax,rax,0x4 add rax,0xf000000 push 0x530000 pop rcx push 0x1000 pop rdi imul rdi,rdi,0x4 add rdi,0x300 mov rsi,0xff sub rsi,0x84 add rax,rdi add rax,rsi add rax,rcx xor rbx,rbx mov ebx,DWORD PTR [r15] bswap eax cmp eax,ebx je 0x5555555581ce jmp 0x5555555581e9 mov rcx,0x4 mov r10,0x0 inc BYTE PTR [rbp+r10*1+0x0] inc r10 dec rcx jne 0x5555555581dc mov rcx,0x10 mov rdx,rbp cmp BYTE PTR [rdx],0x1 jne 0x555555558202 inc rdx dec rcx jne 0x5555555581f3 jmp 0x55555555820c xor rdi,rdi mov eax,0x3c syscall movabs rax,0xa21216972 push rax movabs rax,0x61746963696c6566 push rax mov rdi,0x1 lea rsi,[rsp] mov rdx,0xd mov rax,0x1 syscall mov rdi,0x3c xor rsi,rsi mov eax,0x3c syscall What this does is validate a password in chunks. That’s what those checks were. I asked Gemini to translate this to a better C, and it thought it was some sort of game:\n#include #include #include #include #include #include #include int main() { // 1. Allocate 256 bytes of RW memory (rax = 0x9: mmap) uint8_t *mem = mmap(NULL, 0x100, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0); if (mem == MAP_FAILED) return 1; // 2. Read input from stdin (rax = 0x0: read) read(0, mem, 0x100); // Scoreboard starts at mem + 0x50. // If a check passes, we increment values here. uint8_t *scoreboard = mem + 0x50; uint8_t *input_ptr = mem + 0x4; // Start checking from 5th character int score_idx = 0; // --- CHECK 1: Single Byte Logic --- // (0x22 ^ (uintptr_t)scoreboard \u0026 0xFF) == input[4] uint8_t check1 = 0x22 ^ ((uintptr_t)scoreboard \u0026 0xFF); if (input_ptr[0] == check1) { scoreboard[score_idx++]++; input_ptr++; } // --- CHECK 2: Finding '3' via loop --- // The assembly loop effectively searches for 0x33 ('3') uint8_t target = 0x33; if (input_ptr[0] == target) { scoreboard[score_idx++]++; input_ptr++; } // --- CHECK 3: Word/Short check --- // (0x10000 \u003e\u003e 1) ^ 0xDF76 = 0x8000 ^ 0xDF76 = 0x5F76 uint16_t word_check = 0x5F76; if (*(uint16_t *)input_ptr == word_check) { scoreboard[score_idx++] = 1; scoreboard[score_idx++] = 1; input_ptr += 2; } // --- CHECK 4: 64-bit obfuscated loop --- // This reconstructs a 64-bit value from 0xFFB2A25B948B4475 // and compares 7 bytes of it against the input. uint64_t magic = 0xFFB2A25B948B4475; uint64_t rbx = 0; for (int i = 0; i \u003c 8; i++) { uint8_t byte = (magic \u0026 0xFF) - ((i + 1) \u003c\u003c 3); rbx = (rbx \u003c\u003c 8) | byte; magic \u003e\u003e= 8; } rbx = __builtin_bswap64(rbx); // Compare 7 bytes if (((*(uint64_t *)input_ptr) \u003c\u003c 8) == (rbx \u003c\u003c 8)) { for (int i = 0; i \u003c 7; i++) scoreboard[score_idx++] = 1; input_ptr += 7; } // --- CHECK 5: Single character '}' --- if (input_ptr[0] == 0x7D) { scoreboard[score_idx++] = 1; } // --- CHECK 6: Large Constant Math --- // The code does complex math to result in a 32-bit constant uint32_t val = ((0x1000 \u003c\u003c 16) * 4 + 0xF000000) + (0x1000 * 4 + 0x300) + (0xFF - 0x84) + 0x530000; val = __builtin_bswap32(val); input_ptr -= 15; // Moves pointer back to check a different segment if (*(uint32_t *)input_ptr == val) { for (int i = 0; i \u003c 4; i++) scoreboard[score_idx++] = 1; } // --- FINAL VALIDATION --- // Verify that the first 16 bytes of the scoreboard are all 0x1 for (int i = 0; i \u003c 16; i++) { if (mem[0x50 + i] != 1) { _exit(0); // Fail silently } } // If passed: Print \"felicitations!\" const char *msg = \"felicitations!\"; write(1, msg, 13); _exit(60); // Exit return 0; } I thought since Gemini understood this assembly so good, it might give us a clue, but instead it did all the maths for us and gave us the flag. Whoops. It did do a lot of maths.\nThe human way to do it, was go through the lines of assembly, and guess when the flag chunks would be loaded in registers for checking and take them from there. In this screenshot, for example, rbx was equal to a part of the flag, and rax was holding our input, and they were being compared. A bit tedious but, that would be the non-AI way to do it.\nAnyways, thanks for reading!\n",
+  "wordCount" : "1689",
+  "inLanguage": "en",
+  "datePublished": "2026-02-04T00:00:00Z",
+  "dateModified": "2026-02-04T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/asmadventure-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      CyberEdu asmadventure Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-02-04 00:00:00 +0000 UTC'>February 4, 2026</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>Because it&rsquo;s a reverse engineering chall I&rsquo;m including the <strong><a href="https://app.cyber-edu.co/challenges/9e65d240-9d72-4a37-bd46-ecaf20fd6630?tenant=cyberedu">link</a></strong>.</p>
+<hr>
+<p>Ieri seară am primit o alertă privind un shellcode executat de un binar suspicios.</p>
+<p>Poți analiza ce se întâmplă și să descoperi parola infractorului?</p>
+<hr>
+<p>We receive a main binary. Very strangely, looking at this in IDA, it doesn&rsquo;t look like anything.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/asmadventure-writeup/pic1.png#center"></p>
+<p>This is literally it. All of it.</p>
+<p>It allocates a rwx memory region of 559 bytes with 0.</p>
+<p>It xors each byte of <code>unk_4020</code> with &lsquo;A&rsquo;, moves it into v5, then makes the last 8 bytes of v5 become <code>unk_4247</code>.</p>
+<p>It does a bunch of weird stuff in that <code>qmemcpy</code> we&rsquo;ll get to in a moment, and then calls the function v5 points to. And that&rsquo;s <em>all</em> of the code.</p>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>Let&rsquo;s look at the <code>qmemcpy</code>. We know that it should look like <code>memcpy(&amp;dest, &amp;addr, numBytesToCopy)</code>.</p>
+<ul>
+<li>
+<p><strong>The dest</strong>: <code>(void *)(((unsigned __int64)v5 + 8) &amp; 0xFFFFFFFFFFFFFFF8LL)</code>; it takes <code>(v5+8)</code> and zeros the last three bits. Essentially this aligns this for a 64-bit system, making it divisible by 8. Basically <code>value - value % 8</code> is what&rsquo;s happening. Then it casts that to a pointer. Equivalent to <code>v5+8 - v5%8</code>.</p>
+</li>
+<li>
+<p><strong>The data</strong>: <code>(const void *)(&amp;unk_4020 - (_UNKNOWN *)((char *)v5 - (((unsigned __int64)v5 + 8) &amp; 0xFFFFFFFFFFFFFFF8LL)))</code>; We&rsquo;re back at working with our <code>unk_4020</code>, and we&rsquo;re extracting <code>v5 - addr</code>. So that would be <code>unk_4020 - (v5%8 - 8)</code>.</p>
+</li>
+<li>
+<p><strong>The length</strong>: - <code>8LL * ((((_DWORD)v5 - (((_DWORD)v5 + 8) &amp; 0xFFFFFFF8) + 559) &amp; 0xFFFFFFF8) &gt;&gt; 3));</code>: First, the <code>&gt;&gt;3</code> (divide by 8) and multiplicate by 8 just cancel each other out, so let&rsquo;s omit bothering with it. The middle part - <code>v5 - (v5+8 - (v5+8)%8) +559</code> = <code>v5 - v5 - 8 + v5%8 +559</code> = <code>(551 + v5 % 8)</code>. Then we &amp;-8 that as well. The &amp;-8 always gives something &lt;= number, the biggest number divisible by 8, smaller than our number. And if the v5%8 is bigger than 0, that number becomes 552. Otherwise, it&rsquo;s 544.</p>
+</li>
+</ul>
+<p>Let&rsquo;s rewrite this memcpy:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a6e22e">memcpy</span>(
+</span></span><span style="display:flex;"><span>    v5 <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">-</span> v5<span style="color:#f92672">%</span><span style="color:#ae81ff">8</span>,
+</span></span><span style="display:flex;"><span>    pie <span style="color:#f92672">+</span> <span style="color:#ae81ff">4020</span> <span style="color:#f92672">+</span> (<span style="color:#ae81ff">8</span> <span style="color:#f92672">-</span> v5<span style="color:#f92672">%</span><span style="color:#ae81ff">8</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">552</span>
+</span></span><span style="display:flex;"><span>    );
+</span></span></code></pre></div><p>That was annoying! (And note from the future, absolutely unnecessary! I still left this in, greatly reduced maths, so you can see how long this took).</p>
+<p>Now let&rsquo;s examine the binary behaviour with <code>gef</code>. I put a breakpoint on main and just followed it, and at the end, it called the v5 I assume, leading us to <code>0x7ffff7fb7000</code>. There, I saw our first syscall - <code>0x9</code>. Looking that up in a syscall table, that&rsquo;s mmap.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/asmadventure-writeup/pic2.png#center"></p>
+<p>Then, it syscall-ed again, this time with rax 0, so that&rsquo;s <em>read</em>. But what does it read from? From what file descriptor? It&rsquo;s in one of the parameter registers, more exactly <code>rdi</code>. Which is 0, aka stdin. And <code>rdx</code> is the count, in this case <code>0x100</code>, so I pasted <code>0x100*'a'</code> and it continued assemblying.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/asmadventure-writeup/pic3.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/asmadventure-writeup/read.png#center"></p>
+<p>So now we can respond to this question about the syscall:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/asmadventure-writeup/grila.png#center"></p>
+<p>I kept looking through the assembly, and at some point <code>rax</code> became a pointer to a string &ldquo;unix:path=/run/user/1000/bus&rdquo;. This <em>is</em> supposed to be malware, I think. Good thing I&rsquo;ve been running it for an hour now! Luckily I haven&rsquo;t got any money.</p>
+<p>Problem is, I&rsquo;ve no clue how I managed to stumble upon it. I was just going step-into-to-step-into, and setting all the registers getting checked in je&rsquo;s to zeros, to continue the process.</p>
+<p>I changed a bunch of random values <em>again</em> to satisfy some random conditions, whenever I felt like it. Genuinely. Then, when I saw it was trying to <em>kill</em> me, I changed the syscall rax from 60 to 39 (a syscall that does nothing), so I can stay, and&hellip;</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/asmadventure-writeup/what.png#center"></p>
+<p>Printing the stack in this state:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>0x7fffffffe0fe: <span style="color:#e6db74">&#34;COMMAND_NOT_FOUND_INSTALL_PROMPT=1&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe121: <span style="color:#e6db74">&#34;DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe157: <span style="color:#e6db74">&#34;DESKTOP_SESSION=lightdm-xsession&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe178: <span style="color:#e6db74">&#34;DISPLAY=:0.0&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe185: <span style="color:#e6db74">&#34;DOTNET_CLI_TELEMETRY_OPTOUT=1&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe1a3: <span style="color:#e6db74">&#34;GDMSESSION=lightdm-xsession&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe1bf: <span style="color:#e6db74">&#34;HOME=/home/kali&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe1cf: <span style="color:#e6db74">&#34;LANG=en_US.UTF-8&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe1e0: <span style="color:#e6db74">&#34;LANGUAGE=&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe1ea: <span style="color:#e6db74">&#34;LOGNAME=kali&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe1f7: <span style="color:#e6db74">&#34;NMAP_PRIVILEGED=&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe208: <span style="color:#e6db74">&#34;PANEL_GDK_CORE_DEVICE_EVENTS=0&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe227: <span style="color:#e6db74">&#34;PATH=/home/kali/.local/share/gem/ruby/3.3.0/bin:/home/kali/.pyenv/plugins/pyenv-virtualenv/shims:/home/kali/.pyenv/shims:/home/kali/.pyenv/bin:/home/kali/.local/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/home/kali/.dotnet/tools&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe33e: <span style="color:#e6db74">&#34;POWERSHELL_TELEMETRY_OPTOUT=1&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe35c: <span style="color:#e6db74">&#34;POWERSHELL_UPDATECHECK=Off&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe377: <span style="color:#e6db74">&#34;PWD=/home/kali/Downloads&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe390: <span style="color:#e6db74">&#34;QT_ACCESSIBILITY=1&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe3a3: <span style="color:#e6db74">&#34;QT_AUTO_SCREEN_SCALE_FACTOR=0&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe3c1: <span style="color:#e6db74">&#34;QT_QPA_PLATFORMTHEME=qt5ct&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe3dc: <span style="color:#e6db74">&#34;SESSION_MANAGER=local/kali:@/tmp/.ICE-unix/896,unix/kali:/tmp/.ICE-unix/896&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe428: <span style="color:#e6db74">&#34;SHELL=/usr/bin/zsh&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe43b: <span style="color:#e6db74">&#34;SHLVL=1&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe443: <span style="color:#e6db74">&#34;SSH_AGENT_PID=1003&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe456: <span style="color:#e6db74">&#34;SSH_AUTH_SOCK=/home/kali/.ssh/agent/s.RDJpj98jBr.agent.53nQ35rQUj&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe498: <span style="color:#e6db74">&#34;TERM=xterm-256color&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe4ac: <span style="color:#e6db74">&#34;USER=kali&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe4b6: <span style="color:#e6db74">&#34;WINDOWID=0&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe4c1: <span style="color:#e6db74">&#34;XAUTHORITY=/home/kali/.Xauthority&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe4e3: <span style="color:#e6db74">&#34;XDG_CACHE_HOME=/home/kali/.cache&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe504: <span style="color:#e6db74">&#34;XDG_CONFIG_DIRS=/etc/xdg&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe51d: <span style="color:#e6db74">&#34;XDG_CONFIG_HOME=/home/kali/.config&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe540: <span style="color:#e6db74">&#34;XDG_CURRENT_DESKTOP=XFCE&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe559: <span style="color:#e6db74">&#34;XDG_DATA_DIRS=/usr/share/xfce4:/usr/local/share/:/usr/share/:/usr/share&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe5a1: <span style="color:#e6db74">&#34;XDG_GREETER_DATA_DIR=/var/lib/lightdm/data/kali&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe5d1: <span style="color:#e6db74">&#34;XDG_MENU_PREFIX=xfce-&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe5e7: <span style="color:#e6db74">&#34;XDG_RUNTIME_DIR=/run/user/1000&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe606: <span style="color:#e6db74">&#34;XDG_SEAT=seat0&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe615: <span style="color:#e6db74">&#34;XDG_SEAT_PATH=/org/freedesktop/DisplayManager/Seat0&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe649: <span style="color:#e6db74">&#34;XDG_SESSION_CLASS=user&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe660: <span style="color:#e6db74">&#34;XDG_SESSION_DESKTOP=lightdm-xsession&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe685: <span style="color:#e6db74">&#34;XDG_SESSION_ID=2&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe696: <span style="color:#e6db74">&#34;XDG_SESSION_PATH=/org/freedesktop/DisplayManager/Session0&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe6d0: <span style="color:#e6db74">&#34;XDG_SESSION_TYPE=x11&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe6e5: <span style="color:#e6db74">&#34;XDG_VTNR=7&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe6f0: <span style="color:#e6db74">&#34;OLDPWD=/home/kali/Downloads&#34;</span>
+</span></span><span style="display:flex;"><span>0x7fffffffe70c: <span style="color:#e6db74">&#34;PYENV_ROOT=/home/kali/.pyenv&#34;</span>
+</span></span></code></pre></div><p>But this isn&rsquo;t extremely useful. I started using my brain a little bit, and my conclusion was that the following:</p>
+<p>The memory at <code>unk_4020</code> becomes actual assembly instructions <em>after</em> that xor with &lsquo;A&rsquo;; That&rsquo;s the weird shellcode being executed. So if we break after that xor, we can view the actual shellcode.</p>
+<p>And here it is:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span><span style="color:#a6e22e">xor</span>    <span style="color:#66d9ef">rdi</span>,<span style="color:#66d9ef">rdi</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">push</span>   <span style="color:#ae81ff">0x100</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pop</span>    <span style="color:#66d9ef">rsi</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">rdx</span>,<span style="color:#ae81ff">0x3</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">r10</span>,<span style="color:#ae81ff">0x22</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">r8</span>,<span style="color:#ae81ff">0xffffffffffffffff</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xor</span>    <span style="color:#66d9ef">r9</span>,<span style="color:#66d9ef">r9</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">rax</span>,<span style="color:#ae81ff">0x9</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">syscall</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">rsi</span>,<span style="color:#66d9ef">rax</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sub</span>    <span style="color:#66d9ef">rax</span>,<span style="color:#66d9ef">rax</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">push</span>   <span style="color:#ae81ff">0x100</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pop</span>    <span style="color:#66d9ef">rdx</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">syscall</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">rbp</span>,<span style="color:#66d9ef">rsi</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">r15</span>,<span style="color:#66d9ef">rsi</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">rax</span>,<span style="color:#ae81ff">0x50</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">add</span>    <span style="color:#66d9ef">rbp</span>,<span style="color:#66d9ef">rax</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">add</span>    <span style="color:#66d9ef">r15</span>,<span style="color:#ae81ff">0x4</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">rdx</span>,<span style="color:#ae81ff">0x22</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">r12</span>,<span style="color:#66d9ef">rbp</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">and</span>    <span style="color:#66d9ef">r12</span>,<span style="color:#ae81ff">0xff</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xor</span>    <span style="color:#66d9ef">rdx</span>,<span style="color:#66d9ef">r12</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xor</span>    <span style="color:#66d9ef">dl</span>,<span style="color:#66d9ef">BYTE</span> <span style="color:#66d9ef">PTR</span> [<span style="color:#66d9ef">r15</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">test</span>   <span style="color:#66d9ef">dl</span>,<span style="color:#66d9ef">dl</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">je</span>     <span style="color:#ae81ff">0x555555558089</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">jmp</span>    <span style="color:#ae81ff">0x55555555808c</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">inc</span>    <span style="color:#66d9ef">BYTE</span> <span style="color:#66d9ef">PTR</span> [<span style="color:#66d9ef">rbp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#ae81ff">0x0</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">inc</span>    <span style="color:#66d9ef">rbp</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">inc</span>    <span style="color:#66d9ef">r15</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xor</span>    <span style="color:#66d9ef">rax</span>,<span style="color:#66d9ef">rax</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">bl</span>,<span style="color:#ae81ff">0x30</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">al</span>,<span style="color:#66d9ef">bl</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sub</span>    <span style="color:#66d9ef">al</span>,<span style="color:#ae81ff">0x33</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">test</span>   <span style="color:#66d9ef">al</span>,<span style="color:#66d9ef">al</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">je</span>     <span style="color:#ae81ff">0x5555555580a3</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">inc</span>    <span style="color:#66d9ef">bl</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">jmp</span>    <span style="color:#ae81ff">0x555555558097</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sub</span>    <span style="color:#66d9ef">bl</span>,<span style="color:#66d9ef">BYTE</span> <span style="color:#66d9ef">PTR</span> [<span style="color:#66d9ef">r15</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">test</span>   <span style="color:#66d9ef">bl</span>,<span style="color:#66d9ef">bl</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">je</span>     <span style="color:#ae81ff">0x5555555580ac</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">jmp</span>    <span style="color:#ae81ff">0x5555555580af</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">inc</span>    <span style="color:#66d9ef">BYTE</span> <span style="color:#66d9ef">PTR</span> [<span style="color:#66d9ef">rbp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#ae81ff">0x0</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">inc</span>    <span style="color:#66d9ef">rbp</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">inc</span>    <span style="color:#66d9ef">r15</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">push</span>   <span style="color:#ae81ff">0x10000</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pop</span>    <span style="color:#66d9ef">rax</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">shr</span>    <span style="color:#66d9ef">eax</span>,<span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">and</span>    <span style="color:#66d9ef">eax</span>,<span style="color:#ae81ff">0xffff</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xor</span>    <span style="color:#66d9ef">eax</span>,<span style="color:#ae81ff">0xdf76</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">bx</span>,<span style="color:#66d9ef">WORD</span> <span style="color:#66d9ef">PTR</span> [<span style="color:#66d9ef">r15</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xor</span>    <span style="color:#66d9ef">rax</span>,<span style="color:#66d9ef">rbx</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">or</span>     <span style="color:#66d9ef">rax</span>,<span style="color:#66d9ef">rax</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">je</span>     <span style="color:#ae81ff">0x5555555580d5</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">jmp</span>    <span style="color:#ae81ff">0x5555555580db</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">inc</span>    <span style="color:#66d9ef">BYTE</span> <span style="color:#66d9ef">PTR</span> [<span style="color:#66d9ef">rbp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#ae81ff">0x0</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">inc</span>    <span style="color:#66d9ef">BYTE</span> <span style="color:#66d9ef">PTR</span> [<span style="color:#66d9ef">rbp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#ae81ff">0x1</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">add</span>    <span style="color:#66d9ef">rbp</span>,<span style="color:#ae81ff">0x2</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">add</span>    <span style="color:#66d9ef">r15</span>,<span style="color:#ae81ff">0x2</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">movabs</span> <span style="color:#66d9ef">rax</span>,<span style="color:#ae81ff">0xffb2a25b948b4475</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xor</span>    <span style="color:#66d9ef">rbx</span>,<span style="color:#66d9ef">rbx</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">rcx</span>,<span style="color:#ae81ff">0x8</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">rdx</span>,<span style="color:#66d9ef">rax</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">rsi</span>,<span style="color:#ae81ff">0x0</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">r8</span>,<span style="color:#66d9ef">rdx</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">and</span>    <span style="color:#66d9ef">r8</span>,<span style="color:#ae81ff">0xff</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">r9</span>,<span style="color:#66d9ef">rsi</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">add</span>    <span style="color:#66d9ef">r9</span>,<span style="color:#ae81ff">0x1</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">shl</span>    <span style="color:#66d9ef">r9</span>,<span style="color:#ae81ff">0x3</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sub</span>    <span style="color:#66d9ef">r8</span>,<span style="color:#66d9ef">r9</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">r10</span>,<span style="color:#66d9ef">rbx</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">shl</span>    <span style="color:#66d9ef">r10</span>,<span style="color:#ae81ff">0x8</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">or</span>     <span style="color:#66d9ef">r10</span>,<span style="color:#66d9ef">r8</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">rbx</span>,<span style="color:#66d9ef">r10</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">shr</span>    <span style="color:#66d9ef">rdx</span>,<span style="color:#ae81ff">0x8</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">inc</span>    <span style="color:#66d9ef">rsi</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">loop</span>   <span style="color:#ae81ff">0x555555558101</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">bswap</span>  <span style="color:#66d9ef">rbx</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">rax</span>,<span style="color:#66d9ef">QWORD</span> <span style="color:#66d9ef">PTR</span> [<span style="color:#66d9ef">r15</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">shl</span>    <span style="color:#66d9ef">rax</span>,<span style="color:#ae81ff">0x8</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">shl</span>    <span style="color:#66d9ef">rbx</span>,<span style="color:#ae81ff">0x8</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sub</span>    <span style="color:#66d9ef">rax</span>,<span style="color:#66d9ef">rbx</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">cmp</span>    <span style="color:#66d9ef">rax</span>,<span style="color:#ae81ff">0x0</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">je</span>     <span style="color:#ae81ff">0x555555558148</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">jmp</span>    <span style="color:#ae81ff">0x555555558163</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">rcx</span>,<span style="color:#ae81ff">0x7</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">r10</span>,<span style="color:#ae81ff">0x0</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">inc</span>    <span style="color:#66d9ef">BYTE</span> <span style="color:#66d9ef">PTR</span> [<span style="color:#66d9ef">rbp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">r10</span>*<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#ae81ff">0x0</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">inc</span>    <span style="color:#66d9ef">r10</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dec</span>    <span style="color:#66d9ef">rcx</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">jne</span>    <span style="color:#ae81ff">0x555555558156</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">add</span>    <span style="color:#66d9ef">r15</span>,<span style="color:#ae81ff">0x7</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">add</span>    <span style="color:#66d9ef">rbp</span>,<span style="color:#ae81ff">0x7</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">cmp</span>    <span style="color:#66d9ef">BYTE</span> <span style="color:#66d9ef">PTR</span> [<span style="color:#66d9ef">r15</span>],<span style="color:#ae81ff">0x7d</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">je</span>     <span style="color:#ae81ff">0x555555558173</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">jmp</span>    <span style="color:#ae81ff">0x555555558176</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">inc</span>    <span style="color:#66d9ef">BYTE</span> <span style="color:#66d9ef">PTR</span> [<span style="color:#66d9ef">rbp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#ae81ff">0x0</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sub</span>    <span style="color:#66d9ef">rbp</span>,<span style="color:#ae81ff">0xf</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sub</span>    <span style="color:#66d9ef">r15</span>,<span style="color:#ae81ff">0xf</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">push</span>   <span style="color:#ae81ff">0x1000</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pop</span>    <span style="color:#66d9ef">rax</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">shl</span>    <span style="color:#66d9ef">rax</span>,<span style="color:#ae81ff">0x10</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">imul</span>   <span style="color:#66d9ef">rax</span>,<span style="color:#66d9ef">rax</span>,<span style="color:#ae81ff">0x4</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">add</span>    <span style="color:#66d9ef">rax</span>,<span style="color:#ae81ff">0xf000000</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">push</span>   <span style="color:#ae81ff">0x530000</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pop</span>    <span style="color:#66d9ef">rcx</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">push</span>   <span style="color:#ae81ff">0x1000</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pop</span>    <span style="color:#66d9ef">rdi</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">imul</span>   <span style="color:#66d9ef">rdi</span>,<span style="color:#66d9ef">rdi</span>,<span style="color:#ae81ff">0x4</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">add</span>    <span style="color:#66d9ef">rdi</span>,<span style="color:#ae81ff">0x300</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">rsi</span>,<span style="color:#ae81ff">0xff</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sub</span>    <span style="color:#66d9ef">rsi</span>,<span style="color:#ae81ff">0x84</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">add</span>    <span style="color:#66d9ef">rax</span>,<span style="color:#66d9ef">rdi</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">add</span>    <span style="color:#66d9ef">rax</span>,<span style="color:#66d9ef">rsi</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">add</span>    <span style="color:#66d9ef">rax</span>,<span style="color:#66d9ef">rcx</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xor</span>    <span style="color:#66d9ef">rbx</span>,<span style="color:#66d9ef">rbx</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">ebx</span>,<span style="color:#66d9ef">DWORD</span> <span style="color:#66d9ef">PTR</span> [<span style="color:#66d9ef">r15</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">bswap</span>  <span style="color:#66d9ef">eax</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">cmp</span>    <span style="color:#66d9ef">eax</span>,<span style="color:#66d9ef">ebx</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">je</span>     <span style="color:#ae81ff">0x5555555581ce</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">jmp</span>    <span style="color:#ae81ff">0x5555555581e9</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">rcx</span>,<span style="color:#ae81ff">0x4</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">r10</span>,<span style="color:#ae81ff">0x0</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">inc</span>    <span style="color:#66d9ef">BYTE</span> <span style="color:#66d9ef">PTR</span> [<span style="color:#66d9ef">rbp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">r10</span>*<span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#ae81ff">0x0</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">inc</span>    <span style="color:#66d9ef">r10</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dec</span>    <span style="color:#66d9ef">rcx</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">jne</span>    <span style="color:#ae81ff">0x5555555581dc</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">rcx</span>,<span style="color:#ae81ff">0x10</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">rdx</span>,<span style="color:#66d9ef">rbp</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">cmp</span>    <span style="color:#66d9ef">BYTE</span> <span style="color:#66d9ef">PTR</span> [<span style="color:#66d9ef">rdx</span>],<span style="color:#ae81ff">0x1</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">jne</span>    <span style="color:#ae81ff">0x555555558202</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">inc</span>    <span style="color:#66d9ef">rdx</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dec</span>    <span style="color:#66d9ef">rcx</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">jne</span>    <span style="color:#ae81ff">0x5555555581f3</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">jmp</span>    <span style="color:#ae81ff">0x55555555820c</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xor</span>    <span style="color:#66d9ef">rdi</span>,<span style="color:#66d9ef">rdi</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">eax</span>,<span style="color:#ae81ff">0x3c</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">syscall</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">movabs</span> <span style="color:#66d9ef">rax</span>,<span style="color:#ae81ff">0xa21216972</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">push</span>   <span style="color:#66d9ef">rax</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">movabs</span> <span style="color:#66d9ef">rax</span>,<span style="color:#ae81ff">0x61746963696c6566</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">push</span>   <span style="color:#66d9ef">rax</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">rdi</span>,<span style="color:#ae81ff">0x1</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">lea</span>    <span style="color:#66d9ef">rsi</span>,[<span style="color:#66d9ef">rsp</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">rdx</span>,<span style="color:#ae81ff">0xd</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">rax</span>,<span style="color:#ae81ff">0x1</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">syscall</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">rdi</span>,<span style="color:#ae81ff">0x3c</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xor</span>    <span style="color:#66d9ef">rsi</span>,<span style="color:#66d9ef">rsi</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>    <span style="color:#66d9ef">eax</span>,<span style="color:#ae81ff">0x3c</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">syscall</span> 
+</span></span></code></pre></div><p>What this does is validate a password in chunks. <em>That&rsquo;s</em> what those checks were. I asked Gemini to translate this to a better C, and it thought it was some sort of game:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/mman.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;unistd.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdint.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;byteswap.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 1. Allocate 256 bytes of RW memory (rax = 0x9: mmap)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint8_t</span> <span style="color:#f92672">*</span>mem <span style="color:#f92672">=</span> <span style="color:#a6e22e">mmap</span>(NULL, <span style="color:#ae81ff">0x100</span>, PROT_READ <span style="color:#f92672">|</span> PROT_WRITE, MAP_PRIVATE <span style="color:#f92672">|</span> MAP_ANONYMOUS, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (mem <span style="color:#f92672">==</span> MAP_FAILED) <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 2. Read input from stdin (rax = 0x0: read)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">read</span>(<span style="color:#ae81ff">0</span>, mem, <span style="color:#ae81ff">0x100</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Scoreboard starts at mem + 0x50. 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// If a check passes, we increment values here.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint8_t</span> <span style="color:#f92672">*</span>scoreboard <span style="color:#f92672">=</span> mem <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x50</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint8_t</span> <span style="color:#f92672">*</span>input_ptr <span style="color:#f92672">=</span> mem <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x4</span>; <span style="color:#75715e">// Start checking from 5th character
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> score_idx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// --- CHECK 1: Single Byte Logic ---
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// (0x22 ^ (uintptr_t)scoreboard &amp; 0xFF) == input[4]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint8_t</span> check1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x22</span> <span style="color:#f92672">^</span> ((<span style="color:#66d9ef">uintptr_t</span>)scoreboard <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xFF</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (input_ptr[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">==</span> check1) {
+</span></span><span style="display:flex;"><span>        scoreboard[score_idx<span style="color:#f92672">++</span>]<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        input_ptr<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// --- CHECK 2: Finding &#39;3&#39; via loop ---
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// The assembly loop effectively searches for 0x33 (&#39;3&#39;)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint8_t</span> target <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x33</span>; 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (input_ptr[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">==</span> target) {
+</span></span><span style="display:flex;"><span>        scoreboard[score_idx<span style="color:#f92672">++</span>]<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        input_ptr<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// --- CHECK 3: Word/Short check ---
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// (0x10000 &gt;&gt; 1) ^ 0xDF76 = 0x8000 ^ 0xDF76 = 0x5F76
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint16_t</span> word_check <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x5F76</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">*</span>(<span style="color:#66d9ef">uint16_t</span> <span style="color:#f92672">*</span>)input_ptr <span style="color:#f92672">==</span> word_check) {
+</span></span><span style="display:flex;"><span>        scoreboard[score_idx<span style="color:#f92672">++</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>        scoreboard[score_idx<span style="color:#f92672">++</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>        input_ptr <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// --- CHECK 4: 64-bit obfuscated loop ---
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// This reconstructs a 64-bit value from 0xFFB2A25B948B4475
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// and compares 7 bytes of it against the input.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint64_t</span> magic <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xFFB2A25B948B4475</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint64_t</span> rbx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">8</span>; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">uint8_t</span> byte <span style="color:#f92672">=</span> (magic <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xFF</span>) <span style="color:#f92672">-</span> ((i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">3</span>);
+</span></span><span style="display:flex;"><span>        rbx <span style="color:#f92672">=</span> (rbx <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">8</span>) <span style="color:#f92672">|</span> byte;
+</span></span><span style="display:flex;"><span>        magic <span style="color:#f92672">&gt;&gt;=</span> <span style="color:#ae81ff">8</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    rbx <span style="color:#f92672">=</span> <span style="color:#a6e22e">__builtin_bswap64</span>(rbx);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Compare 7 bytes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (((<span style="color:#f92672">*</span>(<span style="color:#66d9ef">uint64_t</span> <span style="color:#f92672">*</span>)input_ptr) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">8</span>) <span style="color:#f92672">==</span> (rbx <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">8</span>)) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">7</span>; i<span style="color:#f92672">++</span>) scoreboard[score_idx<span style="color:#f92672">++</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>        input_ptr <span style="color:#f92672">+=</span> <span style="color:#ae81ff">7</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// --- CHECK 5: Single character &#39;}&#39; ---
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (input_ptr[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">==</span> <span style="color:#ae81ff">0x7D</span>) {
+</span></span><span style="display:flex;"><span>        scoreboard[score_idx<span style="color:#f92672">++</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// --- CHECK 6: Large Constant Math ---
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// The code does complex math to result in a 32-bit constant
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint32_t</span> val <span style="color:#f92672">=</span> ((<span style="color:#ae81ff">0x1000</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">16</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">0xF000000</span>) <span style="color:#f92672">+</span> (<span style="color:#ae81ff">0x1000</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x300</span>) <span style="color:#f92672">+</span> (<span style="color:#ae81ff">0xFF</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x84</span>) <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x530000</span>;
+</span></span><span style="display:flex;"><span>    val <span style="color:#f92672">=</span> <span style="color:#a6e22e">__builtin_bswap32</span>(val);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    input_ptr <span style="color:#f92672">-=</span> <span style="color:#ae81ff">15</span>; <span style="color:#75715e">// Moves pointer back to check a different segment
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">*</span>(<span style="color:#66d9ef">uint32_t</span> <span style="color:#f92672">*</span>)input_ptr <span style="color:#f92672">==</span> val) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">4</span>; i<span style="color:#f92672">++</span>) scoreboard[score_idx<span style="color:#f92672">++</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// --- FINAL VALIDATION ---
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// Verify that the first 16 bytes of the scoreboard are all 0x1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">16</span>; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (mem[<span style="color:#ae81ff">0x50</span> <span style="color:#f92672">+</span> i] <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">_exit</span>(<span style="color:#ae81ff">0</span>); <span style="color:#75715e">// Fail silently
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// If passed: Print &#34;felicitations!&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>msg <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;felicitations!&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">write</span>(<span style="color:#ae81ff">1</span>, msg, <span style="color:#ae81ff">13</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">_exit</span>(<span style="color:#ae81ff">60</span>); <span style="color:#75715e">// Exit
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>I thought since Gemini understood this assembly so good, it might give us a clue, but instead it did all the maths for us and gave us the flag. Whoops. It did do a lot of maths.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/asmadventure-writeup/flag.png#center"></p>
+<p>The human way to do it, was go through the lines of assembly, and guess when the flag chunks would be loaded in registers for checking and take them from there. In this screenshot, for example, <code>rbx</code> was equal to a part of the flag, and <code>rax</code> was holding our input, and they were being compared. A bit tedious but, that would be the non-AI way to do it.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/asmadventure-writeup/idea.png#center"></p>
+<hr>
+<p>Anyways, thanks for reading!</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/rev/">Rev</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

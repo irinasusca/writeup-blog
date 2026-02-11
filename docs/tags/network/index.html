@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Network | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/tags/network/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="https://irinasusca.github.io/writeup-blog/tags/network/index.xml" title="rss">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/tags/network/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/tags/network/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Network">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Network">
+<meta name="twitter:description" content="">
+
+</head>
+<body class="list" id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header">
+  <h1>
+    Network
+  </h1>
+</header>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu online-encryption Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview This is why you should not trust online encryption for your most awesome secrets.
+After extracting all the HTTP objects, I noticed the PKCS5 files (from 1 to 30, and only the even ones) contained a plaintext=(14chars). I moved them all to a separate folder and did the following, to extract that plainText parameter:
+grep -E -o &#39;plainText=[A-Za-z0-9]{14}&#39; * &gt; plaintext.txt
+grep -o -E &#39;[a-zA-Z0-9]{14}$&#39; plaintext.txt
+The exception was the last part, 019726}, which was in PKCS5(18) with an extra %3D%3D to the parameter value, and also 20, which had a ‘ha ha ha’ in it (very funny).
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-11 00:00:00 +0000 UTC'>February 11, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu online-encryption Writeup" href="https://irinasusca.github.io/writeup-blog/posts/onlineencryption-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu universal-studio-boss-exfiltration Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Another Unbreakable tutorial whatever challenge. This time it’s USB.
+My tshark displays the usbhid.data as 1020304050607080 instead of 10:20:30:40:50:60:70:80. And that’s a thing that happens. I found this writeup for generally extracting USB data with PUK.
+I ran this command: tshark -r task.pcap -Y &#39;usb&#39; -T fields -e &#39;usbhid.data&#39; | sed &#39;/^$/d&#39; | grep -v &#39;0000000000000000&#39; &gt; capdata.txt and replaced the capdata.txt in that repo, git cloned and ran PUK, and got the password Yu=6SD6mvD9dU!9B.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-10 00:00:00 +0000 UTC'>February 10, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu universal-studio-boss-exfiltration Writeup" href="https://irinasusca.github.io/writeup-blog/posts/universalstudioboss-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu usualtraffic Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Just normal network traffic. Or isn’t it?
+The correct way to phrase it would have been Or is it?, because the affirmation before isn’t a negation. Or isn’t it?
+I noticed something weird following a TCP stream, at the last 4 bytes of each BGP update message packet.
+The following command: tshark -Y &#39;tcp.stream==1&amp;&amp;bgp.type==2&amp;&amp;ip.src==10.10.10.251&#39; -r traffic.pcapng -x | grep -o &#39;\.d ....$&#39; | grep -o &#39; ....$&#39; | tr -d &#39;\n&#39; outputs Hell o Ro uter 1!.H ere is t he v ecto r: 8 BF46 C25D 9BAD 98ED 8EAE 6C1F 7AD2 D04. This is my s ecre t: u WyYT CYqB Ty9a fI69 to3e K0Sc CA3S lPDE zBsW BnR9 D8Ro 7aIO qihG MPXw u/Z&#43; HLn..
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-06 00:00:00 +0000 UTC'>February 6, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu usualtraffic Writeup" href="https://irinasusca.github.io/writeup-blog/posts/usualtraffic-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu packet-snatchers Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Get ready for a multi-protocol, multi-question hunt
+I’ll just include the answers and maybe some other things I thought were slightly more difficult than the others.
+I took the FTP command list from here.
+The command to print out all the files downloaded by ftp, alphabetically: tshark -Y ftp -T fields -e ftp.request.arg -r traffic.pcap | sed &#39;/^$/d&#39; | sort -u.
+Here are the question asnwers:
+That’s it!
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-05 00:00:00 +0000 UTC'>February 5, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu packet-snatchers Writeup" href="https://irinasusca.github.io/writeup-blog/posts/packetsnatchers-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu biscuiti Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Biscuiții mei au prea multe calorii, așa că trebuie să îi împart în mai multe porții.
+În această probă, aveți o captură PCAP, iar obiectivul este să recuperați un secret.
+I already solved this last year at the OSCJ but the foolish way, looking through pcaps like a fool. But now, we’re solving this with tshark!
+The command I used was tshark -r task.pcap -Y http -T fields -e http.cookie_pair to print out all of the cookie parts, along with their indexes. But then I thought, what the hell, if I’m not doing that manually, I’m not doing anything manually! So I came up with this command:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-03 00:00:00 +0000 UTC'>February 3, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu biscuiti Writeup" href="https://irinasusca.github.io/writeup-blog/posts/biscuiti-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu private-coms Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Există o comunicare scursă în acest fișier pcap. Găsește-o și obține flag-ul.
+Another challenge I’ve come across at OSCN, which I didn’t solve, because binwalk won’t show it found files if it can’t extract them using -e but it will find and extract them using more flags.
+Doing a simple binwalk -Mve --dd=&#34;.*&#34; private-coms.pcap extracts an audio file reading out the flag. I didn’t bother listening to it so I popped it into one of those AI wrapper speech to text apps, and got the text in CAPS so I just lowered it with python.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-03 00:00:00 +0000 UTC'>February 3, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu private-coms Writeup" href="https://irinasusca.github.io/writeup-blog/posts/privatecoms-writeup/"></a>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

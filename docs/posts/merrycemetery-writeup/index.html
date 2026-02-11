@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CyberEdu merry-cemetery Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, pwn, buffer-overflow">
+<meta name="description" content="Challenge overview
+After doing exactly two web challenges, I remembered just how much better pwn is, and if I don&rsquo;t sprinkle in at least another actually fun chall this blog won&rsquo;t last too long. Enough prologue, let&rsquo;s get started.
+Rest In Peace Read More: https://en.wikipedia.org/wiki/Merry_Cemetery
+The challenge was initially published at HackTM Quals 2020, organized by WreckTheLine.
+This is a reference to Cimitirul Vesel I guess. We&rsquo;re given two files, a .js and a .wasm, more interestingly. That just means web assembly, and it&rsquo;s a sort of binary format.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/merrycemetery-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/merrycemetery-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/merrycemetery-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="CyberEdu merry-cemetery Writeup">
+  <meta property="og:description" content="Challenge overview After doing exactly two web challenges, I remembered just how much better pwn is, and if I don’t sprinkle in at least another actually fun chall this blog won’t last too long. Enough prologue, let’s get started.
+Rest In Peace Read More: https://en.wikipedia.org/wiki/Merry_Cemetery
+The challenge was initially published at HackTM Quals 2020, organized by WreckTheLine.
+This is a reference to Cimitirul Vesel I guess. We’re given two files, a .js and a .wasm, more interestingly. That just means web assembly, and it’s a sort of binary format.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-10T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-02-10T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="Buffer-Overflow">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CyberEdu merry-cemetery Writeup">
+<meta name="twitter:description" content="Challenge overview
+After doing exactly two web challenges, I remembered just how much better pwn is, and if I don&rsquo;t sprinkle in at least another actually fun chall this blog won&rsquo;t last too long. Enough prologue, let&rsquo;s get started.
+Rest In Peace Read More: https://en.wikipedia.org/wiki/Merry_Cemetery
+The challenge was initially published at HackTM Quals 2020, organized by WreckTheLine.
+This is a reference to Cimitirul Vesel I guess. We&rsquo;re given two files, a .js and a .wasm, more interestingly. That just means web assembly, and it&rsquo;s a sort of binary format.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CyberEdu merry-cemetery Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/merrycemetery-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CyberEdu merry-cemetery Writeup",
+  "name": "CyberEdu merry-cemetery Writeup",
+  "description": "Challenge overview After doing exactly two web challenges, I remembered just how much better pwn is, and if I don\u0026rsquo;t sprinkle in at least another actually fun chall this blog won\u0026rsquo;t last too long. Enough prologue, let\u0026rsquo;s get started.\nRest In Peace Read More: https://en.wikipedia.org/wiki/Merry_Cemetery\nThe challenge was initially published at HackTM Quals 2020, organized by WreckTheLine.\nThis is a reference to Cimitirul Vesel I guess. We\u0026rsquo;re given two files, a .js and a .wasm, more interestingly. That just means web assembly, and it\u0026rsquo;s a sort of binary format.\n",
+  "keywords": [
+    "CyberEdu", "pwn", "buffer-overflow"
+  ],
+  "articleBody": "Challenge overview After doing exactly two web challenges, I remembered just how much better pwn is, and if I don’t sprinkle in at least another actually fun chall this blog won’t last too long. Enough prologue, let’s get started.\nRest In Peace Read More: https://en.wikipedia.org/wiki/Merry_Cemetery\nThe challenge was initially published at HackTM Quals 2020, organized by WreckTheLine.\nThis is a reference to Cimitirul Vesel I guess. We’re given two files, a .js and a .wasm, more interestingly. That just means web assembly, and it’s a sort of binary format.\nThe .js is one of those extremely long files, I mean long enough that reading a book would take less time. And that’s coming from me.\nWe do have a var aaaa = \"HackTM{REDACTED}\";. It looked like it was prepping for a binary.\nI was right! We’re probably just going to need the name of the var.\nI used ghidra with a WASM extension to decompile the file, and then I looked for strings.\nThat’s right. A heap menu. I’ve still got no clue how to solve heap challs so I’m going to leave this for later, and look for a stack one.\nIdentifying the vulnerabilities The exploit As always, the full code can be found on my GitHub here.\n",
+  "wordCount" : "209",
+  "inLanguage": "en",
+  "datePublished": "2026-02-10T00:00:00Z",
+  "dateModified": "2026-02-10T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/merrycemetery-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      CyberEdu merry-cemetery Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-02-10 00:00:00 +0000 UTC'>February 10, 2026</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a></li>
+                <li>
+                    <a href="#the-exploit" aria-label="The exploit">The exploit</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>After doing exactly <em>two</em> web challenges, I remembered just how much better pwn is, and if I don&rsquo;t sprinkle in at least another actually fun chall this blog won&rsquo;t last too long. Enough prologue, let&rsquo;s get started.</p>
+<p>Rest In Peace Read More: <a href="https://en.wikipedia.org/wiki/Merry_Cemetery">https://en.wikipedia.org/wiki/Merry_Cemetery</a></p>
+<p>The <strong><a href="https://app.cyber-edu.co/challenges/23bd9680-abd7-11ea-9682-bf805593105b?tenant=cyberedu">challenge</a></strong> was initially published at HackTM Quals 2020, organized by WreckTheLine.</p>
+<p>This is a reference to Cimitirul Vesel I guess. We&rsquo;re given two files, a <code>.js</code> and a <code>.wasm</code>, more interestingly. That just means <em>web assembly</em>, and it&rsquo;s a sort of binary format.</p>
+<p>The <code>.js</code> is one of those extremely long files, I mean long enough that reading a book would take less time. And that&rsquo;s coming from me.</p>
+<p>We do have a <code>var aaaa = &quot;HackTM{REDACTED}&quot;;</code>. It looked like it was prepping for a binary.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/merrycemetery-writeup/pic1.png#center"></p>
+<p>I was right! We&rsquo;re probably just going to need the name of the var.</p>
+<p>I used <code>ghidra</code> with a WASM extension to decompile the file, and then I looked for strings.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/merrycemetery-writeup/pic2.png#center"></p>
+<p>That&rsquo;s right. A heap menu. I&rsquo;ve still got no clue how to solve heap challs so I&rsquo;m going to leave this for later, and look for a stack one.</p>
+<hr>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<hr>
+<hr>
+<h2 id="the-exploit">The exploit<a hidden class="anchor" aria-hidden="true" href="#the-exploit">#</a></h2>
+<hr>
+<p>As always, the full code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/cyberedu/babyfmt.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/">Buffer-Overflow</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

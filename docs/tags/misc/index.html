@@ -137,6 +137,39 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu universe Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview What is the technique name? What is the flag?
+I took a bunch of images with all the steps while solving this challenge, so I’ll just let those speak for me. (Also, for the stereogram - stegsolve):
+sed &#39;s/%20/\n/g&#39; part2.txt -i
+Felt really smart for figuring out it was b32.
+Here is that stegsolve stereogram solver I mentioned.
+And the full flag is ctf{6da4a51e2ee5437bece4699edf7728ae26e6684abe8711b85b034902a920a775}!
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-10 00:00:00 +0000 UTC'>February 10, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu universe Writeup" href="https://irinasusca.github.io/writeup-blog/posts/universe-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu cross-or-zero Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Can you find the key and the flag? I bet. It is not an encryption. It is ZERO.
+The code we’re given is a perfectly normal string xor alg (I found one on Medium):
+The challenge actually gives us a big hint as to what the key is (ZERO). Yeah, it’s literally “0”. I converted the base64 to bytes to hex, and used it in an online XOR calculator with the ASCII for “0”.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-05 00:00:00 +0000 UTC'>February 5, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu cross-or-zero Writeup" href="https://irinasusca.github.io/writeup-blog/posts/crossorzero-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu dumb-discord Writeup
     </h2>
   </header>

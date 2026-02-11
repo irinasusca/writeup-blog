@@ -6,8 +6,20 @@
     <description>Recent content in Format-String on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 04 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 04 Feb 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/tags/format-string/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CyberEdu montgomery Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/montgomery-writeup/</link>
+      <pubDate>Wed, 04 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/montgomery-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;E prima data cand ai un contact cu o proba de pwn? Acest exercitiu s-ar putea sa fie pentru tine.&lt;/p&gt;
+&lt;p&gt;PS: Acest serviciu merge cu netcat.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;This is just a basic format string vulnerability. Leaking from &lt;code&gt;$69%p&lt;/code&gt; to &lt;code&gt;$100%p&lt;/code&gt;, we get the flag but in that fuckass format that I would usually put in a string reverser, 8 ASCII by 8 ASCII. But not this time. I wrote a script.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>CyberEdu cookies Writeup</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/cookies-writeup/</link>

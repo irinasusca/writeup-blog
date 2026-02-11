@@ -1,5 +1,57 @@
 [
   {
+    "title": "CyberEdu online-encryption Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/onlineencryption-writeup/"
+  },
+  {
+    "title": "CyberEdu injective Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/injective-writeup/"
+  },
+  {
+    "title": "CyberEdu merry-cemetery Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/merrycemetery-writeup/"
+  },
+  {
+    "title": "CyberEdu universal-studio-boss-exfiltration Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/universalstudioboss-writeup/"
+  },
+  {
+    "title": "CyberEdu universe Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/universe-writeup/"
+  },
+  {
+    "title": "CyberEdu usualtraffic Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/usualtraffic-writeup/"
+  },
+  {
+    "title": "CyberEdu cross-or-zero Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/crossorzero-writeup/"
+  },
+  {
+    "title": "CyberEdu east-grandma Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/eastgrandma-writeup/"
+  },
+  {
+    "title": "CyberEdu packet-snatchers Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/packetsnatchers-writeup/"
+  },
+  {
+    "title": "CyberEdu asmadventure Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/asmadventure-writeup/"
+  },
+  {
+    "title": "CyberEdu montgomery Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/montgomery-writeup/"
+  },
+  {
+    "title": "CyberEdu biscuiti Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/biscuiti-writeup/"
+  },
+  {
+    "title": "CyberEdu private-coms Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/privatecoms-writeup/"
+  },
+  {
     "title": "CyberEdu dumb-discord Writeup",
     "permalink": "https://irinasusca.github.io/writeup-blog/posts/dumbdiscord-writeup/"
   },
@@ -8,7 +60,7 @@
     "permalink": "https://irinasusca.github.io/writeup-blog/posts/formula1-writeup/"
   },
   {
-    "title": "Wireshark \u0026 Tshark",
+    "title": "Wireshark, tshark \u0026 sorting",
     "permalink": "https://irinasusca.github.io/writeup-blog/posts/wireshark/"
   },
   {

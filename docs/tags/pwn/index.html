@@ -137,6 +137,55 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu merry-cemetery Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview After doing exactly two web challenges, I remembered just how much better pwn is, and if I don’t sprinkle in at least another actually fun chall this blog won’t last too long. Enough prologue, let’s get started.
+Rest In Peace Read More: https://en.wikipedia.org/wiki/Merry_Cemetery
+The challenge was initially published at HackTM Quals 2020, organized by WreckTheLine.
+This is a reference to Cimitirul Vesel I guess. We’re given two files, a .js and a .wasm, more interestingly. That just means web assembly, and it’s a sort of binary format.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-10 00:00:00 +0000 UTC'>February 10, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu merry-cemetery Writeup" href="https://irinasusca.github.io/writeup-blog/posts/merrycemetery-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu asmadventure Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Because it’s a reverse engineering chall I’m including the link.
+Ieri seară am primit o alertă privind un shellcode executat de un binar suspicios.
+Poți analiza ce se întâmplă și să descoperi parola infractorului?
+We receive a main binary. Very strangely, looking at this in IDA, it doesn’t look like anything.
+This is literally it. All of it.
+It allocates a rwx memory region of 559 bytes with 0.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-04 00:00:00 +0000 UTC'>February 4, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu asmadventure Writeup" href="https://irinasusca.github.io/writeup-blog/posts/asmadventure-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu montgomery Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview E prima data cand ai un contact cu o proba de pwn? Acest exercitiu s-ar putea sa fie pentru tine.
+PS: Acest serviciu merge cu netcat.
+Identifying the vulnerabilities This is just a basic format string vulnerability. Leaking from $69%p to $100%p, we get the flag but in that fuckass format that I would usually put in a string reverser, 8 ASCII by 8 ASCII. But not this time. I wrote a script.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-04 00:00:00 +0000 UTC'>February 4, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu montgomery Writeup" href="https://irinasusca.github.io/writeup-blog/posts/montgomery-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu cookies Writeup
     </h2>
   </header>
@@ -253,55 +302,6 @@ This is the vuln function, along which we have a getshell function that we need 
   </div>
   <footer class="entry-footer"><span title='2025-12-27 00:00:00 +0000 UTC'>December 27, 2025</span></footer>
   <a class="entry-link" aria-label="post link to CyberEdu darkmagic Writeup" href="https://irinasusca.github.io/writeup-blog/posts/darkmagic-writeup/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu get-access Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Can you pwn this?
-Very interestingly, this challenge doesn’t come with any source files, and we just get a Username and Password prompt.
-Identifying the vulnerabilities The first thing I thought about was a buffer overflow.
-The Username seemed to read a specific amount of bytes, and the overflow would go into password, and password just didn’t crash anything, so it might’ve been the same situation.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-27 00:00:00 +0000 UTC'>December 27, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu get-access Writeup" href="https://irinasusca.github.io/writeup-blog/posts/getaccess-writeup/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu nulle Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Our developer got a bit too clever with C structs. They decided that if two structs have the same fields, just in a different order, it’s fine to cast between them.
-Let’s look at our binary, main.
-In our main function, we get to write into a aIsYour string, after which a function I named call_param that looks like this is called:
-This function essentially calls the function at address a1 (its parameter), passing the value located at a1&#43;1 (immediately after a1) as a parameter to the a1() function.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-27 00:00:00 +0000 UTC'>December 27, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu nulle Writeup" href="https://irinasusca.github.io/writeup-blog/posts/nulle-writeup/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu baby-fmt Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Merry Christmas everyone! 🎄
-Challenge overview This is should be a basic pwn challenge but please be aware that time is not your friend.
-Let’s check out the restrictions we’re dealing with.
-We’re working with a 64-bit binary with NX and PIE enabled, and as the name suggests, probably a format string vulnerability. Let’s take a look at the disassembled binary.
-We have a function called by main, let’s call it vuln.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-26 00:00:00 +0000 UTC'>December 26, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu baby-fmt Writeup" href="https://irinasusca.github.io/writeup-blog/posts/babyfmt-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

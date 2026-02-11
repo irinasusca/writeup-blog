@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Network on Irina&#39;s CTF Writeups</title>
+    <link>https://irinasusca.github.io/writeup-blog/tags/network/</link>
+    <description>Recent content in Network on Irina&#39;s CTF Writeups</description>
+    <generator>Hugo -- 0.146.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 11 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://irinasusca.github.io/writeup-blog/tags/network/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CyberEdu online-encryption Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/onlineencryption-writeup/</link>
+      <pubDate>Wed, 11 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/onlineencryption-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;This is why you should not trust online encryption for your most awesome secrets.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;After extracting all the HTTP objects, I noticed the &lt;code&gt;PKCS5&lt;/code&gt; files (from 1 to 30, and only the even ones) contained a &lt;code&gt;plaintext=(14chars)&lt;/code&gt;. I moved them all to a separate folder and did the following, to extract that plainText parameter:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;grep -E -o &#39;plainText=[A-Za-z0-9]{14}&#39; * &amp;gt; plaintext.txt&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;grep -o -E &#39;[a-zA-Z0-9]{14}$&#39; plaintext.txt&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;The exception was the last part, &lt;code&gt;019726}&lt;/code&gt;, which was in PKCS5(18) with an extra &lt;code&gt;%3D%3D&lt;/code&gt; to the parameter value, and also 20, which had a &amp;lsquo;ha ha ha&amp;rsquo; in it (very funny).&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu universal-studio-boss-exfiltration Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/universalstudioboss-writeup/</link>
+      <pubDate>Tue, 10 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/universalstudioboss-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Another Unbreakable tutorial whatever challenge. This time it&amp;rsquo;s USB.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;My tshark displays the usbhid.data as &lt;code&gt;1020304050607080&lt;/code&gt; instead of &lt;code&gt;10:20:30:40:50:60:70:80&lt;/code&gt;. And that&amp;rsquo;s a thing that happens. I found this &lt;a href=&#34;https://medium.com/@alyangulzar149/how-to-solve-wireshark-usb-packet-data-challenges-in-ctfs-snyk-ctf-428302d9eb4d&#34;&gt;writeup&lt;/a&gt; for generally extracting USB data with &lt;a href=&#34;https://github.com/syminical/PUK#&#34;&gt;PUK&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I ran this command: &lt;code&gt;tshark -r task.pcap -Y &#39;usb&#39; -T fields -e &#39;usbhid.data&#39; | sed &#39;/^$/d&#39; | grep -v &#39;0000000000000000&#39; &amp;gt; capdata.txt&lt;/code&gt; and replaced the capdata.txt in that repo, git cloned and ran PUK, and got the password &lt;code&gt;Yu=6SD6mvD9dU!9B&lt;/code&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu usualtraffic Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/usualtraffic-writeup/</link>
+      <pubDate>Fri, 06 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/usualtraffic-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Just normal network traffic. Or isn&amp;rsquo;t it?&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;The correct way to phrase it would have been &lt;em&gt;Or is it?&lt;/em&gt;, because the affirmation before isn&amp;rsquo;t a negation. &lt;em&gt;Or isn&amp;rsquo;t it?&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;I noticed something weird following a TCP stream, at the last 4 bytes of each BGP update message packet.&lt;/p&gt;
+&lt;p&gt;The following command: &lt;code&gt;tshark -Y &#39;tcp.stream==1&amp;amp;&amp;amp;bgp.type==2&amp;amp;&amp;amp;ip.src==10.10.10.251&#39; -r  traffic.pcapng -x | grep -o &#39;\.d ....$&#39; | grep -o &#39; ....$&#39; | tr -d &#39;\n&#39;&lt;/code&gt; outputs &lt;code&gt;Hell o Ro uter 1!.H ere  is t he v ecto r: 8 BF46 C25D 9BAD 98ED 8EAE 6C1F 7AD2 D04. This  is  my s ecre t: u WyYT CYqB Ty9a fI69 to3e K0Sc CA3S lPDE zBsW BnR9 D8Ro 7aIO qihG MPXw u/Z+ HLn.&lt;/code&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu packet-snatchers Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/packetsnatchers-writeup/</link>
+      <pubDate>Thu, 05 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/packetsnatchers-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Get ready for a multi-protocol, multi-question hunt&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;I&amp;rsquo;ll just include the answers and maybe some other things I thought were slightly more difficult than the others.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;I took the FTP command list from &lt;a href=&#34;https://en.wikipedia.org/wiki/List_of_FTP_commands&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The command to print out all the files downloaded by ftp, alphabetically: &lt;code&gt;tshark -Y ftp -T fields -e ftp.request.arg -r traffic.pcap | sed &#39;/^$/d&#39; | sort -u&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Here are the question asnwers:&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/packetsnatchers-writeup/pic1.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/packetsnatchers-writeup/pic2.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;That&amp;rsquo;s it!&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu biscuiti Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/biscuiti-writeup/</link>
+      <pubDate>Tue, 03 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/biscuiti-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Biscuiții mei au prea multe calorii, așa că trebuie să îi împart în mai multe porții.&lt;/p&gt;
+&lt;p&gt;În această probă, aveți o captură PCAP, iar obiectivul este să recuperați un secret.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;I already solved this last year at the OSCJ but the foolish way, looking through pcaps like a fool. But &lt;em&gt;now&lt;/em&gt;, we&amp;rsquo;re solving this with tshark!&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;The command I used was &lt;code&gt;tshark -r task.pcap -Y http -T fields -e http.cookie_pair&lt;/code&gt; to print out all of the cookie parts, along with their indexes. But then I thought, what the hell, if I&amp;rsquo;m not doing that manually, I&amp;rsquo;m not doing anything manually! So I came up with this command:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu private-coms Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/privatecoms-writeup/</link>
+      <pubDate>Tue, 03 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/privatecoms-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Există o comunicare scursă în acest fișier pcap. Găsește-o și obține flag-ul.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Another challenge I&amp;rsquo;ve come across at OSCN, which I didn&amp;rsquo;t solve, because &lt;em&gt;binwalk&lt;/em&gt; won&amp;rsquo;t show it found files if it can&amp;rsquo;t extract them using &lt;code&gt;-e&lt;/code&gt; but it &lt;em&gt;will&lt;/em&gt; find and extract them using more flags.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Doing a simple &lt;code&gt;binwalk -Mve --dd=&amp;quot;.*&amp;quot; private-coms.pcap&lt;/code&gt; extracts an audio file reading out the flag. I didn&amp;rsquo;t bother listening to it so I popped it into one of those AI wrapper speech to text apps, and got the text in CAPS so I just lowered it with python.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

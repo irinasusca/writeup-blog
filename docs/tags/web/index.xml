@@ -19,7 +19,7 @@
 &lt;p&gt;We&amp;rsquo;re confronted with a login page, with two fields, &lt;code&gt;Only for F1 champions. Enter your first name and pit code to start your engine&lt;/code&gt;. Entering a random username and random password would give an &lt;code&gt;Invalid username&lt;/code&gt; error, but sending &lt;em&gt;max&lt;/em&gt; (for Max Verstappen) would give an &lt;code&gt;Invalid pit code&lt;/code&gt;.&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Wireshark &amp; Tshark</title>
+      <title>Wireshark, tshark &amp; sorting</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/wireshark/</link>
       <pubDate>Sun, 01 Feb 2026 00:00:00 +0000</pubDate>
       <guid>https://irinasusca.github.io/writeup-blog/posts/wireshark/</guid>
