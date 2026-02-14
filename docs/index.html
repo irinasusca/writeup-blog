@@ -178,6 +178,21 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu exfill - very funny Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Extract the flag from the pcap.
+This challenge is just a bunch of GET requests, from /page0 to /page9 of something about Chunk Norris.
+I sifted through a bunch of the HTTP requests and the only thing that seemed to change irregularly was the http.user_agent: It looked like User-Agent: curl/0 00 0 0 0, with the 0s and spaces alternating seemingly randomly. I thought that might be a binary code throughout the million requests, with the spaces having to be FILLED with 1s (you know, since the name is exFILL) but it turned out to be a bunch of gibberish.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-13 00:00:00 +0000 UTC'>February 13, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu exfill - very funny Writeup" href="https://irinasusca.github.io/writeup-blog/posts/exfill-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu online-encryption Writeup
     </h2>
   </header>
@@ -206,22 +221,6 @@ And from that you just put the letters together. Here is a gallery of my process
   </div>
   <footer class="entry-footer"><span title='2026-02-10 00:00:00 +0000 UTC'>February 10, 2026</span></footer>
   <a class="entry-link" aria-label="post link to CyberEdu injective Writeup" href="https://irinasusca.github.io/writeup-blog/posts/injective-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu merry-cemetery Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview After doing exactly two web challenges, I remembered just how much better pwn is, and if I don’t sprinkle in at least another actually fun chall this blog won’t last too long. Enough prologue, let’s get started.
-Rest In Peace Read More: https://en.wikipedia.org/wiki/Merry_Cemetery
-The challenge was initially published at HackTM Quals 2020, organized by WreckTheLine.
-This is a reference to Cimitirul Vesel I guess. We’re given two files, a .js and a .wasm, more interestingly. That just means web assembly, and it’s a sort of binary format.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-02-10 00:00:00 +0000 UTC'>February 10, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu merry-cemetery Writeup" href="https://irinasusca.github.io/writeup-blog/posts/merrycemetery-writeup/"></a>
 </article>
 
 <article class="post-entry"> 

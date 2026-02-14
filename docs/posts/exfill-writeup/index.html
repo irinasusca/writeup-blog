@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CyberEdu exfill - very funny Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, network">
+<meta name="description" content="Challenge overview
+Extract the flag from the pcap.
+
+This challenge is just a bunch of GET requests, from /page0 to /page9 of something about Chunk Norris.
+I sifted through a bunch of the HTTP requests and the only thing that seemed to change irregularly was the http.user_agent: It looked like User-Agent: curl/0 00 0 0 0, with the 0s and spaces alternating seemingly randomly. I thought that might be a binary code throughout the million requests, with the spaces having to be FILLED with 1s (you know, since the name is exFILL) but it turned out to be a bunch of gibberish.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/exfill-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/exfill-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/exfill-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="CyberEdu exfill - very funny Writeup">
+  <meta property="og:description" content="Challenge overview Extract the flag from the pcap.
+This challenge is just a bunch of GET requests, from /page0 to /page9 of something about Chunk Norris.
+I sifted through a bunch of the HTTP requests and the only thing that seemed to change irregularly was the http.user_agent: It looked like User-Agent: curl/0 00 0 0 0, with the 0s and spaces alternating seemingly randomly. I thought that might be a binary code throughout the million requests, with the spaces having to be FILLED with 1s (you know, since the name is exFILL) but it turned out to be a bunch of gibberish.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-13T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-02-13T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Network">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CyberEdu exfill - very funny Writeup">
+<meta name="twitter:description" content="Challenge overview
+Extract the flag from the pcap.
+
+This challenge is just a bunch of GET requests, from /page0 to /page9 of something about Chunk Norris.
+I sifted through a bunch of the HTTP requests and the only thing that seemed to change irregularly was the http.user_agent: It looked like User-Agent: curl/0 00 0 0 0, with the 0s and spaces alternating seemingly randomly. I thought that might be a binary code throughout the million requests, with the spaces having to be FILLED with 1s (you know, since the name is exFILL) but it turned out to be a bunch of gibberish.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CyberEdu exfill - very funny Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/exfill-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CyberEdu exfill - very funny Writeup",
+  "name": "CyberEdu exfill - very funny Writeup",
+  "description": "Challenge overview Extract the flag from the pcap.\nThis challenge is just a bunch of GET requests, from /page0 to /page9 of something about Chunk Norris.\nI sifted through a bunch of the HTTP requests and the only thing that seemed to change irregularly was the http.user_agent: It looked like User-Agent: curl/0 00 0 0 0, with the 0s and spaces alternating seemingly randomly. I thought that might be a binary code throughout the million requests, with the spaces having to be FILLED with 1s (you know, since the name is exFILL) but it turned out to be a bunch of gibberish.\n",
+  "keywords": [
+    "CyberEdu", "network"
+  ],
+  "articleBody": "Challenge overview Extract the flag from the pcap.\nThis challenge is just a bunch of GET requests, from /page0 to /page9 of something about Chunk Norris.\nI sifted through a bunch of the HTTP requests and the only thing that seemed to change irregularly was the http.user_agent: It looked like User-Agent: curl/0 00 0 0 0, with the 0s and spaces alternating seemingly randomly. I thought that might be a binary code throughout the million requests, with the spaces having to be FILLED with 1s (you know, since the name is exFILL) but it turned out to be a bunch of gibberish.\nI even tried to xor it, same stuff.\nI had to practice for my theoretical driving exam so I had to put off this challenge for a couple of days so I just looked up a writeup for it, and I was close noticing the User Agent but it’s a little more complicated than that.\nThe solution Turns out this was solvable with a decabit (you know, ten bits) lookup table. So what I should have done is looked online for 10 bit types of encryption. Here it is.\nBUT! Before the decabit, we have a Chuck Norris encoding which is GREATLY referenced in the chall. Whoops, missed that one. Pretty interesting though;\nSo the first command I ran was tshark -r captura.pcapng -Y 'http\u0026\u0026ip.src==192.168.124.1' -T fields -e 'http.user_agent' | grep -E -o '.{10}$' | tr -d '\\n' to extract all the user agents without the newline, and put that through this Chunk Norris decoder.\nJust now comes that decabit into play. This part I couldn’t have guessed, genuinely. Putting that into a decabit, we get the flag reversed.\nSo we just reverse that and the flag is ctf{b3d7630e73726a79f39210a8c5e170aa1da595404aacbf0c765501c8c3257e5b}.\nHow though? But I was still wondering how the hell you’re supposed to reach the conclusion that that is, in fact, decabit. So first I threw them into ChatGPT, Deepseek, Claude and Gemini.\nI don’t know what Claude thought I was doing but it flagged the chat.\nGemini just hallucinated some lorem ipsum:\nDeepseek just entered a C-printing loop:\nBut ChatGPT was by far the worst one:\nAnd the dcode.fr cipher detector didn’t say shit about it being decabit. Even though it is capable of decoding decabit from 0s and 1s and even C’s and N’s instead of just + and -.\nThis other website cachesleuth’s cipher detector showed everything but since it only recognized + and - it didn’t show up.\nBut it did prompt us to add the characters as keys - and here it is - decoded!\nThis did give me an idea for this tool though.\nSo indeed it was solvable. I’m just glad I found this website now! Thanks for reading!\n",
+  "wordCount" : "457",
+  "inLanguage": "en",
+  "datePublished": "2026-02-13T00:00:00Z",
+  "dateModified": "2026-02-13T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/exfill-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      CyberEdu exfill - very funny Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-02-13 00:00:00 +0000 UTC'>February 13, 2026</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#the-solution" aria-label="The solution">The solution</a></li>
+                <li>
+                    <a href="#how-though" aria-label="How though?">How though?</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>Extract the flag from the pcap.</p>
+<hr>
+<p>This challenge is just a bunch of GET requests, from /page0 to /page9 of something about Chunk Norris.</p>
+<p>I sifted through a bunch of the HTTP requests and the only thing that seemed to change irregularly was the <code>http.user_agent</code>: It looked like <code>User-Agent: curl/0 00 0 0 0</code>, with the 0s and spaces alternating seemingly randomly. I thought that might be a binary code throughout the million requests, with the spaces having to be FILLED with 1s (you know, since the name is exFILL) but it turned out to be a bunch of gibberish.</p>
+<p>I even tried to xor it, same stuff.</p>
+<hr>
+<p>I had to practice for my theoretical driving exam so I had to put off this challenge for a couple of days so I just looked up a writeup for it, and I was close noticing the User Agent but it&rsquo;s a little more complicated than that.</p>
+<h2 id="the-solution">The solution<a hidden class="anchor" aria-hidden="true" href="#the-solution">#</a></h2>
+<p>Turns out this was solvable with a decabit (you know, ten bits) lookup table. So what I should have done is looked online for 10 bit types of encryption. <a href="https://www.dcode.fr/decabit-code">Here it is</a>.</p>
+<hr>
+<p>BUT! Before the decabit, we have a Chuck Norris encoding which is GREATLY referenced in the chall. Whoops, missed that one. Pretty interesting though;</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/exfill-writeup/chuck.png#center"></p>
+<p>So the first command I ran was <code>tshark -r captura.pcapng -Y 'http&amp;&amp;ip.src==192.168.124.1' -T fields -e 'http.user_agent' | grep -E -o  '.{10}$' | tr -d '\n'</code> to extract all the user agents without the newline, and put that through this <a href="https://www.dcode.fr/chuck-norris-code">Chunk Norris decoder</a>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/exfill-writeup/decode.png#center"></p>
+<p>Just <em>now</em> comes that decabit into play. This part I couldn&rsquo;t have guessed, genuinely. Putting that into a decabit, we get the flag reversed.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/exfill-writeup/deca.png#center"></p>
+<p>So we just reverse that and the flag is <code>ctf{b3d7630e73726a79f39210a8c5e170aa1da595404aacbf0c765501c8c3257e5b}</code>.</p>
+<h2 id="how-though">How though?<a hidden class="anchor" aria-hidden="true" href="#how-though">#</a></h2>
+<p>But I was still wondering how the hell you&rsquo;re supposed to reach the conclusion that that is, in fact, decabit. So first I threw them into ChatGPT, Deepseek, Claude and Gemini.</p>
+<p>I don&rsquo;t know <em>what</em> Claude thought I was doing but it flagged the chat.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/exfill-writeup/claude.png#center"></p>
+<p>Gemini just hallucinated some lorem ipsum:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/exfill-writeup/gemini.png#center"></p>
+<p>Deepseek just entered a C-printing loop:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/exfill-writeup/deepseek.png#center"></p>
+<p>But ChatGPT was <em>by far</em> the worst one:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/exfill-writeup/chatgpt.png#center"></p>
+<p>And the dcode.fr cipher detector didn&rsquo;t say shit about it being decabit. <em>Even though</em> it is capable of decoding decabit from 0s and 1s and even C&rsquo;s and N&rsquo;s instead of just + and -.</p>
+<p>This other website <a href="https://www.cachesleuth.com/multidecoder/">cachesleuth&rsquo;s cipher detector</a> showed everything but since it only recognized + and - it didn&rsquo;t show up.</p>
+<p>But it did prompt us to add the characters as keys - and here it is - decoded!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/exfill-writeup/human.png#center"></p>
+<p>This did give me an idea for <a href="">this tool</a> though.</p>
+<p>So indeed it was solvable. I&rsquo;m just glad I found this website now! Thanks for reading!</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/network/">Network</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

@@ -137,22 +137,6 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu get-access Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Can you pwn this?
-Very interestingly, this challenge doesn’t come with any source files, and we just get a Username and Password prompt.
-Identifying the vulnerabilities The first thing I thought about was a buffer overflow.
-The Username seemed to read a specific amount of bytes, and the overflow would go into password, and password just didn’t crash anything, so it might’ve been the same situation.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-12-27 00:00:00 +0000 UTC'>December 27, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu get-access Writeup" href="https://irinasusca.github.io/writeup-blog/posts/getaccess-writeup/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu nulle Writeup
     </h2>
   </header>
@@ -291,6 +275,22 @@ At first glance, the chall looks like a 64-bit executable, and upon a buffer ove
   </div>
   <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
   <a class="entry-link" aria-label="post link to CyberEdu Buy-Cooffe Writeup" href="https://irinasusca.github.io/writeup-blog/posts/buycooffe-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu ftp-console Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview We got a very strange ftp console? Can you retrive the flag?
+At first glance, the ftp_server looks like a 32-bit executable, and as hinted by the name, a FTP (File Transfer Protocol) server mockup.
+Upon checking, every protection is disabled, so that’s nice! Now let’s take a look at the binary.
+We have a main function that calls login, and we can already see some interesting things going on.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu ftp-console Writeup" href="https://irinasusca.github.io/writeup-blog/posts/ftpconsole-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

@@ -6,8 +6,19 @@
     <description>Recent content in Network on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 11 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 13 Feb 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/tags/network/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CyberEdu exfill - very funny Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/exfill-writeup/</link>
+      <pubDate>Fri, 13 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/exfill-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Extract the flag from the pcap.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;This challenge is just a bunch of GET requests, from /page0 to /page9 of something about Chunk Norris.&lt;/p&gt;
+&lt;p&gt;I sifted through a bunch of the HTTP requests and the only thing that seemed to change irregularly was the &lt;code&gt;http.user_agent&lt;/code&gt;: It looked like &lt;code&gt;User-Agent: curl/0 00 0 0 0&lt;/code&gt;, with the 0s and spaces alternating seemingly randomly. I thought that might be a binary code throughout the million requests, with the spaces having to be FILLED with 1s (you know, since the name is exFILL) but it turned out to be a bunch of gibberish.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>CyberEdu online-encryption Writeup</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/onlineencryption-writeup/</link>

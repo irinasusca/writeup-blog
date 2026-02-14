@@ -1,5 +1,5 @@
 +++
-date = '2026-02-10'
+date = '2026-03-10'
 draft = false
 title = 'CyberEdu merry-cemetery Writeup'
 ShowToc = true
