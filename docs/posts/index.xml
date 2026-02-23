@@ -6,8 +6,31 @@
     <description>Recent content in Posts on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 13 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 23 Feb 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ROCSC 2026</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/rocsc2026/</link>
+      <pubDate>Mon, 23 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/rocsc2026/</guid>
+      <description>&lt;h1 id=&#34;intro&#34;&gt;Intro&lt;/h1&gt;
+&lt;p&gt;This year&amp;rsquo;s ROCSC was my first participation, and I ended up ranking 50, so I&amp;rsquo;m pretty proud about my performance. Sadly, the competition was crazy in the junior section, as the only people who qualified were those with a full solve, which almost never happens. But seniors ranked below me &lt;em&gt;did&lt;/em&gt; qualify, so I&amp;rsquo;m a bit salty about that.&lt;/p&gt;
+&lt;p&gt;What was unfortunate was the AI thing, which essentially made this pay-to-win, since most challenges &lt;em&gt;were&lt;/em&gt; solvable using AI; just mindlessly pumping challenges into Claude and GPT isn&amp;rsquo;t fun, but not doing so puts you at a great disadvantage to people who do so.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu badimg Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/badimg-writeup/</link>
+      <pubDate>Wed, 18 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/badimg-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Web apps are everywhere, so are the bugs.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;This is an image upload injection with php.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://portswigger.net/web-security/file-upload&#34;&gt;First some recon about this sort of vulnerability&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The files we upload are saved in &lt;code&gt;/profiles/longcode.jpg&lt;/code&gt; (rendered as jpg) but also available at &lt;code&gt;/index.php/page=profiles/longcode.jpg&lt;/code&gt; (rendered as html) even if their extension is php.&lt;/p&gt;
+&lt;p&gt;I tried a bunch of tricks including adding a php command as an exiftool comment, but it doesn&amp;rsquo;t get rendered on the page. And somehow, our file gets longer. But something&amp;rsquo;s weird here.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>CyberEdu exfill - very funny Writeup</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/exfill-writeup/</link>
@@ -537,6 +560,17 @@
 &lt;hr&gt;
 &lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
 &lt;p&gt;We can look at &lt;code&gt;/tickets?user=admin&lt;/code&gt; by clicking tickets. Here we&amp;rsquo;re given some hints:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Mobile rev</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/mobile/</link>
+      <pubDate>Thu, 08 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/mobile/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;Since these mobile reverse engineering challs have &lt;em&gt;really&lt;/em&gt; gained traction from what I&amp;rsquo;ve seen, and since I only ever tried one challenge on my Windows machine before, I think it&amp;rsquo;s time to set everything up and write down some notes, since rocsc is tomorrow and I&amp;rsquo;d like to at least pretend to be prepared for this.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;set-up&#34;&gt;Set up&lt;/h2&gt;
+&lt;p&gt;I stumbled upon these wonderful &lt;a href=&#34;https://book.jorianwoltjer.com/mobile/setup&#34;&gt;docs here&lt;/a&gt;. I will be installing this on my main ubuntu machine and that&amp;rsquo;s what I recommend. And don&amp;rsquo;t forget to install apktool from their &lt;a href=&#34;https://apktool.org/docs/install/&#34;&gt;docs&lt;/a&gt;.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Serialization and Deserialization</title>

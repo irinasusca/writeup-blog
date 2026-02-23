@@ -147,6 +147,36 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu slightly-broken Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview For this one, only contact admins for socialising with them. Do not contact them for errors at this challenge.
+Identifying the vulnerabilities We bump into some errors, but look at this section of a response:
+This is part of the Flask/Werkzeug’s interactive debugger, and we see it because of the error.
+To execute a command, we need the params __debugger__: &#39;yes&#39;, cmd: &#39;pinauth&#39;, pin: pin, s: SECRET as json. In a GET request, because Workzeug uses GETs not POST.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-13 00:00:00 +0000 UTC'>January 13, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu slightly-broken Writeup" href="https://irinasusca.github.io/writeup-blog/posts/slightlybroken-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu downloader-v1 Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Don’t you find it frustrating when you have uploaded some files on a website but you’re are not sure if the download button works? Me neither. But some people did. Is there even demand for such a service?
+Identifying the vulnerabilities In the GET request, we have a comment pointing us to flag.php, and the /file.php contains “GET ME”. Using gobuster, we find a /uploads/ directory. There’s a /uploads/index.html, but it’s empty. I kept trying to find a way to access uploads aimlessly, when I thought, what if I try to send an actual image’s link?
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-12 00:00:00 +0000 UTC'>January 12, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu downloader-v1 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/downloaderv1-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu manual-review Writeup
     </h2>
   </header>
@@ -227,6 +257,20 @@ Identifying the vulnerabilities We can look at /tickets?user=admin by clicking t
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Mobile rev
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Why Since these mobile reverse engineering challs have really gained traction from what I’ve seen, and since I only ever tried one challenge on my Windows machine before, I think it’s time to set everything up and write down some notes, since rocsc is tomorrow and I’d like to at least pretend to be prepared for this.
+Set up I stumbled upon these wonderful docs here. I will be installing this on my main ubuntu machine and that’s what I recommend. And don’t forget to install apktool from their docs.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-08 00:00:00 +0000 UTC'>January 8, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to Mobile rev" href="https://irinasusca.github.io/writeup-blog/posts/mobile/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Serialization and Deserialization
     </h2>
   </header>
@@ -253,57 +297,6 @@ I did exiftool, strings, looked at it in hex, steghide, stegseek, just about eve
   </div>
   <footer class="entry-footer"><span title='2026-01-07 00:00:00 +0000 UTC'>January 7, 2026</span></footer>
   <a class="entry-link" aria-label="post link to CyberEdu reccon Writeup" href="https://irinasusca.github.io/writeup-blog/posts/reccon-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu cookies Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Cookies for my friends.
-We’ve got a 64-bit binary, 100% format string vulnerability, canary and NX enabled.
-This loop happens exactly twice, to leak something then for us to exploit the buffer overflow.
-We even have a getshell function, so this really won’t be that complicated; We’re not even dealing with PIE.
-Identifying the vulnerabilities We get the gadgets in our binary, we can start looking for the canary now! Let’s just look remotely straight away, so we don’t bother with trying to do it twice, since the offsets are going to differ.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-01-04 00:00:00 +0000 UTC'>January 4, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu cookies Writeup" href="https://irinasusca.github.io/writeup-blog/posts/cookies-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu off Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview This application is here just to serve your team. When you are done, you can try to exploit it. We hope is going to be much more fun.
-We also have canary and NX enabled.
-Let’s look at the functions here. First we have a main which forks every time it’s ran:
-Then, this function is looped:
-It calls some weird functions on the string:
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-01-04 00:00:00 +0000 UTC'>January 4, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu off Writeup" href="https://irinasusca.github.io/writeup-blog/posts/off-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu threadz Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Threads are so cool! And secure! So secure that I store all my secrets there
-Note 1: The flag is broken into chunks of 4 characters, like this: volatile __thread unsigned int flag1 = ‘{CFT’;
-The letters in the chunks are reversed for your convenience, and the chunks are defined in order
-Note 2: The binary is intentionally not given.
-Note 3: The program will read 0x1000 bytes of shellcode, stored into a mmap-ed region with RWX permissions
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-01-04 00:00:00 +0000 UTC'>January 4, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu threadz Writeup" href="https://irinasusca.github.io/writeup-blog/posts/threadz-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

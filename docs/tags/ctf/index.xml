@@ -6,8 +6,17 @@
     <description>Recent content in Ctf on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 16 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 23 Feb 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/tags/ctf/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ROCSC 2026</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/rocsc2026/</link>
+      <pubDate>Mon, 23 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/rocsc2026/</guid>
+      <description>&lt;h1 id=&#34;intro&#34;&gt;Intro&lt;/h1&gt;
+&lt;p&gt;This year&amp;rsquo;s ROCSC was my first participation, and I ended up ranking 50, so I&amp;rsquo;m pretty proud about my performance. Sadly, the competition was crazy in the junior section, as the only people who qualified were those with a full solve, which almost never happens. But seniors ranked below me &lt;em&gt;did&lt;/em&gt; qualify, so I&amp;rsquo;m a bit salty about that.&lt;/p&gt;
+&lt;p&gt;What was unfortunate was the AI thing, which essentially made this pay-to-win, since most challenges &lt;em&gt;were&lt;/em&gt; solvable using AI; just mindlessly pumping challenges into Claude and GPT isn&amp;rsquo;t fun, but not doing so puts you at a great disadvantage to people who do so.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>VianuCTF 2025</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/vianuctf-writeup/</link>

@@ -152,6 +152,42 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu packet-snatchers Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Get ready for a multi-protocol, multi-question hunt
+I’ll just include the answers and maybe some other things I thought were slightly more difficult than the others.
+I took the FTP command list from here.
+The command to print out all the files downloaded by ftp, alphabetically: tshark -Y ftp -T fields -e ftp.request.arg -r traffic.pcap | sed &#39;/^$/d&#39; | sort -u.
+Here are the question asnwers:
+That’s it!
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-05 00:00:00 +0000 UTC'>February 5, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu packet-snatchers Writeup" href="https://irinasusca.github.io/writeup-blog/posts/packetsnatchers-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu asmadventure Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Because it’s a reverse engineering chall I’m including the link.
+Ieri seară am primit o alertă privind un shellcode executat de un binar suspicios.
+Poți analiza ce se întâmplă și să descoperi parola infractorului?
+We receive a main binary. Very strangely, looking at this in IDA, it doesn’t look like anything.
+This is literally it. All of it.
+It allocates a rwx memory region of 559 bytes with 0.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-04 00:00:00 +0000 UTC'>February 4, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu asmadventure Writeup" href="https://irinasusca.github.io/writeup-blog/posts/asmadventure-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu montgomery Writeup
     </h2>
   </header>
@@ -267,37 +303,6 @@ We receive an Atmel AVR 8-bit file, which is the code for a microcontroller, so 
   </div>
   <footer class="entry-footer"><span title='2026-01-30 00:00:00 +0000 UTC'>January 30, 2026</span></footer>
   <a class="entry-link" aria-label="post link to CyberEdu digikey Writeup" href="https://irinasusca.github.io/writeup-blog/posts/digikey-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu mountain Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Take a look at those mountains!
-We get a zip file I ran binwalk -Me --dd=&#34;.*&#34; filename on (just does it recursively). We get a PNG file which has a barely visible flag in the top left which I noticed waay to late; I opened a web version of gimp, turned off the green and blue, and the flag became just visible enough to be transcribed.
-Here it is: DCTF{157d2d840f229720e7f8082dd4468a8583fb348ebf2cb38456147dc046ff942d}
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-01-30 00:00:00 +0000 UTC'>January 30, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu mountain Writeup" href="https://irinasusca.github.io/writeup-blog/posts/mountain-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu pawn-shop Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Se spune ca fericirea nu poate fi cumparata. Acesta este cazul si pentru acest magazin. Trebuie sa gasesti o vulnerabilitate in aceasta aplicatie si sa recuperezi secretul.
-This was one of the challenges from OSC 2025 county phase, I remember it, so let’s quickly solve this.
-Identifying the vulnerabilities Trying to access the flag, we get this response:
-Adding the allowed Origin as a HTTP Header, we get the flag.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-01-30 00:00:00 +0000 UTC'>January 30, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu pawn-shop Writeup" href="https://irinasusca.github.io/writeup-blog/posts/pawnshop-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

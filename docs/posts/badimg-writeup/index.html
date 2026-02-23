@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CyberEdu badimg Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, web">
+<meta name="description" content="Challenge overview
+Web apps are everywhere, so are the bugs.
+
+This is an image upload injection with php.
+Identifying the vulnerabilities
+First some recon about this sort of vulnerability.
+The files we upload are saved in /profiles/longcode.jpg (rendered as jpg) but also available at /index.php/page=profiles/longcode.jpg (rendered as html) even if their extension is php.
+I tried a bunch of tricks including adding a php command as an exiftool comment, but it doesn&rsquo;t get rendered on the page. And somehow, our file gets longer. But something&rsquo;s weird here.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/badimg-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/badimg-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/badimg-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="CyberEdu badimg Writeup">
+  <meta property="og:description" content="Challenge overview Web apps are everywhere, so are the bugs.
+This is an image upload injection with php.
+Identifying the vulnerabilities First some recon about this sort of vulnerability.
+The files we upload are saved in /profiles/longcode.jpg (rendered as jpg) but also available at /index.php/page=profiles/longcode.jpg (rendered as html) even if their extension is php.
+I tried a bunch of tricks including adding a php command as an exiftool comment, but it doesn’t get rendered on the page. And somehow, our file gets longer. But something’s weird here.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-18T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-02-18T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CyberEdu badimg Writeup">
+<meta name="twitter:description" content="Challenge overview
+Web apps are everywhere, so are the bugs.
+
+This is an image upload injection with php.
+Identifying the vulnerabilities
+First some recon about this sort of vulnerability.
+The files we upload are saved in /profiles/longcode.jpg (rendered as jpg) but also available at /index.php/page=profiles/longcode.jpg (rendered as html) even if their extension is php.
+I tried a bunch of tricks including adding a php command as an exiftool comment, but it doesn&rsquo;t get rendered on the page. And somehow, our file gets longer. But something&rsquo;s weird here.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CyberEdu badimg Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/badimg-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CyberEdu badimg Writeup",
+  "name": "CyberEdu badimg Writeup",
+  "description": "Challenge overview Web apps are everywhere, so are the bugs.\nThis is an image upload injection with php.\nIdentifying the vulnerabilities First some recon about this sort of vulnerability.\nThe files we upload are saved in /profiles/longcode.jpg (rendered as jpg) but also available at /index.php/page=profiles/longcode.jpg (rendered as html) even if their extension is php.\nI tried a bunch of tricks including adding a php command as an exiftool comment, but it doesn\u0026rsquo;t get rendered on the page. And somehow, our file gets longer. But something\u0026rsquo;s weird here.\n",
+  "keywords": [
+    "CyberEdu", "web"
+  ],
+  "articleBody": "Challenge overview Web apps are everywhere, so are the bugs.\nThis is an image upload injection with php.\nIdentifying the vulnerabilities First some recon about this sort of vulnerability.\nThe files we upload are saved in /profiles/longcode.jpg (rendered as jpg) but also available at /index.php/page=profiles/longcode.jpg (rendered as html) even if their extension is php.\nI tried a bunch of tricks including adding a php command as an exiftool comment, but it doesn’t get rendered on the page. And somehow, our file gets longer. But something’s weird here.\nThe preview file is the one getting rendered, and something is just overwriting our comment here.\nThat something is that our file is getting compressed and the metadata is getting overwritten by CREATOR: gd-jpeg v1.0 (using IJG JPEG v62), default quality.. As I was writing this I was scrolling like, the fifth? Maybe? Website about file injection and extremely luckily - In this website -\nEXACTLY what we’re fighting with! I tried working with this but guess what, that script was made in 2009. So we need to patch a bunch of shit. And turns out gifs aren’t even supported. I stumbled upon this other writeup for some other ctf challenge and since PNG aren’t supported in this chall, I tried their PoC for jpegs, but it didn’t work.\nAnd I just now realized we had lfi this whole time. So if we can somehow find where our files are getting stored at, maybe we can open them and run that god damn php.\nI took a break from this as I got really sick, I even tried looking for the writeup online but I didn’t find one so I took it as a sign to solve this myself. I found this resource and FINALLY WE EXECUTE PHP!\nSo essentially the vulnerability is injecting php code after the Scan Header. What is the Scan Header you might ask yourself? Well it signals the end of metadata and beginning of the actual image data.\nBut we soon bump into another problem, the fact that any command execution returns a 500 from the server or a 200 without the php being executed, ending up completely scrambled through the compression. And the reason was right under my nose, I realised half an hour later:\nAll we need though is a way to do some sort of ls. I spent another day doing and trying things I won’t even get into and I resorted to a little help from ChatGPT who suggested this function: \u003c?=join(',',glob('/*'))?\u003e.\nIt was a great one because it was both short and safe I suppose.\nAnd now we can just retrieve the god damn flag.\nJust as a fun fact this stupid challenge took me about a week\n",
+  "wordCount" : "455",
+  "inLanguage": "en",
+  "datePublished": "2026-02-18T00:00:00Z",
+  "dateModified": "2026-02-18T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/badimg-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      CyberEdu badimg Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-02-18 00:00:00 +0000 UTC'>February 18, 2026</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>Web apps are everywhere, so are the bugs.</p>
+<hr>
+<p>This is an image upload injection with php.</p>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p><a href="https://portswigger.net/web-security/file-upload">First some recon about this sort of vulnerability</a>.</p>
+<p>The files we upload are saved in <code>/profiles/longcode.jpg</code> (rendered as jpg) but also available at <code>/index.php/page=profiles/longcode.jpg</code> (rendered as html) even if their extension is php.</p>
+<p>I tried a bunch of tricks including adding a php command as an exiftool comment, but it doesn&rsquo;t get rendered on the page. And somehow, our file gets longer. But something&rsquo;s weird here.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/badimg-writeup/weird.png#center"></p>
+<p>The <em>preview</em> file is the one getting rendered, and something is just overwriting our comment here.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/badimg-writeup/files.png#center"></p>
+<p>That something is that our file is getting compressed and the metadata is getting overwritten by <code>CREATOR: gd-jpeg v1.0 (using IJG JPEG v62), default quality.</code>. As I was writing this I was scrolling like, the fifth? Maybe? Website about file injection and extremely luckily - In this <a href="https://onsecurity.io/article/file-upload-checklist/">website</a> -</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/badimg-writeup/aha.png#center"></p>
+<p>EXACTLY what we&rsquo;re fighting with! I tried working with this but guess what, that script was made in 2009. So we need to patch a bunch of shit. And turns out gifs aren&rsquo;t even supported. I stumbled upon <a href="https://platypwnies.de/writeups/2025/gpn/web/image-contest/">this other writeup for some other ctf challenge</a> and since PNG aren&rsquo;t supported in this chall, I tried their PoC for jpegs, but it didn&rsquo;t work.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/badimg-writeup/lfi.png#center"></p>
+<p>And I just now realized we had lfi this whole time. So if we can somehow find where our files are getting stored at, maybe we can open them and run that god damn php.</p>
+<hr>
+<p>I took a break from this as I got really sick, I even tried looking for the writeup online but I didn&rsquo;t find one so I took it as a sign to solve this myself. I found <a href="https://github.com/fakhrizulkifli/Defeating-PHP-GD-imagecreatefromjpeg/blob/master/README.md">this</a> resource and FINALLY WE EXECUTE PHP!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/badimg-writeup/run.png#center"></p>
+<p>So essentially the vulnerability is injecting php code after the Scan Header. What is the Scan Header you might ask yourself? Well it signals the end of metadata and beginning of the actual image data.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/badimg-writeup/scan.png#center"></p>
+<p>But we soon bump into another problem, the fact that any command execution returns a 500 from the server or a 200 without the php being executed, ending up completely scrambled through the compression. And the reason was right under my nose, I realised half an hour later:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/badimg-writeup/blaclist.png#center"></p>
+<p>All we need though is a way to do some sort of <code>ls</code>. I spent <em>another day</em> doing and trying things I won&rsquo;t even get into and I resorted to a little help from ChatGPT who suggested this function: <code>&lt;?=join(',',glob('/*'))?&gt;</code>.</p>
+<p>It was a great one because it was both short <em>and</em> safe I suppose.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/badimg-writeup/flag1.png#center"></p>
+<p>And now we can just retrieve the god damn flag.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/badimg-writeup/flag2.png#center"></p>
+<hr>
+<p>Just as a fun fact this stupid challenge took me about a week</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/web/">Web</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

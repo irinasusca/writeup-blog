@@ -1,5 +1,13 @@
 [
   {
+    "title": "ROCSC 2026",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/rocsc2026/"
+  },
+  {
+    "title": "CyberEdu badimg Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/badimg-writeup/"
+  },
+  {
     "title": "CyberEdu exfill - very funny Writeup",
     "permalink": "https://irinasusca.github.io/writeup-blog/posts/exfill-writeup/"
   },
@@ -138,6 +146,10 @@
   {
     "title": "CyberEdu jargon Writeup",
     "permalink": "https://irinasusca.github.io/writeup-blog/posts/jargon-writeup/"
+  },
+  {
+    "title": "Mobile rev",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/mobile/"
   },
   {
     "title": "Serialization and Deserialization",

@@ -152,6 +152,37 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">ROCSC 2026
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Intro This year’s ROCSC was my first participation, and I ended up ranking 50, so I’m pretty proud about my performance. Sadly, the competition was crazy in the junior section, as the only people who qualified were those with a full solve, which almost never happens. But seniors ranked below me did qualify, so I’m a bit salty about that.
+What was unfortunate was the AI thing, which essentially made this pay-to-win, since most challenges were solvable using AI; just mindlessly pumping challenges into Claude and GPT isn’t fun, but not doing so puts you at a great disadvantage to people who do so.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-23 00:00:00 +0000 UTC'>February 23, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to ROCSC 2026" href="https://irinasusca.github.io/writeup-blog/posts/rocsc2026/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu badimg Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Web apps are everywhere, so are the bugs.
+This is an image upload injection with php.
+Identifying the vulnerabilities First some recon about this sort of vulnerability.
+The files we upload are saved in /profiles/longcode.jpg (rendered as jpg) but also available at /index.php/page=profiles/longcode.jpg (rendered as html) even if their extension is php.
+I tried a bunch of tricks including adding a php command as an exiftool comment, but it doesn’t get rendered on the page. And somehow, our file gets longer. But something’s weird here.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-18 00:00:00 +0000 UTC'>February 18, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu badimg Writeup" href="https://irinasusca.github.io/writeup-blog/posts/badimg-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu exfill - very funny Writeup
     </h2>
   </header>
@@ -274,42 +305,6 @@ For that we need to prep the format, but zip2john won’t work, since this is a 
   </div>
   <footer class="entry-footer"><span title='2026-02-05 00:00:00 +0000 UTC'>February 5, 2026</span></footer>
   <a class="entry-link" aria-label="post link to CyberEdu east-grandma Writeup" href="https://irinasusca.github.io/writeup-blog/posts/eastgrandma-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu packet-snatchers Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Get ready for a multi-protocol, multi-question hunt
-I’ll just include the answers and maybe some other things I thought were slightly more difficult than the others.
-I took the FTP command list from here.
-The command to print out all the files downloaded by ftp, alphabetically: tshark -Y ftp -T fields -e ftp.request.arg -r traffic.pcap | sed &#39;/^$/d&#39; | sort -u.
-Here are the question asnwers:
-That’s it!
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-02-05 00:00:00 +0000 UTC'>February 5, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu packet-snatchers Writeup" href="https://irinasusca.github.io/writeup-blog/posts/packetsnatchers-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu asmadventure Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Because it’s a reverse engineering chall I’m including the link.
-Ieri seară am primit o alertă privind un shellcode executat de un binar suspicios.
-Poți analiza ce se întâmplă și să descoperi parola infractorului?
-We receive a main binary. Very strangely, looking at this in IDA, it doesn’t look like anything.
-This is literally it. All of it.
-It allocates a rwx memory region of 559 bytes with 0.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-02-04 00:00:00 +0000 UTC'>February 4, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu asmadventure Writeup" href="https://irinasusca.github.io/writeup-blog/posts/asmadventure-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

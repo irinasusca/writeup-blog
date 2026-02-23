@@ -137,6 +137,22 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu ast-tree Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview A careless developer left behind some code that reads sensitive files directly from disk.
+We’re prompted with a “Paste your AST-Grep YAML rule here” and an option to run it. ast-grep is a code tool for structural search and replace, like syntax-aware grep.
+We can also use jQuery like utility methods to traverse syntax tree nodes.
+Identifying the vulnerabilities Upon entering an invalid file, we get this ChatGPT written error:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-29 00:00:00 +0000 UTC'>January 29, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu ast-tree Writeup" href="https://irinasusca.github.io/writeup-blog/posts/asttree-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu password Writeup
     </h2>
   </header>
@@ -275,22 +291,6 @@ I sent a &lt;script&gt; fetch(&#39;https://myprivatelinkwithlimitedrequests.m.pi
   </div>
   <footer class="entry-footer"><span title='2026-01-12 00:00:00 +0000 UTC'>January 12, 2026</span></footer>
   <a class="entry-link" aria-label="post link to CyberEdu manual-review Writeup" href="https://irinasusca.github.io/writeup-blog/posts/manualreview-writeup/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu broken-login Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Intern season is up again and our new intern Alex had to do a simple login page. Not only the login page is not working properly, it is also highly insecure…
-Identifying the vulnerabilities This is how our POST requests are sent.
-Then, another GET is made: GET /auth?username=67616761&amp;password=9748ae63d43e39bb35e3060fbde9f34c731d4173f8b579441404bed6f485644335fca004f512c6602f77549e0aa5e23fec9a8b3979d61a73b9eb414ee9a27ca6.
-That’s a sha512 hash. I’m thinking, why don’t we try rockyou.txt? We can just sha512 each entry, send it, and see if we get a response with a content length higher than 0. That failed though.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-01-10 00:00:00 +0000 UTC'>January 10, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu broken-login Writeup" href="https://irinasusca.github.io/writeup-blog/posts/brokenlogin-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

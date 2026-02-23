@@ -24,5 +24,16 @@
 &lt;p&gt;This is literally it. All of it.&lt;/p&gt;
 &lt;p&gt;It allocates a rwx memory region of 559 bytes with 0.&lt;/p&gt;</description>
     </item>
+    <item>
+      <title>Mobile rev</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/mobile/</link>
+      <pubDate>Thu, 08 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/mobile/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;Since these mobile reverse engineering challs have &lt;em&gt;really&lt;/em&gt; gained traction from what I&amp;rsquo;ve seen, and since I only ever tried one challenge on my Windows machine before, I think it&amp;rsquo;s time to set everything up and write down some notes, since rocsc is tomorrow and I&amp;rsquo;d like to at least pretend to be prepared for this.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;set-up&#34;&gt;Set up&lt;/h2&gt;
+&lt;p&gt;I stumbled upon these wonderful &lt;a href=&#34;https://book.jorianwoltjer.com/mobile/setup&#34;&gt;docs here&lt;/a&gt;. I will be installing this on my main ubuntu machine and that&amp;rsquo;s what I recommend. And don&amp;rsquo;t forget to install apktool from their &lt;a href=&#34;https://apktool.org/docs/install/&#34;&gt;docs&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
   </channel>
 </rss>
