@@ -183,7 +183,7 @@ p.interactive()
 
 ## directory
 
-This one was also particularly interesting, but I didn't really understand how the stack layout looked properly, and I'll explain why in a minute.
+This one was also pretty nice, but I didn't really understand how the stack layout looked properly, and I'll explain why in a minute.
 
 We had a menu, with options, out of which are interesting:
 
