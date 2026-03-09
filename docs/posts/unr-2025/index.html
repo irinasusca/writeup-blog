@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Unbreakable 2025 | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="ctf">
+<meta name="description" content="I didn&rsquo;t participate in this edition but as a way to prepare for the 2026 edition Unbreakable I decided to try solving the last edition&rsquo;s challenges by myself.
+And another note, these are only what I could find still lying around on CyberEdu, a lot of the challenges I just couldn&rsquo;t find.
+Gambling Habbits
+We get an image from a video game I identifies as DayZ, through reverse image search, on the map of Chernarus.
+From the image it looks like the house is near some powerlines and rails, and near a forest.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/unr-2025/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/unr-2025/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/unr-2025/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Unbreakable 2025">
+  <meta property="og:description" content="I didn’t participate in this edition but as a way to prepare for the 2026 edition Unbreakable I decided to try solving the last edition’s challenges by myself.
+And another note, these are only what I could find still lying around on CyberEdu, a lot of the challenges I just couldn’t find.
+Gambling Habbits We get an image from a video game I identifies as DayZ, through reverse image search, on the map of Chernarus. From the image it looks like the house is near some powerlines and rails, and near a forest.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-03-04T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-03-04T00:00:00+00:00">
+    <meta property="article:tag" content="Ctf">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Unbreakable 2025">
+<meta name="twitter:description" content="I didn&rsquo;t participate in this edition but as a way to prepare for the 2026 edition Unbreakable I decided to try solving the last edition&rsquo;s challenges by myself.
+And another note, these are only what I could find still lying around on CyberEdu, a lot of the challenges I just couldn&rsquo;t find.
+Gambling Habbits
+We get an image from a video game I identifies as DayZ, through reverse image search, on the map of Chernarus.
+From the image it looks like the house is near some powerlines and rails, and near a forest.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Unbreakable 2025",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/unr-2025/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Unbreakable 2025",
+  "name": "Unbreakable 2025",
+  "description": "I didn\u0026rsquo;t participate in this edition but as a way to prepare for the 2026 edition Unbreakable I decided to try solving the last edition\u0026rsquo;s challenges by myself.\nAnd another note, these are only what I could find still lying around on CyberEdu, a lot of the challenges I just couldn\u0026rsquo;t find.\nGambling Habbits We get an image from a video game I identifies as DayZ, through reverse image search, on the map of Chernarus. From the image it looks like the house is near some powerlines and rails, and near a forest.\n",
+  "keywords": [
+    "ctf"
+  ],
+  "articleBody": "I didn’t participate in this edition but as a way to prepare for the 2026 edition Unbreakable I decided to try solving the last edition’s challenges by myself.\nAnd another note, these are only what I could find still lying around on CyberEdu, a lot of the challenges I just couldn’t find.\nGambling Habbits We get an image from a video game I identifies as DayZ, through reverse image search, on the map of Chernarus. From the image it looks like the house is near some powerlines and rails, and near a forest.\nI looked for types of houses in this game and identified it as a land_house_2w02.\nAll that’s left now is finding one near a forest, railway and powerline. And it took me a bit to realize, since maps coordinates have two types, xxxx.xx and x.xx, I had to find an online map with the required format.\nTook me a while but I finally found it (after trying 30 different houses) here. The coordinates were Dobroye(1.29:0.03)NE and the flag was CTF{6acfb96047869efed819b66c2bab15565698d8295ca78d7d4859a94873dcc5ce}.\nSilent beacon Network challenge with bluetooth packets! I did some recon and found this amazing source. This gave me a bit of context into what’s happening and I investigated the sbc route.\nI ran the command tshark -r capture.pcap -d \"btl2cap.cid==0x0043,bta2dp\" -T json -x \u003e data.json as instructed.\nThe problem though, was this weird pattern thing that was happening in the sbc_raw. . So I started inspecting the pcap further packet by packet and found some interesting OBEX put protocol transmissions, which is apparently related to the FTP, more exactly a way to upload files. And since the file has a name, ttsmaker-file-2025-4-10-13-59-35.mp3, this makes the whole thing more interesting.\nI wanted to take the values of the obex bodies and then treat them as hex somehow. So I did a tshark -r capture.pcap -T fields -e \"obex.header.value.byte_sequence\" -Y \"obex.opcode==0x02\" | grep -v \"^$\" \u003e bytes.hex to extract the content.\nThen, to achieve my grand idea, I used this command: cat bytes.hex | tr -d '\\n' | xxd -r -p \u003e flag.mp3. This removed the newlines between packet bodies, then used xxd reverse (turn hex into binary, and the -p was just a plain hex format, without offsets).\nI am so mad because since I was using headphones my stupid kali machine didn’t play audio and I thought I just didn’t solve the challenge, since I couldn’t hear anything, so I spent another full hour trying a bunch of different shit, but that was indeed enough to solve it.\nI still ended up trying to use an audio transcriber, and it worked - turboai. The flag was ctf{32faf5270d2ac7382047ac3864712cd8cb5b8999511a59a7c5cb5822e0805b91}, after turning the output from the audio transcript to lowercase and adding the curly brackets.\nog-jail The hint says just write HELP but the server just replies “Oh no, you need help”… trying something like print(1) gives us this strange error:\nI looked it up on google and I found this Stack Overflow conversation:\nAnd sending it as a string works. But I’m pretty sure it’s not what I was supposed to do.\nI also inspected the source, and an empty message by us would have given us “Invalid input, HELP or SOURCE for more information”. And SOURCE would have given the b64 source code. The blacklist was just ['getattr','eval','lambda'].\nSo to understand why this works is to look into literal_eval: it’s like a safety measure for eval that doesn’t allow us to execute any commands, just send in strings, numbers, lists and so on. If it detects any function calling business, it throws an error.\nSo us sending a python command would crash there, as you saw. And what it returns is the corresponding python value for it.\nAnd doing literal_eval('\"hello\"') just returns the string 'hello', since it’s a string, so that’s valid, right? That’s what’s stored in parsed and then executed inside eval as a parameter. So that’s why the exploit worked.\nThe flag was ctf{97829f135832f37a4b3d6176227cf6b96d481d543e6051c0087f24c1cd0881ed}.\n",
+  "wordCount" : "659",
+  "inLanguage": "en",
+  "datePublished": "2026-03-04T00:00:00Z",
+  "dateModified": "2026-03-04T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/unr-2025/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Unbreakable 2025
+    </h1>
+    <div class="post-meta"><span title='2026-03-04 00:00:00 +0000 UTC'>March 4, 2026</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#gambling-habbits" aria-label="Gambling Habbits">Gambling Habbits</a></li>
+                <li>
+                    <a href="#silent-beacon" aria-label="Silent beacon">Silent beacon</a></li>
+                <li>
+                    <a href="#og-jail" aria-label="og-jail">og-jail</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>I didn&rsquo;t participate in this edition but as a way to prepare for the 2026 edition Unbreakable I decided to try solving the last edition&rsquo;s challenges by myself.</p>
+<p>And another note, these are only what I could find still lying around on CyberEdu, a lot of the challenges I just couldn&rsquo;t find.</p>
+<h2 id="gambling-habbits">Gambling Habbits<a hidden class="anchor" aria-hidden="true" href="#gambling-habbits">#</a></h2>
+<p>We get an image from a video game I identifies as DayZ, through reverse image search, on the map of Chernarus.
+From the image it looks like the house is near some powerlines and rails, and near a forest.</p>
+<p>I looked for types of houses in this game and identified it as a <a href="https://dayz.fandom.com/wiki/Houses?file=Land_House_2W02.png">land_house_2w02</a>.</p>
+<p>All that&rsquo;s left now is finding one near a forest, railway and powerline. And it took me a bit to realize, since maps coordinates have two types, xxxx.xx and x.xx, I had to find an online map with the required format.</p>
+<p>Took me a while but I finally found it (after trying 30 different houses) <a href="https://dayz.xam.nu/#10665.00;13860.00;2">here</a>. The coordinates were <code>Dobroye(1.29:0.03)NE</code> and the flag was <code>CTF{6acfb96047869efed819b66c2bab15565698d8295ca78d7d4859a94873dcc5ce}</code>.</p>
+<h2 id="silent-beacon">Silent beacon<a hidden class="anchor" aria-hidden="true" href="#silent-beacon">#</a></h2>
+<p>Network challenge with bluetooth packets! I did some recon and found this <a href="https://www.botanica.software/blog/unraveling-the-bluetooth-enigma-extracting-the-flag-from-bsides-tlv-2022-ctf">amazing source</a>. This gave me a bit of context into what&rsquo;s happening and I investigated the sbc route.</p>
+<p>I ran the command <code>tshark -r capture.pcap -d &quot;btl2cap.cid==0x0043,bta2dp&quot; -T json -x &gt; data.json</code> as instructed.</p>
+<p>The problem though, was this weird pattern thing that was happening in the sbc_raw.
+<img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/unr-2025/sbc_raw.png#center">. So I started inspecting the pcap further packet by packet and found some interesting OBEX put protocol transmissions, which is apparently related to the FTP, more exactly a way to upload files. And since the file has a name, <code>ttsmaker-file-2025-4-10-13-59-35.mp3</code>, this makes the whole thing more interesting.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/unr-2025/obex.png#center"></p>
+<p>I wanted to take the values of the obex bodies and then treat them as hex somehow. So I did a <code>tshark -r capture.pcap -T fields -e &quot;obex.header.value.byte_sequence&quot; -Y &quot;obex.opcode==0x02&quot; | grep -v &quot;^$&quot; &gt; bytes.hex</code> to extract the content.</p>
+<p>Then, to achieve my grand idea, I used this command: <code>cat bytes.hex | tr -d '\n' | xxd -r -p &gt; flag.mp3</code>. This removed the newlines between packet bodies, then used xxd reverse (turn hex into binary, and the <code>-p</code> was just a plain hex format, without offsets).</p>
+<p>I am so mad because since I was using headphones my stupid kali machine didn&rsquo;t play audio and I thought I just didn&rsquo;t solve the challenge, since I couldn&rsquo;t hear anything, so I spent another full hour trying a bunch of different shit, but that <em>was</em> indeed enough to solve it.</p>
+<p>I still ended up trying to use an audio transcriber, and it worked - <a href="https://turboscribe.ai/transcript/6683341847105292515/flag">turboai</a>. The flag was <code>ctf{32faf5270d2ac7382047ac3864712cd8cb5b8999511a59a7c5cb5822e0805b91}</code>, after turning the output from the audio transcript to lowercase and adding the curly brackets.</p>
+<h2 id="og-jail">og-jail<a hidden class="anchor" aria-hidden="true" href="#og-jail">#</a></h2>
+<p>The hint says just write HELP but the server just replies &ldquo;Oh no, you need help&rdquo;&hellip; trying something like <code>print(1)</code> gives us this strange error:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/unr-2025/jail1.png#center"></p>
+<p>I looked it up on google and I found this Stack Overflow conversation:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/unr-2025/jail2.png#center"></p>
+<p>And sending it as a string works. But I&rsquo;m pretty sure it&rsquo;s not what I was supposed to do.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/unr-2025/jail3.png#center"></p>
+<p>I also inspected the source, and an empty message by us would have given us &ldquo;Invalid input, HELP or SOURCE for more information&rdquo;. And SOURCE would have given the b64 source code. The blacklist was just <code>['getattr','eval','lambda']</code>.</p>
+<p>So to understand why this works is to look into <code>literal_eval</code>: it&rsquo;s like a safety measure for <code>eval</code> that doesn&rsquo;t allow us to execute any commands, just send in strings, numbers, lists and so on. If it detects any function calling business, it throws an error.</p>
+<p>So us sending a python command would crash there, as you saw. And what it returns is the corresponding python value for it.</p>
+<p>And doing <code>literal_eval('&quot;hello&quot;')</code> just returns the string <code>'hello'</code>, since it&rsquo;s a string, so that&rsquo;s valid, right? That&rsquo;s what&rsquo;s stored in <code>parsed</code> and then executed inside <code>eval</code> as a parameter. So that&rsquo;s why the exploit worked.</p>
+<p>The flag was <code>ctf{97829f135832f37a4b3d6176227cf6b96d481d543e6051c0087f24c1cd0881ed}</code>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/ctf/">Ctf</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

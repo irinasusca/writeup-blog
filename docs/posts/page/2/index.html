@@ -152,6 +152,70 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu universe Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview What is the technique name? What is the flag?
+I took a bunch of images with all the steps while solving this challenge, so I’ll just let those speak for me. (Also, for the stereogram - stegsolve):
+sed &#39;s/%20/\n/g&#39; part2.txt -i
+Felt really smart for figuring out it was b32.
+Here is that stegsolve stereogram solver I mentioned.
+And the full flag is ctf{6da4a51e2ee5437bece4699edf7728ae26e6684abe8711b85b034902a920a775}!
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-10 00:00:00 +0000 UTC'>February 10, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu universe Writeup" href="https://irinasusca.github.io/writeup-blog/posts/universe-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu usualtraffic Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Just normal network traffic. Or isn’t it?
+The correct way to phrase it would have been Or is it?, because the affirmation before isn’t a negation. Or isn’t it?
+I noticed something weird following a TCP stream, at the last 4 bytes of each BGP update message packet.
+The following command: tshark -Y &#39;tcp.stream==1&amp;&amp;bgp.type==2&amp;&amp;ip.src==10.10.10.251&#39; -r traffic.pcapng -x | grep -o &#39;\.d ....$&#39; | grep -o &#39; ....$&#39; | tr -d &#39;\n&#39; outputs Hell o Ro uter 1!.H ere is t he v ecto r: 8 BF46 C25D 9BAD 98ED 8EAE 6C1F 7AD2 D04. This is my s ecre t: u WyYT CYqB Ty9a fI69 to3e K0Sc CA3S lPDE zBsW BnR9 D8Ro 7aIO qihG MPXw u/Z&#43; HLn..
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-06 00:00:00 +0000 UTC'>February 6, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu usualtraffic Writeup" href="https://irinasusca.github.io/writeup-blog/posts/usualtraffic-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu cross-or-zero Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Can you find the key and the flag? I bet. It is not an encryption. It is ZERO.
+The code we’re given is a perfectly normal string xor alg (I found one on Medium):
+The challenge actually gives us a big hint as to what the key is (ZERO). Yeah, it’s literally “0”. I converted the base64 to bytes to hex, and used it in an online XOR calculator with the ASCII for “0”.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-05 00:00:00 +0000 UTC'>February 5, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu cross-or-zero Writeup" href="https://irinasusca.github.io/writeup-blog/posts/crossorzero-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu east-grandma Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Investigate the wants of the most expensive club on the east coast.
+We receive a picture called camashadefortza.jpg which we can extract a zip file from using binwalk -Mve --dd=&#34;.*&#34;. The zip file is encrypted, and of 7z format, so we can try using john the ripper, I guess.
+For that we need to prep the format, but zip2john won’t work, since this is a 7z. So let’s grab a tool for that.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-05 00:00:00 +0000 UTC'>February 5, 2026</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu east-grandma Writeup" href="https://irinasusca.github.io/writeup-blog/posts/eastgrandma-writeup/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu packet-snatchers Writeup
     </h2>
   </header>
@@ -246,63 +310,6 @@ Identifying the vulnerabilities The script, decompiled:
   </div>
   <footer class="entry-footer"><span title='2026-02-02 00:00:00 +0000 UTC'>February 2, 2026</span></footer>
   <a class="entry-link" aria-label="post link to CyberEdu dumb-discord Writeup" href="https://irinasusca.github.io/writeup-blog/posts/dumbdiscord-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu formula1 Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Only a champion can win this race. Enter the secret pit stop and claim your flag!
-Identifying the vulnerabilities We’re confronted with a login page, with two fields, Only for F1 champions. Enter your first name and pit code to start your engine. Entering a random username and random password would give an Invalid username error, but sending max (for Max Verstappen) would give an Invalid pit code.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-02-02 00:00:00 +0000 UTC'>February 2, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu formula1 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/formula1-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Wireshark, tshark &amp; sorting
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Why Since this is, sadly, something that needs to be done in order to score points in ctfs, I’m going to cover some things that I feel are important in this category.
-I have done quite a few forensics challenges, but I never really mastered grep and tshark to their full potential. And I forgot most of my Wireshark expertise from last year, so I’ll include what I feel is important or non-intuitive about that as well.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-02-01 00:00:00 +0000 UTC'>February 1, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to Wireshark, tshark & sorting" href="https://irinasusca.github.io/writeup-blog/posts/wireshark/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu imagine-that Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>This challenge is part of one of the Unbreakable python labs, and I decided to solve the challenge myself instead of just reading about it. And since it’s pwn, should be fun!
-Challenge overview Imagine that we are using socat for this one.
-We get a server to connect to, with socat, and we’re prompted to give a starting point twice. This however refers to the starting point first and then the ending point, and it prints out the bytes between the two offsets, then asks us for a password. We can only enter numbers from 1 to 10.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-01-31 00:00:00 +0000 UTC'>January 31, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu imagine-that Writeup" href="https://irinasusca.github.io/writeup-blog/posts/imaginethat-writeup/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu digikey Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview This challenge contains the extracted ELF data from a compiled atTiny85 avr chip The device was automatically being detected as a keyboard and inputs in a loop the ctf flag as string.
-We receive an Atmel AVR 8-bit file, which is the code for a microcontroller, so we can’t run it locally on our kali (since it’s COMPILED). So we need a decompiler, but of course IDA Pro is too expensive and ghidra looks absolutely awful, so we have to look for one online.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-01-30 00:00:00 +0000 UTC'>January 30, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu digikey Writeup" href="https://irinasusca.github.io/writeup-blog/posts/digikey-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
