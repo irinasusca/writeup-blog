@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
 <title>Nullctf 2025 Sketchy Writeup | Irina&#39;s CTF Writeups</title>
-<meta name="keywords" content="pwn, buffer-overflow, Ret2libc, one-gadget">
+<meta name="keywords" content="pwn, buffer-overflow, ret2libc">
 <meta name="description" content="Challenge overview
 This challenge was a part of the NullCTF 2025, made by tudor, with the description sketchy stuff going on here i&rsquo;m scared.
 Upon checking, we&rsquo;re dealing with NX, PIE and ALSR and no canary.
@@ -15,7 +15,7 @@ Let&rsquo;s take a look at the binary. We have two interesting functions, main a
 Inside main, firstly, we are given the address of main (located at PIE address &#43; 0x1265), so we don&rsquo;t need to bother with leaking it. Then, a pointer s gets assigned the string quite interesting stuff you&rsquo;re saying.">
 <meta name="author" content="">
 <link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/sketchy-writeup/">
-<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
@@ -90,7 +90,6 @@ Inside main, firstly, we are given the address of main (located at PIE address &
     <meta property="article:tag" content="Pwn">
     <meta property="article:tag" content="Buffer-Overflow">
     <meta property="article:tag" content="Ret2libc">
-    <meta property="article:tag" content="One-Gadget">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nullctf 2025 Sketchy Writeup">
 <meta name="twitter:description" content="Challenge overview
@@ -129,7 +128,7 @@ Inside main, firstly, we are given the address of main (located at PIE address &
   "name": "Nullctf 2025 Sketchy Writeup",
   "description": "Challenge overview This challenge was a part of the NullCTF 2025, made by tudor, with the description sketchy stuff going on here i\u0026rsquo;m scared.\nUpon checking, we\u0026rsquo;re dealing with NX, PIE and ALSR and no canary.\nLet\u0026rsquo;s take a look at the binary. We have two interesting functions, main and handler.\nInside main, firstly, we are given the address of main (located at PIE address + 0x1265), so we don\u0026rsquo;t need to bother with leaking it. Then, a pointer s gets assigned the string quite interesting stuff you\u0026rsquo;re saying.\n",
   "keywords": [
-    "pwn", "buffer-overflow", "Ret2libc", "one-gadget"
+    "pwn", "buffer-overflow", "ret2libc"
   ],
   "articleBody": "Challenge overview This challenge was a part of the NullCTF 2025, made by tudor, with the description sketchy stuff going on here i’m scared.\nUpon checking, we’re dealing with NX, PIE and ALSR and no canary.\nLet’s take a look at the binary. We have two interesting functions, main and handler.\nInside main, firstly, we are given the address of main (located at PIE address + 0x1265), so we don’t need to bother with leaking it. Then, a pointer s gets assigned the string quite interesting stuff you’re saying.\nThen, we get to write 58 bytes into buf, which, QWORD buf[6], stores 48 bytes. So we have a 10 byte buffer overflow.\nNext, buf is searched for its first \\n and modifies it into a null byte. Afterwards, it’s checked whether the string inside buf is longer than 50 bytes, which calls a sys_exit.\nThen, puts(s) is called, and we get to write a long hexadecimal address in v6 via scanf. If the address is before printf’s address, we get to write 5 bytes in the address we chose for v6 with fgets.\nWhat handler does is just start a 100 second timer when connection is established, and when the 100 seconds pass, call puts(\"challenge timed out\") and sys_exit.\nThe exploit First of all, let’s calculate the base of our PIE.\np.recvuntil(b': ') main = int(p.recv(14), 16) So since the next move is probably leaking libc, it would be great to somehow make that puts(s) turn into a puts(putsgot). Our best bet is the 10 byte buffer overflow we have at our disposal, our of which the v8 eats 8, so that leaves us with 2 bytes.\nThe string quite interesting stuff you’re saying is located in the .rodata, as is the puts got. Since we get to overwrite only two of the LSB in s, that means the distance between the string and got isn’t that far.\nBasically, since s is a pointer to a .rodata address, we can modify it to point to another address in .rodata as long as they share everything except the last 2 bytes we can modify.\nThe only problem for now is the buffer overflow verification after that; but since it only checks for the first newline, and it turns it into a null byte aka string terminator, we can trick it into thinking our string ends early by adding a random newline inside our payload.\nHere, we can see by modifying the last byte to 0x20, we end up printing another string in the .rodata. Now let’s actually calculate the PIE offset to puts got and get that libc puts_IO!\nputsgot = PIE_base + elf.got['puts'] #we can modify the last two bytes -\u003e since the dif to got is only two bytes we get got payload = (b'\\x00'*16+b'\\n'+b'\\x00'*39 + #padding to *p p64(putsgot)[:2] ) Great! Now we can parse it and calculate our actual libc base.\nleak = p.recvn(6) puts_leak = u64(leak.ljust(8, b'\\x00')) print(hex(puts_leak)) #local puts_offset = 0x585a0 system_offset = 0x2b110 #2.40 puts_offset=0x080be0 system_offset=0x51c30 #apparently it was 2.28 puts_offset=0x87be0 I struggled a little with finding the correct version of libc, I assumed it was 2.39 for a long time but apparently it was 2.28.\nThe secret to actually solving this challenge was overwriting the right thing. Because of all the sys_exit(0) calls everywhere, and since after our v6 overwrite no function was actually being called, we can think of two things: first, we can probably use our handler function, which calls puts, and second, overwrite the puts got in a way that we can pop a shell.\nMy first idea was overwriting puts got with system, but the problem was the argument of the function would be challenge timed out, not /bin/sh. Same thing with execve. The solution here was using a one_gadget. We can look for one in our given libc.so.6 like so:\nThe one I went with was 0xef4ce, since it seemed like the most promising. So since it’s basically like a gadget except for libc, the actual address of it would be libc base + one_gadget.\nAlright, but after modifying the address with our gadget, the binary immediately calls sys_exit and we don’t get that puts caused by the time out, so what can we do?\nWell, since the program will wait until our full fgets input to actually call the sys_exit in main, we can do both at the same time.\nBy this I mean that if we only give some of the 5 bytes in fgets, let’s say 3 is enough, and then we wait until the alarm starts, it will end our fgets early, make that overwrite with the 3 bytes we gave it (should be enough, since puts and our gadget share the same first 5 bytes), and call puts (now our shell).\naddr_putsgot = hex(putsgot)[2:].encode() print(addr_putsgot) p.sendline(addr_putsgot) execve = 0xef4ce #execve = 0xef52b one_gadget = libc + execve low3 = p64(one_gadget)[:3] p.send(low3) #now just wait for the alarm After waiting 100 seconds, we pop a shell, and we get the flag!\nAs always, the full code can be found on my GitHub here.\n",
   "wordCount" : "849",
@@ -155,7 +154,9 @@ Inside main, firstly, we are given the address of main (located at PIE address &
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -206,7 +207,7 @@ Inside main, firstly, we are given the address of main (located at PIE address &
     <h1 class="post-title entry-hint-parent">
       Nullctf 2025 Sketchy Writeup
     </h1>
-    <div class="post-meta"><span title='2025-12-11 00:00:00 +0000 UTC'>December 11, 2025</span>
+    <div class="post-meta"><span title='2025-12-11 00:00:00 +0000 UTC'>December 11, 2025</span>&nbsp;·&nbsp;<span>4 min</span>
 
 </div>
   </header> <div class="toc">
@@ -309,7 +310,6 @@ Inside main, firstly, we are given the address of main (located at PIE address &
       <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
       <li><a href="https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/">Buffer-Overflow</a></li>
       <li><a href="https://irinasusca.github.io/writeup-blog/tags/ret2libc/">Ret2libc</a></li>
-      <li><a href="https://irinasusca.github.io/writeup-blog/tags/one-gadget/">One-Gadget</a></li>
     </ul>
   </footer>
 </article>

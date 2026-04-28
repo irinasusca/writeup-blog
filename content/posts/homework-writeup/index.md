@@ -3,7 +3,7 @@ date = '2025-11-27T21:09:36+02:00'
 draft = false
 title = 'Pico Homework Writeup'
 ShowToc = true
-tags = ["picoCTF", "pwn", "buffer-overflow", "PIE"]
+tags = ["picoCTF", "pwn", "buffer-overflow"]
 +++
 
 ## Challenge overview

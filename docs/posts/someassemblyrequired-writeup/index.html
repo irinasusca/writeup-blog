@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Pico Some Assembly Required 1, 2, 3, 4 Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="picoCTF, web">
+<meta name="description" content="Some Assembly Required 1
+Looking at ./G82XCw5CX3.js, we can see some strange wasm file getting imported, ./JIFxzHyW8W. I navigated to the directory and it immediately got downloaded.
+Note - just running strings on the file was fine too, I realised a little later, there wasn&rsquo;t necessarily any need to decompile the wasm.
+I decompiled it with Ghidra (more on that in this post I made).
+We can see in the check_flag function it&rsquo;s getting checked against the memory at 0x400, which just so happens to be the flag.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/someassemblyrequired-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/someassemblyrequired-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/someassemblyrequired-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Pico Some Assembly Required 1, 2, 3, 4 Writeup">
+  <meta property="og:description" content="Some Assembly Required 1 Looking at ./G82XCw5CX3.js, we can see some strange wasm file getting imported, ./JIFxzHyW8W. I navigated to the directory and it immediately got downloaded.
+Note - just running strings on the file was fine too, I realised a little later, there wasn’t necessarily any need to decompile the wasm.
+I decompiled it with Ghidra (more on that in this post I made).
+We can see in the check_flag function it’s getting checked against the memory at 0x400, which just so happens to be the flag.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-04-02T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-04-02T00:00:00+00:00">
+    <meta property="article:tag" content="PicoCTF">
+    <meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pico Some Assembly Required 1, 2, 3, 4 Writeup">
+<meta name="twitter:description" content="Some Assembly Required 1
+Looking at ./G82XCw5CX3.js, we can see some strange wasm file getting imported, ./JIFxzHyW8W. I navigated to the directory and it immediately got downloaded.
+Note - just running strings on the file was fine too, I realised a little later, there wasn&rsquo;t necessarily any need to decompile the wasm.
+I decompiled it with Ghidra (more on that in this post I made).
+We can see in the check_flag function it&rsquo;s getting checked against the memory at 0x400, which just so happens to be the flag.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Pico Some Assembly Required 1, 2, 3, 4 Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/someassemblyrequired-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Pico Some Assembly Required 1, 2, 3, 4 Writeup",
+  "name": "Pico Some Assembly Required 1, 2, 3, 4 Writeup",
+  "description": "Some Assembly Required 1 Looking at ./G82XCw5CX3.js, we can see some strange wasm file getting imported, ./JIFxzHyW8W. I navigated to the directory and it immediately got downloaded.\nNote - just running strings on the file was fine too, I realised a little later, there wasn\u0026rsquo;t necessarily any need to decompile the wasm.\nI decompiled it with Ghidra (more on that in this post I made).\nWe can see in the check_flag function it\u0026rsquo;s getting checked against the memory at 0x400, which just so happens to be the flag.\n",
+  "keywords": [
+    "picoCTF", "web"
+  ],
+  "articleBody": "Some Assembly Required 1 Looking at ./G82XCw5CX3.js, we can see some strange wasm file getting imported, ./JIFxzHyW8W. I navigated to the directory and it immediately got downloaded.\nNote - just running strings on the file was fine too, I realised a little later, there wasn’t necessarily any need to decompile the wasm.\nI decompiled it with Ghidra (more on that in this post I made).\nWe can see in the check_flag function it’s getting checked against the memory at 0x400, which just so happens to be the flag.\nI ran this Ghidra Jython script to print the memory starting at 0x400 and we can copy the flag:\nSome Assembly Required 2 For this one, I tried to deobfuscate the code myself, and it looked a little like this:\nlet exports ;(async () =\u003e { let wasmFile = await fetch(\"./aD8SvhyVkb\"), wasm = await WebAssembly.instantiate(await wasmFile.arrayBuffer()), wasmResult = wasm[\"instance\"] exports = wasmResult[exports] })() function onButtonPress() { let input = document[getElemendById](input)[value] for (let i = 0; i \u003c input.length; i++) { exports[copy_char](input[charCodeAt](i), i) } exports.copy_char(0, input[length]) exports[check_flag]() == 1 ? (document.getElementById(result)[innerHTML] = \"Correct!\") : (document[getElementById](result).innerHTML = \"Incorrect!\") } This time, the string in check_flag was xakgK\\Nsn08m?80jj:i;j:m0?klnmiljinu. Taking a look at copy_char, it looks like it was xor-ing each character with 8.\nWe just xor that with 8 again through cyberchef and we get the flag, picoCTF{f80e708bb2a3b2e87cdfe4a9206adbaf}.\nSome Assembly Required 3 I was trying to tick off everything in the medium web category, and I thought to look in the hard one to see if there are any more continuations to this, and guess what! Now let’s take a look and see how hard these really are.\nI used this deobfuscator again and replaced the obfuscated hex name variables with what they really were, this time by running the js code and just printing it instead of calculating it myself:\nfunction onButtonPress() { let doc = document[getElemendById](input)[value] for (let i = 0; i \u003c doc[length]; i++) { exports[copy_char](doc.charCodeAt(i), i) } exports[copy_char](0, doc[length) exports[check_flag]() == 1 ? (document[getElemendById](result)[innerHTML] = \"Correct!\") : (document[getElemendById](result).innerHTML = \"Incorrect!\") } So, pretty much the exact same thing, with an operation being done on each character. This is what it looked like:\nSo for each character in input[i] we xor it with what’s at address 0x42f - i % 5. That leaves whats in between 0x42B and 0x42F.\nI wrote this little script, and using it we get the flag picoCTF{3a09d0a084e8032bf66c5171c4049aff}.\nr1 = 0xf1 r2 = 0xa7 r3 = 0xf0 r4 = 0x07 r5 = 0xed r = [r1, r2, r3, r4, r5] bytes = b\"\\x9dn\\x93\\xc8\\xb2\\xb9A\\x8b\\x94\\x90\\xdd\u003e\\x94\\x97\\x90\\xdd?\\xc4\\xc2\\xc9\\xdd4\\xc2\\xc5\\x97\\xdb1\\x93\\x92\\xc0\\xda6\\x93\\x93\\xc1\\xd9\u003e\\x91\\xc1\\x97\\x90\" print(bytes) i = 0 while(i\u003clen(bytes)): j = 4 - i%5 print(chr(bytes[i]^(r[j])), end=\"\") i=i+1 Some Assembly Required 4 Finally the last one! I looked at the js file and I’m assuming everything is the same as the previous challenge. This time, check_flag got a little more complicated, and it was the one responsible for the char-by-char xor-ing.\nThis time an action is being done after the xor, which is the swap. So we need to do the swap first in our decode script.\nbytes2 = bytearray(b'\\x18j|a\\x118i7\\x1fYyY\u003e\\x1cVc\\rB\\x1d~l9\\x1cZ!]c\\x11\\x00b\\x05IK~a4\\x1cW(\\x0fR') #we need to do this in reverse, so the swap first j = 0 while(j\u003clen(bytes2)): if(j%2==0 and j+1\u003clen(bytes2)): bytes2[j], bytes2[j+1] = bytes2[j+1], bytes2[j] j=j+1 #now the XOR in reverse i = len(bytes2)-1 while(i\u003e=0): bytes2[i] = bytes2[i] ^ 0x14 if(0\u003ci): bytes2[i] = bytes2[i] ^ bytes2[i-1] if(2\u003ci): bytes2[i] = bytes2[i] ^ bytes2[i-3] bytes2[i] = bytes2[i] ^ (i%10) if(i%2==0): bytes2[i] = bytes2[i] ^ 9 else: bytes2[i] = bytes2[i] ^ 8 if(i%3==0): bytes2[i] = bytes2[i] ^ 7 elif(i%3==1): bytes2[i] = bytes2[i] ^ 6 else: bytes2[i] = bytes2[i] ^ 5 i=i-1 print(bytes2.decode('latin-1')) Running this gives us the flag, picoCTF{1c4abb877272112e39233c05ade7abbb}.\n",
+  "wordCount" : "604",
+  "inLanguage": "en",
+  "datePublished": "2026-04-02T00:00:00Z",
+  "dateModified": "2026-04-02T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/someassemblyrequired-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Pico Some Assembly Required 1, 2, 3, 4 Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-04-02 00:00:00 +0000 UTC'>April 2, 2026</span>&nbsp;·&nbsp;<span>3 min</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#some-assembly-required-1" aria-label="Some Assembly Required 1">Some Assembly Required 1</a></li>
+                <li>
+                    <a href="#some-assembly-required-2" aria-label="Some Assembly Required 2">Some Assembly Required 2</a></li>
+                <li>
+                    <a href="#some-assembly-required-3" aria-label="Some Assembly Required 3">Some Assembly Required 3</a></li>
+                <li>
+                    <a href="#some-assembly-required-4" aria-label="Some Assembly Required 4">Some Assembly Required 4</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="some-assembly-required-1">Some Assembly Required 1<a hidden class="anchor" aria-hidden="true" href="#some-assembly-required-1">#</a></h2>
+<p>Looking at <code>./G82XCw5CX3.js</code>, we can see some strange <em>wasm</em> file getting imported, <code>./JIFxzHyW8W</code>. I navigated to the directory and it immediately got downloaded.</p>
+<p><em>Note - just running strings on the file was fine too, I realised a little later, there wasn&rsquo;t necessarily any need to decompile the wasm.</em></p>
+<p>I decompiled it with Ghidra (more on that in <a href="irinasusca.github.io/writeup-blog/posts/wasm/">this post I made</a>).</p>
+<p>We can see in the <code>check_flag</code> function it&rsquo;s getting checked against the memory at <code>0x400</code>, which just so happens to be the flag.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/someassemblyrequired-writeup/flag1.png#center"></p>
+<p>I ran this Ghidra Jython script to print the memory starting at <code>0x400</code> and we can copy the flag:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/someassemblyrequired-writeup/script.png#center"></p>
+<h2 id="some-assembly-required-2">Some Assembly Required 2<a hidden class="anchor" aria-hidden="true" href="#some-assembly-required-2">#</a></h2>
+<p>For this one, I tried to deobfuscate the code myself, and it looked a little like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> <span style="color:#a6e22e">exports</span>
+</span></span><span style="display:flex;"><span>;(<span style="color:#66d9ef">async</span> () =&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">wasmFile</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">fetch</span>(<span style="color:#e6db74">&#34;./aD8SvhyVkb&#34;</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">wasm</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">WebAssembly</span>.<span style="color:#a6e22e">instantiate</span>(<span style="color:#66d9ef">await</span> <span style="color:#a6e22e">wasmFile</span>.<span style="color:#a6e22e">arrayBuffer</span>()),
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">wasmResult</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">wasm</span>[<span style="color:#e6db74">&#34;instance&#34;</span>]
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">wasmResult</span>[<span style="color:#a6e22e">exports</span>]
+</span></span><span style="display:flex;"><span>})()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">onButtonPress</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">input</span> <span style="color:#f92672">=</span> document[<span style="color:#a6e22e">getElemendById</span>](<span style="color:#a6e22e">input</span>)[<span style="color:#a6e22e">value</span>]
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">input</span>.<span style="color:#a6e22e">length</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">exports</span>[<span style="color:#a6e22e">copy_char</span>](<span style="color:#a6e22e">input</span>[<span style="color:#a6e22e">charCodeAt</span>](<span style="color:#a6e22e">i</span>), <span style="color:#a6e22e">i</span>)
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">exports</span>.<span style="color:#a6e22e">copy_char</span>(<span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">input</span>[<span style="color:#a6e22e">length</span>])
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">exports</span>[<span style="color:#a6e22e">check_flag</span>]() <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">?</span> (document.<span style="color:#a6e22e">getElementById</span>(<span style="color:#a6e22e">result</span>)[<span style="color:#a6e22e">innerHTML</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Correct!&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">:</span> (document[<span style="color:#a6e22e">getElementById</span>](<span style="color:#a6e22e">result</span>).<span style="color:#a6e22e">innerHTML</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Incorrect!&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This time, the string in <code>check_flag</code> was <code>xakgK\Nsn08m?80jj:i;j:m0?klnm&lt;i1:8&gt;iljinu</code>. Taking a look at <code>copy_char</code>, it looks like it was xor-ing each character with 8.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/someassemblyrequired-writeup/copychat.png#center"></p>
+<p>We just xor that with 8 again through cyberchef and we get the flag, <code>picoCTF{f80e708bb2a3b2e87cdfe4a9206adbaf}</code>.</p>
+<h2 id="some-assembly-required-3">Some Assembly Required 3<a hidden class="anchor" aria-hidden="true" href="#some-assembly-required-3">#</a></h2>
+<p>I was trying to tick off everything in the medium web category, and I thought to look in the hard one to see if there are any more continuations to this, and guess what! Now let&rsquo;s take a look and see how hard these <em>really</em> are.</p>
+<p>I used <a href="https://deobfuscate.relative.im/">this deobfuscator</a> again and replaced the obfuscated hex name variables with what they really were, this time by running the js code and just printing it instead of calculating it myself:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/someassemblyrequired-writeup/viuh.png#center"></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">onButtonPress</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">doc</span> <span style="color:#f92672">=</span> document[<span style="color:#a6e22e">getElemendById</span>](<span style="color:#a6e22e">input</span>)[<span style="color:#a6e22e">value</span>]
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">doc</span>[<span style="color:#a6e22e">length</span>]; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">exports</span>[<span style="color:#a6e22e">copy_char</span>](<span style="color:#a6e22e">doc</span>.<span style="color:#a6e22e">charCodeAt</span>(<span style="color:#a6e22e">i</span>), <span style="color:#a6e22e">i</span>)
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">exports</span>[<span style="color:#a6e22e">copy_char</span>](<span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">doc</span>[<span style="color:#a6e22e">length</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">exports</span>[<span style="color:#a6e22e">check_flag</span>]() <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">?</span> (document[<span style="color:#a6e22e">getElemendById</span>](<span style="color:#a6e22e">result</span>)[<span style="color:#a6e22e">innerHTML</span>] <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>       <span style="color:#e6db74">&#34;Correct!&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">:</span> (document[<span style="color:#a6e22e">getElemendById</span>](<span style="color:#a6e22e">result</span>).<span style="color:#a6e22e">innerHTML</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Incorrect!&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>So, pretty much the exact same thing, with an operation being done on each character. This is what it looked like:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/someassemblyrequired-writeup/copychar2.png#center"></p>
+<p>So for each character in <code>input[i]</code> we xor it with what&rsquo;s at address <code>0x42f - i % 5</code>. That leaves whats in between <code>0x42B</code> and <code>0x42F</code>.</p>
+<p>I wrote this little script, and using it we get the flag <code>picoCTF{3a09d0a084e8032bf66c5171c4049aff}</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>r1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xf1</span>
+</span></span><span style="display:flex;"><span>r2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xa7</span>
+</span></span><span style="display:flex;"><span>r3 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xf0</span>
+</span></span><span style="display:flex;"><span>r4 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x07</span>
+</span></span><span style="display:flex;"><span>r5 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xed</span>
+</span></span><span style="display:flex;"><span>r <span style="color:#f92672">=</span> [r1, r2, r3, r4, r5]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>bytes <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x9d</span><span style="color:#e6db74">n</span><span style="color:#ae81ff">\x93\xc8\xb2\xb9</span><span style="color:#e6db74">A</span><span style="color:#ae81ff">\x8b\x94\x90\xdd</span><span style="color:#e6db74">&gt;</span><span style="color:#ae81ff">\x94\x97\x90\xdd</span><span style="color:#e6db74">?</span><span style="color:#ae81ff">\xc4\xc2\xc9\xdd</span><span style="color:#e6db74">4</span><span style="color:#ae81ff">\xc2\xc5\x97\xdb</span><span style="color:#e6db74">1</span><span style="color:#ae81ff">\x93\x92\xc0\xda</span><span style="color:#e6db74">6</span><span style="color:#ae81ff">\x93\x93\xc1\xd9</span><span style="color:#e6db74">&gt;</span><span style="color:#ae81ff">\x91\xc1\x97\x90</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(bytes)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span>(i<span style="color:#f92672">&lt;</span>len(bytes)):
+</span></span><span style="display:flex;"><span>    j <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">-</span> i<span style="color:#f92672">%</span><span style="color:#ae81ff">5</span>
+</span></span><span style="display:flex;"><span>    print(chr(bytes[i]<span style="color:#f92672">^</span>(r[j])), end<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>    i<span style="color:#f92672">=</span>i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>
+</span></span></code></pre></div><h2 id="some-assembly-required-4">Some Assembly Required 4<a hidden class="anchor" aria-hidden="true" href="#some-assembly-required-4">#</a></h2>
+<p>Finally the last one! I looked at the js file and I&rsquo;m assuming everything is the same as the previous challenge. This time, <code>check_flag</code> got a little more complicated, and it was the one responsible for the char-by-char xor-ing.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/someassemblyrequired-writeup/checkflag.png#center"></p>
+<p>This time an action is being done after the xor, which is the swap. So we need to do the swap first in our decode script.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>bytes2 <span style="color:#f92672">=</span> bytearray(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x18</span><span style="color:#e6db74">j|a</span><span style="color:#ae81ff">\x11</span><span style="color:#e6db74">8i7</span><span style="color:#ae81ff">\x1f</span><span style="color:#e6db74">YyY&gt;</span><span style="color:#ae81ff">\x1c</span><span style="color:#e6db74">Vc</span><span style="color:#ae81ff">\r</span><span style="color:#e6db74">B</span><span style="color:#ae81ff">\x1d</span><span style="color:#e6db74">~l9</span><span style="color:#ae81ff">\x1c</span><span style="color:#e6db74">Z!]c</span><span style="color:#ae81ff">\x11\x00</span><span style="color:#e6db74">b</span><span style="color:#ae81ff">\x05</span><span style="color:#e6db74">IK~a4</span><span style="color:#ae81ff">\x1c</span><span style="color:#e6db74">W(</span><span style="color:#ae81ff">\x0f</span><span style="color:#e6db74">R&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#we need to do this in reverse, so the swap first</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span>(j<span style="color:#f92672">&lt;</span>len(bytes2)):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span>(j<span style="color:#f92672">%</span><span style="color:#ae81ff">2</span><span style="color:#f92672">==</span><span style="color:#ae81ff">0</span> <span style="color:#f92672">and</span> j<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span><span style="color:#f92672">&lt;</span>len(bytes2)):
+</span></span><span style="display:flex;"><span>        bytes2[j], bytes2[j<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> bytes2[j<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>], bytes2[j]
+</span></span><span style="display:flex;"><span>    j<span style="color:#f92672">=</span>j<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#now the XOR in reverse</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>i <span style="color:#f92672">=</span> len(bytes2)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span>(i<span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">0</span>):
+</span></span><span style="display:flex;"><span>    bytes2[i] <span style="color:#f92672">=</span> bytes2[i] <span style="color:#f92672">^</span> <span style="color:#ae81ff">0x14</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span>(<span style="color:#ae81ff">0</span><span style="color:#f92672">&lt;</span>i):
+</span></span><span style="display:flex;"><span>        bytes2[i] <span style="color:#f92672">=</span> bytes2[i] <span style="color:#f92672">^</span> bytes2[i<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span>(<span style="color:#ae81ff">2</span><span style="color:#f92672">&lt;</span>i):
+</span></span><span style="display:flex;"><span>        bytes2[i] <span style="color:#f92672">=</span> bytes2[i] <span style="color:#f92672">^</span> bytes2[i<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>]
+</span></span><span style="display:flex;"><span>    bytes2[i] <span style="color:#f92672">=</span> bytes2[i] <span style="color:#f92672">^</span> (i<span style="color:#f92672">%</span><span style="color:#ae81ff">10</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span>(i<span style="color:#f92672">%</span><span style="color:#ae81ff">2</span><span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>):
+</span></span><span style="display:flex;"><span>        bytes2[i] <span style="color:#f92672">=</span> bytes2[i] <span style="color:#f92672">^</span> <span style="color:#ae81ff">9</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        bytes2[i] <span style="color:#f92672">=</span> bytes2[i] <span style="color:#f92672">^</span> <span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span>(i<span style="color:#f92672">%</span><span style="color:#ae81ff">3</span><span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>):
+</span></span><span style="display:flex;"><span>        bytes2[i] <span style="color:#f92672">=</span> bytes2[i] <span style="color:#f92672">^</span> <span style="color:#ae81ff">7</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span>(i<span style="color:#f92672">%</span><span style="color:#ae81ff">3</span><span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>):
+</span></span><span style="display:flex;"><span>        bytes2[i] <span style="color:#f92672">=</span> bytes2[i] <span style="color:#f92672">^</span> <span style="color:#ae81ff">6</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        bytes2[i] <span style="color:#f92672">=</span> bytes2[i] <span style="color:#f92672">^</span> <span style="color:#ae81ff">5</span>
+</span></span><span style="display:flex;"><span>    i<span style="color:#f92672">=</span>i<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>print(bytes2<span style="color:#f92672">.</span>decode(<span style="color:#e6db74">&#39;latin-1&#39;</span>))
+</span></span></code></pre></div><p>Running this gives us the flag, <code>picoCTF{1c4abb877272112e39233c05ade7abbb}</code>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/picoctf/">PicoCTF</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/web/">Web</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

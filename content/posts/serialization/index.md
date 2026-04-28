@@ -3,7 +3,7 @@ date = '2026-01-08'
 draft = false
 title = 'Serialization and Deserialization'
 ShowToc = true
-tags = ["Materials", "web"]
+tags = ["Materials"]
 +++
 
 

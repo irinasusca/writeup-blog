@@ -11,7 +11,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="canonical" href="https://irinasusca.github.io/writeup-blog/">
-<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
@@ -100,7 +100,9 @@
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -145,154 +147,175 @@
 </header>
 <main class="main"> 
 
-<article class="post-entry"> 
+
+
+<article class="post-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu formula1 Writeup
+    <h2 class="entry-hint-parent">Pico No FA writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Only a champion can win this race. Enter the secret pit stop and claim your flag!
-Identifying the vulnerabilities We’re confronted with a login page, with two fields, Only for F1 champions. Enter your first name and pit code to start your engine. Entering a random username and random password would give an Invalid username error, but sending max (for Max Verstappen) would give an Invalid pit code.
+    <p>Overview Seems like some data has been leaked! Can you get the flag?
+We’re given a website, its source and a db leak.
+Identifying the vulnerabilities The hashes aren’t salted at all, and just a sha256, so we can quickly crack the admin’s password with hashcat: hashcat -a 0 -m 1400 hashadmin.txt /usr/share/wordlists/rockyou.txt (-a 0 means dictionary attack, and -m 1400 means sha256).
+Then, looking at the source, for the admin user there is also a ‘MFA’ code, which has a 120 second duration, and is a random number from 1000 to 9999. I tried just sending the requests one by one, but it was taking forever, so I tried threads with ThreadPoolExecutor. This was my script:
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-02-02 00:00:00 +0000 UTC'>February 2, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu formula1 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/formula1-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-09 00:00:00 +0000 UTC'>April 9, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico No FA writeup" href="https://irinasusca.github.io/writeup-blog/posts/nofa-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Wireshark, tshark &amp; sorting
+    <h2 class="entry-hint-parent">Pico Cookies &amp; More Cookies &amp; Most Cookies writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Why Since this is, sadly, something that needs to be done in order to score points in ctfs, I’m going to cover some things that I feel are important in this category.
-I have done quite a few forensics challenges, but I never really mastered grep and tshark to their full potential. And I forgot most of my Wireshark expertise from last year, so I’ll include what I feel is important or non-intuitive about that as well.
+    <p>Cookies I’m making a writeup for this because I remember having tried to do this one unsuccessfully a while ago.
+When first logging in, in the request we can see a Cookie: name=-1 being set. Modifying it to name=1 for example doesn’t do much, except getting a That is a cookie! Not very special though… response.
+Setting it to admin just renders the default home page.
+There are two POST pages, /check and /search. The only time I saw /check get requested was when my search input was ‘chocolate chip’; that’s when the cookie was set to 1 by their side. Then I noticed ‘snickerdoodle’ was setting the Cookie to 0.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-02-01 00:00:00 +0000 UTC'>February 1, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to Wireshark, tshark & sorting" href="https://irinasusca.github.io/writeup-blog/posts/wireshark/"></a>
+  <footer class="entry-footer"><span title='2026-04-03 00:00:00 +0000 UTC'>April 3, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Cookies & More Cookies & Most Cookies writeup" href="https://irinasusca.github.io/writeup-blog/posts/picocookies-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu imagine-that Writeup
+    <h2 class="entry-hint-parent">Pico Some Assembly Required 1, 2, 3, 4 Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>This challenge is part of one of the Unbreakable python labs, and I decided to solve the challenge myself instead of just reading about it. And since it’s pwn, should be fun!
-Challenge overview Imagine that we are using socat for this one.
-We get a server to connect to, with socat, and we’re prompted to give a starting point twice. This however refers to the starting point first and then the ending point, and it prints out the bytes between the two offsets, then asks us for a password. We can only enter numbers from 1 to 10.
+    <p>Some Assembly Required 1 Looking at ./G82XCw5CX3.js, we can see some strange wasm file getting imported, ./JIFxzHyW8W. I navigated to the directory and it immediately got downloaded.
+Note - just running strings on the file was fine too, I realised a little later, there wasn’t necessarily any need to decompile the wasm.
+I decompiled it with Ghidra (more on that in this post I made).
+We can see in the check_flag function it’s getting checked against the memory at 0x400, which just so happens to be the flag.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-31 00:00:00 +0000 UTC'>January 31, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu imagine-that Writeup" href="https://irinasusca.github.io/writeup-blog/posts/imaginethat-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-02 00:00:00 +0000 UTC'>April 2, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Some Assembly Required 1, 2, 3, 4 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/someassemblyrequired-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu digikey Writeup
+    <h2 class="entry-hint-parent">Pico Client-side-again Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview This challenge contains the extracted ELF data from a compiled atTiny85 avr chip The device was automatically being detected as a keyboard and inputs in a loop the ctf flag as string.
-We receive an Atmel AVR 8-bit file, which is the code for a microcontroller, so we can’t run it locally on our kali (since it’s COMPILED). So we need a decompiler, but of course IDA Pro is too expensive and ghidra looks absolutely awful, so we have to look for one online.
+    <p>Challenge overview Can you break into this super secure portal?
+We need to input some sort of password, and we have access to the obfuscated js code.
+Identifying the vulnerabilities I tried deobfuscating with deobfuscate.io but that didn’t really work.
+The code looks like so:
+var _0x5a46 = [&#34;daf93}&#34;, &#34;_again_4&#34;, &#34;this&#34;, &#34;Password Verified&#34;, &#34;Incorrect password&#34;, &#34;getElementById&#34;, &#34;value&#34;, &#34;substring&#34;, &#34;picoCTF{&#34;, &#34;not_this&#34;]; (function (_0x4bd822, _0x2bd6f7) { var _0xb4bdb3 = function (_0x1d68f6) { while (--_0x1d68f6) { _0x4bd822.push(_0x4bd822.shift()); } }; _0xb4bdb3(&#43;&#43;_0x2bd6f7); }(_0x5a46, 435)); var _0x4b5b = function (_0x2d8f05, _0x4b81bb) { _0x2d8f05 = _0x2d8f05 - 0; var _0x4d74cb = _0x5a46[_0x2d8f05]; return _0x4d74cb; }; function verify() { checkpass = document[_0x4b5b(&#34;0x0&#34;)](&#34;pass&#34;)[_0x4b5b(&#34;0x1&#34;)]; split = 4; if (checkpass[_0x4b5b(&#34;0x2&#34;)](0, split * 2) == _0x4b5b(&#34;0x3&#34;)) { if (checkpass[_0x4b5b(&#34;0x2&#34;)](7, 9) == &#34;{n&#34;) { if (checkpass[_0x4b5b(&#34;0x2&#34;)](split * 2, split * 2 * 2) == _0x4b5b(&#34;0x4&#34;)) { if (checkpass[_0x4b5b(&#34;0x2&#34;)](3, 6) == &#34;oCT&#34;) { if (checkpass[_0x4b5b(&#34;0x2&#34;)](split * 3 * 2, split * 4 * 2) == _0x4b5b(&#34;0x5&#34;)) { if (checkpass.substring(6, 11) == &#34;F{not&#34;) { if (checkpass[_0x4b5b(&#34;0x2&#34;)](split * 2 * 2, split * 3 * 2) == _0x4b5b(&#34;0x6&#34;)) { if (checkpass[_0x4b5b(&#34;0x2&#34;)](12, 16) == _0x4b5b(&#34;0x7&#34;)) { alert(_0x4b5b(&#34;0x8&#34;)); } } } } } } } } else { alert(_0x4b5b(&#34;0x9&#34;)); } } I gave up and tried reconstructing from the random strings laying around, and tested it, and picoCTF{not_this_again_4daf93} actually worked.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-30 00:00:00 +0000 UTC'>January 30, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu digikey Writeup" href="https://irinasusca.github.io/writeup-blog/posts/digikey-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-01 00:00:00 +0000 UTC'>April 1, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Client-side-again Writeup" href="https://irinasusca.github.io/writeup-blog/posts/clientsideagain-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu mountain Writeup
+    <h2 class="entry-hint-parent">Pico Forbidden Paths Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Take a look at those mountains!
-We get a zip file I ran binwalk -Me --dd=&#34;.*&#34; filename on (just does it recursively). We get a PNG file which has a barely visible flag in the top left which I noticed waay to late; I opened a web version of gimp, turned off the green and blue, and the flag became just visible enough to be transcribed.
-Here it is: DCTF{157d2d840f229720e7f8082dd4468a8583fb348ebf2cb38456147dc046ff942d}
-...</p>
+    <p>Challenge overview Can you get the flag? We know that the website files live in /usr/share/nginx/html/ and the flag is at /flag.txt but the website is filtering absolute file paths. Can you get past the filter to read the flag?
+The / path indeed doesn’t work. This is the solution:
+</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-30 00:00:00 +0000 UTC'>January 30, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu mountain Writeup" href="https://irinasusca.github.io/writeup-blog/posts/mountain-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-01 00:00:00 +0000 UTC'>April 1, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Forbidden Paths Writeup" href="https://irinasusca.github.io/writeup-blog/posts/forbiddenpaths-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu pawn-shop Writeup
+    <h2 class="entry-hint-parent">Pico Irish Name Repo 1, 2, 3 Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Se spune ca fericirea nu poate fi cumparata. Acesta este cazul si pentru acest magazin. Trebuie sa gasesti o vulnerabilitate in aceasta aplicatie si sa recuperezi secretul.
-This was one of the challenges from OSC 2025 county phase, I remember it, so let’s quickly solve this.
-Identifying the vulnerabilities Trying to access the flag, we get this response:
-Adding the allowed Origin as a HTTP Header, we get the flag.
+    <p>Challenge overview Do you think you can log us in? Try to see if you can login!
+Another super easy challenge.
+Irish Name Repo 1 Opening the request, we can see a “debug” parameter or whatever it’s called, and it enables us to see our queries. I don’t even think it was necessary since this was just the simplest form of SQLi.
+Irish Name Repo 2 Same stuff
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-30 00:00:00 +0000 UTC'>January 30, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu pawn-shop Writeup" href="https://irinasusca.github.io/writeup-blog/posts/pawnshop-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-01 00:00:00 +0000 UTC'>April 1, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Irish Name Repo 1, 2, 3 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/irishnamerepo-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">requests library
+    <h2 class="entry-hint-parent">Pico Web Gauntlet 2 &amp; 3 Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Why Since I actually (sadly) have to learn python myself for the OSC since AIs got banned, I decided it’s time to lay down the foundation of the requests library instead of letting an AI slave do the dirty python work for me. That means it’s time to learn the requests library.
-It really wasn’t as difficult as I thought, and I really wish I’d done this sooner. Who would’ve ever guessed learning is really useful?
+    <p>Challenge overview This website looks familiar… Log in as admin.
+We need to log in as admin, through SQLi, and we have 5 rounds to beat.
+Identifying the vulnerabilities This time I realised the filters were actually spelled out in filter.php; oops.
+Round 1 filters: or and true false union like = &gt; &lt; ; -- /* */ admin
+I struggled with this for about two hours until I gave up and found this solution:
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-30 00:00:00 +0000 UTC'>January 30, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to requests library" href="https://irinasusca.github.io/writeup-blog/posts/requests/"></a>
+  <footer class="entry-footer"><span title='2026-04-01 00:00:00 +0000 UTC'>April 1, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Web Gauntlet 2 & 3 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/webgauntlet2-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="materials "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu ast-tree Writeup
+    <h2 class="entry-hint-parent">nosql
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview A careless developer left behind some code that reads sensitive files directly from disk.
-We’re prompted with a “Paste your AST-Grep YAML rule here” and an option to run it. ast-grep is a code tool for structural search and replace, like syntax-aware grep.
-We can also use jQuery like utility methods to traverse syntax tree nodes.
-Identifying the vulnerabilities Upon entering an invalid file, we get this ChatGPT written error:
+    <p>Why Why not
+nosql Video.
+Unlike SQL, NoSQL (not only SQL) works without relational tables; It’s often used when you can’t be sure enough about the definite structure of an object to make it into a table.
+So, think of JSON, with some columns being optional; This is often used with documents for blog apps. Or, maybe a graph structure, with nodes being users and arcs being relationships between them. There’s a bunch of different stuff you can do, and its usage is pretty different to SQL. We’re using collections instead of tables.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-29 00:00:00 +0000 UTC'>January 29, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu ast-tree Writeup" href="https://irinasusca.github.io/writeup-blog/posts/asttree-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-03-31 00:00:00 +0000 UTC'>March 31, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to nosql" href="https://irinasusca.github.io/writeup-blog/posts/nosql/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu password Writeup
+    <h2 class="entry-hint-parent">Pico JaWT Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Can you find the password? I am asking for a friend.
-We’re given a .pyc (python bytecode) file. So what we need to do is find a python bytecode decompiler compatible with python version 2.7.
-After a bunch of googling I found this one. Here is the relevant part of the decompiled code:
-The flag is constructed as such: flag = a &#43; b &#43; c &#43; d &#43; e &#43; f &#43; g &#43; h. But the chunks are given to us in another order, so we just need to select and concatenate the chunks alphabetically.
+    <p>Challenge overview Check the admin scratchpad!
+We can log in, based on a username, but we aren’t allowed to write admin. The challenge also hints us with “You can use your name as a log in, because that’s quick and easy to remember! If you don’t like your name, use a short and cool one like https://github.com/magnumripper/JohnTheRipper.
+Identifying the vulnerabilities I’m guessing we need to brute force the JWT secret and sign our own admin cookie. I searched it on google and found this portswigger lab saying to use hashcat -a 0 -m 16500 &lt;jwt&gt; &lt;wordlist&gt;. Obviously that worked:
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-28 00:00:00 +0000 UTC'>January 28, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu password Writeup" href="https://irinasusca.github.io/writeup-blog/posts/password-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-03-31 00:00:00 +0000 UTC'>March 31, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico JaWT Writeup" href="https://irinasusca.github.io/writeup-blog/posts/jawt-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu ultra-crawl Writeup
+    <h2 class="entry-hint-parent">Pico Web Gauntlet Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Here is your favorite proxy for crawling minimal websites.
-Identifying the vulnerabilities This looks like some sort of crawler that mirrors the given page’s response. After a pipedream webhook, looks like they’re using Python-urllib/3.6.
-Some classic SSRF, we can just feed this crawler a file:///etc/passwd and surprise, it works!
-Now we just need to figure our where our flag is - if we input a wrong file location, we get a 500. From /etc/passwd, looks like we have a /home/ctf user, so let’s look for the flag there.
+    <p>Challenge overview Can you beat the filters? Log in as admin.
+We need to log in as admin, through SQLi, and we have 5 rounds to beat.
+Identifying the vulnerabilities First, by submitting a single ’ as the password, we get the SQL engine right away, SQLite3.
+However, sending the user=admin and pass=&#39; or 1=1-- didn’t work send us to the next phase, but returned a 302 page. So I turned to PayloadAllTheThings, and to practice my python skills, wrote this:
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-26 00:00:00 +0000 UTC'>January 26, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu ultra-crawl Writeup" href="https://irinasusca.github.io/writeup-blog/posts/ultracrawl-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-03-31 00:00:00 +0000 UTC'>March 31, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Web Gauntlet Writeup" href="https://irinasusca.github.io/writeup-blog/posts/webgauntlet-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

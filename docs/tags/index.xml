@@ -6,34 +6,55 @@
     <description>Recent content in Tags on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 09 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 23 Apr 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/tags/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Ctf</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/ctf/</link>
-      <pubDate>Mon, 09 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/ctf/</guid>
-      <description></description>
-    </item>
     <item>
       <title>Materials</title>
       <link>https://irinasusca.github.io/writeup-blog/tags/materials/</link>
-      <pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate>
       <guid>https://irinasusca.github.io/writeup-blog/tags/materials/</guid>
       <description></description>
     </item>
     <item>
-      <title>CyberEdu</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/cyberedu/</link>
-      <pubDate>Wed, 18 Feb 2026 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/cyberedu/</guid>
+      <title>PicoCTF</title>
+      <link>https://irinasusca.github.io/writeup-blog/tags/picoctf/</link>
+      <pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/tags/picoctf/</guid>
       <description></description>
     </item>
     <item>
       <title>Web</title>
       <link>https://irinasusca.github.io/writeup-blog/tags/web/</link>
-      <pubDate>Wed, 18 Feb 2026 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate>
       <guid>https://irinasusca.github.io/writeup-blog/tags/web/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>CyberEdu</title>
+      <link>https://irinasusca.github.io/writeup-blog/tags/cyberedu/</link>
+      <pubDate>Sun, 29 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/tags/cyberedu/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Buffer-Overflow</title>
+      <link>https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/</link>
+      <pubDate>Tue, 10 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Pwn</title>
+      <link>https://irinasusca.github.io/writeup-blog/tags/pwn/</link>
+      <pubDate>Tue, 10 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/tags/pwn/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Ctf</title>
+      <link>https://irinasusca.github.io/writeup-blog/tags/ctf/</link>
+      <pubDate>Mon, 09 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/tags/ctf/</guid>
       <description></description>
     </item>
     <item>
@@ -44,17 +65,17 @@
       <description></description>
     </item>
     <item>
-      <title>Ai</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/ai/</link>
-      <pubDate>Tue, 10 Feb 2026 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/ai/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Misc</title>
       <link>https://irinasusca.github.io/writeup-blog/tags/misc/</link>
       <pubDate>Tue, 10 Feb 2026 00:00:00 +0000</pubDate>
       <guid>https://irinasusca.github.io/writeup-blog/tags/misc/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Ml/Ai</title>
+      <link>https://irinasusca.github.io/writeup-blog/tags/ml/ai/</link>
+      <pubDate>Tue, 10 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/tags/ml/ai/</guid>
       <description></description>
     </item>
     <item>
@@ -72,52 +93,10 @@
       <description></description>
     </item>
     <item>
-      <title>Pwn</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/pwn/</link>
-      <pubDate>Wed, 04 Feb 2026 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/pwn/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Rev</title>
       <link>https://irinasusca.github.io/writeup-blog/tags/rev/</link>
       <pubDate>Wed, 04 Feb 2026 00:00:00 +0000</pubDate>
       <guid>https://irinasusca.github.io/writeup-blog/tags/rev/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Buffer-Overflow</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/</link>
-      <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Chat</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/chat/</link>
-      <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/chat/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Shellcode</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/shellcode/</link>
-      <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/shellcode/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Threads</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/threads/</link>
-      <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/threads/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Vm</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/vm/</link>
-      <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/vm/</guid>
       <description></description>
     </item>
     <item>
@@ -128,20 +107,6 @@
       <description></description>
     </item>
     <item>
-      <title>Reverse-Engineering</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/reverse-engineering/</link>
-      <pubDate>Tue, 23 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/reverse-engineering/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Ssh</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/ssh/</link>
-      <pubDate>Tue, 23 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/ssh/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Ret2libc</title>
       <link>https://irinasusca.github.io/writeup-blog/tags/ret2libc/</link>
       <pubDate>Mon, 22 Dec 2025 00:00:00 +0000</pubDate>
@@ -149,66 +114,10 @@
       <description></description>
     </item>
     <item>
-      <title>FSOP</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/fsop/</link>
-      <pubDate>Tue, 16 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/fsop/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>JOP</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/jop/</link>
-      <pubDate>Tue, 16 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/jop/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>One-Gadget</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/one-gadget/</link>
-      <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/one-gadget/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>ASLR</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/aslr/</link>
-      <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/aslr/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Canary</title>
       <link>https://irinasusca.github.io/writeup-blog/tags/canary/</link>
       <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
       <guid>https://irinasusca.github.io/writeup-blog/tags/canary/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>PIE</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/pie/</link>
-      <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/pie/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>PicoCTF</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/picoctf/</link>
-      <pubDate>Sun, 30 Nov 2025 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/picoctf/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Rop</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/rop/</link>
-      <pubDate>Mon, 24 Nov 2025 21:09:36 +0200</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/rop/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Overflow</title>
-      <link>https://irinasusca.github.io/writeup-blog/tags/overflow/</link>
-      <pubDate>Sun, 23 Nov 2025 21:08:35 +0200</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/tags/overflow/</guid>
       <description></description>
     </item>
   </channel>

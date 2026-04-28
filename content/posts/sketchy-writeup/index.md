@@ -3,7 +3,7 @@ date = '2025-12-11'
 draft = false
 title = "Nullctf 2025 Sketchy Writeup"
 ShowToc = true
-tags = ["pwn", "buffer-overflow", "Ret2libc", "one-gadget"]
+tags = ["pwn", "buffer-overflow", "ret2libc"]
 +++
 
 ## Challenge overview

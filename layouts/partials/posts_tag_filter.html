@@ -1,0 +1,7 @@
+<div id="tag-filter" class="tag-filter">
+  {{ range $name, $_ := .Site.Taxonomies.tags }}
+    <a class="tag-pill" href="{{ "/writeup-blog/tags/" | relURL }}{{ $name | urlize }}/">
+      {{ $name }}
+    </a>
+  {{ end }}
+</div>

@@ -3,7 +3,7 @@ date = '2026-01-04'
 draft = false
 title = 'CyberEdu threadz Writeup'
 ShowToc = true
-tags = ["CyberEdu", "pwn", "threads", "shellcode"]
+tags = ["CyberEdu", "pwn"]
 +++
 
 

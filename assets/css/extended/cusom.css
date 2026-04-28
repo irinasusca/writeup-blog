@@ -1,0 +1,436 @@
+/* =========================
+   🌸 SAKURA THEME (FINAL)
+   ========================= */
+
+/* i know this whole theme file is ai slop but if it aint broke .. */
+/* LIGHT MODE */
+:root {
+  --bg: #FFF7FA;
+  --surface: #FFFFFF;
+  --surface-2: #FFE3EC;
+
+  --accent: #DB7F8E;
+  --accent-soft: #F5B5C9;
+
+  --text: #3A2A33;
+  --muted: #7A6A73;
+
+  --border: rgba(0,0,0,0.08);
+
+  --code-bg: #F8E9ED;
+
+  --pill-bg: #FFFFFF;
+  --pill-hover: #DB7F8E;
+  --pill-text: #3A2A33;
+}
+
+/* DARK MODE */
+[data-theme="dark"] {
+  --bg: #0E1238;
+  --surface: #3C3261;
+  --surface-2: #4B3A6F;
+
+  --accent: #E5B5C9;
+  --accent-strong: #F795A7;
+
+  --text: #E5D6DE;
+  --muted: #A79AA7;
+
+  --border: rgba(255,255,255,0.08);
+
+  --code-bg: #2A2348;
+
+  --pill-bg: #3C3261;
+  --pill-hover: #79517A;
+  --pill-text: #E5B5C9;
+}
+
+/* =========================
+   🌸 BACKGROUND
+   ========================= */
+
+/* =========================
+   🌙 DARK BG (SUBTLE FIX)
+   ========================= */
+
+[data-theme="dark"] body {
+  background:
+    radial-gradient(
+      circle at 20% -10%,
+      rgba(229,181,201,0.08),
+      transparent 50%
+    ),
+    var(--bg) !important;
+}
+
+/* =========================
+   🧱 HOMEPAGE CARDS
+   ========================= */
+
+.post-entry {
+  background: var(--surface) !important;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.post-entry:hover {
+  background: var(--surface-2) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+}
+
+/* =========================
+   📄 POST CONTENT (NO BLOB)
+   ========================= */
+
+.post-content {
+  background: transparent !important;
+  padding: 0;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.post-content > * {
+  margin-bottom: 18px;
+}
+
+.post-content h2,
+.post-content h3 {
+  margin-top: 30px;
+}
+
+/* =========================
+   ✍️ TYPOGRAPHY
+   ========================= */
+
+h1, h2, h3 {
+  color: var(--accent);
+}
+
+.post-content p {
+  color: var(--text);
+}
+
+.post-meta {
+  color: var(--muted);
+}
+
+a {
+  color: var(--accent);
+}
+
+a:hover {
+  opacity: 0.85;
+}
+
+/* =========================
+   💻 CODE BLOCKS (FIXED)
+   ========================= */
+
+.highlight {
+  background: var(--code-bg) !important;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  padding: 16px;
+  overflow-x: auto;
+}
+
+.highlight pre {
+  background: transparent !important;
+  margin: 0;
+  padding: 0;
+}
+
+/* Inline code */
+.post-content code {
+  background: rgba(229,181,201,0.2);
+  padding: 3px 6px;
+  border-radius: 6px;
+  font-size: 0.9em;
+}
+
+/* Syntax highlighting */
+.highlight .k { color: #F795A7; } /* keyword */
+.highlight .s { color: #E5B5C9; } /* string */
+.highlight .c { color: #8C7A84; } /* comment */
+.highlight .n { color: #E5D6DE; } /* normal */
+.highlight .o { color: #DB7F8E; }
+
+/* =========================
+   📑 TOC (FIXED)
+   ========================= */
+
+details.toc {
+  background: var(--surface) !important;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+
+details.toc summary {
+  color: var(--accent);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+details.toc ul {
+  margin-top: 10px;
+  padding-left: 16px;
+}
+
+details.toc li a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+details.toc li a:hover {
+  color: var(--accent);
+}
+
+/* =========================
+   🏷️ TAG PILLS
+   ========================= */
+
+.tag-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.tag-pill {
+  display: inline-block;
+  background: var(--pill-bg);
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: 12px;
+  color: var(--pill-text);
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.tag-pill:hover {
+  background: var(--pill-hover);
+  color: white;
+  transform: translateY(-1px);
+}
+/* =========================
+   🌸 NAVBAR (CLEAN FIXED)
+   ========================= */
+
+/* HEADER */
+.header {
+  backdrop-filter: blur(10px);
+  background: rgba(0,0,0,0.15);
+  border-bottom: 1px solid var(--border);
+}
+
+[data-theme="light"] .header {
+  background: rgba(255,255,255,0.7);
+}
+
+/* NAV CONTAINER */
+.nav {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* =========================
+   🌸 LOGO ICON (FINAL FIX)
+   ========================= */
+
+.logo a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none !important;
+}
+
+/* icon */
+.logo img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* REMOVE underline effect from title ONLY */
+.logo a::after {
+  display: none !important;
+}
+
+/* =========================
+   🔗 NAV LINKS
+   ========================= */
+
+.nav a {
+  color: var(--muted);
+  font-weight: 500;
+  position: relative;
+  text-decoration: none;
+}
+
+/* hover color */
+.nav a:hover {
+  color: var(--accent);
+}
+
+/* subtle underline animation (ONLY for links, not logo) */
+.nav a:not(.logo a)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 0%;
+  height: 2px;
+  background: var(--accent);
+  transition: width 0.2s ease;
+}
+
+.nav a:not(.logo a):hover::after {
+  width: 100%;
+}
+
+/* =========================
+   🌙 DARK MODE HIGHLIGHT FIX
+   ========================= */
+
+/* fix selection contrast */
+[data-theme="dark"] ::selection {
+  background: #f795a7;  /* stronger pink */
+  color: #1a1a2e;       /* dark text for contrast */
+}
+
+/* optional: also fix code selection */
+[data-theme="dark"] code::selection {
+  background: #f795a7;
+  color: #1a1a2e;
+}
+
+/* =========================
+   ✨ POLISH
+   ========================= */
+
+* {
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+::selection {
+  background: var(--accent);
+  color: white;
+}
+
+
+/* =========================
+   🔘 PAGINATION / NEXT BUTTONS
+   ========================= */
+
+.pagination a,
+.post-nav a {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 16px;
+
+  color: var(--accent);
+  text-decoration: none;
+
+  transition: all 0.2s ease;
+}
+
+/* hover */
+.pagination a:hover,
+.post-nav a:hover {
+  background: var(--surface-2);
+  transform: translateY(-1px);
+}
+
+/* make arrows/icons nicer */
+.post-nav a span {
+  color: var(--muted);
+}
+
+
+/* FIXED underline */
+.nav a {
+  position: relative;
+  text-decoration: none;
+}
+
+.nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+
+  width: 0%;
+  height: 2px;
+
+  background: var(--accent);
+  transition: width 0.2s ease;
+
+  pointer-events: none; /* prevents weird artifacts */
+}
+
+.nav a:hover::after {
+  width: 100%;
+}
+
+/* prevent it on logo */
+.logo a::after {
+  display: none !important;
+}
+
+/* =========================
+   🌸 LIGHT MODE HOVER FIX
+   ========================= */
+
+[data-theme="light"] .post-entry:hover {
+  background: #d8a3aa !important;
+  color: white;
+}
+
+/* force ALL text inside card to turn white */
+[data-theme="light"] .post-entry:hover * {
+  color: white !important;
+}
+
+/* =========================
+   🔘 PAGINATION HOVER (LIGHT)
+   ========================= */
+
+[data-theme="light"] .pagination a:hover,
+[data-theme="light"] .post-nav a:hover {
+  background: #d8a3aa !important;
+  color: white !important;
+  border-color: #d8a3aa;
+}
+
+/* ensure inner text/icons also turn white */
+[data-theme="light"] .pagination a:hover *,
+[data-theme="light"] .post-nav a:hover * {
+  color: white !important;
+}
+
+/* Fix scrollbar on nav link hover */
+.nav {
+  overflow: hidden;
+}
+
+#menu {
+  overflow: hidden;
+}
+
+/* Remove ALL ::after underline effects on nav links */
+.nav a::after,
+.nav a:not(.logo a)::after,
+#menu a::after,
+#menu li a::after {
+  display: none !important;
+  content: none !important;
+}

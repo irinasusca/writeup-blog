@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Pico Cookies &amp; More Cookies &amp; Most Cookies writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="picoCTF, web">
+<meta name="description" content="Cookies
+I&rsquo;m making a writeup for this because I remember having tried to do this one unsuccessfully a while ago.
+When first logging in, in the request we can see a Cookie: name=-1 being set. Modifying it to name=1 for example doesn&rsquo;t do much, except getting a That is a cookie! Not very special though&hellip; response.
+Setting it to admin just renders the default home page.
+There are two POST pages, /check and /search. The only time I saw /check get requested was when my search input was &lsquo;chocolate chip&rsquo;; that&rsquo;s when the cookie was set to 1 by their side. Then I noticed &lsquo;snickerdoodle&rsquo; was setting the Cookie to 0.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/picocookies-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/picocookies-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/picocookies-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Pico Cookies & More Cookies & Most Cookies writeup">
+  <meta property="og:description" content="Cookies I’m making a writeup for this because I remember having tried to do this one unsuccessfully a while ago.
+When first logging in, in the request we can see a Cookie: name=-1 being set. Modifying it to name=1 for example doesn’t do much, except getting a That is a cookie! Not very special though… response.
+Setting it to admin just renders the default home page.
+There are two POST pages, /check and /search. The only time I saw /check get requested was when my search input was ‘chocolate chip’; that’s when the cookie was set to 1 by their side. Then I noticed ‘snickerdoodle’ was setting the Cookie to 0.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-04-03T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-04-03T00:00:00+00:00">
+    <meta property="article:tag" content="PicoCTF">
+    <meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pico Cookies &amp; More Cookies &amp; Most Cookies writeup">
+<meta name="twitter:description" content="Cookies
+I&rsquo;m making a writeup for this because I remember having tried to do this one unsuccessfully a while ago.
+When first logging in, in the request we can see a Cookie: name=-1 being set. Modifying it to name=1 for example doesn&rsquo;t do much, except getting a That is a cookie! Not very special though&hellip; response.
+Setting it to admin just renders the default home page.
+There are two POST pages, /check and /search. The only time I saw /check get requested was when my search input was &lsquo;chocolate chip&rsquo;; that&rsquo;s when the cookie was set to 1 by their side. Then I noticed &lsquo;snickerdoodle&rsquo; was setting the Cookie to 0.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Pico Cookies \u0026 More Cookies \u0026 Most Cookies writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/picocookies-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Pico Cookies \u0026 More Cookies \u0026 Most Cookies writeup",
+  "name": "Pico Cookies \u0026 More Cookies \u0026 Most Cookies writeup",
+  "description": "Cookies I\u0026rsquo;m making a writeup for this because I remember having tried to do this one unsuccessfully a while ago.\nWhen first logging in, in the request we can see a Cookie: name=-1 being set. Modifying it to name=1 for example doesn\u0026rsquo;t do much, except getting a That is a cookie! Not very special though\u0026hellip; response.\nSetting it to admin just renders the default home page.\nThere are two POST pages, /check and /search. The only time I saw /check get requested was when my search input was \u0026lsquo;chocolate chip\u0026rsquo;; that\u0026rsquo;s when the cookie was set to 1 by their side. Then I noticed \u0026lsquo;snickerdoodle\u0026rsquo; was setting the Cookie to 0.\n",
+  "keywords": [
+    "picoCTF", "web"
+  ],
+  "articleBody": "Cookies I’m making a writeup for this because I remember having tried to do this one unsuccessfully a while ago.\nWhen first logging in, in the request we can see a Cookie: name=-1 being set. Modifying it to name=1 for example doesn’t do much, except getting a That is a cookie! Not very special though… response.\nSetting it to admin just renders the default home page.\nThere are two POST pages, /check and /search. The only time I saw /check get requested was when my search input was ‘chocolate chip’; that’s when the cookie was set to 1 by their side. Then I noticed ‘snickerdoodle’ was setting the Cookie to 0.\nI cannot believe how long this took me because I kept overthinking it. I finally just iterated through all the numbers using this script:\nimport requests from utils.pretty_print import pretty_print url = \"http://wily-courier.picoctf.net:56171/check\" i = 0 while(i\u003c9999): headers = { \"Cookie\": f\"name={i}\" } res = requests.get(url, headers=headers) pretty_print(res) print(f\"THE LINE USED WAS {i}\") i+=1 And at i=18, we can see the flag:\nMore Cookies Welcome to my cookie search page. Only the admin can use it!\nThis time, our cookie starts as name=1. Now, what’s getting modified is the auth_name of the cookie, looking something like TXFkcFFFNzN6OFZpZFpveUhOaWtYcWtkTjZwUHZpUjk0NS9LSnQ5aXkzaXZwUW5PNHk0S2hLTTAyckx6MVZReGd3ejJzVVVYbVJaQytBTEt4M251YWtVQXZ5cHlDeEk2OUNNRlYvTDRoUnJKRlNETXQ5eEt3VVB1SVJMckxZTFA=. Seems to be some sort of encryption. I tried b64 but just seemed to stay like crap.\nAfter fuzzing, we find a /flag and a /search page. We can send POST requests to /search. But doing so, without a session token, returns a “danger, unauthenticated search” error. Doing so without an auth_name token returns a weird unreadable session token, that also resolves to unauthenticated search.\nI ended up searching for a writeup and I’m glad I did, because I wouldn’t have guessed this. The writeup I found here also cheated, just like me, lol.\nAnyways, the technique used was bit-flipping. That meant that if there was an isAdmin=0 parameter inside the cookie, encoded through Homomorphic encryption, by bruteforcingly flipping each byte one by one, we’d switch that 0 to a 1. That’s based on this post right here.\nI wanted to make my own script, though. And I felt like that script was way too complicated for what we’re dealing with, so this was my version of it:\nimport requests from base64 import b64decode, b64encode from utils.pretty_print import pretty_print url = \"http://wily-courier.picoctf.net:52667\" data = \"VmpuUUswUEl5b0xaOFpZek9pbXhoamp6Si9vWDVCcmhNK1ZURzNMSWVrcGxra1R3TjZQcGpQbE5zb3pvYjY2dW9zajFnaUVkTnlJalhaZUxycDJzWndiR0FTWjJIeGN5UGJWelR2ZUY0R3FYKzh1SGFpNzZBM0xLaG16N0JHQzk=\" decoded_data = b64decode(b64decode(data).decode()) #turn into byte array bytes_data = bytearray(decoded_data) mask = 0b01 for i in range(len(bytes_data)): cookie = bytearray(decoded_data) cookie[i] ^= mask cookie_encoded = b64encode(b64encode(cookie)) cookie_decoded = cookie_encoded.decode('utf-8') cookies = { \"auth_name\":cookie_decoded } res = requests.get(url, cookies=cookies) if 'picoCTF{' in res.text: pretty_print(res) And this worked in about five seconds.\nMost Cookies This time, we’re working with flask cookies. There is also a /display page, showing “I love blank cookies!” by default. The cookie’s data is {\"very_auth\":\"blank\"}, so we just need to change that.\nI googled the commands and I found them very nicely listed here.\nThis is what I ran, and I got the flag upon accessing /display with the modified cookie: picoCTF{cO0ki3s_yum_e45c084f}.\n",
+  "wordCount" : "507",
+  "inLanguage": "en",
+  "datePublished": "2026-04-03T00:00:00Z",
+  "dateModified": "2026-04-03T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/picocookies-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Pico Cookies &amp; More Cookies &amp; Most Cookies writeup
+    </h1>
+    <div class="post-meta"><span title='2026-04-03 00:00:00 +0000 UTC'>April 3, 2026</span>&nbsp;·&nbsp;<span>3 min</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#cookies" aria-label="Cookies">Cookies</a></li>
+                <li>
+                    <a href="#more-cookies" aria-label="More Cookies">More Cookies</a></li>
+                <li>
+                    <a href="#most-cookies" aria-label="Most Cookies">Most Cookies</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="cookies">Cookies<a hidden class="anchor" aria-hidden="true" href="#cookies">#</a></h2>
+<p>I&rsquo;m making a writeup for this because I remember having tried to do this one unsuccessfully a while ago.</p>
+<p>When first logging in, in the request we can see a <code>Cookie: name=-1</code> being set. Modifying it to <code>name=1</code> for example doesn&rsquo;t do much, except getting a <em>That is a cookie! Not very special though&hellip;</em> response.</p>
+<p>Setting it to admin just renders the default home page.</p>
+<p>There are two POST pages, <code>/check</code> and <code>/search</code>. The only time I saw <code>/check</code> get requested was when my search input was &lsquo;chocolate chip&rsquo;; that&rsquo;s when the cookie was set to <code>1</code> by their side. Then I noticed &lsquo;snickerdoodle&rsquo; was setting the Cookie to 0.</p>
+<p>I cannot <em>believe</em> how long this took me because I kept overthinking it. I finally just iterated through all the numbers using this script:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> requests
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> utils.pretty_print <span style="color:#f92672">import</span> pretty_print
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;http://wily-courier.picoctf.net:56171/check&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span>(i<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">9999</span>):
+</span></span><span style="display:flex;"><span>    headers <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Cookie&#34;</span>: <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;name=</span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    res <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(url, headers<span style="color:#f92672">=</span>headers)
+</span></span><span style="display:flex;"><span>    pretty_print(res) 
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;THE LINE USED WAS </span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>    i<span style="color:#f92672">+=</span><span style="color:#ae81ff">1</span>
+</span></span></code></pre></div><p>And at <code>i=18</code>, we can see the flag:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/picocookies-writeup/flag1.png#center"></p>
+<h2 id="more-cookies">More Cookies<a hidden class="anchor" aria-hidden="true" href="#more-cookies">#</a></h2>
+<p><em>Welcome to my cookie search page. Only the admin can use it!</em></p>
+<p>This time, our cookie starts as <code>name=1</code>. Now, what&rsquo;s getting modified is the <code>auth_name</code> of the cookie, looking something like <code>TXFkcFFFNzN6OFZpZFpveUhOaWtYcWtkTjZwUHZpUjk0NS9LSnQ5aXkzaXZwUW5PNHk0S2hLTTAyckx6MVZReGd3ejJzVVVYbVJaQytBTEt4M251YWtVQXZ5cHlDeEk2OUNNRlYvTDRoUnJKRlNETXQ5eEt3VVB1SVJMckxZTFA=</code>. Seems to be some sort of encryption. I tried b64 but just seemed to stay like crap.</p>
+<p>After fuzzing, we find a <code>/flag</code> and a <code>/search</code> page. We <em>can</em> send POST requests to <code>/search</code>. But doing so, without a <code>session</code> token, returns a &ldquo;danger, unauthenticated search&rdquo; error. Doing so without an <code>auth_name</code> token returns a weird unreadable session token, that also resolves to unauthenticated search.</p>
+<p>I ended up searching for a writeup and I&rsquo;m glad I did, because I wouldn&rsquo;t have guessed this. The writeup I found <a href="https://mrshan.medium.com/picoctf-more-cookies-web-exploitation-1238e29e75fe">here</a> also cheated, just like me, lol.</p>
+<p>Anyways, the technique used was <em>bit-flipping</em>. That meant that if there was an <code>isAdmin=0</code> parameter inside the cookie, encoded through Homomorphic encryption, by bruteforcingly flipping each byte one by one, we&rsquo;d switch that 0 to a 1. That&rsquo;s based on <a href="https://crypto.stackexchange.com/questions/66085/bit-flipping-attack-on-cbc-mode/66086#66086">this post right here</a>.</p>
+<p>I wanted to make my own script, though. And I felt like that script was way too complicated for what we&rsquo;re dealing with, so this was <em>my</em> version of it:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> requests
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> base64 <span style="color:#f92672">import</span> b64decode, b64encode
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> utils.pretty_print <span style="color:#f92672">import</span> pretty_print
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;http://wily-courier.picoctf.net:52667&#34;</span>
+</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;VmpuUUswUEl5b0xaOFpZek9pbXhoamp6Si9vWDVCcmhNK1ZURzNMSWVrcGxra1R3TjZQcGpQbE5zb3pvYjY2dW9zajFnaUVkTnlJalhaZUxycDJzWndiR0FTWjJIeGN5UGJWelR2ZUY0R3FYKzh1SGFpNzZBM0xLaG16N0JHQzk=&#34;</span>
+</span></span><span style="display:flex;"><span>decoded_data <span style="color:#f92672">=</span> b64decode(b64decode(data)<span style="color:#f92672">.</span>decode())
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#turn into byte array</span>
+</span></span><span style="display:flex;"><span>bytes_data <span style="color:#f92672">=</span> bytearray(decoded_data)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>mask <span style="color:#f92672">=</span> <span style="color:#ae81ff">0b01</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(bytes_data)):
+</span></span><span style="display:flex;"><span>    cookie <span style="color:#f92672">=</span> bytearray(decoded_data)
+</span></span><span style="display:flex;"><span>    cookie[i] <span style="color:#f92672">^=</span> mask
+</span></span><span style="display:flex;"><span>    cookie_encoded <span style="color:#f92672">=</span> b64encode(b64encode(cookie))
+</span></span><span style="display:flex;"><span>    cookie_decoded <span style="color:#f92672">=</span> cookie_encoded<span style="color:#f92672">.</span>decode(<span style="color:#e6db74">&#39;utf-8&#39;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    cookies <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;auth_name&#34;</span>:cookie_decoded
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    res <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(url, cookies<span style="color:#f92672">=</span>cookies)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;picoCTF{&#39;</span> <span style="color:#f92672">in</span> res<span style="color:#f92672">.</span>text:
+</span></span><span style="display:flex;"><span>        pretty_print(res)
+</span></span></code></pre></div><p>And this worked in about five seconds.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/picocookies-writeup/flag2.png#center"></p>
+<h2 id="most-cookies">Most Cookies<a hidden class="anchor" aria-hidden="true" href="#most-cookies">#</a></h2>
+<p>This time, we&rsquo;re working with flask cookies. There is also a <code>/display</code> page, showing &ldquo;I love blank cookies!&rdquo; by default. The cookie&rsquo;s data is <code>{&quot;very_auth&quot;:&quot;blank&quot;}</code>, so we just need to change that.</p>
+<p>I googled the commands and I found them very nicely listed <a href="https://hacktricks.wiki/en/network-services-pentesting/pentesting-web/flask.html">here</a>.</p>
+<p>This is what I ran, and I got the flag upon accessing <code>/display</code> with the modified cookie: <code>picoCTF{cO0ki3s_yum_e45c084f}</code>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/picocookies-writeup/flag3.png#center"></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/picoctf/">PicoCTF</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/web/">Web</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

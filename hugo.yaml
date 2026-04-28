@@ -3,9 +3,6 @@ languageCode: "en-us"
 title: "Irina's CTF Writeups"
 theme: "PaperMod"
 
-params:
-  ShowReadingTime: true
-  
 menu:
   main:
     - name: "Home"
@@ -19,9 +16,10 @@ menu:
       weight: 3
       
 params:
+  ShowReadingTime: true
   homeInfoParams:
     title: Irina's CTF Writeups
-    Content: Short ctf challs writeups focused on pwn and web — for future me and anyone else stuck on the same challenge.
+    Content: Welcome! This is where I share all the challenges I've solved and the knowledge I've gathered along the way. Hopefully this blog can save you some time and frustration. Free resources, especially in this field, are pretty hard to come by; So please enjoy my open-source hard work! :)      
   socialIcons:
     - name: github
       url: "https://github.com/irinasusca"

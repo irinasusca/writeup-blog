@@ -11,7 +11,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="canonical" href="https://irinasusca.github.io/writeup-blog/">
-<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
@@ -100,7 +100,9 @@
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -145,166 +147,167 @@
 </header>
 <main class="main"> 
 
-<article class="post-entry"> 
+
+
+<article class="post-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu universe Writeup
+    <h2 class="entry-hint-parent">Pico No Sql Injection writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview What is the technique name? What is the flag?
-I took a bunch of images with all the steps while solving this challenge, so I’ll just let those speak for me. (Also, for the stereogram - stegsolve):
-sed &#39;s/%20/\n/g&#39; part2.txt -i
-Felt really smart for figuring out it was b32.
-Here is that stegsolve stereogram solver I mentioned.
-And the full flag is ctf{6da4a51e2ee5437bece4699edf7728ae26e6684abe8711b85b034902a920a775}!
+    <p>Overview Can you try to get access to this website to get the flag?
+We have access to the source, the most interesting part being this:
+const initialUser = new User({ firstName: &#34;pico&#34;, lastName: &#34;player&#34;, email: &#34;picoplayer355@picoctf.org&#34;, password: crypto.randomBytes(16).toString(&#34;hex&#34;).slice(0, 16), }); await initialUser.save(); #... app.post(&#34;/login&#34;, async (req, res) =&gt; { const { email, password } = req.body; try { const user = await User.findOne({ email: email.startsWith(&#34;{&#34;) &amp;&amp; email.endsWith(&#34;}&#34;) ? JSON.parse(email) : email, password: password.startsWith(&#34;{&#34;) &amp;&amp; password.endsWith(&#34;}&#34;) ? JSON.parse(password) : password, }); if (user) { res.json({ success: true, email: user.email, token: user.token, firstName: user.firstName, lastName: user.lastName, }); } else { res.json({ success: false }); } } catch (err) { res.status(500).json({ success: false, error: err.message }); } Identifying the vulnerabilities This is a Mongo db, with nosql, as suggested by the challenge name. What’s immediately interesting is that the email and password are parsed as json. Here is a portswigger article talking about NoSQL injection. I also watched this video.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-02-10 00:00:00 +0000 UTC'>February 10, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu universe Writeup" href="https://irinasusca.github.io/writeup-blog/posts/universe-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico No Sql Injection writeup" href="https://irinasusca.github.io/writeup-blog/posts/nosqlinjection-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu usualtraffic Writeup
+    <h2 class="entry-hint-parent">Pico North-South writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Just normal network traffic. Or isn’t it?
-The correct way to phrase it would have been Or is it?, because the affirmation before isn’t a negation. Or isn’t it?
-I noticed something weird following a TCP stream, at the last 4 bytes of each BGP update message packet.
-The following command: tshark -Y &#39;tcp.stream==1&amp;&amp;bgp.type==2&amp;&amp;ip.src==10.10.10.251&#39; -r traffic.pcapng -x | grep -o &#39;\.d ....$&#39; | grep -o &#39; ....$&#39; | tr -d &#39;\n&#39; outputs Hell o Ro uter 1!.H ere is t he v ecto r: 8 BF46 C25D 9BAD 98ED 8EAE 6C1F 7AD2 D04. This is my s ecre t: u WyYT CYqB Ty9a fI69 to3e K0Sc CA3S lPDE zBsW BnR9 D8Ro 7aIO qihG MPXw u/Z&#43; HLn..
+    <p>Overview I’ve set up geo-based routing - can you outsmart it? You’re trying to retrieve the flag, but there’s a catch: access to the real service is restricted based on your geographic location. Only requests from a specific region are routed to the server that holds the flag. Everyone else is sent somewhere… less interesting.
+Identifying the vulnerabilities We also receive the nginx conf file; It’s serving two proxies, and one is only available to people with $geoip2_data_country_code = IS. That’s Iceland, upon looking at countrycode.org.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-02-06 00:00:00 +0000 UTC'>February 6, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu usualtraffic Writeup" href="https://irinasusca.github.io/writeup-blog/posts/usualtraffic-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico North-South writeup" href="https://irinasusca.github.io/writeup-blog/posts/northsouth-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu cross-or-zero Writeup
+    <h2 class="entry-hint-parent">Pico Secret Box writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Can you find the key and the flag? I bet. It is not an encryption. It is ZERO.
-The code we’re given is a perfectly normal string xor alg (I found one on Medium):
-The challenge actually gives us a big hint as to what the key is (ZERO). Yeah, it’s literally “0”. I converted the base64 to bytes to hex, and used it in an online XOR calculator with the ASCII for “0”.
+    <p>Overview I’ve set up geo-based routing - can you outsmart it? You’re trying to retrieve the flag, but there’s a catch: access to the real service is restricted based on your geographic location. Only requests from a specific region are routed to the server that holds the flag. Everyone else is sent somewhere… less interesting.
+Identifying the vulnerabilities The create secret is vulnerable to sql injection; Creating a secret with the contents a&#39;); INSERT INTO secrets(owner_id, content) SELECT &#39;5fba75e8-3444-434d-a353-b9ea93796097&#39;, password FROM users WHERE username = &#39;admin&#39;-- will insert into our secrets the admin’s password.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-02-05 00:00:00 +0000 UTC'>February 5, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu cross-or-zero Writeup" href="https://irinasusca.github.io/writeup-blog/posts/crossorzero-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Secret Box writeup" href="https://irinasusca.github.io/writeup-blog/posts/secretbox-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="materials "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu east-grandma Writeup
+    <h2 class="entry-hint-parent">http
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Investigate the wants of the most expensive club on the east coast.
-We receive a picture called camashadefortza.jpg which we can extract a zip file from using binwalk -Mve --dd=&#34;.*&#34;. The zip file is encrypted, and of 7z format, so we can try using john the ripper, I guess.
-For that we need to prep the format, but zip2john won’t work, since this is a 7z. So let’s grab a tool for that.
+    <p>Why idfk
+headers Here are some of the headers that I didn’t really have much of a clue about what they actually meant.
+X-Forwarded-For: the originating IP address of a client connecting to a web server through a HTTP proxy. Basically saying, hey, I’m a proxy forwarding this for this guy!
+X-Forwarded-Host: the domain originally requested by the user.
+Forwarded: the official version to replace the previous ones, looks like this: by=; for=; host=; proto=http
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-02-05 00:00:00 +0000 UTC'>February 5, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu east-grandma Writeup" href="https://irinasusca.github.io/writeup-blog/posts/eastgrandma-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-16 00:00:00 +0000 UTC'>April 16, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to http" href="https://irinasusca.github.io/writeup-blog/posts/http/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu packet-snatchers Writeup
+    <h2 class="entry-hint-parent">Pico Crack The Gate 2 writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Get ready for a multi-protocol, multi-question hunt
-I’ll just include the answers and maybe some other things I thought were slightly more difficult than the others.
-I took the FTP command list from here.
-The command to print out all the files downloaded by ftp, alphabetically: tshark -Y ftp -T fields -e ftp.request.arg -r traffic.pcap | sed &#39;/^$/d&#39; | sort -u.
-Here are the question asnwers:
-That’s it!
+    <p>Overview The login system has been upgraded with a basic rate-limiting mechanism that locks out repeated failed attempts from the same source. We’ve received a tip that the system might still trust user-controlled headers. Your objective is to bypass the rate-limiting restriction and log in using the known email address: ctf-player@picoctf.org and uncover the hidden secret.
+Identifying the vulnerabilities The challenge hints at modifying our headers, and the X-Forwarded-For header was the one responsible for rate limiting. We got a passwords.txt file, it wasn’t that long, but I wanted to practice python anyways; since I always dread doing it, I’m trying to force myself to get comfortable with it.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-02-05 00:00:00 +0000 UTC'>February 5, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu packet-snatchers Writeup" href="https://irinasusca.github.io/writeup-blog/posts/packetsnatchers-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-16 00:00:00 +0000 UTC'>April 16, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Crack The Gate 2 writeup" href="https://irinasusca.github.io/writeup-blog/posts/crackthegate-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu asmadventure Writeup
+    <h2 class="entry-hint-parent">Pico Sql Map 1 writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Because it’s a reverse engineering chall I’m including the link.
-Ieri seară am primit o alertă privind un shellcode executat de un binar suspicios.
-Poți analiza ce se întâmplă și să descoperi parola infractorului?
-We receive a main binary. Very strangely, looking at this in IDA, it doesn’t look like anything.
-This is literally it. All of it.
-It allocates a rwx memory region of 559 bytes with 0.
+    <p>Overview You’ve been hired by a shadowy group of pentesters who love a good puzzle. The system looks ordinary, but appearances lie. Somewhere inside, sloppy code and legacy hashing practices left a tiny….
+I finally stumbled upon the newer AI slop challenges from pico, presenting itself immediately through the page long description.
+Identifying the vulnerabilities We can register our own user and search for flags. Just writing Flag immediately shows a bunch of fake results; I tried running sqlmap as suggested by the challenge name, but it kept breaking, so I got annoyed and wrote my stuff manually.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-02-04 00:00:00 +0000 UTC'>February 4, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu asmadventure Writeup" href="https://irinasusca.github.io/writeup-blog/posts/asmadventure-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-16 00:00:00 +0000 UTC'>April 16, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Sql Map 1 writeup" href="https://irinasusca.github.io/writeup-blog/posts/sqlmap-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu montgomery Writeup
+    <h2 class="entry-hint-parent">Pico findme writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview E prima data cand ai un contact cu o proba de pwn? Acest exercitiu s-ar putea sa fie pentru tine.
-PS: Acest serviciu merge cu netcat.
-Identifying the vulnerabilities This is just a basic format string vulnerability. Leaking from $69%p to $100%p, we get the flag but in that fuckass format that I would usually put in a string reverser, 8 ASCII by 8 ASCII. But not this time. I wrote a script.
+    <p>Overview Help us test the form by submiting the username as test and password as test!
+This only got a writeup because it took me almost half an hour.
+Identifying the vulnerabilities Logging in doesn’t do much, however by fuzzing we find a /home page, saying I was redirected here by a friend of mine but i couldnt find anything. Help me search for flags :-). It also has a Search for flags search bar that does nothing. Parameter fuzzing didn’t work either.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-02-04 00:00:00 +0000 UTC'>February 4, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu montgomery Writeup" href="https://irinasusca.github.io/writeup-blog/posts/montgomery-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-15 00:00:00 +0000 UTC'>April 15, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico findme writeup" href="https://irinasusca.github.io/writeup-blog/posts/findme-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu biscuiti Writeup
+    <h2 class="entry-hint-parent">Pico Trickster writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Biscuiții mei au prea multe calorii, așa că trebuie să îi împart în mai multe porții.
-În această probă, aveți o captură PCAP, iar obiectivul este să recuperați un secret.
-I already solved this last year at the OSCJ but the foolish way, looking through pcaps like a fool. But now, we’re solving this with tshark!
-The command I used was tshark -r task.pcap -Y http -T fields -e http.cookie_pair to print out all of the cookie parts, along with their indexes. But then I thought, what the hell, if I’m not doing that manually, I’m not doing anything manually! So I came up with this command:
+    <p>Overview I found a web app that can help process images: PNG images only!
+Image upload, so immediately this is some sort of php file upload vulnerability.
+Identifying the vulnerabilities We can smuggle any file as a png, by adding the PNG header and the .png extension, upon testing.
+There is also an /uploads directory, where we can find each one of our uploaded files.
+I noticed something interesting in the phrasing, when trying different exentions: Error: File name does not contain ‘.png’. So I thought, what if we just pop that in? So I send this file:
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-02-03 00:00:00 +0000 UTC'>February 3, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu biscuiti Writeup" href="https://irinasusca.github.io/writeup-blog/posts/biscuiti-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-15 00:00:00 +0000 UTC'>April 15, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Trickster writeup" href="https://irinasusca.github.io/writeup-blog/posts/trickster-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu private-coms Writeup
+    <h2 class="entry-hint-parent">Pico JAuth writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Există o comunicare scursă în acest fișier pcap. Găsește-o și obține flag-ul.
-Another challenge I’ve come across at OSCN, which I didn’t solve, because binwalk won’t show it found files if it can’t extract them using -e but it will find and extract them using more flags.
-Doing a simple binwalk -Mve --dd=&#34;.*&#34; private-coms.pcap extracts an audio file reading out the flag. I didn’t bother listening to it so I popped it into one of those AI wrapper speech to text apps, and got the text in CAPS so I just lowered it with python.
+    <p>Overview Most web application developers use third party components without testing their security. Some of the past affected companies are:
+Equifax (a US credit bureau organization) - breach due to unpatched Apache Struts web framework CVE-2017-5638 Mossack Fonesca (Panama Papers law firm) breach - unpatched version of Drupal CMS used VerticalScope (internet media company) - outdated version of vBulletin forum software used Can you identify the components and exploit the vulnerable one? The website is running here. Can you become an admin? You can login as test with the password Test123! to get started.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-02-03 00:00:00 +0000 UTC'>February 3, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu private-coms Writeup" href="https://irinasusca.github.io/writeup-blog/posts/privatecoms-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-14 00:00:00 +0000 UTC'>April 14, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico JAuth writeup" href="https://irinasusca.github.io/writeup-blog/posts/jauth-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu dumb-discord Writeup
+    <h2 class="entry-hint-parent">Pico Super Serial writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Well here is an example of a funny discord bot.
-_PS: Please note that the IP:PORT received is not needed to solve the challenge and nothing will answer there. _
-Identifying the vulnerabilities The script, decompiled:
-# Decompiled with PyLingual (https://pylingual.io) # Internal filename: server.py # Bytecode version: 3.6rc1 (3379) # Source timestamp: 2020-12-02 02:30:35 UTC (1606876235) from discord.ext import commands import discord import json from discord.utils import get def obfuscate(byt): mask = b&#39;ctf{tryharderdontstring}&#39; lmask = len(mask) return bytes((c ^ mask[i % lmask] for i, c in enumerate(byt))) def test(s): data = obfuscate(s.encode()) return data intents = discord.Intents.default() intents.members = True cfg = open(&#39;config.json&#39;, &#39;r&#39;) tmpconfig = cfg.read() cfg.close() config = json.loads(tmpconfig) token = config[test(&#39;\x17\x1b\r\x1e\x1a&#39;).decode()] client = commands.Bot(command_prefix=&#39;/&#39;) @client.event async def on_ready(): print(&#39;Connected to bot: {}&#39;.format(client.user.name)) print(&#39;Bot ID: {}&#39;.format(client.user.id)) @client.command() async def getflag(ctx): await ctx.send(test(&#39;\x13\x1b\x08\x1c&#39;).decode()) @client.event async def on_message(message): await client.process_commands(message) if test(&#39;B\x04\x0f\x15\x13&#39;).decode() in message.content.lower(): await message.channel.send(test(&#39;\x13\x1b\x08\x1c&#39;).decode()) if test(&#39;L\x13\x03\x0f\x12\x1e\x18\x0f&#39;).decode() in message.content.lower() and message.author.id == 783473293554352141: role = discord.utils.get(message.author.guild.roles, name=test(&#39;\x07\x17\x12\x1dFBKXO\x11\x1d\x07\x17\x16\n\n\x01]\x06\x1d&#39;).decode()) member = discord.utils.get(message.author.guild.members, id=message.author.id) if role in member.roles: await message.channel.send(test(config[test(&#39;\x05\x18\x07\x1c&#39;).decode()])) if test(&#39;L\x1c\x03\x17\x04&#39;).decode() in message.content.lower(): await message.channel.send(test(&#39;7\x06\x1f[\x1c\x13\x0b\x0c\x04\x00E&#39;).decode()) if &#39;/s基ay&#39; in message.content.lower(): await message.channel.send(message.content.replace(&#39;/s基ay&#39;, &#39;&#39;).replace(test(&#39;L\x13\x03\x0f\x12\x1e\x18\x0f&#39;).decode(), &#39;&#39;)) client.run(token) I ran the bot locally to decode those strings, and here is the less obfuscated stuff:
+    <p>Overview Try to recover the flag stored on this website
+We have a login page, which upon trying any credentials, we get back the error Fatal error: Uncaught Exception: Unable to open database: unable to open database file in /var/www/html/index.php:5 Stack trace: #0 /var/www/html/index.php(5): SQLite3-&gt;__construct(&#39;../users.db&#39;) #1 {main} thrown in /var/www/html/index.php on line 5.
+Identifying the vulnerabilities I tried fuzzing, and we got some interesting pages:
+The authentication.php one would just redirect to index and clear our cookies, the cookie.php one was just empty, and set us a PHP session id, and in robots.txt was Disallow: /admin.phps, a file which did not exist.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-02-02 00:00:00 +0000 UTC'>February 2, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu dumb-discord Writeup" href="https://irinasusca.github.io/writeup-blog/posts/dumbdiscord-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-14 00:00:00 +0000 UTC'>April 14, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Super Serial writeup" href="https://irinasusca.github.io/writeup-blog/posts/superserial-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

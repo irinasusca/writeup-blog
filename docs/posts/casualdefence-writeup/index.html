@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CyberEdu casual-defence Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, web">
+<meta name="description" content="I haven&rsquo;t done a web challenge outside a ctf in quite a while, so let&rsquo;s see how this goes!
+Challenge overview
+In light of recent events related to the cyber attack, we have prepared a mirror environment of the defaced website so you can have a look. Moreover, both the mirror and production environments retain a copy of the defacement file and up-to-date security policies that prevent any access to our systems.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/casualdefence-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/casualdefence-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/casualdefence-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="CyberEdu casual-defence Writeup">
+  <meta property="og:description" content="I haven’t done a web challenge outside a ctf in quite a while, so let’s see how this goes!
+Challenge overview In light of recent events related to the cyber attack, we have prepared a mirror environment of the defaced website so you can have a look. Moreover, both the mirror and production environments retain a copy of the defacement file and up-to-date security policies that prevent any access to our systems.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-03-29T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-03-29T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CyberEdu casual-defence Writeup">
+<meta name="twitter:description" content="I haven&rsquo;t done a web challenge outside a ctf in quite a while, so let&rsquo;s see how this goes!
+Challenge overview
+In light of recent events related to the cyber attack, we have prepared a mirror environment of the defaced website so you can have a look. Moreover, both the mirror and production environments retain a copy of the defacement file and up-to-date security policies that prevent any access to our systems.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CyberEdu casual-defence Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/casualdefence-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CyberEdu casual-defence Writeup",
+  "name": "CyberEdu casual-defence Writeup",
+  "description": "I haven\u0026rsquo;t done a web challenge outside a ctf in quite a while, so let\u0026rsquo;s see how this goes!\nChallenge overview In light of recent events related to the cyber attack, we have prepared a mirror environment of the defaced website so you can have a look. Moreover, both the mirror and production environments retain a copy of the defacement file and up-to-date security policies that prevent any access to our systems.\n",
+  "keywords": [
+    "CyberEdu", "web"
+  ],
+  "articleBody": "I haven’t done a web challenge outside a ctf in quite a while, so let’s see how this goes!\nChallenge overview In light of recent events related to the cyber attack, we have prepared a mirror environment of the defaced website so you can have a look. Moreover, both the mirror and production environments retain a copy of the defacement file and up-to-date security policies that prevent any access to our systems.\nOpening the website, we just get back the text Hacked by NotRealH4ck3rN4m3! You shall not elevate me!. Doing a ffuf reveals only the .htpasswd and .htaccess forbidden files, so we’re working with Apache here.\nIdentifying the vulnerabilities OPTIONS didn’t reveal anything and fuzzing more didn’t either. I tried looking online for the hacker name but didn’t find anything. And this just seemed to return 200 at about anything we throw at it.\nThere was also a forbidden .html file, along the classic apache ones.\nThe challenge description suggests we have to find a copy of the defacement file and the up-to-date security policies. There isn’t any CSP in the headers of the response, so what the hell is that supposed to mean?\nI tried adding custom headers, about all of them, but nothing.\nDoing /index.php/anything would just return 200, but adding /index.php/../test would suddenly turn to 404… but I left it at that.\nAfter about a 3 week break, because of the finals exams simulations I begrudgingly studied for, I finally returned to this, and I tried this again. The issue was I was trying to fuzz for a parameter using the dirb/common.txt file. Very clever. I downloaded seclists and finally got a hit:\nYeah I changed the terminal look on my kali, glad you noticed! Moving on, I tried fuzzing the parameter values, and some started hitting a blacklist (the 200 just meant Try Harder! here).\nThe blacklist consists of ., exec, system, shell, ', \", /, $, [ and so on. URL encoding the whole thing didn’t bypass this.\nSo, this is most likely some sort of php RCE, so let’s look into it.\nAt first, doing a GET /index.php?cmd=phpinfo(); worked immediately, so we’re on the right path.\nAnd here is our situation. cmd=print_r(getcwd()); does show us /var/www/html, and we can view its contents:\nNow, sadly, we can’t use closed brackets to access any one of the elements. But I snooped around and found this StackOverflow conversation:\nBut this only let us properly view the first . and the last useless file. So I needed a way to remove the dots from the scandir. More StackOverflow:\nAwesome! So cmd=print_r(array_slice(scandir(getcwd()),2)); now begins with index.php. So we can single it out with cmd=print_r(reset(array_slice(scandir(getcwd()),2)));. Now, we can just swap the print_r with highlight_file and there we have it!\n",
+  "wordCount" : "459",
+  "inLanguage": "en",
+  "datePublished": "2026-03-29T00:00:00Z",
+  "dateModified": "2026-03-29T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/casualdefence-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      CyberEdu casual-defence Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-03-29 00:00:00 +0000 UTC'>March 29, 2026</span>&nbsp;·&nbsp;<span>3 min</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>I haven&rsquo;t done a web challenge outside a ctf in quite a while, so let&rsquo;s see how this goes!</p>
+<h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>In light of recent events related to the cyber attack, we have prepared a mirror environment of the defaced website so you can have a look. Moreover, both the mirror and production environments retain a copy of the defacement file and up-to-date security policies that prevent any access to our systems.</p>
+<hr>
+<p>Opening the website, we just get back the text <em>Hacked by NotRealH4ck3rN4m3! You shall not elevate me!</em>. Doing a ffuf reveals only the .htpasswd and .htaccess forbidden files, so we&rsquo;re working with Apache here.</p>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>OPTIONS didn&rsquo;t reveal anything and fuzzing more didn&rsquo;t either. I tried looking online for the hacker name but didn&rsquo;t find anything. And this just seemed to return 200 at about anything we throw at it.</p>
+<p>There was also a forbidden <em>.html</em> file, along the classic apache ones.</p>
+<p>The challenge description suggests we have to find a copy of the defacement file and the <em>up-to-date security policies</em>. There isn&rsquo;t any CSP in the headers of the response, so what the hell is that supposed to mean?</p>
+<p>I tried adding custom headers, about all of them, but nothing.</p>
+<p>Doing <code>/index.php/anything</code> would just return 200, but adding <code>/index.php/../test</code> would suddenly turn to 404&hellip; but I left it at that.</p>
+<hr>
+<p>After about a 3 week break, because of the finals exams simulations I begrudgingly studied for, I finally returned to this, and I tried this again. The issue was I was trying to fuzz for a parameter using the <code>dirb/common.txt</code> file. Very clever. I downloaded <code>seclists</code> and finally got a hit:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/casualdefence-writeup/HIT.png#center"></p>
+<p>Yeah I changed the terminal look on my kali, glad you noticed! Moving on, I tried fuzzing the parameter values, and some started hitting a blacklist (the 200 just meant Try Harder! here).</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/casualdefence-writeup/tryharder.png#center"></p>
+<p>The blacklist consists of <code>.</code>, <code>exec</code>, <code>system</code>, <code>shell</code>, <code>'</code>, <code>&quot;</code>, <code>/</code>, <code>$</code>, <code>[</code> and so on. URL encoding the whole thing didn&rsquo;t bypass this.</p>
+<p>So, this is most likely some sort of php RCE, so let&rsquo;s look into it.</p>
+<p>At first, doing a <code>GET /index.php?cmd=phpinfo();</code> worked immediately, so we&rsquo;re on the right path.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/casualdefence-writeup/disabled.png#center"></p>
+<p>And here is our situation. <code>cmd=print_r(getcwd());</code> does show us <em>/var/www/html</em>, and we can view its contents:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/casualdefence-writeup/files.png#center"></p>
+<p>Now, sadly, we can&rsquo;t use closed brackets to access any one of the elements. But I snooped around and found this StackOverflow conversation:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/casualdefence-writeup/stacky.png#center"></p>
+<p>But this only let us properly view the first <code>.</code> and the last useless file. So I needed a way to remove the dots from the scandir. More StackOverflow:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/casualdefence-writeup/stacky2.png#center"></p>
+<p>Awesome! So <code>cmd=print_r(array_slice(scandir(getcwd()),2));</code> now begins with <em>index.php</em>. So we can single it out with <code>cmd=print_r(reset(array_slice(scandir(getcwd()),2)));</code>. Now, we can just swap the <code>print_r</code> with <code>highlight_file</code> and there we have it!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/casualdefence-writeup/flag.png#center"></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/web/">Web</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

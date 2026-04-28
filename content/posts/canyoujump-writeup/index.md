@@ -3,7 +3,7 @@ date = '2025-12-16'
 draft = false
 title = "CyberEdu can-you-jump Writeup"
 ShowToc = true
-tags = ["CyberEdu", "pwn", "buffer-overflow", "Ret2libc", "JOP"]
+tags = ["CyberEdu", "pwn", "buffer-overflow", "Ret2libc"]
 +++
 
 ## Challenge overview

@@ -3,7 +3,7 @@ date = '2026-01-08'
 draft = false
 title = 'Mobile rev'
 ShowToc = true
-tags = ["Materials", "rev"]
+tags = ["Materials"]
 +++
 
 

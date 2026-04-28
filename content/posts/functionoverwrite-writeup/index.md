@@ -3,7 +3,7 @@ date = '2025-11-23T21:08:35+02:00'
 draft = false
 title = 'Pico Function Overwrite Writeup'
 ShowToc = true
-tags = ["picoCTF", "pwn", "overflow"]
+tags = ["picoCTF", "pwn", "buffer-overflow"]
 +++
 
 ## Challenge overview

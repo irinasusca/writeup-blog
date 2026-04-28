@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
 <title>VMs | Irina&#39;s CTF Writeups</title>
-<meta name="keywords" content="chat, vm">
+<meta name="keywords" content="materials">
 <meta name="description" content="Why
 I decided to make a post about VMs and things that I didn&rsquo;t see people talk much about, especially because of my past experiences with them. I will be talking about Windows and Linux machines, what worked for me and what didn&rsquo;t, how to set up and all that crap.
 
@@ -14,7 +14,7 @@ Windows
 My first attempt at a &ldquo;cybersecurity&rdquo; Kali VM was on Oracle VirtualBox, on my old Windows Laptop (with 16GB of ram and 400GB of space), which didn&rsquo;t leave much for the VM, maybe four cores and 8GB RAM at best.">
 <meta name="author" content="">
 <link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/vm-specs/">
-<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
@@ -84,8 +84,7 @@ Windows My first attempt at a “cybersecurity” Kali VM was on Oracle VirtualB
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2026-01-04T00:00:00+00:00">
     <meta property="article:modified_time" content="2026-01-04T00:00:00+00:00">
-    <meta property="article:tag" content="Chat">
-    <meta property="article:tag" content="Vm">
+    <meta property="article:tag" content="Materials">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="VMs">
 <meta name="twitter:description" content="Why
@@ -123,7 +122,7 @@ My first attempt at a &ldquo;cybersecurity&rdquo; Kali VM was on Oracle VirtualB
   "name": "VMs",
   "description": "Why I decided to make a post about VMs and things that I didn\u0026rsquo;t see people talk much about, especially because of my past experiences with them. I will be talking about Windows and Linux machines, what worked for me and what didn\u0026rsquo;t, how to set up and all that crap.\nWindows My first attempt at a \u0026ldquo;cybersecurity\u0026rdquo; Kali VM was on Oracle VirtualBox, on my old Windows Laptop (with 16GB of ram and 400GB of space), which didn\u0026rsquo;t leave much for the VM, maybe four cores and 8GB RAM at best.\n",
   "keywords": [
-    "chat", "vm"
+    "materials"
   ],
   "articleBody": "Why I decided to make a post about VMs and things that I didn’t see people talk much about, especially because of my past experiences with them. I will be talking about Windows and Linux machines, what worked for me and what didn’t, how to set up and all that crap.\nWindows My first attempt at a “cybersecurity” Kali VM was on Oracle VirtualBox, on my old Windows Laptop (with 16GB of ram and 400GB of space), which didn’t leave much for the VM, maybe four cores and 8GB RAM at best.\nAnd it was honestly a miracle I didn’t quit because of it altogether, because it constantly, and I mean constantly crashed, the CPU usage was always trough the roof, I could hardly open a couple tabs of Firefox at once, let alone run brute force scripts. Even normal exploits, there was a 20% chance the VM would just crash and not save anything. Really annoying. Especially considering the CyberEdu website, which eats so, so, so many resources for some reason, and it freezes every other minute.\nWhat made me really have to change though, literally, was that after installing a VPN my mouse cursor just disappeared. Something with xfce and gnome incompatibilities. But because it’s Kali, there was no fix, I struggled with finding one for a week then I just started accepting it, because I had too much important stuff installed to make a new VM and start over. I really just started learning shortcuts for everything (which I actually use now, so maybe it wasn’t that shit of a thing), and I used my VM mouseless for a month until I got a new laptop.\nHere’s the documentation for Kali on VirtualBox if you need it.\nMaybe another solution is the VMware, I had a Windows VM on both VirtualBox and VMware on the same windows Laptop, and the VMware worked staggeringly better (still couldn’t run games too well, maybe 20-30 fps, but it wouldn’t instantly crash the VM when I ran them, unlike VirtualBox). So you might have more success with that one, but I recall it being a bit harder to install.\nLinux Since those dark, dark days I’ve got myself a Thinkpad with 32GB RAM and an actual CPU, using Ubuntu because Windows 11 sucks. I just installed kvm, and I’m using the virt-manager’s GUI.\nAt first I gave it the same amount of RAM and cores as my old VirtualBox machine and it unironically worked miles faster, no delay when typing, instant connections, even firefox. But it still crashed and froze a few times, and I could tell I needed a bit more, so I moved to 12GB of ram and gave it 6 cores.\nYou do need to install the spice tools for copy and paste between your main machine and VM though, so don’t forget to do that.\nThis has been the best experience I’ve had so far VM-wise, and the one I recommend the most.\nKali? I know some people who don’t use kali and some don’t even use VMs, but you might install something that just makes your entire machine unusable and reinstalling a VM is easier than an entire laptop. And fair point, kali is a pain to use especially for beginners, and installing stuff and troubleshooting can be literally impossible sometimes. But most of the time it’s fine, it has the most tools you will need built in, and it’s what I’ve always used.\nBut the most important thing is to know what you like the most and what you use the most efficiently, because if you’re not comfortable with a distro nobody is forcing you to use it. So just do what makes you happy, or the least annoyed.\n",
   "wordCount" : "624",
@@ -149,7 +148,9 @@ My first attempt at a &ldquo;cybersecurity&rdquo; Kali VM was on Oracle VirtualB
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -200,7 +201,7 @@ My first attempt at a &ldquo;cybersecurity&rdquo; Kali VM was on Oracle VirtualB
     <h1 class="post-title entry-hint-parent">
       VMs
     </h1>
-    <div class="post-meta"><span title='2026-01-04 00:00:00 +0000 UTC'>January 4, 2026</span>
+    <div class="post-meta"><span title='2026-01-04 00:00:00 +0000 UTC'>January 4, 2026</span>&nbsp;·&nbsp;<span>3 min</span>
 
 </div>
   </header> <div class="toc">
@@ -251,8 +252,7 @@ My first attempt at a &ldquo;cybersecurity&rdquo; Kali VM was on Oracle VirtualB
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="https://irinasusca.github.io/writeup-blog/tags/chat/">Chat</a></li>
-      <li><a href="https://irinasusca.github.io/writeup-blog/tags/vm/">Vm</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/materials/">Materials</a></li>
     </ul>
   </footer>
 </article>

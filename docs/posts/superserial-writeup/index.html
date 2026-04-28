@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Pico Super Serial writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="picoCTF, web">
+<meta name="description" content="Overview
+Try to recover the flag stored on this website
+
+We have a login page, which upon trying any credentials, we get back the error Fatal error: Uncaught Exception: Unable to open database: unable to open database file in /var/www/html/index.php:5 Stack trace: #0 /var/www/html/index.php(5): SQLite3-&gt;__construct(&#39;../users.db&#39;) #1 {main} thrown in /var/www/html/index.php on line 5.
+Identifying the vulnerabilities
+I tried fuzzing, and we got some interesting pages:
+
+The authentication.php one would just redirect to index and clear our cookies, the cookie.php one was just empty, and set us a PHP session id, and in robots.txt was Disallow: /admin.phps, a file which did not exist.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/superserial-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/superserial-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/superserial-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Pico Super Serial writeup">
+  <meta property="og:description" content="Overview Try to recover the flag stored on this website
+We have a login page, which upon trying any credentials, we get back the error Fatal error: Uncaught Exception: Unable to open database: unable to open database file in /var/www/html/index.php:5 Stack trace: #0 /var/www/html/index.php(5): SQLite3-&gt;__construct(&#39;../users.db&#39;) #1 {main} thrown in /var/www/html/index.php on line 5.
+Identifying the vulnerabilities I tried fuzzing, and we got some interesting pages:
+The authentication.php one would just redirect to index and clear our cookies, the cookie.php one was just empty, and set us a PHP session id, and in robots.txt was Disallow: /admin.phps, a file which did not exist.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-04-14T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-04-14T00:00:00+00:00">
+    <meta property="article:tag" content="PicoCTF">
+    <meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pico Super Serial writeup">
+<meta name="twitter:description" content="Overview
+Try to recover the flag stored on this website
+
+We have a login page, which upon trying any credentials, we get back the error Fatal error: Uncaught Exception: Unable to open database: unable to open database file in /var/www/html/index.php:5 Stack trace: #0 /var/www/html/index.php(5): SQLite3-&gt;__construct(&#39;../users.db&#39;) #1 {main} thrown in /var/www/html/index.php on line 5.
+Identifying the vulnerabilities
+I tried fuzzing, and we got some interesting pages:
+
+The authentication.php one would just redirect to index and clear our cookies, the cookie.php one was just empty, and set us a PHP session id, and in robots.txt was Disallow: /admin.phps, a file which did not exist.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Pico Super Serial writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/superserial-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Pico Super Serial writeup",
+  "name": "Pico Super Serial writeup",
+  "description": "Overview Try to recover the flag stored on this website\nWe have a login page, which upon trying any credentials, we get back the error Fatal error: Uncaught Exception: Unable to open database: unable to open database file in /var/www/html/index.php:5 Stack trace: #0 /var/www/html/index.php(5): SQLite3-\u0026gt;__construct('../users.db') #1 {main} thrown in /var/www/html/index.php on line 5.\nIdentifying the vulnerabilities I tried fuzzing, and we got some interesting pages:\nThe authentication.php one would just redirect to index and clear our cookies, the cookie.php one was just empty, and set us a PHP session id, and in robots.txt was Disallow: /admin.phps, a file which did not exist.\n",
+  "keywords": [
+    "picoCTF", "web"
+  ],
+  "articleBody": "Overview Try to recover the flag stored on this website\nWe have a login page, which upon trying any credentials, we get back the error Fatal error: Uncaught Exception: Unable to open database: unable to open database file in /var/www/html/index.php:5 Stack trace: #0 /var/www/html/index.php(5): SQLite3-\u003e__construct('../users.db') #1 {main} thrown in /var/www/html/index.php on line 5.\nIdentifying the vulnerabilities I tried fuzzing, and we got some interesting pages:\nThe authentication.php one would just redirect to index and clear our cookies, the cookie.php one was just empty, and set us a PHP session id, and in robots.txt was Disallow: /admin.phps, a file which did not exist.\nLooking at the error when trying to log in, it’s probably a permissions issue, so the php doesn’t have permission to access the ../users.db file; Quite strange, so that’s not the way to go.\nWhat’s interesting is that the .phps from the admin file is normally used for source code with syntax highlighting, and sure enough, looking at index.phps, we get to see the source code; that applies to all the other files, too.\nLooking at this part of cookie.phps, looks like we’re dealing with a php deserialization vulnerability, encapsulated as the base64 cookie “login”. More on php serialization here.\nSo, we need an object of the class permissions, with a username and password, right? I tried making one, like this, O:4:\"permissions\":2:{s:8:\"username\";s:11:\"' OR 1=1;--\";s:8:\"password\";s:1:\"a\";}. But my lack of php knowledge caught up to me again; the SQL wasn’t vulnerable, and the __toString() magic method was broken on their side, so it would have thrown an error anyways.\nNow, let’s take a look at authentication.phps:\nClearly the read_log() is our way to reach the flag - if we set the log_file string to “../flag” as the hint suggests, it will simply print it out. Now, the code just assumes that what we send is a permissions object that has an is_admin() method. But, we can just send anything we like!\nThe magic method __toString() of the acces_log object will be automatically called and it will invoke the read_log function. So, that’s it! We sneak a different class-ed object, since no one is really checking anything.\nI ran this using a php sandbox:\n\u003c?php class acces_log { public $log_file; function __construct($lf) { $this-\u003elog_file = $lf; } } // instance $obj = new acces_log(\"../flag\"); echo urlencode(base64_encode(serialize($obj))); ?\u003e However, upon loading it up in a login cookie:\nSo, in cookie.php, it has no idea what that class could possibly be. Upon great inspection, turns out I fucking misspelled “access”. I fixed that in the snippet above, got the cookie “TzoxMDoiYWNjZXNzX2xvZyI6MTp7czo4OiJsb2dfZmlsZSI7czo3OiIuLi9mbGFnIjt9”, and finally, the flag:\n",
+  "wordCount" : "432",
+  "inLanguage": "en",
+  "datePublished": "2026-04-14T00:00:00Z",
+  "dateModified": "2026-04-14T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/superserial-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Pico Super Serial writeup
+    </h1>
+    <div class="post-meta"><span title='2026-04-14 00:00:00 +0000 UTC'>April 14, 2026</span>&nbsp;·&nbsp;<span>3 min</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#overview" aria-label="Overview">Overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="overview">Overview<a hidden class="anchor" aria-hidden="true" href="#overview">#</a></h2>
+<p>Try to recover the flag stored on this website</p>
+<hr>
+<p>We have a login page, which upon trying any credentials, we get back the error <code>Fatal error: Uncaught Exception: Unable to open database: unable to open database file in /var/www/html/index.php:5 Stack trace: #0 /var/www/html/index.php(5): SQLite3-&gt;__construct('../users.db') #1 {main} thrown in /var/www/html/index.php on line 5</code>.</p>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>I tried fuzzing, and we got some interesting pages:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/superserial-writeup/fuzz.png#center"></p>
+<p>The authentication.php one would just redirect to index and clear our cookies, the cookie.php one was just empty, and set us a PHP session id, and in robots.txt was <code>Disallow: /admin.phps</code>, a file which did not exist.</p>
+<p>Looking at the error when trying to log in, it&rsquo;s probably a permissions issue, so the php doesn&rsquo;t have permission to access the <code>../users.db</code> file; Quite strange, so that&rsquo;s not the way to go.</p>
+<p>What&rsquo;s interesting is that the <code>.phps</code> from the admin file is normally used for source code with syntax highlighting, and sure enough, looking at <code>index.phps</code>, we get to see the source code; that applies to all the other files, too.</p>
+<p>Looking at this part of <code>cookie.phps</code>, looks like we&rsquo;re dealing with a php deserialization vulnerability, encapsulated as the base64 cookie &ldquo;login&rdquo;. More on php serialization <a href="https://portswigger.net/web-security/deserialization/exploiting">here</a>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/superserial-writeup/ciikie.png#center"></p>
+<p>So, we need an object of the class <code>permissions</code>, with a <code>username</code> and <code>password</code>, right? I tried making one, like this, <code>O:4:&quot;permissions&quot;:2:{s:8:&quot;username&quot;;s:11:&quot;' OR 1=1;--&quot;;s:8:&quot;password&quot;;s:1:&quot;a&quot;;}</code>. But my lack of php knowledge caught up to me again; the SQL wasn&rsquo;t vulnerable, and the <code>__toString()</code> magic method was broken on their side, so it would have thrown an error anyways.</p>
+<p>Now, let&rsquo;s take a look at <code>authentication.phps</code>:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/superserial-writeup/auth.png#center"></p>
+<p>Clearly the <code>read_log()</code> is our way to reach the flag - if we set the <code>log_file</code> string to &ldquo;../flag&rdquo; as the hint suggests, it will simply print it out. Now, the code just assumes that what we send is a <code>permissions</code> object that has an <code>is_admin()</code> method. But, we can just send anything we like!</p>
+<p>The magic method <code>__toString()</code> of the <code>acces_log</code> object will be automatically called and it will invoke the <code>read_log</code> function. So, that&rsquo;s it! We sneak a different class-ed object, since no one is really checking anything.</p>
+<p>I ran this using a php sandbox:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#f92672">&lt;?</span><span style="color:#a6e22e">php</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">acces_log</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> $log_file;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">function</span> __construct($lf) {
+</span></span><span style="display:flex;"><span>		$this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">log_file</span> <span style="color:#f92672">=</span> $lf;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// instance
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$obj <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">acces_log</span>(<span style="color:#e6db74">&#34;../flag&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">echo</span> <span style="color:#a6e22e">urlencode</span>(<span style="color:#a6e22e">base64_encode</span>(<span style="color:#a6e22e">serialize</span>($obj)));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">?&gt;</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><p>However, upon loading it up in a login cookie:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/superserial-writeup/err.png#center"></p>
+<p>So, in <code>cookie.php</code>, it has no idea what that class could possibly be. Upon great inspection, turns out I fucking misspelled &ldquo;access&rdquo;. I fixed that in the snippet above, got the cookie &ldquo;TzoxMDoiYWNjZXNzX2xvZyI6MTp7czo4OiJsb2dfZmlsZSI7czo3OiIuLi9mbGFnIjt9&rdquo;, and finally, the flag:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/superserial-writeup/fla.png#center"></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/picoctf/">PicoCTF</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/web/">Web</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

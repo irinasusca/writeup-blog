@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>sql | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="Materials">
+<meta name="description" content="Why
+SQL injection is a pretty boring subject to me but I ran into it through some pico challenges so I thought I&rsquo;d make some notes anyways. sqlmap usage is probably necessary just for really beginner ctf challs, but I&rsquo;ll include it anyways.
+Obviously this stuff is not that hard to google yourself, so don&rsquo;t think of this as a complete guide, just as my own personal notes because I will most likely forget about this in a week.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/sql/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/sql/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/sql/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="sql">
+  <meta property="og:description" content="Why SQL injection is a pretty boring subject to me but I ran into it through some pico challenges so I thought I’d make some notes anyways. sqlmap usage is probably necessary just for really beginner ctf challs, but I’ll include it anyways.
+Obviously this stuff is not that hard to google yourself, so don’t think of this as a complete guide, just as my own personal notes because I will most likely forget about this in a week.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-03-31T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-03-31T00:00:00+00:00">
+    <meta property="article:tag" content="Materials">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="sql">
+<meta name="twitter:description" content="Why
+SQL injection is a pretty boring subject to me but I ran into it through some pico challenges so I thought I&rsquo;d make some notes anyways. sqlmap usage is probably necessary just for really beginner ctf challs, but I&rsquo;ll include it anyways.
+Obviously this stuff is not that hard to google yourself, so don&rsquo;t think of this as a complete guide, just as my own personal notes because I will most likely forget about this in a week.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "sql",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/sql/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "sql",
+  "name": "sql",
+  "description": "Why SQL injection is a pretty boring subject to me but I ran into it through some pico challenges so I thought I\u0026rsquo;d make some notes anyways. sqlmap usage is probably necessary just for really beginner ctf challs, but I\u0026rsquo;ll include it anyways.\nObviously this stuff is not that hard to google yourself, so don\u0026rsquo;t think of this as a complete guide, just as my own personal notes because I will most likely forget about this in a week.\n",
+  "keywords": [
+    "Materials"
+  ],
+  "articleBody": "Why SQL injection is a pretty boring subject to me but I ran into it through some pico challenges so I thought I’d make some notes anyways. sqlmap usage is probably necessary just for really beginner ctf challs, but I’ll include it anyways.\nObviously this stuff is not that hard to google yourself, so don’t think of this as a complete guide, just as my own personal notes because I will most likely forget about this in a week.\nsql To get SQLi, you need to get SQL. And it really doesn’t hurt to know this stuff. Great source.\nThe first type, Data Definition Language, where you define tables and such.\nCREATE\nCREATE TABLE user (id INT PRIMARY KEY, username VARCHAR(50)); ALTER\nmodify a db structure, like add a constraint, column, etc: ALTER TABLE user ADD COLUMN email VARCHAR(100); DROP\ndeletes a table: DROP TABLE user; TRUNCATE\njust removes all records, but doesn’t delete the table. Next up is Data Manipulation Language, where you work with entries rather than the tables themselves.\nSELECT\nfetches data: SELECT username, email FROM user WHERE id = 1; INSERT\nadd new rows: INSERT INTO user (id, username) VALUES (2, 'fufu'); UPDATE - update data:\nUPDATE user SET email = 'fufu@gmail.com' WHERE id = 1; DELETE\nDELETE FROM user WHERE id = 1; Now, let’s go over the logical operators.\nOR\nSELECT * FROM user WHERE (role = 'admin' OR role = 'staff'); this might seem familiar due to the classic ' OR '1'='1 SQLi. AND\nSELECT * FROM user WHERE role = 'default' AND money \u003e 500; There is also a “wildcard”:\nLIKE in sql, % means any number of characters while _ means a single character. SELECT * FROM products WHERE name LIKE 'ctf%'; matches ctf{a}, ctfbubu etc. in SQLi, for blind SQLi you can guess stuff character by character like AND password LIKE 'a%'. Finally, for combining data:\nUNION\ncombines the result of two or more SELECT. They MUST have the same number of columns and compatible data types: SELECT location FROM user UNION SELECT location FROM shop; this is also used in SQLi to exfiltrate data, e.g. UNION SELECT null, username, password from user--. JOIN\nlinks tables based on a common column, usually a foreign key. INNER JOIN means A ∩ B FULL JOIN means A ∪ B LEFT JOIN means A and matching rows from B RIGHT JOIN means B and matching rows from A SELECT user.username, oder.amount FROM user INNER JOIN order ON user.id = order.user_id; There is also a separate category for this one:\nGROUP BY this is used for grouping stuff together. Like, if you have a bunch of orders, made by users, for items with different prices, and you want to see how much each user spent. SELECT user_id, SUM(price) AS total_spent FROM order GROUP BY user_id. to filter, we don’t use the where, but HAVING. Often group by is used with something called Aggregate Functions aka math helpers:\nCOUNT() SELECT category, COUNT(*) AS items_count FROM products GROUP BY category; SUM() MAX() finds the biggest fish in the bucket; like, if you have some items with price = 10 and one with price = 20, for the same user, and you use GROUP BY user_id, it will display the one with the biggest price. MIN() AVG() calculates the average. These were the most relevant ones. There are also some “miscellaneous” things you ought to know, for blacklists and such; I will update this list as I go:\nConcatenation\nfor example, the word “admin” is blaclisted;\n'ad'||'min' (SQLite)\nCONCAT('ad','min') (MySQL)\n'ad'+'min' (MSSQL)\nDouble url-encoding\nif ' is blacklisted, and so is its %27 form, then %2527 which decodes to %27 might not be.\nSpaces\nwhen, blacklisted can just be replaced with a /**/.\nIS NOT\nlike in Web Gauntlet 2, where just about anything was banned, we needed to turn the password=something into a true statement\ninjecting password=\"a' IS NOT 'b\" worked, because it’s checking FALSE is not ‘b’.\nusually this is used as IS NOT NULL, but it can be useful to us in this other way.\nBETWEEN\nwhen \u003e and \u003c are blocked, we can use column BETWEEN 'a' AND 'z'.\nIN\nwhen = is blacklisted, doing something like OR '1' IN ('1')-- would work.\nGLOB\nwhen LIKE is blacklisted, WHERE password GLOB '*'\nsqlmap For this, the way I do it is I save my request as text in Burpsuite as request.txt. Now let’s get into parameters:\n-r request.txt (pretty straight-forward)\n-u http://link.com?id=1\n-v:\n-v 3 shows the payloads being sent;\n-v 4 shows the requests\n-v 5 shows the responses\n-v 6 just shows the whole raw page.\n--dbms=sqlite in case you already know the db engine; this just skips fingerprinting;\n--level=5 increases the number of payloads and includes headers in the scan;\n--risk=3 enables the heavier payloads, whatever that means;\n--batch just says yes to all the annoying prompts.\n--random-agent in case a WAF gives you trouble;\n--tables dumps the NAMES of the tables found;\n--dump actually dumps the data;\n-A agent\n-H header\n--host=example\n--cookie=example\nSometimes we know that injection was successful based on the text in the response. For example, if the wrong query results in Invalid captcha, you might wanna add --not-string=\"Invalid\". Or, on the contrary, --string=\"Success!!!!!\".\ntable stuff For SQLite, which I see extremely often, the table names can be extracted with 'UNION SELECT name FROM sqlite_master--.\n",
+  "wordCount" : "899",
+  "inLanguage": "en",
+  "datePublished": "2026-03-31T00:00:00Z",
+  "dateModified": "2026-03-31T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/sql/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      sql
+    </h1>
+    <div class="post-meta"><span title='2026-03-31 00:00:00 +0000 UTC'>March 31, 2026</span>&nbsp;·&nbsp;<span>5 min</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#why" aria-label="Why">Why</a></li>
+                <li>
+                    <a href="#sql" aria-label="sql">sql</a></li>
+                <li>
+                    <a href="#sqlmap" aria-label="sqlmap">sqlmap</a></li>
+                <li>
+                    <a href="#table-stuff" aria-label="table stuff">table stuff</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="why">Why<a hidden class="anchor" aria-hidden="true" href="#why">#</a></h2>
+<p>SQL injection is a pretty boring subject to me but I ran into it through some pico challenges so I thought I&rsquo;d make some notes anyways. sqlmap usage is probably necessary just for really beginner ctf challs, but I&rsquo;ll include it anyways.</p>
+<p>Obviously this stuff is not that hard to google yourself, so don&rsquo;t think of this as a <em>complete guide</em>, just as my own personal notes because I will most likely forget about this in a week.</p>
+<h2 id="sql">sql<a hidden class="anchor" aria-hidden="true" href="#sql">#</a></h2>
+<p>To get SQLi, you need to get SQL. And it really doesn&rsquo;t hurt to know this stuff. <a href="https://www.w3schools.com/sql/">Great source</a>.</p>
+<p>The first type, <em>Data Definition Language</em>, where you define tables and such.</p>
+<ul>
+<li>
+<p><code>CREATE</code></p>
+<ul>
+<li><code>CREATE TABLE user (id INT PRIMARY KEY, username VARCHAR(50));</code></li>
+</ul>
+</li>
+<li>
+<p><code>ALTER</code></p>
+<ul>
+<li>modify a db structure, like add a constraint, column, etc:</li>
+<li><code>ALTER TABLE user ADD COLUMN email VARCHAR(100);</code></li>
+</ul>
+</li>
+<li>
+<p><code>DROP</code></p>
+<ul>
+<li>deletes a table:</li>
+<li><code>DROP TABLE user;</code></li>
+</ul>
+</li>
+<li>
+<p><code>TRUNCATE</code></p>
+<ul>
+<li>just removes all records, but doesn&rsquo;t delete the table.</li>
+</ul>
+</li>
+</ul>
+<p>Next up is <em>Data Manipulation Language</em>, where you work with entries rather than the tables themselves.</p>
+<ul>
+<li>
+<p><code>SELECT</code></p>
+<ul>
+<li>fetches data:</li>
+<li><code>SELECT username, email FROM user WHERE id = 1;</code></li>
+</ul>
+</li>
+<li>
+<p><code>INSERT</code></p>
+<ul>
+<li>add new rows:</li>
+<li><code>INSERT INTO user (id, username) VALUES (2, 'fufu');</code></li>
+</ul>
+</li>
+<li>
+<p><code>UPDATE</code> - update data:</p>
+<ul>
+<li><code>UPDATE user SET email = 'fufu@gmail.com' WHERE id = 1;</code></li>
+</ul>
+</li>
+<li>
+<p><code>DELETE</code></p>
+<ul>
+<li><code>DELETE FROM user WHERE id = 1;</code></li>
+</ul>
+</li>
+</ul>
+<p>Now, let&rsquo;s go over the logical operators.</p>
+<ul>
+<li>
+<p><code>OR</code></p>
+<ul>
+<li><code>SELECT * FROM user WHERE (role = 'admin' OR role = 'staff');</code></li>
+<li>this might seem familiar due to the classic <code>' OR '1'='1</code> SQLi.</li>
+</ul>
+</li>
+<li>
+<p><code>AND</code></p>
+<ul>
+<li><code>SELECT * FROM user WHERE role = 'default' AND money &gt; 500;</code></li>
+</ul>
+</li>
+</ul>
+<p>There is also a &ldquo;wildcard&rdquo;:</p>
+<ul>
+<li><code>LIKE</code>
+<ul>
+<li>in sql, <code>%</code> means any number of characters while <code>_</code> means a single character.</li>
+<li><code>SELECT * FROM products WHERE name LIKE 'ctf%';</code> matches ctf{a}, ctfbubu etc.</li>
+<li>in SQLi, for blind SQLi you can guess stuff character by character like <code>AND password LIKE 'a%'</code>.</li>
+</ul>
+</li>
+</ul>
+<p>Finally, for combining data:</p>
+<ul>
+<li>
+<p><code>UNION</code></p>
+<ul>
+<li>combines the result of two or more <code>SELECT</code>. They MUST have the same number of columns and compatible data types:</li>
+<li><code>SELECT location FROM user UNION SELECT location FROM shop;</code></li>
+<li>this is also used in SQLi to exfiltrate data, e.g. <code>UNION SELECT null, username, password from user--</code>.</li>
+</ul>
+</li>
+<li>
+<p><code>JOIN</code></p>
+<ul>
+<li>links tables based on a common column, usually a <em>foreign key</em>.</li>
+<li><code>INNER JOIN</code> means A ∩ B</li>
+<li><code>FULL JOIN</code> means A ∪ B</li>
+<li><code>LEFT JOIN</code> means A and matching rows from B</li>
+<li><code>RIGHT JOIN</code> means B and matching rows from A</li>
+<li><code>SELECT user.username, oder.amount FROM user INNER JOIN order ON user.id = order.user_id;</code></li>
+</ul>
+</li>
+</ul>
+<p>There is also a separate category for this one:</p>
+<ul>
+<li><code>GROUP BY</code></li>
+<li>this is used for grouping stuff together. Like, if you have a bunch of orders, made by users, for items with different prices, and you want to see how much each user spent.</li>
+<li><code>SELECT user_id, SUM(price) AS total_spent FROM order GROUP BY user_id</code>.</li>
+<li>to filter, we don&rsquo;t use the where, but <code>HAVING</code>.</li>
+</ul>
+<p>Often group by is used with something called <em>Aggregate Functions</em> aka math helpers:</p>
+<ul>
+<li><code>COUNT()</code>
+<ul>
+<li><code>SELECT category, COUNT(*) AS items_count FROM products GROUP BY category;</code></li>
+</ul>
+</li>
+<li><code>SUM()</code></li>
+<li><code>MAX()</code>
+<ul>
+<li>finds the biggest fish in the bucket; like, if you have some items with price = 10 and one with price = 20, for the same user, and you use <code>GROUP BY user_id</code>, it will display the one with the biggest price.</li>
+</ul>
+</li>
+<li><code>MIN()</code></li>
+<li><code>AVG()</code> calculates the average.</li>
+</ul>
+<p>These were the most relevant ones. There are also some &ldquo;miscellaneous&rdquo; things you ought to know, for blacklists and such; I will update this list as I go:</p>
+<ul>
+<li>
+<p>Concatenation</p>
+</li>
+<li>
+<p>for example, the word &ldquo;admin&rdquo; is blaclisted;</p>
+</li>
+<li>
+<p><code>'ad'||'min'</code> (SQLite)</p>
+</li>
+<li>
+<p><code>CONCAT('ad','min')</code> (MySQL)</p>
+</li>
+<li>
+<p><code>'ad'+'min'</code> (MSSQL)</p>
+</li>
+<li>
+<p>Double url-encoding</p>
+</li>
+<li>
+<p>if <code>'</code> is blacklisted, and so is its <code>%27</code> form, then <code>%2527</code> which decodes to <code>%27</code> might not be.</p>
+</li>
+<li>
+<p>Spaces</p>
+</li>
+<li>
+<p>when, blacklisted can just be replaced with a <code>/**/</code>.</p>
+</li>
+<li>
+<p><code>IS NOT</code></p>
+</li>
+<li>
+<p>like in Web Gauntlet 2, where just about anything was banned, we needed to turn the password=something into a true statement</p>
+</li>
+<li>
+<p>injecting <code>password=&quot;a' IS NOT 'b&quot;</code> worked, because it&rsquo;s checking FALSE is not &lsquo;b&rsquo;.</p>
+</li>
+<li>
+<p>usually this is used as <code>IS NOT NULL</code>, but it can be useful to us in this other way.</p>
+</li>
+<li>
+<p><code>BETWEEN</code></p>
+</li>
+<li>
+<p>when &gt; and &lt; are blocked, we can use <code>column BETWEEN 'a' AND 'z'</code>.</p>
+</li>
+<li>
+<p><code>IN</code></p>
+</li>
+<li>
+<p>when = is blacklisted, doing something like <code>OR '1' IN ('1')--</code> would work.</p>
+</li>
+<li>
+<p><code>GLOB</code></p>
+</li>
+<li>
+<p>when <code>LIKE</code> is blacklisted, <code>WHERE password GLOB '*'</code></p>
+</li>
+</ul>
+<h2 id="sqlmap">sqlmap<a hidden class="anchor" aria-hidden="true" href="#sqlmap">#</a></h2>
+<p>For this, the way I do it is I save my request as text in Burpsuite as <code>request.txt</code>. Now let&rsquo;s get into parameters:</p>
+<ul>
+<li>
+<p><code>-r request.txt</code> (pretty straight-forward)</p>
+</li>
+<li>
+<p><code>-u http://link.com?id=1</code></p>
+</li>
+<li>
+<p><code>-v</code>:</p>
+<ul>
+<li>
+<p><code>-v 3</code> shows the payloads being sent;</p>
+</li>
+<li>
+<p><code>-v 4</code> shows the requests</p>
+</li>
+<li>
+<p><code>-v 5</code> shows the responses</p>
+</li>
+<li>
+<p><code>-v 6</code> just shows the whole raw page.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><code>--dbms=sqlite</code> in case you already know the db engine; this just skips fingerprinting;</p>
+</li>
+<li>
+<p><code>--level=5</code> increases the number of payloads and includes headers in the scan;</p>
+</li>
+<li>
+<p><code>--risk=3</code> enables the heavier payloads, whatever that means;</p>
+</li>
+<li>
+<p><code>--batch</code> just says yes to all the annoying prompts.</p>
+</li>
+<li>
+<p><code>--random-agent</code> in case a WAF gives you trouble;</p>
+</li>
+<li>
+<p><code>--tables</code> dumps the NAMES of the tables found;</p>
+</li>
+<li>
+<p><code>--dump</code> actually dumps the data;</p>
+</li>
+<li>
+<p><code>-A agent</code></p>
+</li>
+<li>
+<p><code>-H header</code></p>
+</li>
+<li>
+<p><code>--host=example</code></p>
+</li>
+<li>
+<p><code>--cookie=example</code></p>
+</li>
+</ul>
+<p>Sometimes we know that injection was successful based on the text in the response. For example, if the wrong query results in <code>Invalid captcha</code>, you might wanna add <code>--not-string=&quot;Invalid&quot;</code>. Or, on the contrary, <code>--string=&quot;Success!!!!!&quot;</code>.</p>
+<h2 id="table-stuff">table stuff<a hidden class="anchor" aria-hidden="true" href="#table-stuff">#</a></h2>
+<p>For SQLite, which I see extremely often, the table names can be extracted with <code>'UNION SELECT name FROM sqlite_master--</code>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/materials/">Materials</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

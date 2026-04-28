@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
 <title>Pico Ropfu Writeup | Irina&#39;s CTF Writeups</title>
-<meta name="keywords" content="picoCTF, pwn, buffer-overflow, rop">
+<meta name="keywords" content="picoCTF, pwn, buffer-overflow">
 <meta name="description" content="Challenge overview
 What&rsquo;s ROP? Can you exploit the following program to get the flag?
 
@@ -19,7 +19,7 @@ We don&rsquo;t seem to have a /bin/sh in memory so this probably means we have t
 That means we need to make our own bin/sh and point to it, and since the vuln returns the gets, that means eax will hold the gets return value. And the return value of gets is a pointer to the input value!">
 <meta name="author" content="">
 <link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/ropfu-writeup/">
-<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
@@ -95,7 +95,6 @@ That means we need to make our own bin/sh and point to it, and since the vuln re
     <meta property="article:tag" content="PicoCTF">
     <meta property="article:tag" content="Pwn">
     <meta property="article:tag" content="Buffer-Overflow">
-    <meta property="article:tag" content="Rop">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Pico Ropfu Writeup">
 <meta name="twitter:description" content="Challenge overview
@@ -138,7 +137,7 @@ That means we need to make our own bin/sh and point to it, and since the vuln re
   "name": "Pico Ropfu Writeup",
   "description": "Challenge overview What\u0026rsquo;s ROP? Can you exploit the following program to get the flag?\nAt first glance, the vuln looks like a 32-bit executable with a buffer overflow vulnerability.\nIdentifying the vulnerabilities Analyzing the binary, it doesn\u0026rsquo;t look like anything special, just an ordinary buffer overflow.\nWe don\u0026rsquo;t seem to have a /bin/sh in memory so this probably means we have to execute a ret2reg.\nThat means we need to make our own bin/sh and point to it, and since the vuln returns the gets, that means eax will hold the gets return value. And the return value of gets is a pointer to the input value!\n",
   "keywords": [
-    "picoCTF", "pwn", "buffer-overflow", "rop"
+    "picoCTF", "pwn", "buffer-overflow"
   ],
   "articleBody": "Challenge overview What’s ROP? Can you exploit the following program to get the flag?\nAt first glance, the vuln looks like a 32-bit executable with a buffer overflow vulnerability.\nIdentifying the vulnerabilities Analyzing the binary, it doesn’t look like anything special, just an ordinary buffer overflow.\nWe don’t seem to have a /bin/sh in memory so this probably means we have to execute a ret2reg.\nThat means we need to make our own bin/sh and point to it, and since the vuln returns the gets, that means eax will hold the gets return value. And the return value of gets is a pointer to the input value!\nThis is because eax/rax usually holds the current function’s return value.\nWould you look at that, no NX! So we can execute the code right on the stack! Since we have a large enough overflow (28 bytes), we don’t need to worry getting a shell.\nThat means we can just get a jmp eax gadget, and write our shellcraft.sh() at the start the input buffer.\nThe Exploit Well, looks like we need to write the shellcode ourselves, shellcraft.sh() was too large after all…\nI tried a bunch of shellcode that kept getting me segmentation faults, that I won’t include, and I tried fitting it all in our buffer before the jmp eax gadget, and I managed to get all the registers required right (for execve, ebx needs to be a pointer to /bin/sh, and ecx and edx need to be 0)\nAfter I set the address after eip, eip+4, to be a null-terminated /bin/sh, I noticed esp would become that value.\nSo, I tried doing\nmov ebx, esp xor ecx, ecx xor edx, edx mov al, 0x0b int 0x80 And my mistake was most likely that I messed with the stack frame, since execve kept returning error 0xffffff74 = -140 = ERFAULT.\nBut then I thought, if after the jmp eax the value at eip+4 goes into esp, why don’t we write the shellcode in eip+4, then just jmp esp to said shellcode?\nThat way, we can just use shellcraft.sh(), since we have unlimited space.\nSince jmp esp is just 2 bytes, we pad with 26 more nops to its left.\npayload = b'\\x90'*26 payload += asm('jmp esp') payload += jmp_eax #this will become esp after we execute jmp eax. newshell = asm(shellcraft.sh()) payload += newshell And it works!\nThe rest of the code can be found on my GitHub here.\n",
   "wordCount" : "408",
@@ -164,7 +163,9 @@ That means we need to make our own bin/sh and point to it, and since the vuln re
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -215,7 +216,7 @@ That means we need to make our own bin/sh and point to it, and since the vuln re
     <h1 class="post-title entry-hint-parent">
       Pico Ropfu Writeup
     </h1>
-    <div class="post-meta"><span title='2025-11-24 21:09:36 +0200 EET'>November 24, 2025</span>
+    <div class="post-meta"><span title='2025-11-24 21:09:36 +0200 EET'>November 24, 2025</span>&nbsp;·&nbsp;<span>2 min</span>
 
 </div>
   </header> <div class="toc">
@@ -288,7 +289,6 @@ That means we need to make our own bin/sh and point to it, and since the vuln re
       <li><a href="https://irinasusca.github.io/writeup-blog/tags/picoctf/">PicoCTF</a></li>
       <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
       <li><a href="https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/">Buffer-Overflow</a></li>
-      <li><a href="https://irinasusca.github.io/writeup-blog/tags/rop/">Rop</a></li>
     </ul>
   </footer>
 </article>

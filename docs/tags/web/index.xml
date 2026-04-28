@@ -6,8 +6,421 @@
     <description>Recent content in Web on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 18 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 23 Apr 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/tags/web/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Pico Binary Gauntlet 0, 1, 2, 3 writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/binarygauntlet-writeup/</link>
+      <pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/binarygauntlet-writeup/</guid>
+      <description>&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+&lt;p&gt;Okay, time for a challenge. The flag for this challenge does not include the standard picoCTF{} wrapper.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;I&amp;rsquo;m doing this so I don&amp;rsquo;t completely forget how to solve pwn challenges :)&lt;/p&gt;
+&lt;h2 id=&#34;binary-gauntlet-0&#34;&gt;Binary gauntlet 0&lt;/h2&gt;
+&lt;p&gt;For this one I just sent &lt;code&gt;%1$p.%2$p.%3$p.%4$p.%5$p.%6$p.%7$p.%8$p.%9$p.%10$p.%11$p.%12$p.%13$p.%14$p.%15$p.%16$p.%17$p.%18$p.%19$p.%20$p.%21$p.%22$p.%23$p.%24$p.%25$p.%26$p.%27$p.%28$p.%29$p.%30$p.%31$p.%32$p.%33$p.%34$p.%35$p.%36$p.%37$p.%38$p.%39$p.%40$p.%41$p.%42$p.%43$p.%44$p.%45$p.%46$p.%47$p.%48$p.%49$p.%50$p.%51$p.%52$p.%53$p.%54$p.%55$p.%56$p.%57$p.%58$p.%59$p.%60$p.%61$p.%62$p.%63$p.%64$p.%65$p.%66$p.%67$p.%68$p.%69$p.%70$p.%71$p.%72$p.%73$p.%74$p.%75$p.%76$p.%77$p.%78$p.%79$p.%80$p.%81$p.%82$p.%83$p.%84$p.%85$p.%86$p.%87$p.%88$p.%89$p.%90$p.%91$p.%92$p.%93$p.%94$p.%95$p.%96$p.%97$p.%98$p.%99$p.%100$p.%101$p.%102$p.%103$p.%104$p.%105$p.%106$p.%107$p.%108$p.%109$p.%110$p.%111$p.%112$p.%113$p.%114$p.%115$p.%116$p.%117$p.%118$p.%119$p.%120$p.%121$p.%122$p.%123$p.%124$p.%125$p.%126$p.%127$p.%128$p.%129$p.%130$p.%131$p.%132$p.%133$p.%134$p.%135$p.%136$p.%137$p.%138$p.%139$p.%140$p.%141$p.%142$p.%143$p.%144$p.%145$p.%146$p.%147$p.%148$p.%149$p.%150$p&lt;/code&gt; twice, and I got the flag.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/binarygauntlet-writeup/flag0.png#center&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;binary-gauntlet-1&#34;&gt;Binary gauntlet 1&lt;/h2&gt;
+&lt;p&gt;NX and PIE are both disabled, and we get the location of &lt;code&gt;dest&lt;/code&gt; on the stack. So, the stack is executable, and we have a buffer overflow. I actually had to look for a hint for this, I haven&amp;rsquo;t seen an NX disabled challenge in so long it hadn&amp;rsquo;t even crossed my mind.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico Startup Company writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/startupcompany-writeup/</link>
+      <pubDate>Wed, 22 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/startupcompany-writeup/</guid>
+      <description>&lt;p&gt;The last challenge in my Pico Medium Web category - finally - all four pages are finished! It&amp;rsquo;s been quite a while, with 12th grade and university admissions, but I&amp;rsquo;m super proud that I got to it in the end.&lt;/p&gt;
+&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+&lt;p&gt;Do you want to fund my startup?&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;We can register, then head over to &lt;code&gt;contribute.php&lt;/code&gt; to contribute money. The request looks like &lt;code&gt;captcha=73&amp;amp;moneys=1&lt;/code&gt;. We can send negative money but it&amp;rsquo;s not that big of a deal.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico 3v@l writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/3v@l-writeup/</link>
+      <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/3v@l-writeup/</guid>
+      <description>&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+&lt;p&gt;ABC Bank&amp;rsquo;s website has a loan calculator to help its clients calculate the amount they pay if they take a loan from the bank. Unfortunately, they are using an eval function to calculate the loan. Bypassing this will give you Remote Code Execution (RCE). Can you exploit the bank&amp;rsquo;s calculator and read the flag?&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;I hate command injection&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;re supposed to bypass this regex: &lt;code&gt;r&#39;0x[0-9A-Fa-f]+|\\u[0-9A-Fa-f]{4}|%[0-9A-Fa-f]{2}|\.[A-Za-z0-9]{1,3}\b|[\\\/]|\.\.&#39;&lt;/code&gt;. I found this nice &lt;a href=&#34;https://regex101.com/r/M32bCK/1&#34;&gt;website&lt;/a&gt; that decodes this regex so it&amp;rsquo;s easier to understand.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico byp4ss3d writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/byp4ss3d-writeup/</link>
+      <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/byp4ss3d-writeup/</guid>
+      <description>&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+&lt;p&gt;A university&amp;rsquo;s online registration portal asks students to upload their ID cards for verification. The developer put some filters in place to ensure only image files are uploaded but are they enough? Take a look at how the upload is implemented. Maybe there&amp;rsquo;s a way to slip past the checks and interact with the server in ways you shouldn&amp;rsquo;t.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;We can upload images via &lt;code&gt;/upload.php&lt;/code&gt;, and access them after at &lt;code&gt;/images/img.png&lt;/code&gt;. Changing the Content-Type to image/png and the extension to .png lets us upload any file, though.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico Credential Stuffing writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/credentialstuffing-writeup/</link>
+      <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/credentialstuffing-writeup/</guid>
+      <description>&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+&lt;p&gt;Credential stuffing is the automated injection of stolen username and password pairs (“credentials”) in to website login forms, in order to fraudulently gain access to user accounts. Since many users will re-use the same password and username/email, when those credentials are exposed (by a database breach or phishing attack, for example) submitting those sets of stolen credentials into dozens or hundreds of other sites can allow an attacker to compromise those accounts too. Download the credentials dump here. There was a recent data breach at a famous department store, in which the login credentials of thousands of users were stolen and dumped online. You&amp;rsquo;re hoping at least one person reused their credentials from the department store for an account at a local bank. Stuff those credentials and get the flag!&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico Fool The Lockout writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/foolthelockout-writeup/</link>
+      <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/foolthelockout-writeup/</guid>
+      <description>&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+&lt;p&gt;Your friend is building a simple website with a login page. To stop brute forcing and credential stuffing, they’ve added an IP-based rate limit: exceed the attempt threshold and your IP is blocked for a while. They’re convinced this makes guessing credentials impossible. To test their defense, they’ve:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Created a dummy account with a random username–password pair from public credential lists.&lt;/li&gt;
+&lt;li&gt;Given you those username and password lists.&lt;/li&gt;
+&lt;li&gt;Shared the full source code.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Can you bypass the rate limit, log in, and capture the flag?&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico Hashgate writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/hashgate-writeup/</link>
+      <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/hashgate-writeup/</guid>
+      <description>&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+&lt;p&gt;You have gotten access to an organisation&amp;rsquo;s portal. Submit your email and password, and it redirects you to your profile. But be careful: just because access to the admin isn’t directly exposed doesn’t mean it’s secure. Maybe someone forgot that obscurity isn’t security&amp;hellip; Can you find your way into the admin’s profile for this organisation and capture the flag? The website is running here.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;In a comment, we find the guest creds, &lt;code&gt; &amp;lt;!-- Email: guest@picoctf.org Password: guest --&amp;gt;&lt;/code&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico Java Code Analysis writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/javacodeanalysis-writeup/</link>
+      <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/javacodeanalysis-writeup/</guid>
+      <description>&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+&lt;p&gt;BookShelf Pico, my premium online book-reading service. I believe that my website is super secure. I challenge you to prove me wrong by reading the &amp;lsquo;Flag&amp;rsquo; book! Here are the credentials to get you started:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Username: &amp;ldquo;user&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;Password: &amp;ldquo;user&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;Initially I thought this was a tad mode complicated, and since there was a profile picture upload with admin restrictions we&amp;rsquo;d have to work with that, but it was much simpler.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico No Sql Injection writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/nosqlinjection-writeup/</link>
+      <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/nosqlinjection-writeup/</guid>
+      <description>&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+&lt;p&gt;Can you try to get access to this website to get the flag?&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;We have access to the source, the most interesting part being this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;initialUser&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;User&lt;/span&gt;({
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#a6e22e&#34;&gt;firstName&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;pico&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#a6e22e&#34;&gt;lastName&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;player&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#a6e22e&#34;&gt;email&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;picoplayer355@picoctf.org&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#a6e22e&#34;&gt;password&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;crypto&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;randomBytes&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;).&lt;span style=&#34;color:#a6e22e&#34;&gt;toString&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;hex&amp;#34;&lt;/span&gt;).&lt;span style=&#34;color:#a6e22e&#34;&gt;slice&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    });
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;initialUser&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;save&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;#&lt;/span&gt;...
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;app&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;post&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/login&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;res&lt;/span&gt;) =&amp;gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; { &lt;span style=&#34;color:#a6e22e&#34;&gt;email&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;password&lt;/span&gt; } &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;body&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#66d9ef&#34;&gt;try&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;user&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;await&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;User&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;findOne&lt;/span&gt;({
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#a6e22e&#34;&gt;email&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#a6e22e&#34;&gt;email&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;startsWith&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{&amp;#34;&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;email&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;endsWith&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;}&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;              &lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;JSON&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;parse&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;email&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;              &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;email&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#a6e22e&#34;&gt;password&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#a6e22e&#34;&gt;password&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;startsWith&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{&amp;#34;&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;password&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;endsWith&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;}&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;              &lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;JSON&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;parse&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;password&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;              &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;password&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        });
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;user&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#a6e22e&#34;&gt;res&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;json&lt;/span&gt;({
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#a6e22e&#34;&gt;success&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#a6e22e&#34;&gt;email&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;user&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;email&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#a6e22e&#34;&gt;token&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;user&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;token&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#a6e22e&#34;&gt;firstName&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;user&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;firstName&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#a6e22e&#34;&gt;lastName&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;user&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;lastName&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          });
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#a6e22e&#34;&gt;res&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;json&lt;/span&gt;({ &lt;span style=&#34;color:#a6e22e&#34;&gt;success&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt; });
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      } &lt;span style=&#34;color:#66d9ef&#34;&gt;catch&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;res&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;status&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;500&lt;/span&gt;).&lt;span style=&#34;color:#a6e22e&#34;&gt;json&lt;/span&gt;({ &lt;span style=&#34;color:#a6e22e&#34;&gt;success&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;error&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;message&lt;/span&gt; });
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      }
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;This is a Mongo db, with nosql, as suggested by the challenge name. What&amp;rsquo;s immediately interesting is that the email and password are parsed as &lt;em&gt;json&lt;/em&gt;. Here is a portswigger &lt;a href=&#34;https://portswigger.net/web-security/nosql-injection&#34;&gt;article&lt;/a&gt; talking about NoSQL injection. I also watched &lt;a href=&#34;https://www.youtube.com/watch?v=zHxgZJCy9fA&#34;&gt;this video&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico North-South writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/northsouth-writeup/</link>
+      <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/northsouth-writeup/</guid>
+      <description>&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+&lt;p&gt;I&amp;rsquo;ve set up geo-based routing - can you outsmart it? You&amp;rsquo;re trying to retrieve the flag, but there&amp;rsquo;s a catch: access to the real service is restricted based on your geographic location. Only requests from a specific region are routed to the server that holds the flag. Everyone else is sent somewhere&amp;hellip; less interesting.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;We also receive the nginx conf file; It&amp;rsquo;s serving two proxies, and one is only available to people with &lt;code&gt;$geoip2_data_country_code = IS&lt;/code&gt;. That&amp;rsquo;s Iceland, upon looking at countrycode.org.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico Secret Box writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/secretbox-writeup/</link>
+      <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/secretbox-writeup/</guid>
+      <description>&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+&lt;p&gt;I&amp;rsquo;ve set up geo-based routing - can you outsmart it? You&amp;rsquo;re trying to retrieve the flag, but there&amp;rsquo;s a catch: access to the real service is restricted based on your geographic location. Only requests from a specific region are routed to the server that holds the flag. Everyone else is sent somewhere&amp;hellip; less interesting.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;The create secret is vulnerable to sql injection; Creating a secret with the contents &lt;code&gt;a&#39;); INSERT INTO secrets(owner_id, content) SELECT &#39;5fba75e8-3444-434d-a353-b9ea93796097&#39;, password FROM users WHERE username = &#39;admin&#39;--&lt;/code&gt; will insert into our secrets the admin&amp;rsquo;s password.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico Crack The Gate 2 writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/crackthegate-writeup/</link>
+      <pubDate>Thu, 16 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/crackthegate-writeup/</guid>
+      <description>&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+&lt;p&gt;The login system has been upgraded with a basic rate-limiting mechanism that locks out repeated failed attempts from the same source. We’ve received a tip that the system might still trust user-controlled headers. Your objective is to bypass the rate-limiting restriction and log in using the known email address: &lt;a href=&#34;mailto:ctf-player@picoctf.org&#34;&gt;ctf-player@picoctf.org&lt;/a&gt; and uncover the hidden secret.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;The challenge hints at modifying our headers, and the &lt;code&gt;X-Forwarded-For&lt;/code&gt; header was the one responsible for rate limiting. We got a &lt;code&gt;passwords.txt&lt;/code&gt; file, it wasn&amp;rsquo;t that long, but I wanted to practice python anyways; since I always dread doing it, I&amp;rsquo;m trying to force myself to get comfortable with it.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico Sql Map 1 writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/sqlmap-writeup/</link>
+      <pubDate>Thu, 16 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/sqlmap-writeup/</guid>
+      <description>&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+&lt;p&gt;You’ve been hired by a shadowy group of pentesters who love a good puzzle. The system looks ordinary, but appearances lie. Somewhere inside, sloppy code and legacy hashing practices left a tiny&amp;hellip;.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;I finally stumbled upon the newer AI slop challenges from pico, presenting itself immediately through the page long description.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;We can register our own user and search for &lt;em&gt;flags&lt;/em&gt;. Just writing Flag immediately shows a bunch of fake results; I tried running sqlmap as suggested by the challenge name, but it kept breaking, so I got annoyed and wrote my stuff manually.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico findme writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/findme-writeup/</link>
+      <pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/findme-writeup/</guid>
+      <description>&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+&lt;p&gt;Help us test the form by submiting the username as test and password as test!&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;This only got a writeup because it took me almost half an hour.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;Logging in doesn&amp;rsquo;t do much, however by fuzzing we find a /home page, saying &lt;em&gt;I was redirected here by a friend of mine but i couldnt find anything. Help me search for flags :-)&lt;/em&gt;. It also has a &lt;em&gt;Search for flags&lt;/em&gt; search bar that does nothing. Parameter fuzzing didn&amp;rsquo;t work either.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico Trickster writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/trickster-writeup/</link>
+      <pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/trickster-writeup/</guid>
+      <description>&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+&lt;p&gt;I found a web app that can help process images: PNG images only!&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Image upload, so immediately this is some sort of php file upload vulnerability.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;We can smuggle any file as a png, by adding the PNG header and the .png extension, upon testing.&lt;/p&gt;
+&lt;p&gt;There is also an /uploads directory, where we can find each one of our uploaded files.&lt;/p&gt;
+&lt;p&gt;I noticed something interesting in the phrasing, when trying different exentions: &lt;em&gt;Error: File name does not contain &amp;lsquo;.png&amp;rsquo;.&lt;/em&gt; So I thought, what if we just pop that in? So I send this file:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico JAuth writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/jauth-writeup/</link>
+      <pubDate>Tue, 14 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/jauth-writeup/</guid>
+      <description>&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+&lt;p&gt;Most web application developers use third party components without testing their security. Some of the past affected companies are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Equifax (a US credit bureau organization) - breach due to unpatched Apache Struts web framework CVE-2017-5638&lt;/li&gt;
+&lt;li&gt;Mossack Fonesca (Panama Papers law firm) breach - unpatched version of Drupal CMS used&lt;/li&gt;
+&lt;li&gt;VerticalScope (internet media company) - outdated version of vBulletin forum software used&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Can you identify the components and exploit the vulnerable one? The website is running here. Can you become an admin? You can login as test with the password Test123! to get started.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico Super Serial writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/superserial-writeup/</link>
+      <pubDate>Tue, 14 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/superserial-writeup/</guid>
+      <description>&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+&lt;p&gt;Try to recover the flag stored on this website&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;We have a login page, which upon trying any credentials, we get back the error &lt;code&gt;Fatal error: Uncaught Exception: Unable to open database: unable to open database file in /var/www/html/index.php:5 Stack trace: #0 /var/www/html/index.php(5): SQLite3-&amp;gt;__construct(&#39;../users.db&#39;) #1 {main} thrown in /var/www/html/index.php on line 5&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;I tried fuzzing, and we got some interesting pages:&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/superserial-writeup/fuzz.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The authentication.php one would just redirect to index and clear our cookies, the cookie.php one was just empty, and set us a PHP session id, and in robots.txt was &lt;code&gt;Disallow: /admin.phps&lt;/code&gt;, a file which did not exist.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico No FA writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/nofa-writeup/</link>
+      <pubDate>Thu, 09 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/nofa-writeup/</guid>
+      <description>&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+&lt;p&gt;Seems like some data has been leaked! Can you get the flag?&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;We&amp;rsquo;re given a website, its source and a db leak.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;The hashes aren&amp;rsquo;t salted at all, and just a sha256, so we can quickly crack the admin&amp;rsquo;s password with hashcat: &lt;code&gt;hashcat -a 0 -m 1400 hashadmin.txt /usr/share/wordlists/rockyou.txt&lt;/code&gt; (&lt;code&gt;-a 0&lt;/code&gt; means dictionary attack, and &lt;code&gt;-m 1400&lt;/code&gt; means sha256).&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/nofa-writeup/hash.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Then, looking at the source, for the admin user there is also a &amp;lsquo;MFA&amp;rsquo; code, which has a 120 second duration, and is a random number from 1000 to 9999. I tried just sending the requests one by one, but it was taking forever, so I tried threads with ThreadPoolExecutor. This was my script:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico Cookies &amp; More Cookies &amp; Most Cookies writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/picocookies-writeup/</link>
+      <pubDate>Fri, 03 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/picocookies-writeup/</guid>
+      <description>&lt;h2 id=&#34;cookies&#34;&gt;Cookies&lt;/h2&gt;
+&lt;p&gt;I&amp;rsquo;m making a writeup for this because I remember having tried to do this one unsuccessfully a while ago.&lt;/p&gt;
+&lt;p&gt;When first logging in, in the request we can see a &lt;code&gt;Cookie: name=-1&lt;/code&gt; being set. Modifying it to &lt;code&gt;name=1&lt;/code&gt; for example doesn&amp;rsquo;t do much, except getting a &lt;em&gt;That is a cookie! Not very special though&amp;hellip;&lt;/em&gt; response.&lt;/p&gt;
+&lt;p&gt;Setting it to admin just renders the default home page.&lt;/p&gt;
+&lt;p&gt;There are two POST pages, &lt;code&gt;/check&lt;/code&gt; and &lt;code&gt;/search&lt;/code&gt;. The only time I saw &lt;code&gt;/check&lt;/code&gt; get requested was when my search input was &amp;lsquo;chocolate chip&amp;rsquo;; that&amp;rsquo;s when the cookie was set to &lt;code&gt;1&lt;/code&gt; by their side. Then I noticed &amp;lsquo;snickerdoodle&amp;rsquo; was setting the Cookie to 0.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico Some Assembly Required 1, 2, 3, 4 Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/someassemblyrequired-writeup/</link>
+      <pubDate>Thu, 02 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/someassemblyrequired-writeup/</guid>
+      <description>&lt;h2 id=&#34;some-assembly-required-1&#34;&gt;Some Assembly Required 1&lt;/h2&gt;
+&lt;p&gt;Looking at &lt;code&gt;./G82XCw5CX3.js&lt;/code&gt;, we can see some strange &lt;em&gt;wasm&lt;/em&gt; file getting imported, &lt;code&gt;./JIFxzHyW8W&lt;/code&gt;. I navigated to the directory and it immediately got downloaded.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note - just running strings on the file was fine too, I realised a little later, there wasn&amp;rsquo;t necessarily any need to decompile the wasm.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;I decompiled it with Ghidra (more on that in &lt;a href=&#34;irinasusca.github.io/writeup-blog/posts/wasm/&#34;&gt;this post I made&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;We can see in the &lt;code&gt;check_flag&lt;/code&gt; function it&amp;rsquo;s getting checked against the memory at &lt;code&gt;0x400&lt;/code&gt;, which just so happens to be the flag.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico Client-side-again Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/clientsideagain-writeup/</link>
+      <pubDate>Wed, 01 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/clientsideagain-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Can you break into this super secure portal?&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;We need to input some sort of password, and we have access to the obfuscated js code.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;I tried deobfuscating with &lt;a href=&#34;https://deobfuscate.io/&#34;&gt;deobfuscate.io&lt;/a&gt; but that didn&amp;rsquo;t really work.&lt;/p&gt;
+&lt;p&gt;The code looks like so:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;_0x5a46&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;daf93}&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;_again_4&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;this&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Password Verified&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Incorrect password&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;getElementById&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;substring&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;picoCTF{&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;not_this&amp;#34;&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4bd822&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;_0x2bd6f7&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;_0xb4bdb3&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;_0x1d68f6&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;_0x1d68f6&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4bd822&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;push&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4bd822&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;shift&lt;/span&gt;());
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  };
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;_0xb4bdb3&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;_0x2bd6f7&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}(&lt;span style=&#34;color:#a6e22e&#34;&gt;_0x5a46&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;435&lt;/span&gt;));
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4b5b&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;_0x2d8f05&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4b81bb&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;_0x2d8f05&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;_0x2d8f05&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4d74cb&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;_0x5a46&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;_0x2d8f05&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4d74cb&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;verify&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;checkpass&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; document[&lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4b5b&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0x0&amp;#34;&lt;/span&gt;)](&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;pass&amp;#34;&lt;/span&gt;)[&lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4b5b&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0x1&amp;#34;&lt;/span&gt;)];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;split&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;checkpass&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4b5b&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0x2&amp;#34;&lt;/span&gt;)](&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;split&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4b5b&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0x3&amp;#34;&lt;/span&gt;)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;checkpass&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4b5b&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0x2&amp;#34;&lt;/span&gt;)](&lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{n&amp;#34;&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;checkpass&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4b5b&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0x2&amp;#34;&lt;/span&gt;)](&lt;span style=&#34;color:#a6e22e&#34;&gt;split&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;split&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4b5b&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0x4&amp;#34;&lt;/span&gt;)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;checkpass&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4b5b&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0x2&amp;#34;&lt;/span&gt;)](&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;oCT&amp;#34;&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;checkpass&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4b5b&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0x2&amp;#34;&lt;/span&gt;)](&lt;span style=&#34;color:#a6e22e&#34;&gt;split&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;split&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4b5b&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0x5&amp;#34;&lt;/span&gt;)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;checkpass&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;substring&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;11&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;F{not&amp;#34;&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;              &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;checkpass&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4b5b&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0x2&amp;#34;&lt;/span&gt;)](&lt;span style=&#34;color:#a6e22e&#34;&gt;split&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;split&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4b5b&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0x6&amp;#34;&lt;/span&gt;)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;checkpass&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4b5b&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0x2&amp;#34;&lt;/span&gt;)](&lt;span style=&#34;color:#ae81ff&#34;&gt;12&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4b5b&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0x7&amp;#34;&lt;/span&gt;)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                  &lt;span style=&#34;color:#a6e22e&#34;&gt;alert&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4b5b&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0x8&amp;#34;&lt;/span&gt;));
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;              }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;alert&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;_0x4b5b&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0x9&amp;#34;&lt;/span&gt;));
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I gave up and tried reconstructing from the random strings laying around, and tested it, and &lt;code&gt;picoCTF{not_this_again_4daf93}&lt;/code&gt; actually worked.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico Forbidden Paths Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/forbiddenpaths-writeup/</link>
+      <pubDate>Wed, 01 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/forbiddenpaths-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Can you get the flag? We know that the website files live in /usr/share/nginx/html/ and the flag is at /flag.txt but the website is filtering absolute file paths. Can you get past the filter to read the flag?&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;The / path indeed doesn&amp;rsquo;t work. This is the solution:&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/forbiddenpaths-writeup/solve.png#center&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico Irish Name Repo 1, 2, 3 Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/irishnamerepo-writeup/</link>
+      <pubDate>Wed, 01 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/irishnamerepo-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Do you think you can log us in? Try to see if you can login!&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Another super easy challenge.&lt;/p&gt;
+&lt;h2 id=&#34;irish-name-repo-1&#34;&gt;Irish Name Repo 1&lt;/h2&gt;
+&lt;p&gt;Opening the request, we can see a &amp;ldquo;debug&amp;rdquo; parameter or whatever it&amp;rsquo;s called, and it enables us to see our queries. I don&amp;rsquo;t even think it was necessary since this was just the simplest form of SQLi.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/irishnamerepo-writeup/flagh.png#center&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;irish-name-repo-2&#34;&gt;Irish Name Repo 2&lt;/h2&gt;
+&lt;p&gt;Same stuff&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/irishnamerepo-writeup/flag2.png#center&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico Web Gauntlet 2 &amp; 3 Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/webgauntlet2-writeup/</link>
+      <pubDate>Wed, 01 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/webgauntlet2-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;This website looks familiar&amp;hellip; Log in as admin.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;We need to log in as admin, through SQLi, and we have 5 rounds to beat.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;This time I realised the filters were actually spelled out in filter.php; oops.&lt;/p&gt;
+&lt;p&gt;Round 1 filters: &lt;code&gt;or and true false union like = &amp;gt; &amp;lt; ; -- /* */ admin&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;I struggled with this for about two hours until I gave up and found &lt;a href=&#34;https://medium.com/@ahmednarmer1/ctf-day-50-ef758c06b0e7&#34;&gt;this solution&lt;/a&gt;:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico JaWT Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/jawt-writeup/</link>
+      <pubDate>Tue, 31 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/jawt-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Check the admin scratchpad!&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;We can log in, based on a username, but we aren&amp;rsquo;t allowed to write admin. The challenge also hints us with &amp;ldquo;You can use your name as a log in, because that&amp;rsquo;s quick and easy to remember! If you don&amp;rsquo;t like your name, use a short and cool one like &lt;em&gt;&lt;a href=&#34;https://github.com/magnumripper/JohnTheRipper&#34;&gt;https://github.com/magnumripper/JohnTheRipper&lt;/a&gt;&lt;/em&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;I&amp;rsquo;m guessing we need to brute force the JWT secret and sign our own admin cookie. I searched it on google and found this &lt;a href=&#34;https://portswigger.net/web-security/jwt#brute-forcing-secret-keys-using-hashcat&#34;&gt;portswigger lab&lt;/a&gt; saying to use &lt;code&gt;hashcat -a 0 -m 16500 &amp;lt;jwt&amp;gt; &amp;lt;wordlist&amp;gt;&lt;/code&gt;. Obviously that worked:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico Web Gauntlet Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/webgauntlet-writeup/</link>
+      <pubDate>Tue, 31 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/webgauntlet-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Can you beat the filters? Log in as admin.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;We need to log in as admin, through SQLi, and we have 5 rounds to beat.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;First, by submitting a single &amp;rsquo; as the password, we get the SQL engine right away, SQLite3.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/webgauntlet-writeup/sqlite3.png#center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;However, sending the &lt;code&gt;user=admin&lt;/code&gt; and &lt;code&gt;pass=&#39; or 1=1--&lt;/code&gt; didn&amp;rsquo;t work send us to the next phase, but returned a 302 page. So I turned to PayloadAllTheThings, and to practice my python skills, wrote this:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Pico It is my Birthday Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/itsmybirthday-writeup/</link>
+      <pubDate>Mon, 30 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/itsmybirthday-writeup/</guid>
+      <description>&lt;p&gt;Yes. That&amp;rsquo;s right. I&amp;rsquo;m going back to finish the pico web category, because I feel like the ones I have left on CyberEdu are a little too difficult for the OSCJ which is next month. And pico is, well, pico-leveled.&lt;/p&gt;
+&lt;p&gt;And I will only have writeups for the pico challenges that take more than two minutes to solve.&lt;/p&gt;
+&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;I sent out 2 invitations to all of my friends for my birthday! I&amp;rsquo;ll know if they get stolen because the two invites look similar, and they even have the same md5 hash, but they are slightly different! You wouldn&amp;rsquo;t believe how long it took me to find a collision. Anyway, see if you&amp;rsquo;re invited by submitting 2 PDFs to my website.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu casual-defence Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/casualdefence-writeup/</link>
+      <pubDate>Sun, 29 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/casualdefence-writeup/</guid>
+      <description>&lt;p&gt;I haven&amp;rsquo;t done a web challenge outside a ctf in quite a while, so let&amp;rsquo;s see how this goes!&lt;/p&gt;
+&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;In light of recent events related to the cyber attack, we have prepared a mirror environment of the defaced website so you can have a look. Moreover, both the mirror and production environments retain a copy of the defacement file and up-to-date security policies that prevent any access to our systems.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>CyberEdu badimg Writeup</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/badimg-writeup/</link>
@@ -31,24 +444,6 @@
 &lt;p&gt;Only a champion can win this race. Enter the secret pit stop and claim your flag!&lt;/p&gt;
 &lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
 &lt;p&gt;We&amp;rsquo;re confronted with a login page, with two fields, &lt;code&gt;Only for F1 champions. Enter your first name and pit code to start your engine&lt;/code&gt;. Entering a random username and random password would give an &lt;code&gt;Invalid username&lt;/code&gt; error, but sending &lt;em&gt;max&lt;/em&gt; (for Max Verstappen) would give an &lt;code&gt;Invalid pit code&lt;/code&gt;.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Wireshark, tshark &amp; sorting</title>
-      <link>https://irinasusca.github.io/writeup-blog/posts/wireshark/</link>
-      <pubDate>Sun, 01 Feb 2026 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/posts/wireshark/</guid>
-      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
-&lt;p&gt;Since this is, sadly, something that needs to be done in order to score points in ctfs, I&amp;rsquo;m going to cover some things that &lt;em&gt;I&lt;/em&gt; feel  are important in this category.&lt;/p&gt;
-&lt;p&gt;I have done quite a few forensics challenges, but I never really mastered &lt;code&gt;grep&lt;/code&gt; and &lt;code&gt;tshark&lt;/code&gt; to their full potential. And I forgot most of my Wireshark expertise from last year, so I&amp;rsquo;ll include what I feel is important or non-intuitive about that as well.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>requests library</title>
-      <link>https://irinasusca.github.io/writeup-blog/posts/requests/</link>
-      <pubDate>Fri, 30 Jan 2026 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/posts/requests/</guid>
-      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
-&lt;p&gt;Since I actually (sadly) have to learn python myself for the OSC since AIs got banned, I decided it&amp;rsquo;s time to lay down the foundation of the requests library instead of letting an AI slave do the dirty python work for me. That means it&amp;rsquo;s time to learn the requests library.&lt;/p&gt;
-&lt;p&gt;It really wasn&amp;rsquo;t as difficult as I thought, and I really wish I&amp;rsquo;d done this sooner. Who would&amp;rsquo;ve ever guessed learning is really useful?&lt;/p&gt;</description>
     </item>
     <item>
       <title>CyberEdu ultra-crawl Writeup</title>
@@ -238,14 +633,6 @@
 &lt;hr&gt;
 &lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
 &lt;p&gt;We can look at &lt;code&gt;/tickets?user=admin&lt;/code&gt; by clicking tickets. Here we&amp;rsquo;re given some hints:&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Serialization and Deserialization</title>
-      <link>https://irinasusca.github.io/writeup-blog/posts/serialization/</link>
-      <pubDate>Thu, 08 Jan 2026 00:00:00 +0000</pubDate>
-      <guid>https://irinasusca.github.io/writeup-blog/posts/serialization/</guid>
-      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
-&lt;p&gt;I decided to get more into this subject because of the challenge &lt;strong&gt;&lt;a href=&#34;irinasusca.github.io/writeup-blog/posts/jargon-writeup/&#34;&gt;jargon&lt;/a&gt;&lt;/strong&gt;. I was struggling with AIs and it was really getting on my nerves, because I felt I didn&amp;rsquo;t &lt;em&gt;really&lt;/em&gt; understand what was going on. So I decided to write a little article about this, to make myself fully grasp serialization, deserialization and the subset of vulnerabilities that may come with them. So, let&amp;rsquo;s get into it.&lt;/p&gt;</description>
     </item>
     <item>
       <title>CyberEdu reccon Writeup</title>

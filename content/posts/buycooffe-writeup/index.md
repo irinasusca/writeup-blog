@@ -3,7 +3,7 @@ date = '2025-12-03'
 draft = false
 title = 'CyberEdu Buy-Cooffe Writeup'
 ShowToc = true
-tags = ["CyberEdu", "pwn", "buffer-overflow", "Ret2libc", "Canary", "PIE", "ASLR"]
+tags = ["CyberEdu", "pwn", "buffer-overflow", "Ret2libc", "Canary"]
 +++
 
 ## Challenge overview

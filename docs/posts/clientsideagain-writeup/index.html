@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Pico Client-side-again Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="picoCTF, web">
+<meta name="description" content="Challenge overview
+Can you break into this super secure portal?
+
+We need to input some sort of password, and we have access to the obfuscated js code.
+Identifying the vulnerabilities
+I tried deobfuscating with deobfuscate.io but that didn&rsquo;t really work.
+The code looks like so:
+var _0x5a46 = [&#34;daf93}&#34;, &#34;_again_4&#34;, &#34;this&#34;, &#34;Password Verified&#34;, &#34;Incorrect password&#34;, &#34;getElementById&#34;, &#34;value&#34;, &#34;substring&#34;, &#34;picoCTF{&#34;, &#34;not_this&#34;];
+(function (_0x4bd822, _0x2bd6f7) {
+  var _0xb4bdb3 = function (_0x1d68f6) {
+    while (--_0x1d68f6) {
+      _0x4bd822.push(_0x4bd822.shift());
+    }
+  };
+  _0xb4bdb3(&#43;&#43;_0x2bd6f7);
+}(_0x5a46, 435));
+var _0x4b5b = function (_0x2d8f05, _0x4b81bb) {
+  _0x2d8f05 = _0x2d8f05 - 0;
+  var _0x4d74cb = _0x5a46[_0x2d8f05];
+  return _0x4d74cb;
+};
+function verify() {
+  checkpass = document[_0x4b5b(&#34;0x0&#34;)](&#34;pass&#34;)[_0x4b5b(&#34;0x1&#34;)];
+  split = 4;
+  if (checkpass[_0x4b5b(&#34;0x2&#34;)](0, split * 2) == _0x4b5b(&#34;0x3&#34;)) {
+    if (checkpass[_0x4b5b(&#34;0x2&#34;)](7, 9) == &#34;{n&#34;) {
+      if (checkpass[_0x4b5b(&#34;0x2&#34;)](split * 2, split * 2 * 2) == _0x4b5b(&#34;0x4&#34;)) {
+        if (checkpass[_0x4b5b(&#34;0x2&#34;)](3, 6) == &#34;oCT&#34;) {
+          if (checkpass[_0x4b5b(&#34;0x2&#34;)](split * 3 * 2, split * 4 * 2) == _0x4b5b(&#34;0x5&#34;)) {
+            if (checkpass.substring(6, 11) == &#34;F{not&#34;) {
+              if (checkpass[_0x4b5b(&#34;0x2&#34;)](split * 2 * 2, split * 3 * 2) == _0x4b5b(&#34;0x6&#34;)) {
+                if (checkpass[_0x4b5b(&#34;0x2&#34;)](12, 16) == _0x4b5b(&#34;0x7&#34;)) {
+                  alert(_0x4b5b(&#34;0x8&#34;));
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  } else {
+    alert(_0x4b5b(&#34;0x9&#34;));
+  }
+}
+I gave up and tried reconstructing from the random strings laying around, and tested it, and picoCTF{not_this_again_4daf93} actually worked.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/clientsideagain-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/clientsideagain-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/clientsideagain-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Pico Client-side-again Writeup">
+  <meta property="og:description" content="Challenge overview Can you break into this super secure portal?
+We need to input some sort of password, and we have access to the obfuscated js code.
+Identifying the vulnerabilities I tried deobfuscating with deobfuscate.io but that didn’t really work.
+The code looks like so:
+var _0x5a46 = [&#34;daf93}&#34;, &#34;_again_4&#34;, &#34;this&#34;, &#34;Password Verified&#34;, &#34;Incorrect password&#34;, &#34;getElementById&#34;, &#34;value&#34;, &#34;substring&#34;, &#34;picoCTF{&#34;, &#34;not_this&#34;]; (function (_0x4bd822, _0x2bd6f7) { var _0xb4bdb3 = function (_0x1d68f6) { while (--_0x1d68f6) { _0x4bd822.push(_0x4bd822.shift()); } }; _0xb4bdb3(&#43;&#43;_0x2bd6f7); }(_0x5a46, 435)); var _0x4b5b = function (_0x2d8f05, _0x4b81bb) { _0x2d8f05 = _0x2d8f05 - 0; var _0x4d74cb = _0x5a46[_0x2d8f05]; return _0x4d74cb; }; function verify() { checkpass = document[_0x4b5b(&#34;0x0&#34;)](&#34;pass&#34;)[_0x4b5b(&#34;0x1&#34;)]; split = 4; if (checkpass[_0x4b5b(&#34;0x2&#34;)](0, split * 2) == _0x4b5b(&#34;0x3&#34;)) { if (checkpass[_0x4b5b(&#34;0x2&#34;)](7, 9) == &#34;{n&#34;) { if (checkpass[_0x4b5b(&#34;0x2&#34;)](split * 2, split * 2 * 2) == _0x4b5b(&#34;0x4&#34;)) { if (checkpass[_0x4b5b(&#34;0x2&#34;)](3, 6) == &#34;oCT&#34;) { if (checkpass[_0x4b5b(&#34;0x2&#34;)](split * 3 * 2, split * 4 * 2) == _0x4b5b(&#34;0x5&#34;)) { if (checkpass.substring(6, 11) == &#34;F{not&#34;) { if (checkpass[_0x4b5b(&#34;0x2&#34;)](split * 2 * 2, split * 3 * 2) == _0x4b5b(&#34;0x6&#34;)) { if (checkpass[_0x4b5b(&#34;0x2&#34;)](12, 16) == _0x4b5b(&#34;0x7&#34;)) { alert(_0x4b5b(&#34;0x8&#34;)); } } } } } } } } else { alert(_0x4b5b(&#34;0x9&#34;)); } } I gave up and tried reconstructing from the random strings laying around, and tested it, and picoCTF{not_this_again_4daf93} actually worked.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-04-01T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-04-01T00:00:00+00:00">
+    <meta property="article:tag" content="PicoCTF">
+    <meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pico Client-side-again Writeup">
+<meta name="twitter:description" content="Challenge overview
+Can you break into this super secure portal?
+
+We need to input some sort of password, and we have access to the obfuscated js code.
+Identifying the vulnerabilities
+I tried deobfuscating with deobfuscate.io but that didn&rsquo;t really work.
+The code looks like so:
+var _0x5a46 = [&#34;daf93}&#34;, &#34;_again_4&#34;, &#34;this&#34;, &#34;Password Verified&#34;, &#34;Incorrect password&#34;, &#34;getElementById&#34;, &#34;value&#34;, &#34;substring&#34;, &#34;picoCTF{&#34;, &#34;not_this&#34;];
+(function (_0x4bd822, _0x2bd6f7) {
+  var _0xb4bdb3 = function (_0x1d68f6) {
+    while (--_0x1d68f6) {
+      _0x4bd822.push(_0x4bd822.shift());
+    }
+  };
+  _0xb4bdb3(&#43;&#43;_0x2bd6f7);
+}(_0x5a46, 435));
+var _0x4b5b = function (_0x2d8f05, _0x4b81bb) {
+  _0x2d8f05 = _0x2d8f05 - 0;
+  var _0x4d74cb = _0x5a46[_0x2d8f05];
+  return _0x4d74cb;
+};
+function verify() {
+  checkpass = document[_0x4b5b(&#34;0x0&#34;)](&#34;pass&#34;)[_0x4b5b(&#34;0x1&#34;)];
+  split = 4;
+  if (checkpass[_0x4b5b(&#34;0x2&#34;)](0, split * 2) == _0x4b5b(&#34;0x3&#34;)) {
+    if (checkpass[_0x4b5b(&#34;0x2&#34;)](7, 9) == &#34;{n&#34;) {
+      if (checkpass[_0x4b5b(&#34;0x2&#34;)](split * 2, split * 2 * 2) == _0x4b5b(&#34;0x4&#34;)) {
+        if (checkpass[_0x4b5b(&#34;0x2&#34;)](3, 6) == &#34;oCT&#34;) {
+          if (checkpass[_0x4b5b(&#34;0x2&#34;)](split * 3 * 2, split * 4 * 2) == _0x4b5b(&#34;0x5&#34;)) {
+            if (checkpass.substring(6, 11) == &#34;F{not&#34;) {
+              if (checkpass[_0x4b5b(&#34;0x2&#34;)](split * 2 * 2, split * 3 * 2) == _0x4b5b(&#34;0x6&#34;)) {
+                if (checkpass[_0x4b5b(&#34;0x2&#34;)](12, 16) == _0x4b5b(&#34;0x7&#34;)) {
+                  alert(_0x4b5b(&#34;0x8&#34;));
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  } else {
+    alert(_0x4b5b(&#34;0x9&#34;));
+  }
+}
+I gave up and tried reconstructing from the random strings laying around, and tested it, and picoCTF{not_this_again_4daf93} actually worked.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Pico Client-side-again Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/clientsideagain-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Pico Client-side-again Writeup",
+  "name": "Pico Client-side-again Writeup",
+  "description": "Challenge overview Can you break into this super secure portal?\nWe need to input some sort of password, and we have access to the obfuscated js code.\nIdentifying the vulnerabilities I tried deobfuscating with deobfuscate.io but that didn\u0026rsquo;t really work.\nThe code looks like so:\nvar _0x5a46 = [\u0026#34;daf93}\u0026#34;, \u0026#34;_again_4\u0026#34;, \u0026#34;this\u0026#34;, \u0026#34;Password Verified\u0026#34;, \u0026#34;Incorrect password\u0026#34;, \u0026#34;getElementById\u0026#34;, \u0026#34;value\u0026#34;, \u0026#34;substring\u0026#34;, \u0026#34;picoCTF{\u0026#34;, \u0026#34;not_this\u0026#34;]; (function (_0x4bd822, _0x2bd6f7) { var _0xb4bdb3 = function (_0x1d68f6) { while (--_0x1d68f6) { _0x4bd822.push(_0x4bd822.shift()); } }; _0xb4bdb3(++_0x2bd6f7); }(_0x5a46, 435)); var _0x4b5b = function (_0x2d8f05, _0x4b81bb) { _0x2d8f05 = _0x2d8f05 - 0; var _0x4d74cb = _0x5a46[_0x2d8f05]; return _0x4d74cb; }; function verify() { checkpass = document[_0x4b5b(\u0026#34;0x0\u0026#34;)](\u0026#34;pass\u0026#34;)[_0x4b5b(\u0026#34;0x1\u0026#34;)]; split = 4; if (checkpass[_0x4b5b(\u0026#34;0x2\u0026#34;)](0, split * 2) == _0x4b5b(\u0026#34;0x3\u0026#34;)) { if (checkpass[_0x4b5b(\u0026#34;0x2\u0026#34;)](7, 9) == \u0026#34;{n\u0026#34;) { if (checkpass[_0x4b5b(\u0026#34;0x2\u0026#34;)](split * 2, split * 2 * 2) == _0x4b5b(\u0026#34;0x4\u0026#34;)) { if (checkpass[_0x4b5b(\u0026#34;0x2\u0026#34;)](3, 6) == \u0026#34;oCT\u0026#34;) { if (checkpass[_0x4b5b(\u0026#34;0x2\u0026#34;)](split * 3 * 2, split * 4 * 2) == _0x4b5b(\u0026#34;0x5\u0026#34;)) { if (checkpass.substring(6, 11) == \u0026#34;F{not\u0026#34;) { if (checkpass[_0x4b5b(\u0026#34;0x2\u0026#34;)](split * 2 * 2, split * 3 * 2) == _0x4b5b(\u0026#34;0x6\u0026#34;)) { if (checkpass[_0x4b5b(\u0026#34;0x2\u0026#34;)](12, 16) == _0x4b5b(\u0026#34;0x7\u0026#34;)) { alert(_0x4b5b(\u0026#34;0x8\u0026#34;)); } } } } } } } } else { alert(_0x4b5b(\u0026#34;0x9\u0026#34;)); } } I gave up and tried reconstructing from the random strings laying around, and tested it, and picoCTF{not_this_again_4daf93} actually worked.\n",
+  "keywords": [
+    "picoCTF", "web"
+  ],
+  "articleBody": "Challenge overview Can you break into this super secure portal?\nWe need to input some sort of password, and we have access to the obfuscated js code.\nIdentifying the vulnerabilities I tried deobfuscating with deobfuscate.io but that didn’t really work.\nThe code looks like so:\nvar _0x5a46 = [\"daf93}\", \"_again_4\", \"this\", \"Password Verified\", \"Incorrect password\", \"getElementById\", \"value\", \"substring\", \"picoCTF{\", \"not_this\"]; (function (_0x4bd822, _0x2bd6f7) { var _0xb4bdb3 = function (_0x1d68f6) { while (--_0x1d68f6) { _0x4bd822.push(_0x4bd822.shift()); } }; _0xb4bdb3(++_0x2bd6f7); }(_0x5a46, 435)); var _0x4b5b = function (_0x2d8f05, _0x4b81bb) { _0x2d8f05 = _0x2d8f05 - 0; var _0x4d74cb = _0x5a46[_0x2d8f05]; return _0x4d74cb; }; function verify() { checkpass = document[_0x4b5b(\"0x0\")](\"pass\")[_0x4b5b(\"0x1\")]; split = 4; if (checkpass[_0x4b5b(\"0x2\")](0, split * 2) == _0x4b5b(\"0x3\")) { if (checkpass[_0x4b5b(\"0x2\")](7, 9) == \"{n\") { if (checkpass[_0x4b5b(\"0x2\")](split * 2, split * 2 * 2) == _0x4b5b(\"0x4\")) { if (checkpass[_0x4b5b(\"0x2\")](3, 6) == \"oCT\") { if (checkpass[_0x4b5b(\"0x2\")](split * 3 * 2, split * 4 * 2) == _0x4b5b(\"0x5\")) { if (checkpass.substring(6, 11) == \"F{not\") { if (checkpass[_0x4b5b(\"0x2\")](split * 2 * 2, split * 3 * 2) == _0x4b5b(\"0x6\")) { if (checkpass[_0x4b5b(\"0x2\")](12, 16) == _0x4b5b(\"0x7\")) { alert(_0x4b5b(\"0x8\")); } } } } } } } } else { alert(_0x4b5b(\"0x9\")); } } I gave up and tried reconstructing from the random strings laying around, and tested it, and picoCTF{not_this_again_4daf93} actually worked.\nI started making a writeup for this because I thought it would’ve been more interesting but I guess not.\n",
+  "wordCount" : "231",
+  "inLanguage": "en",
+  "datePublished": "2026-04-01T00:00:00Z",
+  "dateModified": "2026-04-01T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/clientsideagain-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Pico Client-side-again Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-04-01 00:00:00 +0000 UTC'>April 1, 2026</span>&nbsp;·&nbsp;<span>2 min</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>Can you break into this super secure portal?</p>
+<hr>
+<p>We need to input some sort of password, and we have access to the obfuscated js code.</p>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>I tried deobfuscating with <a href="https://deobfuscate.io/">deobfuscate.io</a> but that didn&rsquo;t really work.</p>
+<p>The code looks like so:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_0x5a46</span> <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;daf93}&#34;</span>, <span style="color:#e6db74">&#34;_again_4&#34;</span>, <span style="color:#e6db74">&#34;this&#34;</span>, <span style="color:#e6db74">&#34;Password Verified&#34;</span>, <span style="color:#e6db74">&#34;Incorrect password&#34;</span>, <span style="color:#e6db74">&#34;getElementById&#34;</span>, <span style="color:#e6db74">&#34;value&#34;</span>, <span style="color:#e6db74">&#34;substring&#34;</span>, <span style="color:#e6db74">&#34;picoCTF{&#34;</span>, <span style="color:#e6db74">&#34;not_this&#34;</span>];
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">_0x4bd822</span>, <span style="color:#a6e22e">_0x2bd6f7</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_0xb4bdb3</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">_0x1d68f6</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (<span style="color:#f92672">--</span><span style="color:#a6e22e">_0x1d68f6</span>) {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">_0x4bd822</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">_0x4bd822</span>.<span style="color:#a6e22e">shift</span>());
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  };
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">_0xb4bdb3</span>(<span style="color:#f92672">++</span><span style="color:#a6e22e">_0x2bd6f7</span>);
+</span></span><span style="display:flex;"><span>}(<span style="color:#a6e22e">_0x5a46</span>, <span style="color:#ae81ff">435</span>));
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_0x4b5b</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">_0x2d8f05</span>, <span style="color:#a6e22e">_0x4b81bb</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">_0x2d8f05</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">_0x2d8f05</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">_0x4d74cb</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">_0x5a46</span>[<span style="color:#a6e22e">_0x2d8f05</span>];
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">_0x4d74cb</span>;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">verify</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">checkpass</span> <span style="color:#f92672">=</span> document[<span style="color:#a6e22e">_0x4b5b</span>(<span style="color:#e6db74">&#34;0x0&#34;</span>)](<span style="color:#e6db74">&#34;pass&#34;</span>)[<span style="color:#a6e22e">_0x4b5b</span>(<span style="color:#e6db74">&#34;0x1&#34;</span>)];
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">split</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">checkpass</span>[<span style="color:#a6e22e">_0x4b5b</span>(<span style="color:#e6db74">&#34;0x2&#34;</span>)](<span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">split</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">==</span> <span style="color:#a6e22e">_0x4b5b</span>(<span style="color:#e6db74">&#34;0x3&#34;</span>)) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">checkpass</span>[<span style="color:#a6e22e">_0x4b5b</span>(<span style="color:#e6db74">&#34;0x2&#34;</span>)](<span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">9</span>) <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;{n&#34;</span>) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">checkpass</span>[<span style="color:#a6e22e">_0x4b5b</span>(<span style="color:#e6db74">&#34;0x2&#34;</span>)](<span style="color:#a6e22e">split</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>, <span style="color:#a6e22e">split</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">==</span> <span style="color:#a6e22e">_0x4b5b</span>(<span style="color:#e6db74">&#34;0x4&#34;</span>)) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">checkpass</span>[<span style="color:#a6e22e">_0x4b5b</span>(<span style="color:#e6db74">&#34;0x2&#34;</span>)](<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">6</span>) <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;oCT&#34;</span>) {
+</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">checkpass</span>[<span style="color:#a6e22e">_0x4b5b</span>(<span style="color:#e6db74">&#34;0x2&#34;</span>)](<span style="color:#a6e22e">split</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>, <span style="color:#a6e22e">split</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">==</span> <span style="color:#a6e22e">_0x4b5b</span>(<span style="color:#e6db74">&#34;0x5&#34;</span>)) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">checkpass</span>.<span style="color:#a6e22e">substring</span>(<span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">11</span>) <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;F{not&#34;</span>) {
+</span></span><span style="display:flex;"><span>              <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">checkpass</span>[<span style="color:#a6e22e">_0x4b5b</span>(<span style="color:#e6db74">&#34;0x2&#34;</span>)](<span style="color:#a6e22e">split</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>, <span style="color:#a6e22e">split</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">==</span> <span style="color:#a6e22e">_0x4b5b</span>(<span style="color:#e6db74">&#34;0x6&#34;</span>)) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">checkpass</span>[<span style="color:#a6e22e">_0x4b5b</span>(<span style="color:#e6db74">&#34;0x2&#34;</span>)](<span style="color:#ae81ff">12</span>, <span style="color:#ae81ff">16</span>) <span style="color:#f92672">==</span> <span style="color:#a6e22e">_0x4b5b</span>(<span style="color:#e6db74">&#34;0x7&#34;</span>)) {
+</span></span><span style="display:flex;"><span>                  <span style="color:#a6e22e">alert</span>(<span style="color:#a6e22e">_0x4b5b</span>(<span style="color:#e6db74">&#34;0x8&#34;</span>));
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>              }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>          }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">alert</span>(<span style="color:#a6e22e">_0x4b5b</span>(<span style="color:#e6db74">&#34;0x9&#34;</span>));
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>I gave up and tried reconstructing from the random strings laying around, and tested it, and <code>picoCTF{not_this_again_4daf93}</code> actually worked.</p>
+<p>I started making a writeup for this because I thought it would&rsquo;ve been more interesting but I guess not.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/picoctf/">PicoCTF</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/web/">Web</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

@@ -6,13 +6,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
 <title>requests library | Irina&#39;s CTF Writeups</title>
-<meta name="keywords" content="Materials, web">
+<meta name="keywords" content="Materials">
 <meta name="description" content="Why
 Since I actually (sadly) have to learn python myself for the OSC since AIs got banned, I decided it&rsquo;s time to lay down the foundation of the requests library instead of letting an AI slave do the dirty python work for me. That means it&rsquo;s time to learn the requests library.
 It really wasn&rsquo;t as difficult as I thought, and I really wish I&rsquo;d done this sooner. Who would&rsquo;ve ever guessed learning is really useful?">
 <meta name="author" content="">
 <link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/requests/">
-<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
@@ -83,7 +83,6 @@ It really wasn’t as difficult as I thought, and I really wish I’d done this 
     <meta property="article:published_time" content="2026-01-30T00:00:00+00:00">
     <meta property="article:modified_time" content="2026-01-30T00:00:00+00:00">
     <meta property="article:tag" content="Materials">
-    <meta property="article:tag" content="Web">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="requests library">
 <meta name="twitter:description" content="Why
@@ -119,10 +118,10 @@ It really wasn&rsquo;t as difficult as I thought, and I really wish I&rsquo;d do
   "name": "requests library",
   "description": "Why Since I actually (sadly) have to learn python myself for the OSC since AIs got banned, I decided it\u0026rsquo;s time to lay down the foundation of the requests library instead of letting an AI slave do the dirty python work for me. That means it\u0026rsquo;s time to learn the requests library.\nIt really wasn\u0026rsquo;t as difficult as I thought, and I really wish I\u0026rsquo;d done this sooner. Who would\u0026rsquo;ve ever guessed learning is really useful?\n",
   "keywords": [
-    "Materials", "web"
+    "Materials"
   ],
-  "articleBody": "Why Since I actually (sadly) have to learn python myself for the OSC since AIs got banned, I decided it’s time to lay down the foundation of the requests library instead of letting an AI slave do the dirty python work for me. That means it’s time to learn the requests library.\nIt really wasn’t as difficult as I thought, and I really wish I’d done this sooner. Who would’ve ever guessed learning is really useful?\nRequests Alright, let’s actually get into it. The docs I used for this are here.\nThe format of making a request is this:\nimport requests data = { \"username\":\"test\", \"password\":\"test\" } res = requests.post(url, data = data) Of course we can make all kinds of requests, requests.get, requests.options, you get the idea.\nWe can also send parameters in a similar way:\npayload = { \"param1\": \"val1\", \"param2\": [\"val2\", \"val3\"] } res = requests.get(url, params=payload) To check the url created by requests, just print(res.url). To view the response content, just print res.text.\nWe can also modify the encoding, and view through r.encoding (automatically utf-8).\nTo add our own headers, done similarly to data:\nheaders = { \"Cookie\": \"test123\", \"Host\": \"127.0.0.1\" } res = requests.get(url, headers=headers) We can also send a file like so:\nfiles = {'file': ('report.xls', open('report.xls', 'rb'), 'application/vnd.ms-excel')} #here, rb stands for read binary. just how python opens files. #the application type is optional. res = requests.post(url, files=files) Or more files!\nfiles = [ ('images', ('foo.png', open('foo.png', 'rb'), 'image/png')), ('images', ('bar.png', open('bar.png', 'rb'), 'image/png')) ] res = requests.post(url, files=files) And stream an upload:\nwith open('massive-body', 'rb') as f: requests.post(url, data=f) Difference is, this is a way to upload larger files, as the raw body.\nWe can check status code by res.status_code. We may test them like res.status_code == requests.codes.ok if we’re too uncultured to recognize status codes.\nTo view the response headers just use r.headers. A specific one by r.headers['Content-Type'] or r.headers.get('content-type'). Capitalization not important.\nThere’s also a allow_redirects param (True or False), and a timeout (if no response in that time, just pack it up).\nHooks We can add hooks, so functions that are called whenever a response happens. Say we have this function we want to hook:\ndef print_url(r, *args, **kwargs): print(r.url) #the args and kwargs are there just in case the response decides to throw some args in there internally. requests.get(url, hooks = {'response' : print_url}) The response is passed as an argument to the hook function. We can stack hooks, like hooks = {'response': [hook1, hook2]}.\nThe string ‘response’ needs to be respected since it’s the library name for an event. And apparently the only event.\nSessions If we want to use a single session, like a normal user would, without having to write all those annoying cookies and headers every time, we can use requests.Session().\ns = requests.Session() s.headers.update({ 'x-test': 'true', 'Host': '127.0.0.1' }) To add a session hook, we need to do s.hooks['response'].append(print_url).\nSo instead of params to requests functions, we pass them as attributes of the Session object.\nAnd we’re done with this library!\n",
-  "wordCount" : "508",
+  "articleBody": "Why Since I actually (sadly) have to learn python myself for the OSC since AIs got banned, I decided it’s time to lay down the foundation of the requests library instead of letting an AI slave do the dirty python work for me. That means it’s time to learn the requests library.\nIt really wasn’t as difficult as I thought, and I really wish I’d done this sooner. Who would’ve ever guessed learning is really useful?\nRequests Alright, let’s actually get into it. The docs I used for this are here.\nThe format of making a request is this:\nimport requests data = { \"username\":\"test\", \"password\":\"test\" } res = requests.post(url, data = data) Of course we can make all kinds of requests, requests.get, requests.options, you get the idea.\nWe can also send parameters in a similar way:\npayload = { \"param1\": \"val1\", \"param2\": [\"val2\", \"val3\"] } res = requests.get(url, params=payload) To check the url created by requests, just print(res.url). To view the response content, just print res.text.\nWe can also modify the encoding, and view through r.encoding (automatically utf-8).\nTo add our own headers, done similarly to data:\nheaders = { \"Cookie\": \"test123\", \"Host\": \"127.0.0.1\" } res = requests.get(url, headers=headers) We can also send a file like so:\nfiles = {'file': ('report.xls', open('report.xls', 'rb'), 'application/vnd.ms-excel')} #here, rb stands for read binary. just how python opens files. #the application type is optional. res = requests.post(url, files=files) Or more files!\nfiles = [ ('images', ('foo.png', open('foo.png', 'rb'), 'image/png')), ('images', ('bar.png', open('bar.png', 'rb'), 'image/png')) ] res = requests.post(url, files=files) And stream an upload:\nwith open('massive-body', 'rb') as f: requests.post(url, data=f) Difference is, this is a way to upload larger files, as the raw body.\nWe can check status code by res.status_code. We may test them like res.status_code == requests.codes.ok if we’re too uncultured to recognize status codes.\nTo view the response headers just use r.headers. A specific one by r.headers['Content-Type'] or r.headers.get('content-type'). Capitalization not important.\nThere’s also a allow_redirects param (True or False), and a timeout (if no response in that time, just pack it up).\nHooks We can add hooks, so functions that are called whenever a response happens. Say we have this function we want to hook:\ndef print_url(r, *args, **kwargs): print(r.url) #the args and kwargs are there just in case the response decides to throw some args in there internally. requests.get(url, hooks = {'response' : print_url}) The response is passed as an argument to the hook function. We can stack hooks, like hooks = {'response': [hook1, hook2]}.\nThe string ‘response’ needs to be respected since it’s the library name for an event. And apparently the only event.\nSessions If we want to use a single session, like a normal user would, without having to write all those annoying cookies and headers every time, we can use requests.Session().\ns = requests.Session() s.headers.update({ 'x-test': 'true', 'Host': '127.0.0.1' }) To add a session hook, we need to do s.hooks['response'].append(print_url).\nSo instead of params to requests functions, we pass them as attributes of the Session object.\nAnd we’re done with this library!\npretty_print Two months after I made this post, I finally had enough of reading barely legible requests and responses and I decided to do something about it. This means creating a python pretty_print.py to import in our scripts.\nThe problem is, they all look like this, with print(res.text), and they get significantly harder to comprehend when there’s 100 of them in a row.\nObviously if you need your code to run fast just don’t use it, but I don’t think such a troublesome bruteforce would be necessary for most ctf challenges.\nYou can customize the theme as you like, here are some “presets” I made:\nI have a ctfweb dir where I save all my scripts, and inside a utils subdir where I added the script. If you’re using the same setup, you can just import it with from utils.pretty_print import pretty_print.\nI’ll drop the code here, but it can also be found on my github page.\n# pretty_print.py # DONT USE THIS IF YOU NEED PERFORMANCE # obviously its not that big of a deal, just keep that in mind. # this uses rich for text coloring and so on. import re from rich.console import Console from rich.syntax import Syntax from rich.panel import Panel from rich.theme import Theme #in case you want to customize your own theme, or choose one I made, just modify the \"selection\" var themes = { \"default\": { \"rich\": Theme({ \"status_ok\": \"green\", \"status_error\": \"red\", \"url_dim\": \"dim\", \"border_normal\": \"blue\", \"border_flag\": \"bright_magenta\", \"flag_text\": \"blink bold yellow\", \"lexer_info\": \"dim\" }), \"syntax\": \"monokai\" }, \"pink\": { \"rich\": Theme({ \"info\": \"hot_pink\", \"url\": \"pale_violet_red1 underline\", \"status_ok\": \"spring_green3\", \"status_error\": \"deep_pink3\", \"border_normal\": \"magenta\", \"border_flag\": \"hot_pink\", \"flag_text\": \"blink bold hot_pink\", \"lexer_info\": \"dim\" }), \"syntax\": \"dracula\" }, \"arctic\": { \"rich\": Theme({ \"status_ok\": \"medium_spring_green\", \"status_error\": \"indian_red\", \"url_dim\": \"light_sky_blue1 underline dim\", \"border_normal\": \"steel_blue\", \"border_flag\": \"cyan1\", \"flag_text\": \"bold black on cyan1\", \"lexer_info\": \"grey70\" }), \"syntax\": \"nord\" } } # SELECT YOUR THEME HERE! selection = \"pink\" # \"pink\" or \"default\" etc active = themes[selection] console = Console(theme=active[\"rich\"]) def pretty_print(res): # status summary status_style = \"status_ok\" if res.status_code \u003c 300 else \"status_error\" console.print(f\"[{status_style}] {res.status_code} {res.reason} [/{status_style}] | [url]{res.url}[/url]\") # content type for the highlighter ctype = res.headers.get('Content-Type', '').lower() lexer = \"json\" if \"json\" in ctype else \"html\" if \"html\" in ctype else \"text\" # look for the flag with regex. flag_patterns = r\"\\b(ctf|unr|ocsc|ocsj|rocsc|flag)\\{.*?\\}\" found_flag = re.search(flag_patterns, res.text, re.IGNORECASE) # prepare the Body syntax = Syntax(res.text, lexer, theme=active[\"syntax\"], word_wrap=True) if found_flag: title = f\"[flag_text]🚩 POTENTIAL FLAG DETECTED: {found_flag.group(0)}[/flag_text]\" border_style = \"border_flag\" else: title = f\"[lexer_info]{lexer} output[/lexer_info]\" border_style = \"border_normal\" # print the result console.print(Panel(syntax, title=title, border_style=border_style)) ",
+  "wordCount" : "934",
   "inLanguage": "en",
   "datePublished": "2026-01-30T00:00:00Z",
   "dateModified": "2026-01-30T00:00:00Z",
@@ -145,7 +144,9 @@ It really wasn&rsquo;t as difficult as I thought, and I really wish I&rsquo;d do
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -196,7 +197,7 @@ It really wasn&rsquo;t as difficult as I thought, and I really wish I&rsquo;d do
     <h1 class="post-title entry-hint-parent">
       requests library
     </h1>
-    <div class="post-meta"><span title='2026-01-30 00:00:00 +0000 UTC'>January 30, 2026</span>
+    <div class="post-meta"><span title='2026-01-30 00:00:00 +0000 UTC'>January 30, 2026</span>&nbsp;·&nbsp;<span>5 min</span>
 
 </div>
   </header> <div class="toc">
@@ -213,7 +214,9 @@ It really wasn&rsquo;t as difficult as I thought, and I really wish I&rsquo;d do
                 <li>
                     <a href="#hooks" aria-label="Hooks">Hooks</a></li>
                 <li>
-                    <a href="#sessions" aria-label="Sessions">Sessions</a>
+                    <a href="#sessions" aria-label="Sessions">Sessions</a></li>
+                <li>
+                    <a href="#pretty_print" aria-label="pretty_print">pretty_print</a>
                 </li>
             </ul>
         </div>
@@ -288,14 +291,110 @@ It really wasn&rsquo;t as difficult as I thought, and I really wish I&rsquo;d do
 <p>So instead of params to requests functions, we pass them as attributes of the Session object.</p>
 <hr>
 <p>And we&rsquo;re done with this library!</p>
-
+<hr>
+<h2 id="pretty_print">pretty_print<a hidden class="anchor" aria-hidden="true" href="#pretty_print">#</a></h2>
+<p>Two months after I made this post, I finally had enough of reading barely legible requests and responses and I decided to do something about it. This means creating a python <code>pretty_print.py</code> to import in our scripts.</p>
+<p>The problem is, they all look like this, with <code>print(res.text)</code>, and they get significantly harder to comprehend when there&rsquo;s 100 of them in a row.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/requests/bland.png#center"></p>
+<p>Obviously if you need your code to run fast just don&rsquo;t use it, but I don&rsquo;t think such a troublesome bruteforce would be necessary for most ctf challenges.</p>
+<p>You can customize the theme as you like, here are some &ldquo;presets&rdquo; I made:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/requests/coloring.png#center">
+<img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/requests/coloring2.png#center">
+<img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/requests/coloring3.png#center"></p>
+<p>I have a <code>ctfweb</code> dir where I save all my scripts, and inside a <code>utils</code> subdir where I added the script. If you&rsquo;re using the same setup, you can just import it with <code>from utils.pretty_print import pretty_print</code>.</p>
+<p>I&rsquo;ll drop the code here, but it can also be found on <strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/misc/pretty_print.py">my github page</a>.</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># pretty_print.py</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># DONT USE THIS IF YOU NEED PERFORMANCE</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># obviously its not that big of a deal, just keep that in mind.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># this uses rich for text coloring and so on.</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> re
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> rich.console <span style="color:#f92672">import</span> Console
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> rich.syntax <span style="color:#f92672">import</span> Syntax
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> rich.panel <span style="color:#f92672">import</span> Panel
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> rich.theme <span style="color:#f92672">import</span> Theme
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#in case you want to customize your own theme, or choose one I made, just modify the &#34;selection&#34; var</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>themes <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;default&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;rich&#34;</span>: Theme({
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;status_ok&#34;</span>: <span style="color:#e6db74">&#34;green&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;status_error&#34;</span>: <span style="color:#e6db74">&#34;red&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;url_dim&#34;</span>: <span style="color:#e6db74">&#34;dim&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;border_normal&#34;</span>: <span style="color:#e6db74">&#34;blue&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;border_flag&#34;</span>: <span style="color:#e6db74">&#34;bright_magenta&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;flag_text&#34;</span>: <span style="color:#e6db74">&#34;blink bold yellow&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;lexer_info&#34;</span>: <span style="color:#e6db74">&#34;dim&#34;</span>
+</span></span><span style="display:flex;"><span>        }),
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;syntax&#34;</span>: <span style="color:#e6db74">&#34;monokai&#34;</span>
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;pink&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;rich&#34;</span>: Theme({
+</span></span><span style="display:flex;"><span>   	    <span style="color:#e6db74">&#34;info&#34;</span>: <span style="color:#e6db74">&#34;hot_pink&#34;</span>,
+</span></span><span style="display:flex;"><span>    	    <span style="color:#e6db74">&#34;url&#34;</span>: <span style="color:#e6db74">&#34;pale_violet_red1 underline&#34;</span>,
+</span></span><span style="display:flex;"><span>    	    <span style="color:#e6db74">&#34;status_ok&#34;</span>: <span style="color:#e6db74">&#34;spring_green3&#34;</span>,
+</span></span><span style="display:flex;"><span>    	    <span style="color:#e6db74">&#34;status_error&#34;</span>: <span style="color:#e6db74">&#34;deep_pink3&#34;</span>,
+</span></span><span style="display:flex;"><span>    	    <span style="color:#e6db74">&#34;border_normal&#34;</span>: <span style="color:#e6db74">&#34;magenta&#34;</span>,
+</span></span><span style="display:flex;"><span>    	    <span style="color:#e6db74">&#34;border_flag&#34;</span>: <span style="color:#e6db74">&#34;hot_pink&#34;</span>,
+</span></span><span style="display:flex;"><span>    	    <span style="color:#e6db74">&#34;flag_text&#34;</span>: <span style="color:#e6db74">&#34;blink bold hot_pink&#34;</span>,
+</span></span><span style="display:flex;"><span>    	    <span style="color:#e6db74">&#34;lexer_info&#34;</span>: <span style="color:#e6db74">&#34;dim&#34;</span>
+</span></span><span style="display:flex;"><span>	}),
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;syntax&#34;</span>: <span style="color:#e6db74">&#34;dracula&#34;</span>
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;arctic&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;rich&#34;</span>: Theme({
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;status_ok&#34;</span>: <span style="color:#e6db74">&#34;medium_spring_green&#34;</span>,  
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;status_error&#34;</span>: <span style="color:#e6db74">&#34;indian_red&#34;</span>,        
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;url_dim&#34;</span>: <span style="color:#e6db74">&#34;light_sky_blue1 underline dim&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;border_normal&#34;</span>: <span style="color:#e6db74">&#34;steel_blue&#34;</span>,       
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;border_flag&#34;</span>: <span style="color:#e6db74">&#34;cyan1&#34;</span>,              
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;flag_text&#34;</span>: <span style="color:#e6db74">&#34;bold black on cyan1&#34;</span>, 
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;lexer_info&#34;</span>: <span style="color:#e6db74">&#34;grey70&#34;</span>
+</span></span><span style="display:flex;"><span>        }),
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;syntax&#34;</span>: <span style="color:#e6db74">&#34;nord&#34;</span>  
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># SELECT YOUR THEME HERE!</span>
+</span></span><span style="display:flex;"><span>selection <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;pink&#34;</span>  <span style="color:#75715e"># &#34;pink&#34; or &#34;default&#34; etc</span>
+</span></span><span style="display:flex;"><span>active <span style="color:#f92672">=</span> themes[selection]
+</span></span><span style="display:flex;"><span>console <span style="color:#f92672">=</span> Console(theme<span style="color:#f92672">=</span>active[<span style="color:#e6db74">&#34;rich&#34;</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">pretty_print</span>(res):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># status summary</span>
+</span></span><span style="display:flex;"><span>    status_style <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;status_ok&#34;</span> <span style="color:#66d9ef">if</span> res<span style="color:#f92672">.</span>status_code <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">300</span> <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#34;status_error&#34;</span>
+</span></span><span style="display:flex;"><span>    console<span style="color:#f92672">.</span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[</span><span style="color:#e6db74">{</span>status_style<span style="color:#e6db74">}</span><span style="color:#e6db74">] </span><span style="color:#e6db74">{</span>res<span style="color:#f92672">.</span>status_code<span style="color:#e6db74">}</span><span style="color:#e6db74"> </span><span style="color:#e6db74">{</span>res<span style="color:#f92672">.</span>reason<span style="color:#e6db74">}</span><span style="color:#e6db74"> [/</span><span style="color:#e6db74">{</span>status_style<span style="color:#e6db74">}</span><span style="color:#e6db74">] | [url]</span><span style="color:#e6db74">{</span>res<span style="color:#f92672">.</span>url<span style="color:#e6db74">}</span><span style="color:#e6db74">[/url]&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># content type for the highlighter</span>
+</span></span><span style="display:flex;"><span>    ctype <span style="color:#f92672">=</span> res<span style="color:#f92672">.</span>headers<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;Content-Type&#39;</span>, <span style="color:#e6db74">&#39;&#39;</span>)<span style="color:#f92672">.</span>lower()
+</span></span><span style="display:flex;"><span>    lexer <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;json&#34;</span> <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#34;json&#34;</span> <span style="color:#f92672">in</span> ctype <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#34;html&#34;</span> <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#34;html&#34;</span> <span style="color:#f92672">in</span> ctype <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#34;text&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># look for the flag with regex. </span>
+</span></span><span style="display:flex;"><span>    flag_patterns <span style="color:#f92672">=</span> <span style="color:#e6db74">r</span><span style="color:#e6db74">&#34;\b(ctf|unr|ocsc|ocsj|rocsc|flag)\{.*?\}&#34;</span>
+</span></span><span style="display:flex;"><span>    found_flag <span style="color:#f92672">=</span> re<span style="color:#f92672">.</span>search(flag_patterns, res<span style="color:#f92672">.</span>text, re<span style="color:#f92672">.</span>IGNORECASE)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># prepare the Body</span>
+</span></span><span style="display:flex;"><span>    syntax <span style="color:#f92672">=</span> Syntax(res<span style="color:#f92672">.</span>text, lexer, theme<span style="color:#f92672">=</span>active[<span style="color:#e6db74">&#34;syntax&#34;</span>], word_wrap<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> found_flag:
+</span></span><span style="display:flex;"><span>        title <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[flag_text]🚩 POTENTIAL FLAG DETECTED: </span><span style="color:#e6db74">{</span>found_flag<span style="color:#f92672">.</span>group(<span style="color:#ae81ff">0</span>)<span style="color:#e6db74">}</span><span style="color:#e6db74">[/flag_text]&#34;</span>
+</span></span><span style="display:flex;"><span>        border_style <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;border_flag&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        title <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[lexer_info]</span><span style="color:#e6db74">{</span>lexer<span style="color:#e6db74">}</span><span style="color:#e6db74"> output[/lexer_info]&#34;</span>
+</span></span><span style="display:flex;"><span>        border_style <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;border_normal&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># print the result</span>
+</span></span><span style="display:flex;"><span>    console<span style="color:#f92672">.</span>print(Panel(syntax, title<span style="color:#f92672">=</span>title, border_style<span style="color:#f92672">=</span>border_style))
+</span></span></code></pre></div>
 
   </div>
 
   <footer class="post-footer">
     <ul class="post-tags">
       <li><a href="https://irinasusca.github.io/writeup-blog/tags/materials/">Materials</a></li>
-      <li><a href="https://irinasusca.github.io/writeup-blog/tags/web/">Web</a></li>
     </ul>
   </footer>
 </article>

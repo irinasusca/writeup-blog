@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
 <title>Pico Function Overwrite Writeup | Irina&#39;s CTF Writeups</title>
-<meta name="keywords" content="picoCTF, pwn, overflow">
+<meta name="keywords" content="picoCTF, pwn, buffer-overflow">
 <meta name="description" content="Challenge overview
 Story telling class 2/2
 Additional details will be available after launching your challenge instance.
@@ -17,7 +17,7 @@ Also NX is enabled, so let&rsquo;s keep that in mind.
 The first input string is not susceptible to a buffer overflow, but something interesting happens on the second scanf. We read two %d (ints), but only one destination for them (&amp;number1).">
 <meta name="author" content="">
 <link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/functionoverwrite-writeup/">
-<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
@@ -91,7 +91,7 @@ The first input string is not susceptible to a buffer overflow, but something in
     <meta property="article:modified_time" content="2025-11-23T21:08:35+02:00">
     <meta property="article:tag" content="PicoCTF">
     <meta property="article:tag" content="Pwn">
-    <meta property="article:tag" content="Overflow">
+    <meta property="article:tag" content="Buffer-Overflow">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Pico Function Overwrite Writeup">
 <meta name="twitter:description" content="Challenge overview
@@ -132,7 +132,7 @@ The first input string is not susceptible to a buffer overflow, but something in
   "name": "Pico Function Overwrite Writeup",
   "description": "Challenge overview Story telling class 2/2 Additional details will be available after launching your challenge instance.\nUpon a quick check, we see that the challenge is a 32-bit binary, and that we can trigger a SEGFAULT. It might be a buffer overflow, but the challenge doesn\u0026rsquo;t necessarily hint that, so let\u0026rsquo;s inspect it further.\nAlso NX is enabled, so let\u0026rsquo;s keep that in mind.\nThe first input string is not susceptible to a buffer overflow, but something interesting happens on the second scanf. We read two %d (ints), but only one destination for them (\u0026amp;number1).\n",
   "keywords": [
-    "picoCTF", "pwn", "overflow"
+    "picoCTF", "pwn", "buffer-overflow"
   ],
   "articleBody": "Challenge overview Story telling class 2/2 Additional details will be available after launching your challenge instance.\nUpon a quick check, we see that the challenge is a 32-bit binary, and that we can trigger a SEGFAULT. It might be a buffer overflow, but the challenge doesn’t necessarily hint that, so let’s inspect it further.\nAlso NX is enabled, so let’s keep that in mind.\nThe first input string is not susceptible to a buffer overflow, but something interesting happens on the second scanf. We read two %d (ints), but only one destination for them (\u0026number1).\nWe also have another couple of functions, hard_checker, easy_checker and calculate_story_score.\nThe check in easy_checker:\nif ( calculate_story_score(input, input_size) != 1337 ) return printf(\"You've failed this class.\"); The check in hard_checker:\nif ( calculate_story_score(input, input_size) != 13371337 ) return printf(\"You've failed this class.\"); And the calculate_story_score they both use:\nNow, inspecting with gef, let’s see where all of our values end up. For input='inputexample', nr1=7 (so it satisfies the first check) and nr2='testing'), it looks like input is being placed on the stack while the second number is getting placed on the heap.\nThe functions we stepped into were hard_checker and then calculate_story_score, so no easy_checker.\nWhat calculate_story_score does is it sums all of the ASCII characters inside our input string.\nFor our inputexample string, the output should be\nsum = 105 + 110 + 112 + 117 + 116 + 101 + 120 + 97 + 109 + 112 + 108 + 101 So, 1308. Setting a breakpoint on the return of calculate_story_score, we can see the value right there on the stack! (0x51c = 1308)\nAnd here it is, checking if it’s equal to 13371337:\nIdentifying the vulnerability So, we need to find a string that has the sum of its ASCII characters equal to 13371337. But that’s quite a big number, isn’t it? And we only have 127 bytes available.\nChars go from 0-255, so our best case scenario would be 127*255, so 32385. Not even close to 13371337 is it?\nWe could either find a way to go into easy_checker instead, or find another way to raise our sum.\nSince the challenge hint was Don’t be so negative, I’m going to assume there’s a way to integer overflow or something else to allow us to reach that number.\nOne thing we haven’t handled yet is the two numbers. What bothers me are these lines of code:\nif ( numbers \u003c= 9 ) fun[number1] += v3; After trying with two numbers, (78 and 78), we can see they’re still placed in the stack and the heap respectively (I thought the second one might’ve ended up on the heap because I gave it too large a value, but it wasn’t the case).\nDebugging Detour Before actually figuring out how to solve this challenge, I wasted a surprising amount of time due to a small mistake, which is that I kept using a string value for the second %d argument. Since scanf(\"%d\") interprets 4-byte integers, my string \"testing\" became some random hex bytes that I misinterpreted as something hardcoded.\nBecause of that, I spent a lot of time trying to find ways to overwrite the ASCII sum, manipulate the comparison instruction, overwrite .rodata, or patch return addresses, so a couple of hours in gef and a lot of SEGFAULTS. Turns out the specific hex value was literally just the second integer, which I had broken it myself by feeding it a string.\nAnd also the challenge had nothing to do with the heap either.\nSo maybe the lesson to be learned is to be a lot more careful with “testing” input values.\nThe exploit Let’s take a look at the assembly code for this if:\nmov eax, [ebp+number1] #eax = number1 mov ecx, ds:(fun - 804C000h)[ebx+eax*4] #ecx = fun[number1] mov edx, [ebp+var_90] # edx = number2 mov eax, [ebp+number1] # eax = numbers add edx, ecx # edx += ecx mov ds:(fun - 804C000h)[ebx+eax*4], edx # fun[number1] = edx Or more simply put,\nfun_table[number1 * 4] += number2; Here we can see number2 getting loaded into edx. And ebx + 0x80 is just the address of fun.\nHere is fun in .data, located at 0804C080.\nAnother interesting thing was how the hard_checker function was called:\nv0 = check; return v0((int)input, input_size); Where check holds the address of hard_checker: 0x804c040 : 0x08049436\nAnd guess what, check is, just like fun, located in the .rodata!\nSince the condition in hard_checker was sum == 13371337, which is impossibe to reach, and we have a similar function called easy_checker that presents us with a much more attainable sum == 1337, we can already guess we are supposed to somehow modify the address in check from hard_checker to easy_checker.\nSince we can choose a negative [numbers] index, we can modify data out of bounds to control the value of check.\nDouble checking with vmmap, the area is rw, so we can modify values!\n0x0804c000 0x0804d000 0x00003000 rw- /home/kali/Downloads/vuln\nOkay, so\nfun - check is 0x804C080 - 0x804C040,\nwhich is 0x40.\nSince we need to modify fun[-0x40], that meansnumber1*4 should be -0x40 = -64. So we already figured out number1 = -16.\nTaking care of the sum, our inputexample was already close to 1337. 1337 - 1308 = 29, so instead of e (101 ASCII) I added two A’s (65+65 = 101 +29).\nNow, to figure out number2, we just need to calculate the offset between hard_checker and easy_checker.\nhard_checker : 0x08049436\neasy_checker : 0x80492FC\nSo out offset is -0x13A, -314 in hex.\nAnd we’re done!\nThe rest of the code can be found on my GitHub here.\n",
   "wordCount" : "938",
@@ -158,7 +158,9 @@ The first input string is not susceptible to a buffer overflow, but something in
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -209,7 +211,7 @@ The first input string is not susceptible to a buffer overflow, but something in
     <h1 class="post-title entry-hint-parent">
       Pico Function Overwrite Writeup
     </h1>
-    <div class="post-meta"><span title='2025-11-23 21:08:35 +0200 EET'>November 23, 2025</span>
+    <div class="post-meta"><span title='2025-11-23 21:08:35 +0200 EET'>November 23, 2025</span>&nbsp;·&nbsp;<span>5 min</span>
 
 </div>
   </header> <div class="toc">
@@ -331,7 +333,7 @@ So we already figured out <code>number1</code> = <code>-16</code>.</p>
     <ul class="post-tags">
       <li><a href="https://irinasusca.github.io/writeup-blog/tags/picoctf/">PicoCTF</a></li>
       <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
-      <li><a href="https://irinasusca.github.io/writeup-blog/tags/overflow/">Overflow</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/buffer-overflow/">Buffer-Overflow</a></li>
     </ul>
   </footer>
 </article>

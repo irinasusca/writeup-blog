@@ -3,7 +3,7 @@ date = '2026-02-10'
 draft = false
 title = 'CyberEdu injective Writeup'
 ShowToc = true
-tags = ["CyberEdu", "ai"]
+tags = ["CyberEdu", "ml/ai"]
 +++
 
 

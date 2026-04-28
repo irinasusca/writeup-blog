@@ -14,7 +14,7 @@ The challenge was initially published at HackTM Quals 2020, organized by WreckTh
 This is a reference to Cimitirul Vesel I guess. We&rsquo;re given two files, a .js and a .wasm, more interestingly. That just means web assembly, and it&rsquo;s a sort of binary format.">
 <meta name="author" content="">
 <link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/merrycemetery-writeup/">
-<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
@@ -84,8 +84,8 @@ This is a reference to Cimitirul Vesel I guess. We’re given two files, a .js a
   <meta property="og:locale" content="en-us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2026-02-10T00:00:00+00:00">
-    <meta property="article:modified_time" content="2026-02-10T00:00:00+00:00">
+    <meta property="article:published_time" content="2026-03-10T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-03-10T00:00:00+00:00">
     <meta property="article:tag" content="CyberEdu">
     <meta property="article:tag" content="Pwn">
     <meta property="article:tag" content="Buffer-Overflow">
@@ -131,8 +131,8 @@ This is a reference to Cimitirul Vesel I guess. We&rsquo;re given two files, a .
   "articleBody": "Challenge overview After doing exactly two web challenges, I remembered just how much better pwn is, and if I don’t sprinkle in at least another actually fun chall this blog won’t last too long. Enough prologue, let’s get started.\nRest In Peace Read More: https://en.wikipedia.org/wiki/Merry_Cemetery\nThe challenge was initially published at HackTM Quals 2020, organized by WreckTheLine.\nThis is a reference to Cimitirul Vesel I guess. We’re given two files, a .js and a .wasm, more interestingly. That just means web assembly, and it’s a sort of binary format.\nThe .js is one of those extremely long files, I mean long enough that reading a book would take less time. And that’s coming from me.\nWe do have a var aaaa = \"HackTM{REDACTED}\";. It looked like it was prepping for a binary.\nI was right! We’re probably just going to need the name of the var.\nI used ghidra with a WASM extension to decompile the file, and then I looked for strings.\nThat’s right. A heap menu. I’ve still got no clue how to solve heap challs so I’m going to leave this for later, and look for a stack one.\nIdentifying the vulnerabilities The exploit As always, the full code can be found on my GitHub here.\n",
   "wordCount" : "209",
   "inLanguage": "en",
-  "datePublished": "2026-02-10T00:00:00Z",
-  "dateModified": "2026-02-10T00:00:00Z",
+  "datePublished": "2026-03-10T00:00:00Z",
+  "dateModified": "2026-03-10T00:00:00Z",
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": "https://irinasusca.github.io/writeup-blog/posts/merrycemetery-writeup/"
@@ -152,7 +152,9 @@ This is a reference to Cimitirul Vesel I guess. We&rsquo;re given two files, a .
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -203,7 +205,7 @@ This is a reference to Cimitirul Vesel I guess. We&rsquo;re given two files, a .
     <h1 class="post-title entry-hint-parent">
       CyberEdu merry-cemetery Writeup
     </h1>
-    <div class="post-meta"><span title='2026-02-10 00:00:00 +0000 UTC'>February 10, 2026</span>
+    <div class="post-meta"><span title='2026-03-10 00:00:00 +0000 UTC'>March 10, 2026</span>&nbsp;·&nbsp;<span>1 min</span>
 
 </div>
   </header> <div class="toc">

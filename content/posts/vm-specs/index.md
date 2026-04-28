@@ -3,7 +3,7 @@ date = '2026-01-04'
 draft = false
 title = 'VMs'
 ShowToc = true
-tags = ["chat", "vm"]
+tags = ["materials"]
 +++
 
 

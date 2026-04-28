@@ -6,8 +6,107 @@
     <description>Recent content in Materials on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 05 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 23 Apr 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/tags/materials/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Fix binary version</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/fixpwnversion/</link>
+      <pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/fixpwnversion/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;I keep bumping into this stupid problem with binaries, where they provide the libc, but not the ldd. That means you can&amp;rsquo;t run it locally using it. So you need to manually look for the stupid thing. And every time this happens I forget how to do it.&lt;/p&gt;
+&lt;h2 id=&#34;find-the-version&#34;&gt;Find the version&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;strings libc-2.27.so | grep &amp;quot;GNU C Library&amp;quot;&lt;/code&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;GNU C Library (Ubuntu GLIBC 2.27-3ubuntu1.6) stable release version 2.27.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h2 id=&#34;use-a-tool-to-pull-the-version&#34;&gt;Use a tool to pull the version&lt;/h2&gt;
+&lt;p&gt;Get this tool:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>gef</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/gef/</link>
+      <pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/gef/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;I&amp;rsquo;ve had this on my iPad for months but I think it&amp;rsquo;s time I write some of this down on this blog as well.&lt;/p&gt;
+&lt;h2 id=&#34;gef&#34;&gt;gef&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/hugsy/gef&#34;&gt;gef&lt;/a&gt; (GDB enhanced features) &lt;em&gt;is a set of commands for x86/64, ARM, MIPS, PowerPC and SPARC to assist exploit developers and reverse-engineers when using old school GDB.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;The only reason I have gef instead of pwndbg is that when I tried to install pwndbg on my first ever kali machine, it wouldn&amp;rsquo;t work, and gef took a minute or two to set up; And I&amp;rsquo;ve stuck with it ever since. &lt;a href=&#34;https://raw.githubusercontent.com/zxgio/gdb_gef-cheatsheet/master/gdb_gef-cheatsheet.pdf&#34;&gt;Cheatsheet&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>http</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/http/</link>
+      <pubDate>Thu, 16 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/http/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;idfk&lt;/p&gt;
+&lt;h2 id=&#34;headers&#34;&gt;headers&lt;/h2&gt;
+&lt;p&gt;Here are some of the headers that I didn&amp;rsquo;t really have much of a clue about what they actually meant.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;X-Forwarded-For&lt;/strong&gt;: the originating IP address of a client connecting to a web server through a HTTP proxy. Basically saying, hey, I&amp;rsquo;m a proxy forwarding this for this guy!&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;X-Forwarded-Host&lt;/strong&gt;: the domain originally requested by the user.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Forwarded&lt;/strong&gt;: the official version to replace the previous ones, looks like this: &lt;em&gt;by=&lt;!-- raw HTML omitted --&gt;; for=&lt;!-- raw HTML omitted --&gt;; host=&lt;!-- raw HTML omitted --&gt;; proto=http&lt;/em&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>nosql</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/nosql/</link>
+      <pubDate>Tue, 31 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/nosql/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;Why not&lt;/p&gt;
+&lt;h2 id=&#34;nosql&#34;&gt;nosql&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=zHxgZJCy9fA&#34;&gt;Video&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Unlike SQL, NoSQL (not only SQL) works without relational tables; It&amp;rsquo;s often used when you can&amp;rsquo;t be sure enough about the definite structure of an object to make it into a table.&lt;/p&gt;
+&lt;p&gt;So, think of JSON, with some columns being optional; This is often used with documents for blog apps. Or, maybe a graph structure, with nodes being users and arcs being relationships between them. There&amp;rsquo;s a bunch of different stuff you can do, and its usage is pretty different to SQL. We&amp;rsquo;re using &lt;em&gt;collections&lt;/em&gt; instead of tables.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>sql</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/sql/</link>
+      <pubDate>Tue, 31 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/sql/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;SQL injection is a pretty boring subject to me but I ran into it through some pico challenges so I thought I&amp;rsquo;d make some notes anyways. sqlmap usage is probably necessary just for really beginner ctf challs, but I&amp;rsquo;ll include it anyways.&lt;/p&gt;
+&lt;p&gt;Obviously this stuff is not that hard to google yourself, so don&amp;rsquo;t think of this as a &lt;em&gt;complete guide&lt;/em&gt;, just as my own personal notes because I will most likely forget about this in a week.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>ffuf</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/ffuf/</link>
+      <pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/ffuf/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;I realized I don&amp;rsquo;t know how to use this outside of just specifying a website and a wordlist. Well, here is everything (relevant) it can do.&lt;/p&gt;
+&lt;h2 id=&#34;ffuf&#34;&gt;ffuf&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://hackviser.com/tactics/tools/ffuf&#34;&gt;Source&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Here&amp;rsquo;s what to keep in mind:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;-X POST&lt;/code&gt; - if you want to try different HTTP methods.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;-H &amp;quot;Authorization: Bearer token&amp;quot;&lt;/code&gt; - add your own headers.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;-w /path/wordlist1.txt:/path/wordlist2.txt&lt;/code&gt; - multiple wordlists at the same time.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;-p 10&lt;/code&gt; - limit the amount of concurrent requests; if you don&amp;rsquo;t want to dos by mistake.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>php</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/php/</link>
+      <pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/php/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;I am so sick and tired of all these php challenges, and I&amp;rsquo;m just always aimlessly trying crap from the internet without understanding half of it. This ends NOW!!&lt;/p&gt;
+&lt;p&gt;And keep in mind this is a work in progress file that I will add to when I feel the need to.&lt;/p&gt;
+&lt;h2 id=&#34;trivia&#34;&gt;trivia&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;.php&lt;/code&gt; are normal php, but &lt;code&gt;.phps&lt;/code&gt; is often used to display the source code of a script with syntax highlighting.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>pyenv</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/pyenv/</link>
@@ -68,6 +167,17 @@
       <guid>https://irinasusca.github.io/writeup-blog/posts/serialization/</guid>
       <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
 &lt;p&gt;I decided to get more into this subject because of the challenge &lt;strong&gt;&lt;a href=&#34;irinasusca.github.io/writeup-blog/posts/jargon-writeup/&#34;&gt;jargon&lt;/a&gt;&lt;/strong&gt;. I was struggling with AIs and it was really getting on my nerves, because I felt I didn&amp;rsquo;t &lt;em&gt;really&lt;/em&gt; understand what was going on. So I decided to write a little article about this, to make myself fully grasp serialization, deserialization and the subset of vulnerabilities that may come with them. So, let&amp;rsquo;s get into it.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>VMs</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/vm-specs/</link>
+      <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/vm-specs/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;I decided to make a post about VMs and things that I didn&amp;rsquo;t see people talk much about, especially because of my past &lt;em&gt;experiences&lt;/em&gt; with them. I will be talking about Windows &lt;em&gt;and&lt;/em&gt; Linux machines, what worked for me and what didn&amp;rsquo;t, how to set up and all that crap.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;windows&#34;&gt;Windows&lt;/h2&gt;
+&lt;p&gt;My first attempt at a &amp;ldquo;cybersecurity&amp;rdquo; Kali VM was on &lt;a href=&#34;https://www.virtualbox.org/wiki/Downloads&#34;&gt;Oracle VirtualBox&lt;/a&gt;, on my old Windows Laptop (with 16GB of ram and 400GB of space), which didn&amp;rsquo;t leave much for the VM, maybe four cores and 8GB RAM at best.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

@@ -11,7 +11,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="canonical" href="https://irinasusca.github.io/writeup-blog/">
-<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
@@ -100,7 +100,9 @@
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -145,160 +147,170 @@
 </header>
 <main class="main"> 
 
-<article class="post-entry"> 
+
+
+<article class="post-entry"
+  data-tags="cyberedu misc "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Nullctf 2025 Sketchy Writeup
+    <h2 class="entry-hint-parent">CyberEdu mountain Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview This challenge was a part of the NullCTF 2025, made by tudor, with the description sketchy stuff going on here i’m scared.
-Upon checking, we’re dealing with NX, PIE and ALSR and no canary.
-Let’s take a look at the binary. We have two interesting functions, main and handler.
-Inside main, firstly, we are given the address of main (located at PIE address &#43; 0x1265), so we don’t need to bother with leaking it. Then, a pointer s gets assigned the string quite interesting stuff you’re saying.
+    <p>Challenge overview Take a look at those mountains!
+We get a zip file I ran binwalk -Me --dd=&#34;.*&#34; filename on (just does it recursively). We get a PNG file which has a barely visible flag in the top left which I noticed waay to late; I opened a web version of gimp, turned off the green and blue, and the flag became just visible enough to be transcribed.
+Here it is: DCTF{157d2d840f229720e7f8082dd4468a8583fb348ebf2cb38456147dc046ff942d}
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-12-11 00:00:00 +0000 UTC'>December 11, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Nullctf 2025 Sketchy Writeup" href="https://irinasusca.github.io/writeup-blog/posts/sketchy-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-30 00:00:00 +0000 UTC'>January 30, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu mountain Writeup" href="https://irinasusca.github.io/writeup-blog/posts/mountain-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="cyberedu misc "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu Buy-Cooffe Writeup
+    <h2 class="entry-hint-parent">CyberEdu pawn-shop Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview It’s early morning, and the caffeine hasn’t quite kicked in yet. As you sip your cup of coffee, you notice something odd – a mysterious program named cooffee is running on your system.
-At first glance, the chall looks like a 64-bit executable, and upon a buffer overflow the program immediately leaks us a libc address. We also get the libc-2.31.so to download, and that means this is the libc version our binary uses.
+    <p>Challenge overview Se spune ca fericirea nu poate fi cumparata. Acesta este cazul si pentru acest magazin. Trebuie sa gasesti o vulnerabilitate in aceasta aplicatie si sa recuperezi secretul.
+This was one of the challenges from OSC 2025 county phase, I remember it, so let’s quickly solve this.
+Identifying the vulnerabilities Trying to access the flag, we get this response:
+Adding the allowed Origin as a HTTP Header, we get the flag.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu Buy-Cooffe Writeup" href="https://irinasusca.github.io/writeup-blog/posts/buycooffe-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-30 00:00:00 +0000 UTC'>January 30, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu pawn-shop Writeup" href="https://irinasusca.github.io/writeup-blog/posts/pawnshop-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="materials "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu ftp-console Writeup
+    <h2 class="entry-hint-parent">requests library
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview We got a very strange ftp console? Can you retrive the flag?
-At first glance, the ftp_server looks like a 32-bit executable, and as hinted by the name, a FTP (File Transfer Protocol) server mockup.
-Upon checking, every protection is disabled, so that’s nice! Now let’s take a look at the binary.
-We have a main function that calls login, and we can already see some interesting things going on.
+    <p>Why Since I actually (sadly) have to learn python myself for the OSC since AIs got banned, I decided it’s time to lay down the foundation of the requests library instead of letting an AI slave do the dirty python work for me. That means it’s time to learn the requests library.
+It really wasn’t as difficult as I thought, and I really wish I’d done this sooner. Who would’ve ever guessed learning is really useful?
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu ftp-console Writeup" href="https://irinasusca.github.io/writeup-blog/posts/ftpconsole-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-30 00:00:00 +0000 UTC'>January 30, 2026</span>&nbsp;·&nbsp;<span>5 min</span></footer>
+  <a class="entry-link" aria-label="post link to requests library" href="https://irinasusca.github.io/writeup-blog/posts/requests/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="cyberedu misc "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu Lost Writeup
+    <h2 class="entry-hint-parent">CyberEdu ast-tree Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Oh no! I lost my flag somewhere in memory. Can you help me find it, please? Make sure to do it quickly!
-Upon trying to run the binary, we are greeted by a so version mismatch, but I won’t bother downloading it myself, so let’s see if we can solve it remotely. We can see it is a 32-bit binary though.
-Taking a look at main, we can see the flag getting copied into a dest buffer. Our input is stored into buf.
+    <p>Challenge overview A careless developer left behind some code that reads sensitive files directly from disk.
+We’re prompted with a “Paste your AST-Grep YAML rule here” and an option to run it. ast-grep is a code tool for structural search and replace, like syntax-aware grep.
+We can also use jQuery like utility methods to traverse syntax tree nodes.
+Identifying the vulnerabilities Upon entering an invalid file, we get this ChatGPT written error:
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu Lost Writeup" href="https://irinasusca.github.io/writeup-blog/posts/lost-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-29 00:00:00 +0000 UTC'>January 29, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu ast-tree Writeup" href="https://irinasusca.github.io/writeup-blog/posts/asttree-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="cyberedu misc "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu Stack Writeup
+    <h2 class="entry-hint-parent">CyberEdu password Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview You can’t run shellcode if all registers are 0, right?
-Our binary main is a 64-bit executable with an obvious buffer overflow vulnerability. Let’s take a look at it using a disassembler.
-We only have one function, main, which mmaps dest, copies 3 bytes of what’s inside &amp;unk_2027 into dest, then lets us write 0x1000 bytes into dest&#43;3. That means our buffer overflow is only 3 bytes, though. Afterwards, it executes this assembly shellcode:
+    <p>Challenge overview Can you find the password? I am asking for a friend.
+We’re given a .pyc (python bytecode) file. So what we need to do is find a python bytecode decompiler compatible with python version 2.7.
+After a bunch of googling I found this one. Here is the relevant part of the decompiled code:
+The flag is constructed as such: flag = a &#43; b &#43; c &#43; d &#43; e &#43; f &#43; g &#43; h. But the chunks are given to us in another order, so we just need to select and concatenate the chunks alphabetically.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-12-03 00:00:00 +0000 UTC'>December 3, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu Stack Writeup" href="https://irinasusca.github.io/writeup-blog/posts/stack-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-28 00:00:00 +0000 UTC'>January 28, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu password Writeup" href="https://irinasusca.github.io/writeup-blog/posts/password-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="cyberedu web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu Bazooka Writeup
+    <h2 class="entry-hint-parent">CyberEdu ultra-crawl Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview We have a problem on the station on Mars, we suspect we would be attacked by some hackers so we put a little protection against them.
-The challenge was proposed by BIT SENTINEL.
-At first glance, the pwn_bazooka_bazooka looks like a 64-bit executable, and I didn’t immediately notice any obvious buffer overflows or format strings. It takes a message input and a junk input. So let’s take a look at the binary.
+    <p>Challenge overview Here is your favorite proxy for crawling minimal websites.
+Identifying the vulnerabilities This looks like some sort of crawler that mirrors the given page’s response. After a pipedream webhook, looks like they’re using Python-urllib/3.6.
+Some classic SSRF, we can just feed this crawler a file:///etc/passwd and surprise, it works!
+Now we just need to figure our where our flag is - if we input a wrong file location, we get a 500. From /etc/passwd, looks like we have a /home/ctf user, so let’s look for the flag there.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-12-02 00:00:00 +0000 UTC'>December 2, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu Bazooka Writeup" href="https://irinasusca.github.io/writeup-blog/posts/bazooka-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-26 00:00:00 +0000 UTC'>January 26, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu ultra-crawl Writeup" href="https://irinasusca.github.io/writeup-blog/posts/ultracrawl-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="cyberedu web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Here&#39;s A LIBC Writeup
+    <h2 class="entry-hint-parent">CyberEdu the-code Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview I am once again asking for you to pwn this binary
-At first glance, the vuln looks like a 64-bit executable with a buffer overflow vulnerability. And since it’s hinted in the title, most probably a ret2libc challenge.
-Upon checking, only NX is enabled. So this should make things fairly easy for us.
-Identifying the vulnerabilities We can quickly check if there’s a /bin/sh in memory, and there it is! Along with a system and also execve.
+    <p>Challenge overview Look, the code is there. Enjoy.
+Identifying the vulnerabilities More php fun.
+We have two arguments here, start (actually start the challenge) and arg. Then, after blacklisting the following in arg: php &gt; &amp; $ :, they execute shell_exec(&#34;find /tmp -iname &#34;.escapeshellcmd($_GET[&#39;arg&#39;])).
+That means they return the toupper version of what that command returns, which is b64 encoded, and more exactly the result of the files that are named like arg in /tmp.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-30 00:00:00 +0000 UTC'>November 30, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Here&#39;s A LIBC Writeup" href="https://irinasusca.github.io/writeup-blog/posts/heresalibc-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-25 00:00:00 +0000 UTC'>January 25, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu the-code Writeup" href="https://irinasusca.github.io/writeup-blog/posts/thecode-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="cyberedu web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Homework Writeup
+    <h2 class="entry-hint-parent">CyberEdu puzzled Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview “time to do some homework!”
-At first glance, homework looks like a 64-bit executable, but we can’t tell much about it.
-After using checksec, sadly, PIE is enabled and so is NX.
-We have a main function (picture above) and a step function. The step function uses and then modifies some variables declared/located in the .bss, so it would be good to see what they look like before execution starts.
+    <p>Challenge overview How puzzled can you get with php?
+I really didn’t feel like doing php challenges but I did it anyways.
+Identifying the vulnerabilities We get a php source file with what looks like login. If we don’t provide a pass, the source gets leaked.
+if (isset($_GET[&#39;pass&#39;])){ $pass = generateRandomString(95); $user_input = json_decode($_GET[&#39;pass&#39;]); if ($pass != $user_input-&gt;pass) { header(&#39;HTTP/1.0 403 Forbidden&#39;); exit; } They generate a random 95 letter long password, decode the json of our pass, and hit us with a 403 if the password isn’t correct. But the comparison is done with !=, not !==. For example, 5!=&#34;5&#34; would return false, while 5!==&#34;5&#34; would return true.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-27 21:09:36 +0200 EET'>November 27, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Homework Writeup" href="https://irinasusca.github.io/writeup-blog/posts/homework-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-18 00:00:00 +0000 UTC'>January 18, 2026</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu puzzled Writeup" href="https://irinasusca.github.io/writeup-blog/posts/puzzled-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="cyberedu web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Buffer Overflow 3 Writeup
+    <h2 class="entry-hint-parent">CyberEdu js-magic Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Do you think you can bypass the protection and get the flag? It looks like Dr. Oswal added a stack canary to this program to protect against buffer overflows.
-At first glance, the vuln looks like a 32-bit executable, probably with a buffer overflow vulnerability.
-We are first prompted to create a canary.txt file, and the binary runs after that.
-Analyzing the binary, first, the read_canary() function is called, and then we go into vuln.
+    <p>Challenge overview Javascript Obfuscation 101.
+Already sounds bad, and I just noticed the Cryptography tag, but let’s give it a go. We’re only given a chall_clean.js file, and no instance.
+Identifying the vulnerabilities I tried running it in an online compiler, but it required the window component, so I locally added an index.html buddy for it and ran them together, and what it did was open a lot of porn tabs.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-25 21:09:36 +0200 EET'>November 25, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Buffer Overflow 3 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/bufferoverflow3-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-15 00:00:00 +0000 UTC'>January 15, 2026</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu js-magic Writeup" href="https://irinasusca.github.io/writeup-blog/posts/jsmagic-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="cyberedu web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Ropfu Writeup
+    <h2 class="entry-hint-parent">CyberEdu rundown Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview What’s ROP? Can you exploit the following program to get the flag?
-At first glance, the vuln looks like a 32-bit executable with a buffer overflow vulnerability.
-Identifying the vulnerabilities Analyzing the binary, it doesn’t look like anything special, just an ordinary buffer overflow.
-We don’t seem to have a /bin/sh in memory so this probably means we have to execute a ret2reg.
-That means we need to make our own bin/sh and point to it, and since the vuln returns the gets, that means eax will hold the gets return value. And the return value of gets is a pointer to the input value!
+    <p>Challenge overview A rundown, informally known as a pickle or the hotbox, is a situation in the game of baseball that occurs when the baserunner is stranded between two bases, also known as no-man’s land, and is in jeopardy of being tagged out.&#34; … if you stopped in the first part of the definition you are one of ours.
+This is EXACTLY like slightly-broken (you could take a look at it, it’s short), except the pin things are actually being used!
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-24 21:09:36 +0200 EET'>November 24, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Ropfu Writeup" href="https://irinasusca.github.io/writeup-blog/posts/ropfu-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-15 00:00:00 +0000 UTC'>January 15, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu rundown Writeup" href="https://irinasusca.github.io/writeup-blog/posts/rundown-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

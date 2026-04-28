@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Web | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/tags/web/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="https://irinasusca.github.io/writeup-blog/tags/web/index.xml" title="rss">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/tags/web/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/tags/web/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Web">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Web">
+<meta name="twitter:description" content="">
+
+</head>
+<body class="list" id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header">
+  <h1>
+    Web
+  </h1>
+</header>
+
+
+
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico Client-side-again Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Can you break into this super secure portal?
+We need to input some sort of password, and we have access to the obfuscated js code.
+Identifying the vulnerabilities I tried deobfuscating with deobfuscate.io but that didn’t really work.
+The code looks like so:
+var _0x5a46 = [&#34;daf93}&#34;, &#34;_again_4&#34;, &#34;this&#34;, &#34;Password Verified&#34;, &#34;Incorrect password&#34;, &#34;getElementById&#34;, &#34;value&#34;, &#34;substring&#34;, &#34;picoCTF{&#34;, &#34;not_this&#34;]; (function (_0x4bd822, _0x2bd6f7) { var _0xb4bdb3 = function (_0x1d68f6) { while (--_0x1d68f6) { _0x4bd822.push(_0x4bd822.shift()); } }; _0xb4bdb3(&#43;&#43;_0x2bd6f7); }(_0x5a46, 435)); var _0x4b5b = function (_0x2d8f05, _0x4b81bb) { _0x2d8f05 = _0x2d8f05 - 0; var _0x4d74cb = _0x5a46[_0x2d8f05]; return _0x4d74cb; }; function verify() { checkpass = document[_0x4b5b(&#34;0x0&#34;)](&#34;pass&#34;)[_0x4b5b(&#34;0x1&#34;)]; split = 4; if (checkpass[_0x4b5b(&#34;0x2&#34;)](0, split * 2) == _0x4b5b(&#34;0x3&#34;)) { if (checkpass[_0x4b5b(&#34;0x2&#34;)](7, 9) == &#34;{n&#34;) { if (checkpass[_0x4b5b(&#34;0x2&#34;)](split * 2, split * 2 * 2) == _0x4b5b(&#34;0x4&#34;)) { if (checkpass[_0x4b5b(&#34;0x2&#34;)](3, 6) == &#34;oCT&#34;) { if (checkpass[_0x4b5b(&#34;0x2&#34;)](split * 3 * 2, split * 4 * 2) == _0x4b5b(&#34;0x5&#34;)) { if (checkpass.substring(6, 11) == &#34;F{not&#34;) { if (checkpass[_0x4b5b(&#34;0x2&#34;)](split * 2 * 2, split * 3 * 2) == _0x4b5b(&#34;0x6&#34;)) { if (checkpass[_0x4b5b(&#34;0x2&#34;)](12, 16) == _0x4b5b(&#34;0x7&#34;)) { alert(_0x4b5b(&#34;0x8&#34;)); } } } } } } } } else { alert(_0x4b5b(&#34;0x9&#34;)); } } I gave up and tried reconstructing from the random strings laying around, and tested it, and picoCTF{not_this_again_4daf93} actually worked.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-04-01 00:00:00 +0000 UTC'>April 1, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Client-side-again Writeup" href="https://irinasusca.github.io/writeup-blog/posts/clientsideagain-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico Forbidden Paths Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Can you get the flag? We know that the website files live in /usr/share/nginx/html/ and the flag is at /flag.txt but the website is filtering absolute file paths. Can you get past the filter to read the flag?
+The / path indeed doesn’t work. This is the solution:
+</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-04-01 00:00:00 +0000 UTC'>April 1, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Forbidden Paths Writeup" href="https://irinasusca.github.io/writeup-blog/posts/forbiddenpaths-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico Irish Name Repo 1, 2, 3 Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Do you think you can log us in? Try to see if you can login!
+Another super easy challenge.
+Irish Name Repo 1 Opening the request, we can see a “debug” parameter or whatever it’s called, and it enables us to see our queries. I don’t even think it was necessary since this was just the simplest form of SQLi.
+Irish Name Repo 2 Same stuff
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-04-01 00:00:00 +0000 UTC'>April 1, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Irish Name Repo 1, 2, 3 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/irishnamerepo-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico Web Gauntlet 2 &amp; 3 Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview This website looks familiar… Log in as admin.
+We need to log in as admin, through SQLi, and we have 5 rounds to beat.
+Identifying the vulnerabilities This time I realised the filters were actually spelled out in filter.php; oops.
+Round 1 filters: or and true false union like = &gt; &lt; ; -- /* */ admin
+I struggled with this for about two hours until I gave up and found this solution:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-04-01 00:00:00 +0000 UTC'>April 1, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Web Gauntlet 2 & 3 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/webgauntlet2-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico JaWT Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Check the admin scratchpad!
+We can log in, based on a username, but we aren’t allowed to write admin. The challenge also hints us with “You can use your name as a log in, because that’s quick and easy to remember! If you don’t like your name, use a short and cool one like https://github.com/magnumripper/JohnTheRipper.
+Identifying the vulnerabilities I’m guessing we need to brute force the JWT secret and sign our own admin cookie. I searched it on google and found this portswigger lab saying to use hashcat -a 0 -m 16500 &lt;jwt&gt; &lt;wordlist&gt;. Obviously that worked:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-03-31 00:00:00 +0000 UTC'>March 31, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico JaWT Writeup" href="https://irinasusca.github.io/writeup-blog/posts/jawt-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico Web Gauntlet Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Can you beat the filters? Log in as admin.
+We need to log in as admin, through SQLi, and we have 5 rounds to beat.
+Identifying the vulnerabilities First, by submitting a single ’ as the password, we get the SQL engine right away, SQLite3.
+However, sending the user=admin and pass=&#39; or 1=1-- didn’t work send us to the next phase, but returned a 302 page. So I turned to PayloadAllTheThings, and to practice my python skills, wrote this:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-03-31 00:00:00 +0000 UTC'>March 31, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Web Gauntlet Writeup" href="https://irinasusca.github.io/writeup-blog/posts/webgauntlet-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico It is my Birthday Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Yes. That’s right. I’m going back to finish the pico web category, because I feel like the ones I have left on CyberEdu are a little too difficult for the OSCJ which is next month. And pico is, well, pico-leveled.
+And I will only have writeups for the pico challenges that take more than two minutes to solve.
+Challenge overview I sent out 2 invitations to all of my friends for my birthday! I’ll know if they get stolen because the two invites look similar, and they even have the same md5 hash, but they are slightly different! You wouldn’t believe how long it took me to find a collision. Anyway, see if you’re invited by submitting 2 PDFs to my website.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-03-30 00:00:00 +0000 UTC'>March 30, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico It is my Birthday Writeup" href="https://irinasusca.github.io/writeup-blog/posts/itsmybirthday-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="cyberedu web "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu casual-defence Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>I haven’t done a web challenge outside a ctf in quite a while, so let’s see how this goes!
+Challenge overview In light of recent events related to the cyber attack, we have prepared a mirror environment of the defaced website so you can have a look. Moreover, both the mirror and production environments retain a copy of the defacement file and up-to-date security policies that prevent any access to our systems.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-03-29 00:00:00 +0000 UTC'>March 29, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu casual-defence Writeup" href="https://irinasusca.github.io/writeup-blog/posts/casualdefence-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="cyberedu web "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu badimg Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Web apps are everywhere, so are the bugs.
+This is an image upload injection with php.
+Identifying the vulnerabilities First some recon about this sort of vulnerability.
+The files we upload are saved in /profiles/longcode.jpg (rendered as jpg) but also available at /index.php/page=profiles/longcode.jpg (rendered as html) even if their extension is php.
+I tried a bunch of tricks including adding a php command as an exiftool comment, but it doesn’t get rendered on the page. And somehow, our file gets longer. But something’s weird here.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-18 00:00:00 +0000 UTC'>February 18, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu badimg Writeup" href="https://irinasusca.github.io/writeup-blog/posts/badimg-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="cyberedu web "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu formula1 Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Only a champion can win this race. Enter the secret pit stop and claim your flag!
+Identifying the vulnerabilities We’re confronted with a login page, with two fields, Only for F1 champions. Enter your first name and pit code to start your engine. Entering a random username and random password would give an Invalid username error, but sending max (for Max Verstappen) would give an Invalid pit code.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-02 00:00:00 +0000 UTC'>February 2, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu formula1 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/formula1-writeup/"></a>
+</article>
+<footer class="page-footer">
+  <nav class="pagination">
+    <a class="prev" href="https://irinasusca.github.io/writeup-blog/tags/web/page/2/">
+      «&nbsp;Prev&nbsp;
+    </a>
+    <a class="next" href="https://irinasusca.github.io/writeup-blog/tags/web/page/4/">Next&nbsp;&nbsp;»
+    </a>
+  </nav>
+</footer>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

@@ -10,7 +10,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="canonical" href="https://irinasusca.github.io/writeup-blog/tags/picoctf/">
-<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
@@ -85,7 +85,9 @@
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -135,148 +137,167 @@
   </h1>
 </header>
 
-<article class="post-entry tag-entry"> 
+
+
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Here&#39;s A LIBC Writeup
+    <h2 class="entry-hint-parent">Pico Binary Gauntlet 0, 1, 2, 3 writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview I am once again asking for you to pwn this binary
-At first glance, the vuln looks like a 64-bit executable with a buffer overflow vulnerability. And since it’s hinted in the title, most probably a ret2libc challenge.
-Upon checking, only NX is enabled. So this should make things fairly easy for us.
-Identifying the vulnerabilities We can quickly check if there’s a /bin/sh in memory, and there it is! Along with a system and also execve.
+    <p>Overview Okay, time for a challenge. The flag for this challenge does not include the standard picoCTF{} wrapper.
+I’m doing this so I don’t completely forget how to solve pwn challenges :)
+Binary gauntlet 0 For this one I just sent %1$p.%2$p.%3$p.%4$p.%5$p.%6$p.%7$p.%8$p.%9$p.%10$p.%11$p.%12$p.%13$p.%14$p.%15$p.%16$p.%17$p.%18$p.%19$p.%20$p.%21$p.%22$p.%23$p.%24$p.%25$p.%26$p.%27$p.%28$p.%29$p.%30$p.%31$p.%32$p.%33$p.%34$p.%35$p.%36$p.%37$p.%38$p.%39$p.%40$p.%41$p.%42$p.%43$p.%44$p.%45$p.%46$p.%47$p.%48$p.%49$p.%50$p.%51$p.%52$p.%53$p.%54$p.%55$p.%56$p.%57$p.%58$p.%59$p.%60$p.%61$p.%62$p.%63$p.%64$p.%65$p.%66$p.%67$p.%68$p.%69$p.%70$p.%71$p.%72$p.%73$p.%74$p.%75$p.%76$p.%77$p.%78$p.%79$p.%80$p.%81$p.%82$p.%83$p.%84$p.%85$p.%86$p.%87$p.%88$p.%89$p.%90$p.%91$p.%92$p.%93$p.%94$p.%95$p.%96$p.%97$p.%98$p.%99$p.%100$p.%101$p.%102$p.%103$p.%104$p.%105$p.%106$p.%107$p.%108$p.%109$p.%110$p.%111$p.%112$p.%113$p.%114$p.%115$p.%116$p.%117$p.%118$p.%119$p.%120$p.%121$p.%122$p.%123$p.%124$p.%125$p.%126$p.%127$p.%128$p.%129$p.%130$p.%131$p.%132$p.%133$p.%134$p.%135$p.%136$p.%137$p.%138$p.%139$p.%140$p.%141$p.%142$p.%143$p.%144$p.%145$p.%146$p.%147$p.%148$p.%149$p.%150$p twice, and I got the flag.
+Binary gauntlet 1 NX and PIE are both disabled, and we get the location of dest on the stack. So, the stack is executable, and we have a buffer overflow. I actually had to look for a hint for this, I haven’t seen an NX disabled challenge in so long it hadn’t even crossed my mind.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-30 00:00:00 +0000 UTC'>November 30, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Here&#39;s A LIBC Writeup" href="https://irinasusca.github.io/writeup-blog/posts/heresalibc-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-23 00:00:00 +0000 UTC'>April 23, 2026</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Binary Gauntlet 0, 1, 2, 3 writeup" href="https://irinasusca.github.io/writeup-blog/posts/binarygauntlet-writeup/"></a>
 </article>
 
-<article class="post-entry tag-entry"> 
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Homework Writeup
+    <h2 class="entry-hint-parent">Pico Startup Company writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview “time to do some homework!”
-At first glance, homework looks like a 64-bit executable, but we can’t tell much about it.
-After using checksec, sadly, PIE is enabled and so is NX.
-We have a main function (picture above) and a step function. The step function uses and then modifies some variables declared/located in the .bss, so it would be good to see what they look like before execution starts.
+    <p>The last challenge in my Pico Medium Web category - finally - all four pages are finished! It’s been quite a while, with 12th grade and university admissions, but I’m super proud that I got to it in the end.
+Overview Do you want to fund my startup?
+We can register, then head over to contribute.php to contribute money. The request looks like captcha=73&amp;moneys=1. We can send negative money but it’s not that big of a deal.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-27 21:09:36 +0200 EET'>November 27, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Homework Writeup" href="https://irinasusca.github.io/writeup-blog/posts/homework-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-22 00:00:00 +0000 UTC'>April 22, 2026</span>&nbsp;·&nbsp;<span>6 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Startup Company writeup" href="https://irinasusca.github.io/writeup-blog/posts/startupcompany-writeup/"></a>
 </article>
 
-<article class="post-entry tag-entry"> 
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Buffer Overflow 3 Writeup
+    <h2 class="entry-hint-parent">Pico 3v@l writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Do you think you can bypass the protection and get the flag? It looks like Dr. Oswal added a stack canary to this program to protect against buffer overflows.
-At first glance, the vuln looks like a 32-bit executable, probably with a buffer overflow vulnerability.
-We are first prompted to create a canary.txt file, and the binary runs after that.
-Analyzing the binary, first, the read_canary() function is called, and then we go into vuln.
+    <p>Overview ABC Bank’s website has a loan calculator to help its clients calculate the amount they pay if they take a loan from the bank. Unfortunately, they are using an eval function to calculate the loan. Bypassing this will give you Remote Code Execution (RCE). Can you exploit the bank’s calculator and read the flag?
+Identifying the vulnerabilities I hate command injection
+We’re supposed to bypass this regex: r&#39;0x[0-9A-Fa-f]&#43;|\\u[0-9A-Fa-f]{4}|%[0-9A-Fa-f]{2}|\.[A-Za-z0-9]{1,3}\b|[\\\/]|\.\.&#39;. I found this nice website that decodes this regex so it’s easier to understand.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-25 21:09:36 +0200 EET'>November 25, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Buffer Overflow 3 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/bufferoverflow3-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico 3v@l writeup" href="https://irinasusca.github.io/writeup-blog/posts/3v@l-writeup/"></a>
 </article>
 
-<article class="post-entry tag-entry"> 
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Ropfu Writeup
+    <h2 class="entry-hint-parent">Pico byp4ss3d writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview What’s ROP? Can you exploit the following program to get the flag?
-At first glance, the vuln looks like a 32-bit executable with a buffer overflow vulnerability.
-Identifying the vulnerabilities Analyzing the binary, it doesn’t look like anything special, just an ordinary buffer overflow.
-We don’t seem to have a /bin/sh in memory so this probably means we have to execute a ret2reg.
-That means we need to make our own bin/sh and point to it, and since the vuln returns the gets, that means eax will hold the gets return value. And the return value of gets is a pointer to the input value!
+    <p>Overview A university’s online registration portal asks students to upload their ID cards for verification. The developer put some filters in place to ensure only image files are uploaded but are they enough? Take a look at how the upload is implemented. Maybe there’s a way to slip past the checks and interact with the server in ways you shouldn’t.
+Identifying the vulnerabilities We can upload images via /upload.php, and access them after at /images/img.png. Changing the Content-Type to image/png and the extension to .png lets us upload any file, though.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-24 21:09:36 +0200 EET'>November 24, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Ropfu Writeup" href="https://irinasusca.github.io/writeup-blog/posts/ropfu-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico byp4ss3d writeup" href="https://irinasusca.github.io/writeup-blog/posts/byp4ss3d-writeup/"></a>
 </article>
 
-<article class="post-entry tag-entry"> 
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Function Overwrite Writeup
+    <h2 class="entry-hint-parent">Pico Credential Stuffing writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Story telling class 2/2 Additional details will be available after launching your challenge instance.
-Upon a quick check, we see that the challenge is a 32-bit binary, and that we can trigger a SEGFAULT. It might be a buffer overflow, but the challenge doesn’t necessarily hint that, so let’s inspect it further.
-Also NX is enabled, so let’s keep that in mind.
-The first input string is not susceptible to a buffer overflow, but something interesting happens on the second scanf. We read two %d (ints), but only one destination for them (&amp;number1).
+    <p>Overview Credential stuffing is the automated injection of stolen username and password pairs (“credentials”) in to website login forms, in order to fraudulently gain access to user accounts. Since many users will re-use the same password and username/email, when those credentials are exposed (by a database breach or phishing attack, for example) submitting those sets of stolen credentials into dozens or hundreds of other sites can allow an attacker to compromise those accounts too. Download the credentials dump here. There was a recent data breach at a famous department store, in which the login credentials of thousands of users were stolen and dumped online. You’re hoping at least one person reused their credentials from the department store for an account at a local bank. Stuff those credentials and get the flag!
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-23 21:08:35 +0200 EET'>November 23, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Function Overwrite Writeup" href="https://irinasusca.github.io/writeup-blog/posts/functionoverwrite-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Credential Stuffing writeup" href="https://irinasusca.github.io/writeup-blog/posts/credentialstuffing-writeup/"></a>
 </article>
 
-<article class="post-entry tag-entry"> 
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Stack Cache Writeup
+    <h2 class="entry-hint-parent">Pico Fool The Lockout writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Undefined behaviours are fun. It looks like Dr. Oswal allowed buffer overflows again. Analyse this program to identify how you can get to the flag.
-At first glance, the vuln looks like a 32-bit executable with a buffer overflow vulnerability.
-Analyzing the binary, we come across some interesting funtions, UnderConstruction and win.
-After a quick checksec, we find vuln has both NX and a stack canary enabled. So we can probably find a way to leak the stack canary using the UnderConstruction function.
+    <p>Overview Your friend is building a simple website with a login page. To stop brute forcing and credential stuffing, they’ve added an IP-based rate limit: exceed the attempt threshold and your IP is blocked for a while. They’re convinced this makes guessing credentials impossible. To test their defense, they’ve:
+Created a dummy account with a random username–password pair from public credential lists. Given you those username and password lists. Shared the full source code. Can you bypass the rate limit, log in, and capture the flag?
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-19 21:09:36 +0200 EET'>November 19, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Stack Cache Writeup" href="https://irinasusca.github.io/writeup-blog/posts/stackcache-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Fool The Lockout writeup" href="https://irinasusca.github.io/writeup-blog/posts/foolthelockout-writeup/"></a>
 </article>
 
-<article class="post-entry tag-entry"> 
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Babygame02 Writeup
+    <h2 class="entry-hint-parent">Pico Hashgate writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Break the game and get the flag. Welcome to BabyGame 02! Navigate around the map and see what you can find!
-After analyzing the binary and renaming the variables, we notice we have a player struct/array consisting of the player y, player x.
-Immediately after that, we have the map matrix.
-From the main function, by solving the puzzle, which can be easily achieved by using the special command p we “win”. And with the special command l we can replace the @ player character with a char (spoiler, it can be any byte of our liking, not necessarily a char).
+    <p>Overview You have gotten access to an organisation’s portal. Submit your email and password, and it redirects you to your profile. But be careful: just because access to the admin isn’t directly exposed doesn’t mean it’s secure. Maybe someone forgot that obscurity isn’t security… Can you find your way into the admin’s profile for this organisation and capture the flag? The website is running here.
+In a comment, we find the guest creds, &lt;!-- Email: guest@picoctf.org Password: guest --&gt;.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-19 21:08:35 +0200 EET'>November 19, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Babygame02 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/babygame02-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Hashgate writeup" href="https://irinasusca.github.io/writeup-blog/posts/hashgate-writeup/"></a>
 </article>
 
-<article class="post-entry tag-entry"> 
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Babygame03 Writeup
+    <h2 class="entry-hint-parent">Pico Java Code Analysis writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Break the game and get the flag. Welcome to BabyGame 03! Navigate around the map and see what you can find! Be careful, you don’t have many moves. There are obstacles that instantly end the game on collision. The game is available to download here. There is no source available, so you’ll have to figure your way around the map.
-After analyzing the binary and renaming the variables, we notice we have a player struct/array consisting of the player y, player x and player lives.
+    <p>Overview BookShelf Pico, my premium online book-reading service. I believe that my website is super secure. I challenge you to prove me wrong by reading the ‘Flag’ book! Here are the credentials to get you started:
+Username: “user” Password: “user” Identifying the vulnerabilities Initially I thought this was a tad mode complicated, and since there was a profile picture upload with admin restrictions we’d have to work with that, but it was much simpler.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-10 21:08:35 +0200 EET'>November 10, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Babygame03 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/babygame03-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Java Code Analysis writeup" href="https://irinasusca.github.io/writeup-blog/posts/javacodeanalysis-writeup/"></a>
 </article>
 
-<article class="post-entry tag-entry"> 
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Handoff Writeup
+    <h2 class="entry-hint-parent">Pico No Sql Injection writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview The first vuln we encounter in handoff is that it doesn’t disable NX. (Basically, this means that we can execute shellcode on the stack!)
-We are presented with a menu with 3 options:
-Add a recipient Send a message to a recipient Exit Upon trying to exit, we are prompted to give our feedback.
-Identifying the vulnerability Immediately after decompiling the binary, we notice a buffer overflow in its feedback buffer. We can also see that the value at feedback[7] gets turned to \0. However, the feedback buffer overflow is way too small for us to do anything with it, so our best bet is to find another buffer and jmp to it.
+    <p>Overview Can you try to get access to this website to get the flag?
+We have access to the source, the most interesting part being this:
+const initialUser = new User({ firstName: &#34;pico&#34;, lastName: &#34;player&#34;, email: &#34;picoplayer355@picoctf.org&#34;, password: crypto.randomBytes(16).toString(&#34;hex&#34;).slice(0, 16), }); await initialUser.save(); #... app.post(&#34;/login&#34;, async (req, res) =&gt; { const { email, password } = req.body; try { const user = await User.findOne({ email: email.startsWith(&#34;{&#34;) &amp;&amp; email.endsWith(&#34;}&#34;) ? JSON.parse(email) : email, password: password.startsWith(&#34;{&#34;) &amp;&amp; password.endsWith(&#34;}&#34;) ? JSON.parse(password) : password, }); if (user) { res.json({ success: true, email: user.email, token: user.token, firstName: user.firstName, lastName: user.lastName, }); } else { res.json({ success: false }); } } catch (err) { res.status(500).json({ success: false, error: err.message }); } Identifying the vulnerabilities This is a Mongo db, with nosql, as suggested by the challenge name. What’s immediately interesting is that the email and password are parsed as json. Here is a portswigger article talking about NoSQL injection. I also watched this video.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-10 21:08:35 +0200 EET'>November 10, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Handoff Writeup" href="https://irinasusca.github.io/writeup-blog/posts/handoff-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico No Sql Injection writeup" href="https://irinasusca.github.io/writeup-blog/posts/nosqlinjection-writeup/"></a>
 </article>
+
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico North-South writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Overview I’ve set up geo-based routing - can you outsmart it? You’re trying to retrieve the flag, but there’s a catch: access to the real service is restricted based on your geographic location. Only requests from a specific region are routed to the server that holds the flag. Everyone else is sent somewhere… less interesting.
+Identifying the vulnerabilities We also receive the nginx conf file; It’s serving two proxies, and one is only available to people with $geoip2_data_country_code = IS. That’s Iceland, upon looking at countrycode.org.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico North-South writeup" href="https://irinasusca.github.io/writeup-blog/posts/northsouth-writeup/"></a>
+</article>
+<footer class="page-footer">
+  <nav class="pagination">
+    <a class="next" href="https://irinasusca.github.io/writeup-blog/tags/picoctf/page/2/">Next&nbsp;&nbsp;»
+    </a>
+  </nav>
+</footer>
     </main>
     
 <footer class="footer">

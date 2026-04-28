@@ -3,7 +3,7 @@ date = '2025-12-23'
 draft = false
 title = 'CyberEdu aptssh Writeup'
 ShowToc = true
-tags = ["CyberEdu", "pwn", "reverse-engineering", "ssh"]
+tags = ["CyberEdu", "pwn"]
 +++
 
 ## Challenge overview

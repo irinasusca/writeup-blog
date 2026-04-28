@@ -1,5 +1,149 @@
 [
   {
+    "title": "Fix binary version",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/fixpwnversion/"
+  },
+  {
+    "title": "gef",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/gef/"
+  },
+  {
+    "title": "Pico Binary Gauntlet 0, 1, 2, 3 writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/binarygauntlet-writeup/"
+  },
+  {
+    "title": "Pico Startup Company writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/startupcompany-writeup/"
+  },
+  {
+    "title": "Pico 3v@l writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/3v@l-writeup/"
+  },
+  {
+    "title": "Pico byp4ss3d writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/byp4ss3d-writeup/"
+  },
+  {
+    "title": "Pico Credential Stuffing writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/credentialstuffing-writeup/"
+  },
+  {
+    "title": "Pico Fool The Lockout writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/foolthelockout-writeup/"
+  },
+  {
+    "title": "Pico Hashgate writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/hashgate-writeup/"
+  },
+  {
+    "title": "Pico Java Code Analysis writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/javacodeanalysis-writeup/"
+  },
+  {
+    "title": "Pico No Sql Injection writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/nosqlinjection-writeup/"
+  },
+  {
+    "title": "Pico North-South writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/northsouth-writeup/"
+  },
+  {
+    "title": "Pico Secret Box writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/secretbox-writeup/"
+  },
+  {
+    "title": "http",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/http/"
+  },
+  {
+    "title": "Pico Crack The Gate 2 writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/crackthegate-writeup/"
+  },
+  {
+    "title": "Pico Sql Map 1 writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/sqlmap-writeup/"
+  },
+  {
+    "title": "Pico findme writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/findme-writeup/"
+  },
+  {
+    "title": "Pico Trickster writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/trickster-writeup/"
+  },
+  {
+    "title": "Pico JAuth writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/jauth-writeup/"
+  },
+  {
+    "title": "Pico Super Serial writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/superserial-writeup/"
+  },
+  {
+    "title": "Pico No FA writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/nofa-writeup/"
+  },
+  {
+    "title": "Pico Cookies \u0026 More Cookies \u0026 Most Cookies writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/picocookies-writeup/"
+  },
+  {
+    "title": "Pico Some Assembly Required 1, 2, 3, 4 Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/someassemblyrequired-writeup/"
+  },
+  {
+    "title": "Pico Client-side-again Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/clientsideagain-writeup/"
+  },
+  {
+    "title": "Pico Forbidden Paths Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/forbiddenpaths-writeup/"
+  },
+  {
+    "title": "Pico Irish Name Repo 1, 2, 3 Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/irishnamerepo-writeup/"
+  },
+  {
+    "title": "Pico Web Gauntlet 2 \u0026 3 Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/webgauntlet2-writeup/"
+  },
+  {
+    "title": "nosql",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/nosql/"
+  },
+  {
+    "title": "Pico JaWT Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/jawt-writeup/"
+  },
+  {
+    "title": "Pico Web Gauntlet Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/webgauntlet-writeup/"
+  },
+  {
+    "title": "sql",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/sql/"
+  },
+  {
+    "title": "Pico It is my Birthday Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/itsmybirthday-writeup/"
+  },
+  {
+    "title": "CyberEdu casual-defence Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/casualdefence-writeup/"
+  },
+  {
+    "title": "ffuf",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/ffuf/"
+  },
+  {
+    "title": "php",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/php/"
+  },
+  {
+    "title": "CyberEdu merry-cemetery Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/merrycemetery-writeup/"
+  },
+  {
     "title": "Unbreakable 2026",
     "permalink": "https://irinasusca.github.io/writeup-blog/posts/unr-2026/"
   },
@@ -299,3 +443,4 @@
     "title": "Pico Handoff Writeup",
     "permalink": "https://irinasusca.github.io/writeup-blog/posts/handoff-writeup/"
   }]
+

