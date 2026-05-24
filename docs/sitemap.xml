@@ -8,25 +8,211 @@
     <loc>https://irinasusca.github.io/writeup-blog/posts/</loc>
     <lastmod>2026-12-10T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/dreamhack/</loc>
+    <lastmod>2026-05-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/holymoly-writeup/</loc>
+    <lastmod>2026-05-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/pwn/</loc>
+    <lastmod>2026-05-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/</loc>
+    <lastmod>2026-05-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/fmtstr_bug-writeup/</loc>
+    <lastmod>2026-05-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/iofile_vtable-writeup/</loc>
+    <lastmod>2026-05-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/string-writeup/</loc>
+    <lastmod>2026-05-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/tcachedup-writeup/</loc>
+    <lastmod>2026-05-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/tcachedup2-writeup/</loc>
+    <lastmod>2026-05-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/leg2-writeup/</loc>
+    <lastmod>2026-05-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/findcandy-writeup/</loc>
+    <lastmod>2026-05-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/secureservice-writeup/</loc>
+    <lastmod>2026-05-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/xrop-writeup/</loc>
+    <lastmod>2026-05-19T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/materials/</loc>
+    <lastmod>2026-05-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/stego/</loc>
+    <lastmod>2026-05-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/cpp_container_1-writeup/</loc>
+    <lastmod>2026-05-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/cube-writeup/</loc>
+    <lastmod>2026-05-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/master_canary-writeup/</loc>
+    <lastmod>2026-05-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/pwnlibrary-writeup/</loc>
+    <lastmod>2026-05-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/seaofstack-writeup/</loc>
+    <lastmod>2026-05-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/basic_heap_overflow-writeup/</loc>
+    <lastmod>2026-05-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/bypass_seccomp-writeup/</loc>
+    <lastmod>2026-05-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/fho-writeup/</loc>
+    <lastmod>2026-05-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/cyberedu/</loc>
+    <lastmod>2026-05-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/babyheap-writeup/</loc>
+    <lastmod>2026-05-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/heap/</loc>
+    <lastmod>2026-05-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/arm/</loc>
+    <lastmod>2026-05-10T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/armtraininglast-writeup/</loc>
+    <lastmod>2026-05-10T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/armop-writeup/</loc>
+    <lastmod>2026-05-10T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/xorboard-writeup/</loc>
+    <lastmod>2026-05-10T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/blindsc-writeup/</loc>
+    <lastmod>2026-05-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/monsterslayer-writeup/</loc>
+    <lastmod>2026-05-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/p_rho-writeup/</loc>
+    <lastmod>2026-05-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/revshell/</loc>
+    <lastmod>2026-05-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/tunneling/</loc>
+    <lastmod>2026-05-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/environ-writeup/</loc>
+    <lastmod>2026-05-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/cpp_type_confustion-writeup/</loc>
+    <lastmod>2026-05-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/rtl-writeup/</loc>
+    <lastmod>2026-05-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/send_sig-writeup/</loc>
+    <lastmod>2026-05-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/structperson_t-writeup/</loc>
+    <lastmod>2026-05-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/nomov-writeup/</loc>
+    <lastmod>2026-05-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/awesomebasics-writeup/</loc>
+    <lastmod>2026-05-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/catjump-writeup/</loc>
+    <lastmod>2026-05-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/cherry-writeup/</loc>
+    <lastmod>2026-05-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/cpp_string-writeup/</loc>
+    <lastmod>2026-05-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/mmapped-writeup/</loc>
+    <lastmod>2026-05-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/rao-writeup/</loc>
+    <lastmod>2026-05-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/r2s-writeup/</loc>
+    <lastmod>2026-05-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/random/</loc>
+    <lastmod>2026-05-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/basic_exploitation_000-writeup/</loc>
+    <lastmod>2026-05-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/basic_rop_x64-writeup/</loc>
+    <lastmod>2026-05-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/basic_rop_x86-writeup/</loc>
+    <lastmod>2026-05-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/rop-writeup/</loc>
+    <lastmod>2026-05-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/shell_basic-writeup/</loc>
+    <lastmod>2026-05-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/sint-writeup/</loc>
+    <lastmod>2026-05-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/volatility/</loc>
+    <lastmod>2026-05-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/base64encoder-writeup/</loc>
+    <lastmod>2026-05-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/out_of_bound-writeup/</loc>
+    <lastmod>2026-05-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/minipwn-writeup/</loc>
+    <lastmod>2026-05-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/babyrop-writeup/</loc>
+    <lastmod>2026-05-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/pwn1-writeup/</loc>
+    <lastmod>2026-05-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/pwn2-writeup/</loc>
+    <lastmod>2026-05-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/pwn/</loc>
+    <lastmod>2026-05-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/posts/javascriptkiddie-writeup/</loc>
+    <lastmod>2026-04-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/picoctf/</loc>
+    <lastmod>2026-04-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://irinasusca.github.io/writeup-blog/tags/web/</loc>
+    <lastmod>2026-04-29T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/posts/fixpwnversion/</loc>
     <lastmod>2026-04-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/posts/gef/</loc>
     <lastmod>2026-04-23T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/tags/materials/</loc>
-    <lastmod>2026-04-23T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/posts/binarygauntlet-writeup/</loc>
-    <lastmod>2026-04-23T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/tags/picoctf/</loc>
-    <lastmod>2026-04-23T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/tags/</loc>
-    <lastmod>2026-04-23T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/tags/web/</loc>
     <lastmod>2026-04-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/posts/startupcompany-writeup/</loc>
@@ -116,9 +302,6 @@
     <loc>https://irinasusca.github.io/writeup-blog/posts/itsmybirthday-writeup/</loc>
     <lastmod>2026-03-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/tags/cyberedu/</loc>
-    <lastmod>2026-03-29T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/posts/casualdefence-writeup/</loc>
     <lastmod>2026-03-29T00:00:00+00:00</lastmod>
   </url><url>
@@ -132,9 +315,6 @@
     <lastmod>2026-03-10T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/posts/merrycemetery-writeup/</loc>
-    <lastmod>2026-03-10T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/tags/pwn/</loc>
     <lastmod>2026-03-10T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/tags/ctf/</loc>
@@ -309,9 +489,6 @@
     <lastmod>2025-12-30T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/posts/offensivehoneypot-writeup/</loc>
-    <lastmod>2025-12-28T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://irinasusca.github.io/writeup-blog/tags/random/</loc>
     <lastmod>2025-12-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://irinasusca.github.io/writeup-blog/posts/darkmagic-writeup/</loc>

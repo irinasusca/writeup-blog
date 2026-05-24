@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Dreamhack | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/tags/dreamhack/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="https://irinasusca.github.io/writeup-blog/tags/dreamhack/index.xml" title="rss">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/tags/dreamhack/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/tags/dreamhack/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Dreamhack">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Dreamhack">
+<meta name="twitter:description" content="">
+
+</head>
+<body class="list" id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header">
+  <h1>
+    Dreamhack
+  </h1>
+</header>
+
+
+
+<article class="post-entry tag-entry"
+  data-tags="dreamhack pwn "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Dreamhack awesome-basics Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Stack Buffer Overflow 취약점이 존재하는 프로그램입니다. 주어진 바이너리와 소스 코드를 분석하여 익스플로잇하고 플래그를 획득하세요! 플래그는 flag 파일에 있습니다.
+플래그의 형식은 DH{…} 입니다.
+int __fastcall main(int argc, const char **argv, const char **envp) { _BYTE buf[80]; // [rsp&#43;10h] [rbp-60h] BYREF int v5; // [rsp&#43;60h] [rbp-10h] int fd; // [rsp&#43;64h] [rbp-Ch] int v7; // [rsp&#43;68h] [rbp-8h] int v8; // [rsp&#43;6Ch] [rbp-4h] v8 = 0; v7 = 1; initialize(argc, argv, envp); flag = malloc(0x45u); fd = open(&#34;./flag&#34;, 0); read(fd, flag, 0x45u); close(fd); v5 = open(&#34;./tmp/flag&#34;, 1); write(1, &#34;Your Input: &#34;, 0xCu); read(0, buf, 128u); write(v5, flag, 69u); write(v5, buf, 80u); close(v5); return 0; } Identifying the vulnerabilities This seems pretty straightforward;
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-06 00:00:00 +0000 UTC'>May 6, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack awesome-basics Writeup" href="https://irinasusca.github.io/writeup-blog/posts/awesomebasics-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="dreamhack pwn random "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Dreamhack Cat Jump Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview 고양이가 방해물을 피해 옥상으로 올라갈 수 있도록 도와주세요!
+플래그 형식은 DH{…} 입니다.
+int PrintBanner() { return puts( &#34; .-.\n&#34; &#34; \\ \\\n&#34; &#34; \\ \\\n&#34; &#34; | |\n&#34; &#34; | |\n&#34; &#34; /\\---/\\ _,---._ | |\n&#34; &#34; /^ ^ \\,&#39; `. ;\n&#34; &#34; ( O O ) ;\n&#34; &#34; `.=o=__,&#39; \\\n&#34; &#34; / _,--.__ \\\n&#34; &#34; / _ ) ,&#39; `-. `-. \\\n&#34; &#34; / ,&#39; / ,&#39; \\ \\ \\ \\\n&#34; &#34; / / / ,&#39; (,_)(,_)\n&#34; &#34; (,; (,,) jrei\n&#34;); } unsigned __int64 StartGame() { unsigned int v0; // eax char v2; // [rsp&#43;4h] [rbp-7Ch] BYREF char v3; // [rsp&#43;5h] [rbp-7Bh] unsigned __int8 v4; // [rsp&#43;6h] [rbp-7Ah] char v5; // [rsp&#43;7h] [rbp-79h] double v6; // [rsp&#43;8h] [rbp-78h] char v7[32]; // [rsp&#43;10h] [rbp-70h] BYREF char s[72]; // [rsp&#43;30h] [rbp-50h] BYREF unsigned __int64 v9; // [rsp&#43;78h] [rbp-8h] v9 = __readfsqword(0x28u); v0 = time(0); srand(v0); v3 = 0; v4 = 0; puts(aLetTheCatReach); sleep(1u); do { v5 = rand() % 2; do { printf(&#34;left jump=&#39;h&#39;, right jump=&#39;j&#39;: &#34;); __isoc99_scanf(&#34;%c%*c&#34;, &amp;v2); } while ( v2 != &#39;h&#39; &amp;&amp; v2 != &#39;l&#39; ); if ( v3 ) { --v3; &#43;&#43;v4; puts(aTheCatPoweredU); } else { if ( (v2 != &#39;h&#39; || !v5) &amp;&amp; (v2 != &#39;l&#39; || v5 == 1) ) { puts(aTheCatGotStuck); return v9 - __readfsqword(0x28u); } &#43;&#43;v4; puts(aTheCatJumpedSu); } v6 = (double)rand() / 2147483647.0; if ( v6 &lt; 0.1 ) { puts(aTheCatFoundAnd); v3 = 3; } } while ( v4 &lt;= 0x24u ); puts(&#34;your cat has reached the roof!\n&#34;); printf(aLetPeopleKnowY); __isoc99_scanf(&#34;%31s&#34;, v7); snprintf(s, 0x40u, &#34;echo \&#34;%s\&#34; &gt; /tmp/cat_db&#34;, v7); system(s); printf(&#34;goodjob! &#34;); system(&#34;cat /tmp/cat_db&#34;); return v9 - __readfsqword(0x28u); } Identifying the vulnerabilities So, we want to win this little game about a cat jumping places. The branch that decides whether we move forward or lose is this:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-06 00:00:00 +0000 UTC'>May 6, 2026</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack Cat Jump Writeup" href="https://irinasusca.github.io/writeup-blog/posts/catjump-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="dreamhack pwn "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Dreamhack Cherry Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview 주어진 바이너리와 소스 코드를 분석하여 익스플로잇하고 플래그를 획득하세요! 플래그는 flag.txt 파일에 있습니다.
+플래그의 형식은 DH{…} 입니다.
+int __fastcall main(int argc, const char **argv, const char **envp) { char buf[6]; // [rsp&#43;18h] [rbp-18h] BYREF int v5; // [rsp&#43;1Eh] [rbp-12h] BYREF __int16 v6; // [rsp&#43;22h] [rbp-Eh] int v7; // [rsp&#43;24h] [rbp-Ch] int fd; // [rsp&#43;28h] [rbp-8h] int v9; // [rsp&#43;2Ch] [rbp-4h] v9 = 0; fd = 1; v5 = 1919248483; v6 = 31090; v7 = 16; initialize(argc, argv, envp); write(1, &#34;Menu: &#34;, 6u); read(0, buf, 0x10u); if ( !strncmp(buf, &#34;cherry&#34;, 6u) ) { write(fd, &#34;Is it cherry?: &#34;, 0xFu); read(v9, &amp;v5, v7); } return 0; } Identifying the vulnerabilities There is also a flag function that pops a shell.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-06 00:00:00 +0000 UTC'>May 6, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack Cherry Writeup" href="https://irinasusca.github.io/writeup-blog/posts/cherry-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="dreamhack pwn "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Dreamhack cpp_string Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(cpp_string)의 바이너리와 소스 코드가 주어집니다. 프로그램의 취약점을 찾아 flag를 획득하세요! “flag” 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{…} 입니다.
+int __fastcall __noreturn main(int argc, const char **argv, const char **envp) { __int64 v3; // rax __int64 v4; // rax __int64 v5; // rax __int64 v6; // rax __int64 v7; // rax __int64 v8; // rax int v9; // [rsp&#43;4h] [rbp-Ch] BYREF unsigned __int64 v10; // [rsp&#43;8h] [rbp-8h] v10 = __readfsqword(0x28u); initialize(); v9 = 0; while ( 1 ) { while ( 1 ) { v3 = std::operator&lt;&lt;&lt;std::char_traits&lt;char&gt;&gt;(&amp;std::cout, &#34;Simple file system&#34;); std::ostream::operator&lt;&lt;(v3, &amp;std::endl&lt;char,std::char_traits&lt;char&gt;&gt;); v4 = std::operator&lt;&lt;&lt;std::char_traits&lt;char&gt;&gt;(&amp;std::cout, &#34;1. read file&#34;); std::ostream::operator&lt;&lt;(v4, &amp;std::endl&lt;char,std::char_traits&lt;char&gt;&gt;); v5 = std::operator&lt;&lt;&lt;std::char_traits&lt;char&gt;&gt;(&amp;std::cout, &#34;2. write file&#34;); std::ostream::operator&lt;&lt;(v5, &amp;std::endl&lt;char,std::char_traits&lt;char&gt;&gt;); v6 = std::operator&lt;&lt;&lt;std::char_traits&lt;char&gt;&gt;(&amp;std::cout, &#34;3. show contents&#34;); std::ostream::operator&lt;&lt;(v6, &amp;std::endl&lt;char,std::char_traits&lt;char&gt;&gt;); v7 = std::operator&lt;&lt;&lt;std::char_traits&lt;char&gt;&gt;(&amp;std::cout, &#34;4. quit&#34;); std::ostream::operator&lt;&lt;(v7, &amp;std::endl&lt;char,std::char_traits&lt;char&gt;&gt;); std::operator&lt;&lt;&lt;std::char_traits&lt;char&gt;&gt;(&amp;std::cout, &#34;[*] input : &#34;); std::istream::operator&gt;&gt;(&amp;std::cin, &amp;v9); if ( v9 != 2 ) break; write_file(); } if ( v9 &gt; 2 ) { if ( v9 == 3 ) { show_contents(); } else if ( v9 == 4 ) { v8 = std::operator&lt;&lt;&lt;std::char_traits&lt;char&gt;&gt;(&amp;std::cout, &#34;BYEBYE&#34;); std::ostream::operator&lt;&lt;(v8, &amp;std::endl&lt;char,std::char_traits&lt;char&gt;&gt;); exit(0); } } else if ( v9 == 1 ) { read_flag(); read_file(); } } } Identifying the vulnerabilities These absolutely disgusting looking cpp binaries…
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-06 00:00:00 +0000 UTC'>May 6, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack cpp_string Writeup" href="https://irinasusca.github.io/writeup-blog/posts/cpp_string-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="dreamhack pwn "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Dreamhack mmapped Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview 프로그램의 취약점을 찾고 익스플로잇하여 플래그를 출력하세요.
+플래그는 ./flag 파일에 위치합니다.
+플래그의 형식은 DH{…} 입니다.
+int __fastcall main(int argc, const char **argv, const char **envp) { char buf[40]; // [rsp&#43;10h] [rbp-40h] BYREF void *addr; // [rsp&#43;38h] [rbp-18h] void *v6; // [rsp&#43;40h] [rbp-10h] int v7; // [rsp&#43;48h] [rbp-8h] int fd; // [rsp&#43;4Ch] [rbp-4h] initialize(argc, argv, envp); fd = open(&#34;./flag&#34;, 0); v7 = 69; v6 = &#34;DH{****************************************************************}&#34;; printf(&#34;fake flag address: %p\n&#34;, &#34;DH{****************************************************************}&#34;); printf(&#34;buf address: %p\n&#34;, buf); addr = mmap(0, 0x45u, 1, 2, fd, 0); printf(&#34;real flag address (mmapped address): %p\n&#34;, addr); printf(&#34;%s&#34;, &#34;input: &#34;); read(0, buf, 0x3Cu); mprotect(addr, v7, 0); write(1, v6, 0x45u); printf(&#34;\nbuf value: &#34;); puts(buf); munmap(addr, 0x45u); close(fd); return 0; } Identifying the vulnerabilities I had to look for 10 minutes, but I finally found what the mprotect values for prot are:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-06 00:00:00 +0000 UTC'>May 6, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack mmapped Writeup" href="https://irinasusca.github.io/writeup-blog/posts/mmapped-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="dreamhack pwn "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Dreamhack Return Address Overwrite Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Exploit Tech: Return Address Overwrite에서 실습하는 문제입니다. int __fastcall main(int argc, const char **argv, const char **envp) { _BYTE v4[48]; // [rsp&#43;0h] [rbp-30h] BYREF init(argc, argv, envp); printf(&#34;Input: &#34;); __isoc99_scanf(&#34;%s&#34;, v4); return 0; } Identifying the vulnerabilities We can instantly see a get_shell function at 0x4006aa; and, a buffer overflow. But, this address has a nullbyte, and we’re reading with scanf… It might be a problem, but it also might work.
+I quickly tested it out, and it worked. Nice!
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-06 00:00:00 +0000 UTC'>May 6, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack Return Address Overwrite Writeup" href="https://irinasusca.github.io/writeup-blog/posts/rao-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="dreamhack pwn "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Dreamhack Return To Shellcode Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Exploit Tech: Return to Shellcode에서 실습하는 문제입니다.
+int __fastcall main(int argc, const char **argv, const char **envp) { char buf[88]; // [rsp&#43;0h] [rbp-60h] BYREF unsigned __int64 v5; // [rsp&#43;58h] [rbp-8h] v5 = __readfsqword(0x28u); init(argc, argv, envp); printf(&#34;Address of the buf: %p\n&#34;, buf); printf(&#34;Distance between buf and $rbp: %ld\n&#34;, 96); puts(&#34;[1] Leak the canary&#34;); printf(&#34;Input: &#34;); fflush(stdout); read(0, buf, 0x100u); printf(&#34;Your input is &#39;%s&#39;\n&#34;, buf); puts(&#34;[2] Overwrite the return address&#34;); printf(&#34;Input: &#34;); fflush(stdout); gets(buf); return 0; } Identifying the vulnerabilities This challenge is being very thoughtful; even spelling out the stack layout to us. We do have a canary, so we can leak that first. Then, shellcode challenge =&gt; we redirect the flow into buf where we place our shellcode. I feel like we have permission to do anything, so we can just pop a shell.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-06 00:00:00 +0000 UTC'>May 6, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack Return To Shellcode Writeup" href="https://irinasusca.github.io/writeup-blog/posts/r2s-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="dreamhack pwn "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Dreamhack basic_exploitation_000 Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(basic_exploitation_000)의 바이너리와 소스 코드가 주어집니다. 프로그램의 취약점을 찾고 익스플로잇해 셸을 획득한 후, “flag” 파일을 읽으세요. “flag” 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{…} 입니다.
+int __cdecl main(int argc, const char **argv, const char **envp) { _BYTE v4[128]; // [esp&#43;0h] [ebp-80h] BYREF initialize(); printf(&#34;buf = (%p)\n&#34;, v4); __isoc99_scanf(&#34;%141s&#34;, v4); return 0; } Identifying the vulnerabilities Back with 32-bit stuff. This time - NX disabled - so I’m thinking this is some shellcoding stuff.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-05 00:00:00 +0000 UTC'>May 5, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack basic_exploitation_000 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/basic_exploitation_000-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="dreamhack pwn "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Dreamhack basic_rop_x64 Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(basic_rop_x64)의 바이너리와 소스 코드가 주어집니다. Return Oriented Programming 공격 기법을 통해 셸을 획득한 후, “flag” 파일을 읽으세요. “flag” 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{…} 입니다.
+int __fastcall main(int argc, const char **argv, const char **envp) { _BYTE buf[64]; // [rsp&#43;10h] [rbp-40h] BYREF __int64 savedregs; // [rsp&#43;50h] [rbp&#43;0h] BYREF memset(buf, 0, sizeof(buf)); initialize(&amp;savedregs, argv, buf); read(0, buf, 0x400u); write(1, buf, 64u); return 0; } Identifying the vulnerabilities 64-bit rop, right? No PIE, NX enabled. So I suppose ret2libc. puts isn’t used in main, but luckily the alarm handler prints “TIME OUT”, so the binary has both the got and plt entries.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-05 00:00:00 +0000 UTC'>May 5, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack basic_rop_x64 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/basic_rop_x64-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="dreamhack pwn "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Dreamhack basic_rop_x86 Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(basic_rop_x86)의 바이너리와 소스 코드가 주어집니다. Return Oriented Programming 공격 기법을 통해 셸을 획득한 후, “flag” 파일을 읽으세요. “flag” 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{…} 입니다.
+int __cdecl main(int argc, const char **argv, const char **envp) { _BYTE buf[64]; // [esp&#43;0h] [ebp-44h] BYREF memset(buf, 0, sizeof(buf)); initialize(); read(0, buf, 0x400u); write(1, buf, 0x40u); return 0; } Identifying the vulnerabilities 32-bit rop… I don’t know if I still remember how to do these, haha. Let’s give it a try anyways. For this, if I recall correctly, the arguments are pulled from the stack; and rbp is 4 bytes.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-05 00:00:00 +0000 UTC'>May 5, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack basic_rop_x86 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/basic_rop_x86-writeup/"></a>
+</article>
+<footer class="page-footer">
+  <nav class="pagination">
+    <a class="prev" href="https://irinasusca.github.io/writeup-blog/tags/dreamhack/page/3/">
+      «&nbsp;Prev&nbsp;
+    </a>
+    <a class="next" href="https://irinasusca.github.io/writeup-blog/tags/dreamhack/page/5/">Next&nbsp;&nbsp;»
+    </a>
+  </nav>
+</footer>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

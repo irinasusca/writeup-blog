@@ -13,8 +13,8 @@ Find the version
 strings libc-2.27.so | grep &quot;GNU C Library&quot;
 
 GNU C Library (Ubuntu GLIBC 2.27-3ubuntu1.6) stable release version 2.27.
-Use a tool to pull the version
-Get this tool:">
+Through Docker
+I recently just found this out, apparently you can use the Dockerfile to identify the exact libc!">
 <meta name="author" content="">
 <link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/fixpwnversion/">
 <link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
@@ -83,7 +83,7 @@ Get this tool:">
   <meta property="og:description" content="Why I keep bumping into this stupid problem with binaries, where they provide the libc, but not the ldd. That means you can’t run it locally using it. So you need to manually look for the stupid thing. And every time this happens I forget how to do it.
 Find the version strings libc-2.27.so | grep &#34;GNU C Library&#34;
 GNU C Library (Ubuntu GLIBC 2.27-3ubuntu1.6) stable release version 2.27.
-Use a tool to pull the version Get this tool:">
+Through Docker I recently just found this out, apparently you can use the Dockerfile to identify the exact libc!">
   <meta property="og:locale" content="en-us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -98,8 +98,8 @@ Find the version
 strings libc-2.27.so | grep &quot;GNU C Library&quot;
 
 GNU C Library (Ubuntu GLIBC 2.27-3ubuntu1.6) stable release version 2.27.
-Use a tool to pull the version
-Get this tool:">
+Through Docker
+I recently just found this out, apparently you can use the Dockerfile to identify the exact libc!">
 
 
 <script type="application/ld+json">
@@ -128,12 +128,12 @@ Get this tool:">
   "@type": "BlogPosting",
   "headline": "Fix binary version",
   "name": "Fix binary version",
-  "description": "Why I keep bumping into this stupid problem with binaries, where they provide the libc, but not the ldd. That means you can\u0026rsquo;t run it locally using it. So you need to manually look for the stupid thing. And every time this happens I forget how to do it.\nFind the version strings libc-2.27.so | grep \u0026quot;GNU C Library\u0026quot;\nGNU C Library (Ubuntu GLIBC 2.27-3ubuntu1.6) stable release version 2.27.\nUse a tool to pull the version Get this tool:\n",
+  "description": "Why I keep bumping into this stupid problem with binaries, where they provide the libc, but not the ldd. That means you can\u0026rsquo;t run it locally using it. So you need to manually look for the stupid thing. And every time this happens I forget how to do it.\nFind the version strings libc-2.27.so | grep \u0026quot;GNU C Library\u0026quot;\nGNU C Library (Ubuntu GLIBC 2.27-3ubuntu1.6) stable release version 2.27.\nThrough Docker I recently just found this out, apparently you can use the Dockerfile to identify the exact libc!\n",
   "keywords": [
     "Materials"
   ],
-  "articleBody": "Why I keep bumping into this stupid problem with binaries, where they provide the libc, but not the ldd. That means you can’t run it locally using it. So you need to manually look for the stupid thing. And every time this happens I forget how to do it.\nFind the version strings libc-2.27.so | grep \"GNU C Library\"\nGNU C Library (Ubuntu GLIBC 2.27-3ubuntu1.6) stable release version 2.27.\nUse a tool to pull the version Get this tool:\ngit clone https://github.com/matrix1001/glibc-all-in-one cd glibc-all-in-one In this case, what I actually needed was 2.27-3ubuntu1_amd64.\nbash download 2.27-3ubuntu1_amd64 Now, in the libs/ folder, we can find all we need. So, just patch the binary (run this in its folder):\npatchelf --set-interpreter /home/kali/Downloads/glibc-all-in-one/libs/2.27-3ubuntu1_amd64/ld-2.27.so ./gauntlet patchelf --set-rpath /home/kali/Downloads/glibc-all-in-one/libs/2.27-3ubuntu1_amd64 ./gauntlet I had a bunch of zombie processes of it open, so I also ran this to kill them before:\npkill -9 gauntlet pkill -9 gdb Success!\nThat’s it! You’re good to go! Good luck!!!\n",
-  "wordCount" : "159",
+  "articleBody": "Why I keep bumping into this stupid problem with binaries, where they provide the libc, but not the ldd. That means you can’t run it locally using it. So you need to manually look for the stupid thing. And every time this happens I forget how to do it.\nFind the version strings libc-2.27.so | grep \"GNU C Library\"\nGNU C Library (Ubuntu GLIBC 2.27-3ubuntu1.6) stable release version 2.27.\nThrough Docker I recently just found this out, apparently you can use the Dockerfile to identify the exact libc!\nIf all you get is this:\nFROM ubuntu:22.04@sha256:hash` Then:\nsudo docker pull ubuntu:22.04@sha256:hash sudo docker create --name tmp ubuntu:22.04@sha256:hash sudo docker cp tmp:/usr/lib/x86_64-linux-gnu/libc.so.6 ./libc.so.6 sudo docker cp tmp:/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2 ./ld-linux-x86-64.so.2 sudo docker rm tmp There!\nUse a tool to pull the version Get this tool:\ngit clone https://github.com/matrix1001/glibc-all-in-one cd glibc-all-in-one In this case, what I actually needed was 2.27-3ubuntu1_amd64.\nbash download 2.27-3ubuntu1_amd64 Now, in the libs/ folder, we can find all we need. So, just patch the binary (run this in its folder):\npatchelf --set-interpreter /home/kali/Downloads/glibc-all-in-one/libs/2.27-3ubuntu1_amd64/ld-2.27.so ./gauntlet patchelf --set-rpath /home/kali/Downloads/glibc-all-in-one/libs/2.27-3ubuntu1_amd64 ./gauntlet I had a bunch of zombie processes of it open, so I also ran this to kill them before:\npkill -9 gauntlet pkill -9 gdb Success!\nThat’s it! You’re good to go! Good luck!!!\n",
+  "wordCount" : "212",
   "inLanguage": "en",
   "datePublished": "2026-04-23T00:00:00Z",
   "dateModified": "2026-04-23T00:00:00Z",
@@ -224,6 +224,8 @@ Get this tool:">
                 <li>
                     <a href="#find-the-version" aria-label="Find the version">Find the version</a></li>
                 <li>
+                    <a href="#through-docker" aria-label="Through Docker">Through Docker</a></li>
+                <li>
                     <a href="#use-a-tool-to-pull-the-version" aria-label="Use a tool to pull the version">Use a tool to pull the version</a>
                 </li>
             </ul>
@@ -237,6 +239,17 @@ Get this tool:">
 <p><code>strings libc-2.27.so | grep &quot;GNU C Library&quot;</code></p>
 <blockquote>
 <p>GNU C Library (Ubuntu GLIBC 2.27-3ubuntu1.6) stable release version 2.27.</p></blockquote>
+<h2 id="through-docker">Through Docker<a hidden class="anchor" aria-hidden="true" href="#through-docker">#</a></h2>
+<p>I recently just found this out, apparently you can use the Dockerfile to identify the exact libc!</p>
+<p>If all you get is this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>FROM ubuntu:22.04@sha256:hash<span style="color:#e6db74">`</span>
+</span></span></code></pre></div><p>Then:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo docker pull ubuntu:22.04@sha256:hash
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo docker create --name tmp ubuntu:22.04@sha256:hash
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo docker cp tmp:/usr/lib/x86_64-linux-gnu/libc.so.6 ./libc.so.6
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo docker cp tmp:/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2 ./ld-linux-x86-64.so.2
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo docker rm tmp
+</span></span></code></pre></div><p>There!</p>
 <h2 id="use-a-tool-to-pull-the-version">Use a tool to pull the version<a hidden class="anchor" aria-hidden="true" href="#use-a-tool-to-pull-the-version">#</a></h2>
 <p>Get this tool:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://github.com/matrix1001/glibc-all-in-one

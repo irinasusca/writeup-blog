@@ -142,6 +142,21 @@
 <article class="post-entry tag-entry"
   data-tags="picoctf web "> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico North-South writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Overview I’ve set up geo-based routing - can you outsmart it? You’re trying to retrieve the flag, but there’s a catch: access to the real service is restricted based on your geographic location. Only requests from a specific region are routed to the server that holds the flag. Everyone else is sent somewhere… less interesting.
+Identifying the vulnerabilities We also receive the nginx conf file; It’s serving two proxies, and one is only available to people with $geoip2_data_country_code = IS. That’s Iceland, upon looking at countrycode.org.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico North-South writeup" href="https://irinasusca.github.io/writeup-blog/posts/northsouth-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="picoctf web "> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Pico Secret Box writeup
     </h2>
   </header>
@@ -283,23 +298,6 @@ There are two POST pages, /check and /search. The only time I saw /check get req
   </div>
   <footer class="entry-footer"><span title='2026-04-03 00:00:00 +0000 UTC'>April 3, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
   <a class="entry-link" aria-label="post link to Pico Cookies & More Cookies & Most Cookies writeup" href="https://irinasusca.github.io/writeup-blog/posts/picocookies-writeup/"></a>
-</article>
-
-<article class="post-entry tag-entry"
-  data-tags="picoctf web "> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Some Assembly Required 1, 2, 3, 4 Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Some Assembly Required 1 Looking at ./G82XCw5CX3.js, we can see some strange wasm file getting imported, ./JIFxzHyW8W. I navigated to the directory and it immediately got downloaded.
-Note - just running strings on the file was fine too, I realised a little later, there wasn’t necessarily any need to decompile the wasm.
-I decompiled it with Ghidra (more on that in this post I made).
-We can see in the check_flag function it’s getting checked against the memory at 0x400, which just so happens to be the flag.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-04-02 00:00:00 +0000 UTC'>April 2, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Some Assembly Required 1, 2, 3, 4 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/someassemblyrequired-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

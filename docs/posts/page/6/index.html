@@ -171,12 +171,20 @@
       cyberedu
     </a>
   
+    <a class="tag-pill" href="/writeup-blog/tags/dreamhack/">
+      dreamhack
+    </a>
+  
     <a class="tag-pill" href="/writeup-blog/tags/forensics/">
       forensics
     </a>
   
     <a class="tag-pill" href="/writeup-blog/tags/format-string/">
       format-string
+    </a>
+  
+    <a class="tag-pill" href="/writeup-blog/tags/heap/">
+      heap
     </a>
   
     <a class="tag-pill" href="/writeup-blog/tags/materials/">
@@ -224,168 +232,170 @@
 
 
 <article class="post-entry"
-  data-tags="cyberedu network "> 
+  data-tags="dreamhack pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu packet-snatchers Writeup
+    <h2 class="entry-hint-parent">Dreamhack out_of_bound Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Get ready for a multi-protocol, multi-question hunt
-I’ll just include the answers and maybe some other things I thought were slightly more difficult than the others.
-I took the FTP command list from here.
-The command to print out all the files downloaded by ftp, alphabetically: tshark -Y ftp -T fields -e ftp.request.arg -r traffic.pcap | sed &#39;/^$/d&#39; | sort -u.
-Here are the question asnwers:
-That’s it!
+    <p>Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(out_of_bound)의 바이너리와 소스 코드가 주어집니다. 프로그램의 취약점을 찾고 익스플로잇해 셸을 획득하세요. “flag” 파일을 읽어 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{…} 입니다.
+And it’s 32 bit!
+Identifying the vulnerabilities int __cdecl main(int argc, const char **argv, const char **envp) { _DWORD v4[3]; // [esp&#43;8h] [ebp-10h] BYREF v4[1] = __readgsdword(0x14u); initialize(); printf(&#34;Admin name: &#34;); read(0, &amp;name, 16u); printf(&#34;What do you want?: &#34;); __isoc99_scanf(&#34;%d&#34;, v4); system((&amp;command)[v4[0]]); return 0; } At .bss :0804A0AC is public name and at .data:0804A060 is command.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-02-05 00:00:00 +0000 UTC'>February 5, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu packet-snatchers Writeup" href="https://irinasusca.github.io/writeup-blog/posts/packetsnatchers-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-05-04 00:00:00 +0000 UTC'>May 4, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack out_of_bound Writeup" href="https://irinasusca.github.io/writeup-blog/posts/out_of_bound-writeup/"></a>
 </article>
 
 <article class="post-entry"
-  data-tags="cyberedu pwn rev "> 
+  data-tags="cyberedu pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu asmadventure Writeup
+    <h2 class="entry-hint-parent">CyberEdu minipwn &amp; minipwn2 Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Because it’s a reverse engineering chall I’m including the link.
-Ieri seară am primit o alertă privind un shellcode executat de un binar suspicios.
-Poți analiza ce se întâmplă și să descoperi parola infractorului?
-We receive a main binary. Very strangely, looking at this in IDA, it doesn’t look like anything.
-This is literally it. All of it.
-It allocates a rwx memory region of 559 bytes with 0.
+    <p>Challenge overview Desi pare o aplicatie simpla suspectam ca autorul a introdus un backdoor. Trebuie sa aflam daca acesta exista si daca il putem exploata pentru a obtine acces la steag (/flag.txt).
+minipwn is just like minipwn2 except they left /flag.txt as readable to anyone. So you can just go to /flag.txt and read it. But not in the second one.
+We do get a web instance this time:
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-02-04 00:00:00 +0000 UTC'>February 4, 2026</span>&nbsp;·&nbsp;<span>8 min</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu asmadventure Writeup" href="https://irinasusca.github.io/writeup-blog/posts/asmadventure-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-05-02 00:00:00 +0000 UTC'>May 2, 2026</span>&nbsp;·&nbsp;<span>7 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu minipwn & minipwn2 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/minipwn-writeup/"></a>
 </article>
 
 <article class="post-entry"
-  data-tags="cyberedu pwn format-string "> 
+  data-tags="cyberedu pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu montgomery Writeup
+    <h2 class="entry-hint-parent">CyberEdu baby-rop Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview E prima data cand ai un contact cu o proba de pwn? Acest exercitiu s-ar putea sa fie pentru tine.
-PS: Acest serviciu merge cu netcat.
-Identifying the vulnerabilities This is just a basic format string vulnerability. Leaking from $69%p to $100%p, we get the flag but in that fuckass format that I would usually put in a string reverser, 8 ASCII by 8 ASCII. But not this time. I wrote a script.
+    <p>Challenge overview This is a simple pwn challenge. You should get it in the lunch break.
+Running on Ubuntu 20.04.
+I copied the template from a challenge I solved last year (baby-fmt) and I had 12 pictures attached to the post… I used to have quite a lot of free time back then :)
+And I switched from gef to pwndbg a couple days ago.
+Identifying the vulnerabilities By the looks of it, we have a no PIE, no canary with a buffer overflow. So just a ret2libc I suppose. Except there’s a bunch of garbage on the stack, so I set up a breakpoint after the gets and looked at where our stuff ends up.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-02-04 00:00:00 +0000 UTC'>February 4, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu montgomery Writeup" href="https://irinasusca.github.io/writeup-blog/posts/montgomery-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-05-01 00:00:00 +0000 UTC'>May 1, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu baby-rop Writeup" href="https://irinasusca.github.io/writeup-blog/posts/babyrop-writeup/"></a>
 </article>
 
 <article class="post-entry"
-  data-tags="cyberedu network "> 
+  data-tags="cyberedu pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu biscuiti Writeup
+    <h2 class="entry-hint-parent">CyberEdu pwn1 Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Biscuiții mei au prea multe calorii, așa că trebuie să îi împart în mai multe porții.
-În această probă, aveți o captură PCAP, iar obiectivul este să recuperați un secret.
-I already solved this last year at the OSCJ but the foolish way, looking through pcaps like a fool. But now, we’re solving this with tshark!
-The command I used was tshark -r task.pcap -Y http -T fields -e http.cookie_pair to print out all of the cookie parts, along with their indexes. But then I thought, what the hell, if I’m not doing that manually, I’m not doing anything manually! So I came up with this command:
+    <p>Challenge overview This is just a regular pwn!
+Again, no PIE, and classic ret2libc. Similar to baby-rop.
+Identifying the vulnerabilities I crafted a classic rop chain, and now we only need to find the libc version to finish it remotely. I’ll assume it’s the same as the challenge I mentioned above.
+Running remotely though, only gave us 5 bytes of libc puts when we needed 6; So I assumed that the last one was null bytes. Tried all the possible libc offsets, that didn’t work; But printing out the data read before our leak, it seemed to have a trailing space that was getting thrown out; an 0x20.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-02-03 00:00:00 +0000 UTC'>February 3, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu biscuiti Writeup" href="https://irinasusca.github.io/writeup-blog/posts/biscuiti-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-05-01 00:00:00 +0000 UTC'>May 1, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu pwn1 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/pwn1-writeup/"></a>
 </article>
 
 <article class="post-entry"
-  data-tags="cyberedu network "> 
+  data-tags="cyberedu pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu private-coms Writeup
+    <h2 class="entry-hint-parent">CyberEdu pwn2 Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Există o comunicare scursă în acest fișier pcap. Găsește-o și obține flag-ul.
-Another challenge I’ve come across at OSCN, which I didn’t solve, because binwalk won’t show it found files if it can’t extract them using -e but it will find and extract them using more flags.
-Doing a simple binwalk -Mve --dd=&#34;.*&#34; private-coms.pcap extracts an audio file reading out the flag. I didn’t bother listening to it so I popped it into one of those AI wrapper speech to text apps, and got the text in CAPS so I just lowered it with python.
+    <p>Challenge overview We have a new version of our product.
+This time, we need to overwrite a data segment in bss, using fmtstr. Continuation of pwn1.
+Identifying the vulnerabilities This is main:
+int __fastcall main(int argc, const char **argv, const char **envp) { char s[512]; // [rsp&#43;0h] [rbp-200h] BYREF setvbuf(stdout, 0, 2, 0); setvbuf(stdin, 0, 2, 0); fgets(s, 512, stdin); printf(s); system(cmd); return 0; } So, fmtstr to overwrite cmd. We can write “/bin/sh” in another .bss region, and put that address into cmd. And we’re writing at the sixth offset:
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-02-03 00:00:00 +0000 UTC'>February 3, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu private-coms Writeup" href="https://irinasusca.github.io/writeup-blog/posts/privatecoms-writeup/"></a>
-</article>
-
-<article class="post-entry"
-  data-tags="cyberedu misc "> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu dumb-discord Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Well here is an example of a funny discord bot.
-_PS: Please note that the IP:PORT received is not needed to solve the challenge and nothing will answer there. _
-Identifying the vulnerabilities The script, decompiled:
-# Decompiled with PyLingual (https://pylingual.io) # Internal filename: server.py # Bytecode version: 3.6rc1 (3379) # Source timestamp: 2020-12-02 02:30:35 UTC (1606876235) from discord.ext import commands import discord import json from discord.utils import get def obfuscate(byt): mask = b&#39;ctf{tryharderdontstring}&#39; lmask = len(mask) return bytes((c ^ mask[i % lmask] for i, c in enumerate(byt))) def test(s): data = obfuscate(s.encode()) return data intents = discord.Intents.default() intents.members = True cfg = open(&#39;config.json&#39;, &#39;r&#39;) tmpconfig = cfg.read() cfg.close() config = json.loads(tmpconfig) token = config[test(&#39;\x17\x1b\r\x1e\x1a&#39;).decode()] client = commands.Bot(command_prefix=&#39;/&#39;) @client.event async def on_ready(): print(&#39;Connected to bot: {}&#39;.format(client.user.name)) print(&#39;Bot ID: {}&#39;.format(client.user.id)) @client.command() async def getflag(ctx): await ctx.send(test(&#39;\x13\x1b\x08\x1c&#39;).decode()) @client.event async def on_message(message): await client.process_commands(message) if test(&#39;B\x04\x0f\x15\x13&#39;).decode() in message.content.lower(): await message.channel.send(test(&#39;\x13\x1b\x08\x1c&#39;).decode()) if test(&#39;L\x13\x03\x0f\x12\x1e\x18\x0f&#39;).decode() in message.content.lower() and message.author.id == 783473293554352141: role = discord.utils.get(message.author.guild.roles, name=test(&#39;\x07\x17\x12\x1dFBKXO\x11\x1d\x07\x17\x16\n\n\x01]\x06\x1d&#39;).decode()) member = discord.utils.get(message.author.guild.members, id=message.author.id) if role in member.roles: await message.channel.send(test(config[test(&#39;\x05\x18\x07\x1c&#39;).decode()])) if test(&#39;L\x1c\x03\x17\x04&#39;).decode() in message.content.lower(): await message.channel.send(test(&#39;7\x06\x1f[\x1c\x13\x0b\x0c\x04\x00E&#39;).decode()) if &#39;/s基ay&#39; in message.content.lower(): await message.channel.send(message.content.replace(&#39;/s基ay&#39;, &#39;&#39;).replace(test(&#39;L\x13\x03\x0f\x12\x1e\x18\x0f&#39;).decode(), &#39;&#39;)) client.run(token) I ran the bot locally to decode those strings, and here is the less obfuscated stuff:
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-02-02 00:00:00 +0000 UTC'>February 2, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu dumb-discord Writeup" href="https://irinasusca.github.io/writeup-blog/posts/dumbdiscord-writeup/"></a>
-</article>
-
-<article class="post-entry"
-  data-tags="cyberedu web "> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu formula1 Writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Challenge overview Only a champion can win this race. Enter the secret pit stop and claim your flag!
-Identifying the vulnerabilities We’re confronted with a login page, with two fields, Only for F1 champions. Enter your first name and pit code to start your engine. Entering a random username and random password would give an Invalid username error, but sending max (for Max Verstappen) would give an Invalid pit code.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-02-02 00:00:00 +0000 UTC'>February 2, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu formula1 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/formula1-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-05-01 00:00:00 +0000 UTC'>May 1, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu pwn2 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/pwn2-writeup/"></a>
 </article>
 
 <article class="post-entry"
   data-tags="materials "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Wireshark, tshark &amp; sorting
+    <h2 class="entry-hint-parent">pwn
     </h2>
   </header>
   <div class="entry-content">
-    <p>Why Since this is, sadly, something that needs to be done in order to score points in ctfs, I’m going to cover some things that I feel are important in this category.
-I have done quite a few forensics challenges, but I never really mastered grep and tshark to their full potential. And I forgot most of my Wireshark expertise from last year, so I’ll include what I feel is important or non-intuitive about that as well.
+    <p>Why Finally I’m making a little post about this, because my notes are all over the place.
+If you’re just starting to learn about this stuff, this guy is a lifesaver; it was the single best resource I had gotten my hands on, as a complete beginner.
+32-bit I forget this every time I need it. Source.
+This is how it expects data, on the stack (turn on light mode, sorry):
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-02-01 00:00:00 +0000 UTC'>February 1, 2026</span>&nbsp;·&nbsp;<span>7 min</span></footer>
-  <a class="entry-link" aria-label="post link to Wireshark, tshark & sorting" href="https://irinasusca.github.io/writeup-blog/posts/wireshark/"></a>
+  <footer class="entry-footer"><span title='2026-05-01 00:00:00 +0000 UTC'>May 1, 2026</span>&nbsp;·&nbsp;<span>12 min</span></footer>
+  <a class="entry-link" aria-label="post link to pwn" href="https://irinasusca.github.io/writeup-blog/posts/pwn/"></a>
 </article>
 
 <article class="post-entry"
-  data-tags="cyberedu misc "> 
+  data-tags="picoctf web "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu imagine-that Writeup
+    <h2 class="entry-hint-parent">Pico Java Script Kiddie 1 &amp; 2 writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>This challenge is part of one of the Unbreakable python labs, and I decided to solve the challenge myself instead of just reading about it. And since it’s pwn, should be fun!
-Challenge overview Imagine that we are using socat for this one.
-We get a server to connect to, with socat, and we’re prompted to give a starting point twice. This however refers to the starting point first and then the ending point, and it prints out the bytes between the two offsets, then asks us for a password. We can only enter numbers from 1 to 10.
+    <p>Java Script Kiddie 1 We can enter some text in a little box.
+We also have this javascript code, essentially:
+var bytes = [69, 36, 1, 151, 249....]; //These are actually fetched from /bytes function assemble_png(u_in){ var LEN = 16; var key = &#34;0000000000000000&#34;; var shifter; if(u_in.length == LEN){ key = u_in; //so, we can set our own key if we input a 16 len thing } var result = []; for(var i = 0; i &lt; LEN; i&#43;&#43;){ shifter = key.charCodeAt(i) - 48; //For each char in key, remove 48 from the ascii for(var j = 0; j &lt; (bytes.length / LEN); j &#43;&#43;){ ///working in chunks of 16 bytes result[(j * LEN) &#43; i] = bytes[(((j &#43; shifter) * LEN) % bytes.length) &#43; i] } } while(result[result.length-1] == 0){ result = result.slice(0,result.length-1); ///just remove the last character if it&#39;s null } document.getElementById(&#34;Area&#34;).src = &#34;data:image/png;base64,&#34; &#43; btoa(String.fromCharCode.apply(null, new Uint8Array(result))); return false; } But what are we supposed to do? We already have the bytes, the result is clearly wrong, I don’t get it.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-31 00:00:00 +0000 UTC'>January 31, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu imagine-that Writeup" href="https://irinasusca.github.io/writeup-blog/posts/imaginethat-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-29 00:00:00 +0000 UTC'>April 29, 2026</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Java Script Kiddie 1 & 2 writeup" href="https://irinasusca.github.io/writeup-blog/posts/javascriptkiddie-writeup/"></a>
 </article>
 
 <article class="post-entry"
-  data-tags="cyberedu misc "> 
+  data-tags="materials "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">CyberEdu digikey Writeup
+    <h2 class="entry-hint-parent">Fix binary version
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview This challenge contains the extracted ELF data from a compiled atTiny85 avr chip The device was automatically being detected as a keyboard and inputs in a loop the ctf flag as string.
-We receive an Atmel AVR 8-bit file, which is the code for a microcontroller, so we can’t run it locally on our kali (since it’s COMPILED). So we need a decompiler, but of course IDA Pro is too expensive and ghidra looks absolutely awful, so we have to look for one online.
+    <p>Why I keep bumping into this stupid problem with binaries, where they provide the libc, but not the ldd. That means you can’t run it locally using it. So you need to manually look for the stupid thing. And every time this happens I forget how to do it.
+Find the version strings libc-2.27.so | grep &#34;GNU C Library&#34;
+GNU C Library (Ubuntu GLIBC 2.27-3ubuntu1.6) stable release version 2.27.
+Through Docker I recently just found this out, apparently you can use the Dockerfile to identify the exact libc!
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-01-30 00:00:00 +0000 UTC'>January 30, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
-  <a class="entry-link" aria-label="post link to CyberEdu digikey Writeup" href="https://irinasusca.github.io/writeup-blog/posts/digikey-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-04-23 00:00:00 +0000 UTC'>April 23, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Fix binary version" href="https://irinasusca.github.io/writeup-blog/posts/fixpwnversion/"></a>
+</article>
+
+<article class="post-entry"
+  data-tags="materials "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">gef
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Why I’ve had this on my iPad for months but I think it’s time I write some of this down on this blog as well.
+gef gef (GDB enhanced features) is a set of commands for x86/64, ARM, MIPS, PowerPC and SPARC to assist exploit developers and reverse-engineers when using old school GDB.
+The only reason I have gef instead of pwndbg is that when I tried to install pwndbg on my first ever kali machine, it wouldn’t work, and gef took a minute or two to set up; And I’ve stuck with it ever since. Cheatsheet.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-04-23 00:00:00 +0000 UTC'>April 23, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to gef" href="https://irinasusca.github.io/writeup-blog/posts/gef/"></a>
+</article>
+
+<article class="post-entry"
+  data-tags="picoctf pwn "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico Binary Gauntlet 0, 1, 2, 3 writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Overview Okay, time for a challenge. The flag for this challenge does not include the standard picoCTF{} wrapper.
+I’m doing this so I don’t completely forget how to solve pwn challenges :)
+Binary gauntlet 0 For this one I just sent %1$p.%2$p.%3$p.%4$p.%5$p.%6$p.%7$p.%8$p.%9$p.%10$p.%11$p.%12$p.%13$p.%14$p.%15$p.%16$p.%17$p.%18$p.%19$p.%20$p.%21$p.%22$p.%23$p.%24$p.%25$p.%26$p.%27$p.%28$p.%29$p.%30$p.%31$p.%32$p.%33$p.%34$p.%35$p.%36$p.%37$p.%38$p.%39$p.%40$p.%41$p.%42$p.%43$p.%44$p.%45$p.%46$p.%47$p.%48$p.%49$p.%50$p.%51$p.%52$p.%53$p.%54$p.%55$p.%56$p.%57$p.%58$p.%59$p.%60$p.%61$p.%62$p.%63$p.%64$p.%65$p.%66$p.%67$p.%68$p.%69$p.%70$p.%71$p.%72$p.%73$p.%74$p.%75$p.%76$p.%77$p.%78$p.%79$p.%80$p.%81$p.%82$p.%83$p.%84$p.%85$p.%86$p.%87$p.%88$p.%89$p.%90$p.%91$p.%92$p.%93$p.%94$p.%95$p.%96$p.%97$p.%98$p.%99$p.%100$p.%101$p.%102$p.%103$p.%104$p.%105$p.%106$p.%107$p.%108$p.%109$p.%110$p.%111$p.%112$p.%113$p.%114$p.%115$p.%116$p.%117$p.%118$p.%119$p.%120$p.%121$p.%122$p.%123$p.%124$p.%125$p.%126$p.%127$p.%128$p.%129$p.%130$p.%131$p.%132$p.%133$p.%134$p.%135$p.%136$p.%137$p.%138$p.%139$p.%140$p.%141$p.%142$p.%143$p.%144$p.%145$p.%146$p.%147$p.%148$p.%149$p.%150$p twice, and I got the flag.
+Binary gauntlet 1 NX and PIE are both disabled, and we get the location of dest on the stack. So, the stack is executable, and we have a buffer overflow. I actually had to look for a hint for this, I haven’t seen an NX disabled challenge in so long it hadn’t even crossed my mind.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-04-23 00:00:00 +0000 UTC'>April 23, 2026</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Binary Gauntlet 0, 1, 2, 3 writeup" href="https://irinasusca.github.io/writeup-blog/posts/binarygauntlet-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

@@ -1,5 +1,233 @@
 [
   {
+    "title": "Dreamhack Holymoly Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/holymoly-writeup/"
+  },
+  {
+    "title": "Dreamhack Format String Bug Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/fmtstr_bug-writeup/"
+  },
+  {
+    "title": "Dreamhack iofile_vtable Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/iofile_vtable-writeup/"
+  },
+  {
+    "title": "Dreamhack string Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/string-writeup/"
+  },
+  {
+    "title": "Dreamhack tcache_dup Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/tcachedup-writeup/"
+  },
+  {
+    "title": "Dreamhack tcache_dup2 Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/tcachedup2-writeup/"
+  },
+  {
+    "title": "Dreamhack Leg2 Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/leg2-writeup/"
+  },
+  {
+    "title": "Dreamhack Find Candy Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/findcandy-writeup/"
+  },
+  {
+    "title": "Dreamhack Secure Service Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/secureservice-writeup/"
+  },
+  {
+    "title": "Dreamhack xrop Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/xrop-writeup/"
+  },
+  {
+    "title": "steganography",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/stego/"
+  },
+  {
+    "title": "Dreamhack cpp_container_1 Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/cpp_container_1-writeup/"
+  },
+  {
+    "title": "Dreamhack cube Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/cube-writeup/"
+  },
+  {
+    "title": "Dreamhack master_canary Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/master_canary-writeup/"
+  },
+  {
+    "title": "Dreamhack pwn-library Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/pwnlibrary-writeup/"
+  },
+  {
+    "title": "Dreamhack Sea of Stack Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/seaofstack-writeup/"
+  },
+  {
+    "title": "Dreamhack basic_heap_overflow Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/basic_heap_overflow-writeup/"
+  },
+  {
+    "title": "Dreamhack Bypass SECCOMP-1 Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/bypass_seccomp-writeup/"
+  },
+  {
+    "title": "Dreamhack fho Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/fho-writeup/"
+  },
+  {
+    "title": "CyberEdu baby heap Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/babyheap-writeup/"
+  },
+  {
+    "title": "arm",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/arm/"
+  },
+  {
+    "title": "Dreamhack Arm Training-last Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/armtraininglast-writeup/"
+  },
+  {
+    "title": "Dreamhack armop Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/armop-writeup/"
+  },
+  {
+    "title": "Dreamhack XOR Board Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/xorboard-writeup/"
+  },
+  {
+    "title": "Dreamhack blindsc Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/blindsc-writeup/"
+  },
+  {
+    "title": "Dreamhack Monster Slayer Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/monsterslayer-writeup/"
+  },
+  {
+    "title": "Dreamhack p_rho Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/p_rho-writeup/"
+  },
+  {
+    "title": "reverse shells",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/revshell/"
+  },
+  {
+    "title": "tunneling",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/tunneling/"
+  },
+  {
+    "title": "Dreamhack __environ Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/environ-writeup/"
+  },
+  {
+    "title": "Dreamhack cpp_type_confusion Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/cpp_type_confustion-writeup/"
+  },
+  {
+    "title": "Dreamhack Return to Library Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/rtl-writeup/"
+  },
+  {
+    "title": "Dreamhack send_sig Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/send_sig-writeup/"
+  },
+  {
+    "title": "Dreamhack struct person_t Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/structperson_t-writeup/"
+  },
+  {
+    "title": "Dreamhack No mov Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/nomov-writeup/"
+  },
+  {
+    "title": "Dreamhack awesome-basics Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/awesomebasics-writeup/"
+  },
+  {
+    "title": "Dreamhack Cat Jump Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/catjump-writeup/"
+  },
+  {
+    "title": "Dreamhack Cherry Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/cherry-writeup/"
+  },
+  {
+    "title": "Dreamhack cpp_string Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/cpp_string-writeup/"
+  },
+  {
+    "title": "Dreamhack mmapped Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/mmapped-writeup/"
+  },
+  {
+    "title": "Dreamhack Return Address Overwrite Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/rao-writeup/"
+  },
+  {
+    "title": "Dreamhack Return To Shellcode Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/r2s-writeup/"
+  },
+  {
+    "title": "Dreamhack basic_exploitation_000 Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/basic_exploitation_000-writeup/"
+  },
+  {
+    "title": "Dreamhack basic_rop_x64 Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/basic_rop_x64-writeup/"
+  },
+  {
+    "title": "Dreamhack basic_rop_x86 Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/basic_rop_x86-writeup/"
+  },
+  {
+    "title": "Dreamhack rop Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/rop-writeup/"
+  },
+  {
+    "title": "Dreamhack shell_basic Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/shell_basic-writeup/"
+  },
+  {
+    "title": "Dreamhack sint Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/sint-writeup/"
+  },
+  {
+    "title": "Volatility",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/volatility/"
+  },
+  {
+    "title": "Dreamhack Base64 Encoder Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/base64encoder-writeup/"
+  },
+  {
+    "title": "Dreamhack out_of_bound Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/out_of_bound-writeup/"
+  },
+  {
+    "title": "CyberEdu minipwn \u0026 minipwn2 Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/minipwn-writeup/"
+  },
+  {
+    "title": "CyberEdu baby-rop Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/babyrop-writeup/"
+  },
+  {
+    "title": "CyberEdu pwn1 Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/pwn1-writeup/"
+  },
+  {
+    "title": "CyberEdu pwn2 Writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/pwn2-writeup/"
+  },
+  {
+    "title": "pwn",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/pwn/"
+  },
+  {
+    "title": "Pico Java Script Kiddie 1 \u0026 2 writeup",
+    "permalink": "https://irinasusca.github.io/writeup-blog/posts/javascriptkiddie-writeup/"
+  },
+  {
     "title": "Fix binary version",
     "permalink": "https://irinasusca.github.io/writeup-blog/posts/fixpwnversion/"
   },

@@ -3,7 +3,7 @@ date = '2026-04-23'
 draft = false
 title = 'Pico Binary Gauntlet 0, 1, 2, 3 writeup'
 ShowToc = true
-tags = ["picoCTF", "web"]
+tags = ["picoCTF", "pwn"]
 +++
 
 ## Overview

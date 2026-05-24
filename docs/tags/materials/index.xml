@@ -6,8 +6,162 @@
     <description>Recent content in Materials on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 23 Apr 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 14 May 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/tags/materials/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>steganography</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/stego/</link>
+      <pubDate>Thu, 14 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/stego/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;I have some notes in a text file on my kali VM, so I&amp;rsquo;m just going to be dumping that here.&lt;/p&gt;
+&lt;hr&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;binwalk
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#75715e&#34;&gt;#Combining two flags recursively extract firmware file&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; 	binwalk -Me --dd&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;.*&amp;#34;&lt;/span&gt; firmware.bin
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; 	Use binwalk -Mve to recursively extract files. It&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;s super cool!
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; 	! gunoiul asta daca ii dai -e nu iti zice tot timpul ca exista
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; 	
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;binwalk
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;zsteg
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;stegsolve
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;exiftool
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;steghide / stegseek
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;CyberChef
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;Audacity
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;HxD
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;java -jar stegsolve.jar
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;zsteg -a img.png
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;foremost
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;# Analyze key length
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;xortool mystery.bin
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;# Guess key length = 5, most common byte = 0x00 (for binary/nulls)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;xortool -l 5 -b 0x00 mystery.bin (on ctfweb)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;# If you expect printable text output
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;xortool -l 5 -c &amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;#39;&lt;/span&gt; mystery.bin   &lt;span style=&#34;color:#75715e&#34;&gt;# space is most common English byte&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Single-byte XOR brute force (all 256 keys)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;xortool-xor -f mystery.bin        &lt;span style=&#34;color:#75715e&#34;&gt;# then inspect outputs&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Output: generates 256+ candidate files — use xortool-guess or grep &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; known strings:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;bashxortool mystery.bin
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cd xortool-out/
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;grep -rl &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;flag{&amp;#34;&lt;/span&gt; .
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;grep -rl &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;CTF&amp;#34;&lt;/span&gt; .
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;grep -rl &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;PK&amp;#34;&lt;/span&gt; .    &lt;span style=&#34;color:#75715e&#34;&gt;# &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#audio:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#spectogram&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sox audio.wav -n spectrogram -o spec.png
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#convert format &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sox audio.mp3 audio.wav
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#reverse audio &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sox audio.wav reversed.wav reverse
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#view waveform &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sox audio.wav -n stat          &lt;span style=&#34;color:#75715e&#34;&gt;# statistics&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sox audio.wav -n stats         &lt;span style=&#34;color:#75715e&#34;&gt;# more detailed stats&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#separate channels&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sox stereo.wav left.wav remix &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;     &lt;span style=&#34;color:#75715e&#34;&gt;# left channel only&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sox stereo.wav right.wav remix &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# right channel only&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
+    <item>
+      <title>arm</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/arm/</link>
+      <pubDate>Sun, 10 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/arm/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;Why not!&lt;/p&gt;
+&lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://azeria-labs.com/writing-arm-assembly-part-1/&#34;&gt;Read this in-depth tutorial&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://blog.perfect.blue/ROPing-on-Aarch64&#34;&gt;This&lt;/a&gt; explains it pretty quickly as well&lt;/p&gt;
+&lt;p&gt;And &lt;a href=&#34;https://www.ctfrecipes.com/pwn/architectures/aarch32/registers&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;And this &lt;a href=&#34;https://repository.root-me.org/Exploitation%20-%20Syst%C3%A8me/Unix/EN%20-%20A%20short%20guide%20on%20ARM%20exploitation.pdf&#34;&gt;book&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;installation&#34;&gt;Installation&lt;/h2&gt;
+&lt;h3 id=&#34;aarch64&#34;&gt;aarch64&lt;/h3&gt;
+&lt;p&gt;On my kali, all I managed to install was &lt;code&gt;sudo apt install qemu-user qemu-system-arm gdb-multiarch&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;To run the binary:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;qemu-aarch64 ./prob
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To debug, you must first &lt;code&gt;qemu-aarch64 -g 1234 ./prob&lt;/code&gt;. Then, on another terminal:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;gdb-multiarch -ex &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;target remote :1234&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;It kept crashing for me, so I also had to add these options inside the debugger:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>reverse shells</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/revshell/</link>
+      <pubDate>Sat, 09 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/revshell/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;I finally ought to learn about these I think&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;For hosting stuff, check out &lt;a href=&#34;https://irinasusca.github.io/writeup-blog/tunneling&#34;&gt;this post&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For a bunch of different shells, &lt;a href=&#34;https://www.revshells.com/&#34;&gt;this website&lt;/a&gt;.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;There are a couple different types of shells:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Bind shell&lt;/strong&gt;, where we connect to the target&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Reverse shell&lt;/strong&gt;, where the target connects to us&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Normally, we, as attackers, listen with &lt;code&gt;netcat&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;nc -lvnp &lt;span style=&#34;color:#ae81ff&#34;&gt;1337&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Flags are &lt;code&gt;-l&lt;/code&gt; (listen), &lt;code&gt;v&lt;/code&gt; (verbose), &lt;code&gt;n&lt;/code&gt; (no DNS), &lt;code&gt;p&lt;/code&gt; (port).&lt;/p&gt;
+&lt;p&gt;A reverse shell typically looks like this:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>tunneling</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/tunneling/</link>
+      <pubDate>Sat, 09 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/tunneling/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;Sometimes you might find yourself needing a tunnel&amp;hellip;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/tunneling/tunnel.gif#center&#34;&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;These are &lt;em&gt;&lt;strong&gt;ALL FREE&lt;/strong&gt;&lt;/em&gt; options, because I refuse to pay actual money for this crap.&lt;/p&gt;
+&lt;h2 id=&#34;http&#34;&gt;http&lt;/h2&gt;
+&lt;p&gt;If you need a HTTP tunnel, there are a couple of pretty easy ways to do it.&lt;/p&gt;
+&lt;p&gt;Before you do anything, you can open a local port with &lt;code&gt;python&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;python3 -m http.server &lt;span style=&#34;color:#ae81ff&#34;&gt;8000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;First, there&amp;rsquo;s &lt;code&gt;ngrok&lt;/code&gt;; Super easy to use, but it&amp;rsquo;s quite annoying because of the warning page that messes up about all your XSS attempts.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Volatility</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/volatility/</link>
+      <pubDate>Tue, 05 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/volatility/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;Although I don&amp;rsquo;t necessarily like forensics challenges, it&amp;rsquo;s about time I learned to use Volatility, the most well known tool for memory forensics.&lt;/p&gt;
+&lt;h2 id=&#34;about&#34;&gt;About&lt;/h2&gt;
+&lt;p&gt;There are two versions of Volatility:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Volatility&lt;/strong&gt;, the &amp;ldquo;classic&amp;rdquo; 2.7 python version compatible, that I am still mentioning since it has some plugins that aren&amp;rsquo;t available on the newer version and it&amp;rsquo;s maintained its relevance. You will need a python2 venv for this though, using &lt;a href=&#34;https://irinasusca.github.io/writeup-blog/pyenv&#34;&gt;pyenv&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>pwn</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/pwn/</link>
+      <pubDate>Fri, 01 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/pwn/</guid>
+      <description>&lt;h2 id=&#34;why&#34;&gt;Why&lt;/h2&gt;
+&lt;p&gt;Finally I&amp;rsquo;m making a little post about this, because my notes are all over the place.&lt;/p&gt;
+&lt;p&gt;If you&amp;rsquo;re just starting to learn about this stuff, &lt;a href=&#34;https://ir0nstone.gitbook.io/notes/binexp/&#34;&gt;this guy is a lifesaver&lt;/a&gt;; it was the single best resource I had gotten my hands on, as a complete beginner.&lt;/p&gt;
+&lt;h2 id=&#34;32-bit&#34;&gt;32-bit&lt;/h2&gt;
+&lt;p&gt;I forget this every time I need it. &lt;a href=&#34;https://ir0nstone.gitbook.io/notes/binexp/stack/return-oriented-programming/exploiting-calling-conventions&#34;&gt;Source&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;This is how it expects data, on the stack (turn on light mode, sorry):&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/pwn/image.png#center&#34;&gt;&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Fix binary version</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/fixpwnversion/</link>
@@ -19,8 +173,8 @@
 &lt;p&gt;&lt;code&gt;strings libc-2.27.so | grep &amp;quot;GNU C Library&amp;quot;&lt;/code&gt;&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;GNU C Library (Ubuntu GLIBC 2.27-3ubuntu1.6) stable release version 2.27.&lt;/p&gt;&lt;/blockquote&gt;
-&lt;h2 id=&#34;use-a-tool-to-pull-the-version&#34;&gt;Use a tool to pull the version&lt;/h2&gt;
-&lt;p&gt;Get this tool:&lt;/p&gt;</description>
+&lt;h2 id=&#34;through-docker&#34;&gt;Through Docker&lt;/h2&gt;
+&lt;p&gt;I recently just found this out, apparently you can use the Dockerfile to identify the exact libc!&lt;/p&gt;</description>
     </item>
     <item>
       <title>gef</title>

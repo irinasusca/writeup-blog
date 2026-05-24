@@ -171,12 +171,20 @@
       cyberedu
     </a>
   
+    <a class="tag-pill" href="/writeup-blog/tags/dreamhack/">
+      dreamhack
+    </a>
+  
     <a class="tag-pill" href="/writeup-blog/tags/forensics/">
       forensics
     </a>
   
     <a class="tag-pill" href="/writeup-blog/tags/format-string/">
       format-string
+    </a>
+  
+    <a class="tag-pill" href="/writeup-blog/tags/heap/">
+      heap
     </a>
   
     <a class="tag-pill" href="/writeup-blog/tags/materials/">
@@ -224,159 +232,161 @@
 
 
 <article class="post-entry"
-  data-tags="materials "> 
+  data-tags="dreamhack pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Fix binary version
+    <h2 class="entry-hint-parent">Dreamhack Holymoly Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Why I keep bumping into this stupid problem with binaries, where they provide the libc, but not the ldd. That means you can’t run it locally using it. So you need to manually look for the stupid thing. And every time this happens I forget how to do it.
-Find the version strings libc-2.27.so | grep &#34;GNU C Library&#34;
-GNU C Library (Ubuntu GLIBC 2.27-3ubuntu1.6) stable release version 2.27.
-Use a tool to pull the version Get this tool:
+    <p>Challenge overview 홀리몰리 과카몰리 송을 알아듣는 서비스예요. 바이너리와 소스 코드가 주어집니다. 프로그램을 이해하고 익스플로잇해 “flag” 파일을 읽으세요. 플래그의 형식은 DH{…} 입니다.
+We get a super long source file, so I’ll quickly explain what each input of ours does.
+There is a ptr in bss and a val in bss. Initially, all actions are executed to val, but sending “mystery” will switch and allow us to write into ptr. Here is my map:
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-04-23 00:00:00 +0000 UTC'>April 23, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
-  <a class="entry-link" aria-label="post link to Fix binary version" href="https://irinasusca.github.io/writeup-blog/posts/fixpwnversion/"></a>
+  <footer class="entry-footer"><span title='2026-05-24 00:00:00 +0000 UTC'>May 24, 2026</span>&nbsp;·&nbsp;<span>7 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack Holymoly Writeup" href="https://irinasusca.github.io/writeup-blog/posts/holymoly-writeup/"></a>
 </article>
 
 <article class="post-entry"
-  data-tags="materials "> 
+  data-tags="dreamhack pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">gef
+    <h2 class="entry-hint-parent">Dreamhack Format String Bug Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Why I’ve had this on my iPad for months but I think it’s time I write some of this down on this blog as well.
-gef gef (GDB enhanced features) is a set of commands for x86/64, ARM, MIPS, PowerPC and SPARC to assist exploit developers and reverse-engineers when using old school GDB.
-The only reason I have gef instead of pwndbg is that when I tried to install pwndbg on my first ever kali machine, it wouldn’t work, and gef took a minute or two to set up; And I’ve stuck with it ever since. Cheatsheet.
+    <p>Challenge overview Exploit Tech: Format String Bug에서 실습하는 문제입니다.
+We just need to overwrite this address to get a shell, and we have a format string vulnerability.
+while ( 1 ) { do { get_string(format, 32); printf(format); puts(&amp;byte_2009); } while ( changeme != 1337 ); system(&#34;/bin/sh&#34;); } Identifying the vulnerabilities PIE is enabled, so all we need to do is leak PIE and then we can use pwntools’ fmtstr_payload to overwrite &#43;0x401C to 1337.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-04-23 00:00:00 +0000 UTC'>April 23, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
-  <a class="entry-link" aria-label="post link to gef" href="https://irinasusca.github.io/writeup-blog/posts/gef/"></a>
+  <footer class="entry-footer"><span title='2026-05-22 00:00:00 +0000 UTC'>May 22, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack Format String Bug Writeup" href="https://irinasusca.github.io/writeup-blog/posts/fmtstr_bug-writeup/"></a>
 </article>
 
 <article class="post-entry"
-  data-tags="picoctf web "> 
+  data-tags="dreamhack pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Binary Gauntlet 0, 1, 2, 3 writeup
+    <h2 class="entry-hint-parent">Dreamhack iofile_vtable Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Overview Okay, time for a challenge. The flag for this challenge does not include the standard picoCTF{} wrapper.
-I’m doing this so I don’t completely forget how to solve pwn challenges :)
-Binary gauntlet 0 For this one I just sent %1$p.%2$p.%3$p.%4$p.%5$p.%6$p.%7$p.%8$p.%9$p.%10$p.%11$p.%12$p.%13$p.%14$p.%15$p.%16$p.%17$p.%18$p.%19$p.%20$p.%21$p.%22$p.%23$p.%24$p.%25$p.%26$p.%27$p.%28$p.%29$p.%30$p.%31$p.%32$p.%33$p.%34$p.%35$p.%36$p.%37$p.%38$p.%39$p.%40$p.%41$p.%42$p.%43$p.%44$p.%45$p.%46$p.%47$p.%48$p.%49$p.%50$p.%51$p.%52$p.%53$p.%54$p.%55$p.%56$p.%57$p.%58$p.%59$p.%60$p.%61$p.%62$p.%63$p.%64$p.%65$p.%66$p.%67$p.%68$p.%69$p.%70$p.%71$p.%72$p.%73$p.%74$p.%75$p.%76$p.%77$p.%78$p.%79$p.%80$p.%81$p.%82$p.%83$p.%84$p.%85$p.%86$p.%87$p.%88$p.%89$p.%90$p.%91$p.%92$p.%93$p.%94$p.%95$p.%96$p.%97$p.%98$p.%99$p.%100$p.%101$p.%102$p.%103$p.%104$p.%105$p.%106$p.%107$p.%108$p.%109$p.%110$p.%111$p.%112$p.%113$p.%114$p.%115$p.%116$p.%117$p.%118$p.%119$p.%120$p.%121$p.%122$p.%123$p.%124$p.%125$p.%126$p.%127$p.%128$p.%129$p.%130$p.%131$p.%132$p.%133$p.%134$p.%135$p.%136$p.%137$p.%138$p.%139$p.%140$p.%141$p.%142$p.%143$p.%144$p.%145$p.%146$p.%147$p.%148$p.%149$p.%150$p twice, and I got the flag.
-Binary gauntlet 1 NX and PIE are both disabled, and we get the location of dest on the stack. So, the stack is executable, and we have a buffer overflow. I actually had to look for a hint for this, I haven’t seen an NX disabled challenge in so long it hadn’t even crossed my mind.
+    <p>Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(iofile_vtable)의 바이너리와 소스 코드가 주어집니다. 프로그램의 취약점을 찾고 익스플로잇해 get_shell 함수를 실행시키세요. 셸을 획득한 후, “flag” 파일을 읽어 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{…} 입니다.
+The environment is using Ubuntu 16.04 which clues at libc version 2.23. This libc version doesn’t flip out when _IO_FILE-&gt;vtable points to some random address.
+initialize(argc, argv, envp); printf(&#34;what is your name: &#34;); read(0, &amp;name, 8u); while ( 1 ) { while ( 1 ) { puts(&#34;1. print&#34;); puts(&#34;2. error&#34;); puts(&#34;3. read&#34;); puts(&#34;4. chance&#34;); printf(&#34;&gt; &#34;); __isoc99_scanf(&#34;%d&#34;, v3); if ( v3[0] != 2 ) break; fwrite(&#34;ERROR\n&#34;, 1u, 6u, stderr); } if ( v3[0] &gt; 2 ) { if ( v3[0] == 3 ) { fgetc(stdin); } else if ( v3[0] == 4 ) { printf(&#34;change: &#34;); read(0, &amp;stderr[1], 8u); } } else if ( v3[0] == 1 ) { puts(&#34;GOOD&#34;); } Identifying the vulnerabilities The challenge name is pretty intuitive, we need to overwrite the vtable in the _IO_FILE structure. We’re given a write right into stderr[1], which is the vtable. Our write, stderr, is the head of the _IO_list_all struct.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-04-23 00:00:00 +0000 UTC'>April 23, 2026</span>&nbsp;·&nbsp;<span>4 min</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Binary Gauntlet 0, 1, 2, 3 writeup" href="https://irinasusca.github.io/writeup-blog/posts/binarygauntlet-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-05-22 00:00:00 +0000 UTC'>May 22, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack iofile_vtable Writeup" href="https://irinasusca.github.io/writeup-blog/posts/iofile_vtable-writeup/"></a>
 </article>
 
 <article class="post-entry"
-  data-tags="picoctf web "> 
+  data-tags="dreamhack pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Startup Company writeup
+    <h2 class="entry-hint-parent">Dreamhack string Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>The last challenge in my Pico Medium Web category - finally - all four pages are finished! It’s been quite a while, with 12th grade and university admissions, but I’m super proud that I got to it in the end.
-Overview Do you want to fund my startup?
-We can register, then head over to contribute.php to contribute money. The request looks like captcha=73&amp;moneys=1. We can send negative money but it’s not that big of a deal.
+    <p>Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(string)의 바이너리와 소스 코드가 주어집니다. 프로그램의 취약점을 찾고 익스플로잇해 셸을 획득한 후, “flag” 파일을 읽으세요. “flag” 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{…} 입니다.
+We’re working on a 32-bit elf here, with a format string vulnerability.
+while ( 1 ) { puts(&#34;1. Input&#34;); puts(&#34;2. Print&#34;); puts(&#34;3. Exit&#34;); printf(&#34;&gt; &#34;); __isoc99_scanf(&#34;%d&#34;, &amp;v3); if ( v3 == 1 ) { input(s); } else if ( v3 == 2 ) { print(s); } } } What’s a little unusual is that instead of printf, warnx is being used:
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-04-22 00:00:00 +0000 UTC'>April 22, 2026</span>&nbsp;·&nbsp;<span>6 min</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Startup Company writeup" href="https://irinasusca.github.io/writeup-blog/posts/startupcompany-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-05-22 00:00:00 +0000 UTC'>May 22, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack string Writeup" href="https://irinasusca.github.io/writeup-blog/posts/string-writeup/"></a>
 </article>
 
 <article class="post-entry"
-  data-tags="picoctf web "> 
+  data-tags="dreamhack pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico 3v@l writeup
+    <h2 class="entry-hint-parent">Dreamhack tcache_dup Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Overview ABC Bank’s website has a loan calculator to help its clients calculate the amount they pay if they take a loan from the bank. Unfortunately, they are using an eval function to calculate the loan. Bypassing this will give you Remote Code Execution (RCE). Can you exploit the bank’s calculator and read the flag?
-Identifying the vulnerabilities I hate command injection
-We’re supposed to bypass this regex: r&#39;0x[0-9A-Fa-f]&#43;|\\u[0-9A-Fa-f]{4}|%[0-9A-Fa-f]{2}|\.[A-Za-z0-9]{1,3}\b|[\\\/]|\.\.&#39;. I found this nice website that decodes this regex so it’s easier to understand.
+    <p>Challenge overview 이 문제는 작동하고 있는 서비스(tcache_dup)의 바이너리와 소스코드가 주어집니다. Tcache dup 공격 기법을 이용한 익스플로잇을 작성하여 셸을 획득한 후, “flag” 파일을 읽으세요. “flag” 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{…} 입니다.
+This is just a classic tcache dup.
+puts(&#34;1. Create&#34;); puts(&#34;2. Delete&#34;); printf(&#34;&gt; &#34;); __isoc99_scanf(&#34;%d&#34;, &amp;v3); if ( v3 == 1 ) { create(v4&#43;&#43;); } else if ( v3 == 2 ) { delete(); } Identifying the vulnerabilities Not only that, we also have a get_shell function provided for us.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
-  <a class="entry-link" aria-label="post link to Pico 3v@l writeup" href="https://irinasusca.github.io/writeup-blog/posts/3v@l-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-05-22 00:00:00 +0000 UTC'>May 22, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack tcache_dup Writeup" href="https://irinasusca.github.io/writeup-blog/posts/tcachedup-writeup/"></a>
 </article>
 
 <article class="post-entry"
-  data-tags="picoctf web "> 
+  data-tags="dreamhack pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico byp4ss3d writeup
+    <h2 class="entry-hint-parent">Dreamhack tcache_dup2 Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Overview A university’s online registration portal asks students to upload their ID cards for verification. The developer put some filters in place to ensure only image files are uploaded but are they enough? Take a look at how the upload is implemented. Maybe there’s a way to slip past the checks and interact with the server in ways you shouldn’t.
-Identifying the vulnerabilities We can upload images via /upload.php, and access them after at /images/img.png. Changing the Content-Type to image/png and the extension to .png lets us upload any file, though.
+    <p>Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(tcache_dup2)의 바이너리와 소스 코드가 주어집니다. 취약점을 익스플로잇해 셸을 획득한 후, “flag” 파일을 읽으세요. “flag” 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{…} 입니다.
+We have three options, create, modify and delete.
+puts(&#34;1. Create heap&#34;); puts(&#34;2. Modify heap&#34;); puts(&#34;3. Delete heap&#34;); printf(&#34;&gt; &#34;); The challenge uses a ptr table in the .bss. The delete function frees the chunks but doesn’t clear out the ptr table.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
-  <a class="entry-link" aria-label="post link to Pico byp4ss3d writeup" href="https://irinasusca.github.io/writeup-blog/posts/byp4ss3d-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-05-22 00:00:00 +0000 UTC'>May 22, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack tcache_dup2 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/tcachedup2-writeup/"></a>
 </article>
 
 <article class="post-entry"
-  data-tags="picoctf web "> 
+  data-tags="dreamhack pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Credential Stuffing writeup
+    <h2 class="entry-hint-parent">Dreamhack Leg2 Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Overview Credential stuffing is the automated injection of stolen username and password pairs (“credentials”) in to website login forms, in order to fraudulently gain access to user accounts. Since many users will re-use the same password and username/email, when those credentials are exposed (by a database breach or phishing attack, for example) submitting those sets of stolen credentials into dozens or hundreds of other sites can allow an attacker to compromise those accounts too. Download the credentials dump here. There was a recent data breach at a famous department store, in which the login credentials of thousands of users were stolen and dumped online. You’re hoping at least one person reused their credentials from the department store for an account at a local bank. Stuff those credentials and get the flag!
+    <p>Challenge overview 드림이는 ARM 의 세계에 첫 발을 내밀었어요!
+I really don’t mind arm challenges, but this one truly was horrible, and it took me multiple hours.
+void vuln(void) { undefined1 auStack_100 [256]; printf(&#34;your name &gt; &#34;); read_input(&amp;name_pointer,0x20); printf(&#34;Hi! &#34;); printf(&amp;name_pointer); putchar(10); printf(&#34;Let me know your message!&#34;); printf(&#34;\n&gt; &#34;); read_input(auStack_100,0x200); return; } Identifying the vulnerabilities The vulnerability is simple, a clear buffer overflow, with a printf format string vulnerability as well.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Credential Stuffing writeup" href="https://irinasusca.github.io/writeup-blog/posts/credentialstuffing-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-05-21 00:00:00 +0000 UTC'>May 21, 2026</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack Leg2 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/leg2-writeup/"></a>
 </article>
 
 <article class="post-entry"
-  data-tags="picoctf web "> 
+  data-tags="dreamhack pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Fool The Lockout writeup
+    <h2 class="entry-hint-parent">Dreamhack Find Candy Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Overview Your friend is building a simple website with a login page. To stop brute forcing and credential stuffing, they’ve added an IP-based rate limit: exceed the attempt threshold and your IP is blocked for a while. They’re convinced this makes guessing credentials impossible. To test their defense, they’ve:
-Created a dummy account with a random username–password pair from public credential lists. Given you those username and password lists. Shared the full source code. Can you bypass the rate limit, log in, and capture the flag?
+    <p>Challenge overview 어딘가에 사탕을 숨겨놓았어요 쉘코드로 사탕을 찾아주세요!
+flag 파일은 458바이트 크기 아스키아트입니다. 아스키아트 속에 DH{…} 형태의 플래그가 존재합니다. fd = open(&#34;./flag&#34;, 0); if ( fd == -1 ) { puts(&#34;open error&#34;); exit(1); } v3 = rand(); buf = mmap((void *)((unsigned int)(v3 &lt;&lt; 12) | 0x80000000000LL), 0x1000u, 3, 34, 0, 0); if ( buf == (void *)-1LL ) { puts(&#34;mmap error&#34;); exit(1); } if ( read(fd, buf, 0x500u) == -1 ) { puts(&#34;read error&#34;); exit(1); } close(fd); s = (char *)mmap((void *)0xBEEFDEAD000LL, 0x1000u, 7, 34, 0, 0); if ( s == (char *)-1LL ) { puts(&#34;mmap error&#34;); exit(1); } memset(s, &#39;\x90&#39;, 0x1000u); memcpy(s, &amp;stub, 0x30u); if ( mmap((void *)0xDEADBEEF000LL, 0x1000u, 3, 34, 0, 0) == (void *)-1LL ) { puts(&#34;mmap error&#34;); exit(1); } puts(&#34;find me :) &#34;); sleep(1u); printf(&#34;shellcode: &#34;); read(0, s &#43; 48, 0x3E8u); Sandbox(); return ((int (*)(void))s)(); Identifying the vulnerabilities seccomp-tools quickly tells us we can only use the write and arch_prctl syscalls.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Fool The Lockout writeup" href="https://irinasusca.github.io/writeup-blog/posts/foolthelockout-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-05-20 00:00:00 +0000 UTC'>May 20, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack Find Candy Writeup" href="https://irinasusca.github.io/writeup-blog/posts/findcandy-writeup/"></a>
 </article>
 
 <article class="post-entry"
-  data-tags="picoctf web "> 
+  data-tags="dreamhack pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Hashgate writeup
+    <h2 class="entry-hint-parent">Dreamhack Secure Service Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Overview You have gotten access to an organisation’s portal. Submit your email and password, and it redirects you to your profile. But be careful: just because access to the admin isn’t directly exposed doesn’t mean it’s secure. Maybe someone forgot that obscurity isn’t security… Can you find your way into the admin’s profile for this organisation and capture the flag? The website is running here.
-In a comment, we find the guest creds, &lt;!-- Email: guest@picoctf.org Password: guest --&gt;.
+    <p>Challenge overview We made a nice “sandbox” program. feel free to attack our service :)
+__int64 bof() { puts(&#34;You chose to bof to attack my system.&#34;); printf(&#34;payload: &#34;); return __isoc99_scanf(&#34;%278s&#34;, &amp;g_buf); } int sandbox() { int result; // eax if ( prctl(38, 1, 0, 0, 0) == -1 ) exit(1); result = prctl(22, seccomp_mode, &amp;prog); if ( result == -1 ) exit(1); return result; } Identifying the vulnerabilities seccomp-tools crashed when I was trying to use it with this challenge. Pretty annoying.
+Anyways, the prctl(38, 1, 0, 0, 0) represents PR_SET_NO_NEW_PRIVS. The prctl(22, seccomp_mode, &amp;prog) is PR_SET_SECCOMP, which will do two things based on the seccomp_mode:
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Hashgate writeup" href="https://irinasusca.github.io/writeup-blog/posts/hashgate-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-05-20 00:00:00 +0000 UTC'>May 20, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack Secure Service Writeup" href="https://irinasusca.github.io/writeup-blog/posts/secureservice-writeup/"></a>
 </article>
 
 <article class="post-entry"
-  data-tags="picoctf web "> 
+  data-tags="dreamhack pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Java Code Analysis writeup
+    <h2 class="entry-hint-parent">Dreamhack xrop Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Overview BookShelf Pico, my premium online book-reading service. I believe that my website is super secure. I challenge you to prove me wrong by reading the ‘Flag’ book! Here are the credentials to get you started:
-Username: “user” Password: “user” Identifying the vulnerabilities Initially I thought this was a tad mode complicated, and since there was a profile picture upload with admin restrictions we’d have to work with that, but it was much simpler.
+    <p>Challenge overview General ROP, but input is xored?
+int __fastcall main(int argc, const char **argv, const char **envp) { int i; // [rsp&#43;8h] [rbp-28h] int v5; // [rsp&#43;Ch] [rbp-24h] char buf[24]; // [rsp&#43;10h] [rbp-20h] BYREF unsigned __int64 v7; // [rsp&#43;28h] [rbp-8h] v7 = __readfsqword(0x28u); setvbuf(stdin, 0, 2, 0); setvbuf(stdout, 0, 2, 0); setvbuf(stderr, 0, 2, 0); do { printf(&#34;Input: &#34;); v5 = read(0, buf, 0x100u); for ( i = 1; i &lt; v5; &#43;&#43;i ) buf[i - 1] ^= buf[i]; printf(&#34;You entered: %s\n&#34;, buf); } while ( strtok(buf, &#34;exit&#34;) ); return 0; } Identifying the vulnerabilities To bypass the input getting xor-ed, I made this helper function:
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Java Code Analysis writeup" href="https://irinasusca.github.io/writeup-blog/posts/javacodeanalysis-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-05-19 00:00:00 +0000 UTC'>May 19, 2026</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack xrop Writeup" href="https://irinasusca.github.io/writeup-blog/posts/xrop-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

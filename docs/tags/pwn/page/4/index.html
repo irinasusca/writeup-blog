@@ -140,40 +140,165 @@
 
 
 <article class="post-entry tag-entry"
-  data-tags="picoctf pwn buffer-overflow "> 
+  data-tags="dreamhack pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Babygame03 Writeup
+    <h2 class="entry-hint-parent">Dreamhack No mov Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview Break the game and get the flag. Welcome to BabyGame 03! Navigate around the map and see what you can find! Be careful, you don’t have many moves. There are obstacles that instantly end the game on collision. The game is available to download here. There is no source available, so you’ll have to figure your way around the map.
-After analyzing the binary and renaming the variables, we notice we have a player struct/array consisting of the player y, player x and player lives.
+    <p>Challenge overview 셸코딩, 이제는 익숙해졌겠죠? mov가 없이도 셸코딩할 수 있는지 한 번 테스트해봅시다. 이 바이너리는 여러분이 입력한 셸코드에 mov에 해당하는 바이트가 있는지 확인하고, 없으면 실행시켜줍니다. 어떻게든 ./flag를 읽어와보세요!
+int __fastcall main(int argc, const char **argv, const char **envp) { int bytes_read; // edx void *s; // [rsp&#43;10h] [rbp-10h] _QWORD *mmaped_page; // [rsp&#43;18h] [rbp-8h] initialize(argc, argv, envp); s = get_mmaped_page(); mmaped_page = get_mmaped_page(); if ( s &amp;&amp; mmaped_page ) { memset(s, 144, 0x1000u); memset(mmaped_page, 0, 0x1000u); printf(&#34;Give me your shellcode &gt; &#34;); bytes_read = read(0, s, 0x800u); if ( (unsigned int)verify((__int64)s, bytes_read) ) mmaped_page[255] = s; else puts(&#34;No.&#34;); return 0; } else { puts(&#34;Failed mmap&#34;); return 1; } } More shellcode!
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-10 21:08:35 +0200 EET'>November 10, 2025</span>&nbsp;·&nbsp;<span>4 min</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Babygame03 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/babygame03-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-05-07 00:00:00 +0000 UTC'>May 7, 2026</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack No mov Writeup" href="https://irinasusca.github.io/writeup-blog/posts/nomov-writeup/"></a>
 </article>
 
 <article class="post-entry tag-entry"
-  data-tags="picoctf pwn buffer-overflow "> 
+  data-tags="dreamhack pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Handoff Writeup
+    <h2 class="entry-hint-parent">Dreamhack awesome-basics Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Challenge overview The first vuln we encounter in handoff is that it doesn’t disable NX. (Basically, this means that we can execute shellcode on the stack!)
-We are presented with a menu with 3 options:
-Add a recipient Send a message to a recipient Exit Upon trying to exit, we are prompted to give our feedback.
-Identifying the vulnerability Immediately after decompiling the binary, we notice a buffer overflow in its feedback buffer. We can also see that the value at feedback[7] gets turned to \0. However, the feedback buffer overflow is way too small for us to do anything with it, so our best bet is to find another buffer and jmp to it.
+    <p>Challenge overview Stack Buffer Overflow 취약점이 존재하는 프로그램입니다. 주어진 바이너리와 소스 코드를 분석하여 익스플로잇하고 플래그를 획득하세요! 플래그는 flag 파일에 있습니다.
+플래그의 형식은 DH{…} 입니다.
+int __fastcall main(int argc, const char **argv, const char **envp) { _BYTE buf[80]; // [rsp&#43;10h] [rbp-60h] BYREF int v5; // [rsp&#43;60h] [rbp-10h] int fd; // [rsp&#43;64h] [rbp-Ch] int v7; // [rsp&#43;68h] [rbp-8h] int v8; // [rsp&#43;6Ch] [rbp-4h] v8 = 0; v7 = 1; initialize(argc, argv, envp); flag = malloc(0x45u); fd = open(&#34;./flag&#34;, 0); read(fd, flag, 0x45u); close(fd); v5 = open(&#34;./tmp/flag&#34;, 1); write(1, &#34;Your Input: &#34;, 0xCu); read(0, buf, 128u); write(v5, flag, 69u); write(v5, buf, 80u); close(v5); return 0; } Identifying the vulnerabilities This seems pretty straightforward;
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2025-11-10 21:08:35 +0200 EET'>November 10, 2025</span>&nbsp;·&nbsp;<span>2 min</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Handoff Writeup" href="https://irinasusca.github.io/writeup-blog/posts/handoff-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-05-06 00:00:00 +0000 UTC'>May 6, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack awesome-basics Writeup" href="https://irinasusca.github.io/writeup-blog/posts/awesomebasics-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="dreamhack pwn random "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Dreamhack Cat Jump Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview 고양이가 방해물을 피해 옥상으로 올라갈 수 있도록 도와주세요!
+플래그 형식은 DH{…} 입니다.
+int PrintBanner() { return puts( &#34; .-.\n&#34; &#34; \\ \\\n&#34; &#34; \\ \\\n&#34; &#34; | |\n&#34; &#34; | |\n&#34; &#34; /\\---/\\ _,---._ | |\n&#34; &#34; /^ ^ \\,&#39; `. ;\n&#34; &#34; ( O O ) ;\n&#34; &#34; `.=o=__,&#39; \\\n&#34; &#34; / _,--.__ \\\n&#34; &#34; / _ ) ,&#39; `-. `-. \\\n&#34; &#34; / ,&#39; / ,&#39; \\ \\ \\ \\\n&#34; &#34; / / / ,&#39; (,_)(,_)\n&#34; &#34; (,; (,,) jrei\n&#34;); } unsigned __int64 StartGame() { unsigned int v0; // eax char v2; // [rsp&#43;4h] [rbp-7Ch] BYREF char v3; // [rsp&#43;5h] [rbp-7Bh] unsigned __int8 v4; // [rsp&#43;6h] [rbp-7Ah] char v5; // [rsp&#43;7h] [rbp-79h] double v6; // [rsp&#43;8h] [rbp-78h] char v7[32]; // [rsp&#43;10h] [rbp-70h] BYREF char s[72]; // [rsp&#43;30h] [rbp-50h] BYREF unsigned __int64 v9; // [rsp&#43;78h] [rbp-8h] v9 = __readfsqword(0x28u); v0 = time(0); srand(v0); v3 = 0; v4 = 0; puts(aLetTheCatReach); sleep(1u); do { v5 = rand() % 2; do { printf(&#34;left jump=&#39;h&#39;, right jump=&#39;j&#39;: &#34;); __isoc99_scanf(&#34;%c%*c&#34;, &amp;v2); } while ( v2 != &#39;h&#39; &amp;&amp; v2 != &#39;l&#39; ); if ( v3 ) { --v3; &#43;&#43;v4; puts(aTheCatPoweredU); } else { if ( (v2 != &#39;h&#39; || !v5) &amp;&amp; (v2 != &#39;l&#39; || v5 == 1) ) { puts(aTheCatGotStuck); return v9 - __readfsqword(0x28u); } &#43;&#43;v4; puts(aTheCatJumpedSu); } v6 = (double)rand() / 2147483647.0; if ( v6 &lt; 0.1 ) { puts(aTheCatFoundAnd); v3 = 3; } } while ( v4 &lt;= 0x24u ); puts(&#34;your cat has reached the roof!\n&#34;); printf(aLetPeopleKnowY); __isoc99_scanf(&#34;%31s&#34;, v7); snprintf(s, 0x40u, &#34;echo \&#34;%s\&#34; &gt; /tmp/cat_db&#34;, v7); system(s); printf(&#34;goodjob! &#34;); system(&#34;cat /tmp/cat_db&#34;); return v9 - __readfsqword(0x28u); } Identifying the vulnerabilities So, we want to win this little game about a cat jumping places. The branch that decides whether we move forward or lose is this:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-06 00:00:00 +0000 UTC'>May 6, 2026</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack Cat Jump Writeup" href="https://irinasusca.github.io/writeup-blog/posts/catjump-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="dreamhack pwn "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Dreamhack Cherry Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview 주어진 바이너리와 소스 코드를 분석하여 익스플로잇하고 플래그를 획득하세요! 플래그는 flag.txt 파일에 있습니다.
+플래그의 형식은 DH{…} 입니다.
+int __fastcall main(int argc, const char **argv, const char **envp) { char buf[6]; // [rsp&#43;18h] [rbp-18h] BYREF int v5; // [rsp&#43;1Eh] [rbp-12h] BYREF __int16 v6; // [rsp&#43;22h] [rbp-Eh] int v7; // [rsp&#43;24h] [rbp-Ch] int fd; // [rsp&#43;28h] [rbp-8h] int v9; // [rsp&#43;2Ch] [rbp-4h] v9 = 0; fd = 1; v5 = 1919248483; v6 = 31090; v7 = 16; initialize(argc, argv, envp); write(1, &#34;Menu: &#34;, 6u); read(0, buf, 0x10u); if ( !strncmp(buf, &#34;cherry&#34;, 6u) ) { write(fd, &#34;Is it cherry?: &#34;, 0xFu); read(v9, &amp;v5, v7); } return 0; } Identifying the vulnerabilities There is also a flag function that pops a shell.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-06 00:00:00 +0000 UTC'>May 6, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack Cherry Writeup" href="https://irinasusca.github.io/writeup-blog/posts/cherry-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="dreamhack pwn "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Dreamhack cpp_string Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(cpp_string)의 바이너리와 소스 코드가 주어집니다. 프로그램의 취약점을 찾아 flag를 획득하세요! “flag” 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{…} 입니다.
+int __fastcall __noreturn main(int argc, const char **argv, const char **envp) { __int64 v3; // rax __int64 v4; // rax __int64 v5; // rax __int64 v6; // rax __int64 v7; // rax __int64 v8; // rax int v9; // [rsp&#43;4h] [rbp-Ch] BYREF unsigned __int64 v10; // [rsp&#43;8h] [rbp-8h] v10 = __readfsqword(0x28u); initialize(); v9 = 0; while ( 1 ) { while ( 1 ) { v3 = std::operator&lt;&lt;&lt;std::char_traits&lt;char&gt;&gt;(&amp;std::cout, &#34;Simple file system&#34;); std::ostream::operator&lt;&lt;(v3, &amp;std::endl&lt;char,std::char_traits&lt;char&gt;&gt;); v4 = std::operator&lt;&lt;&lt;std::char_traits&lt;char&gt;&gt;(&amp;std::cout, &#34;1. read file&#34;); std::ostream::operator&lt;&lt;(v4, &amp;std::endl&lt;char,std::char_traits&lt;char&gt;&gt;); v5 = std::operator&lt;&lt;&lt;std::char_traits&lt;char&gt;&gt;(&amp;std::cout, &#34;2. write file&#34;); std::ostream::operator&lt;&lt;(v5, &amp;std::endl&lt;char,std::char_traits&lt;char&gt;&gt;); v6 = std::operator&lt;&lt;&lt;std::char_traits&lt;char&gt;&gt;(&amp;std::cout, &#34;3. show contents&#34;); std::ostream::operator&lt;&lt;(v6, &amp;std::endl&lt;char,std::char_traits&lt;char&gt;&gt;); v7 = std::operator&lt;&lt;&lt;std::char_traits&lt;char&gt;&gt;(&amp;std::cout, &#34;4. quit&#34;); std::ostream::operator&lt;&lt;(v7, &amp;std::endl&lt;char,std::char_traits&lt;char&gt;&gt;); std::operator&lt;&lt;&lt;std::char_traits&lt;char&gt;&gt;(&amp;std::cout, &#34;[*] input : &#34;); std::istream::operator&gt;&gt;(&amp;std::cin, &amp;v9); if ( v9 != 2 ) break; write_file(); } if ( v9 &gt; 2 ) { if ( v9 == 3 ) { show_contents(); } else if ( v9 == 4 ) { v8 = std::operator&lt;&lt;&lt;std::char_traits&lt;char&gt;&gt;(&amp;std::cout, &#34;BYEBYE&#34;); std::ostream::operator&lt;&lt;(v8, &amp;std::endl&lt;char,std::char_traits&lt;char&gt;&gt;); exit(0); } } else if ( v9 == 1 ) { read_flag(); read_file(); } } } Identifying the vulnerabilities These absolutely disgusting looking cpp binaries…
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-06 00:00:00 +0000 UTC'>May 6, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack cpp_string Writeup" href="https://irinasusca.github.io/writeup-blog/posts/cpp_string-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="dreamhack pwn "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Dreamhack mmapped Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview 프로그램의 취약점을 찾고 익스플로잇하여 플래그를 출력하세요.
+플래그는 ./flag 파일에 위치합니다.
+플래그의 형식은 DH{…} 입니다.
+int __fastcall main(int argc, const char **argv, const char **envp) { char buf[40]; // [rsp&#43;10h] [rbp-40h] BYREF void *addr; // [rsp&#43;38h] [rbp-18h] void *v6; // [rsp&#43;40h] [rbp-10h] int v7; // [rsp&#43;48h] [rbp-8h] int fd; // [rsp&#43;4Ch] [rbp-4h] initialize(argc, argv, envp); fd = open(&#34;./flag&#34;, 0); v7 = 69; v6 = &#34;DH{****************************************************************}&#34;; printf(&#34;fake flag address: %p\n&#34;, &#34;DH{****************************************************************}&#34;); printf(&#34;buf address: %p\n&#34;, buf); addr = mmap(0, 0x45u, 1, 2, fd, 0); printf(&#34;real flag address (mmapped address): %p\n&#34;, addr); printf(&#34;%s&#34;, &#34;input: &#34;); read(0, buf, 0x3Cu); mprotect(addr, v7, 0); write(1, v6, 0x45u); printf(&#34;\nbuf value: &#34;); puts(buf); munmap(addr, 0x45u); close(fd); return 0; } Identifying the vulnerabilities I had to look for 10 minutes, but I finally found what the mprotect values for prot are:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-06 00:00:00 +0000 UTC'>May 6, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack mmapped Writeup" href="https://irinasusca.github.io/writeup-blog/posts/mmapped-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="dreamhack pwn "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Dreamhack Return Address Overwrite Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Exploit Tech: Return Address Overwrite에서 실습하는 문제입니다. int __fastcall main(int argc, const char **argv, const char **envp) { _BYTE v4[48]; // [rsp&#43;0h] [rbp-30h] BYREF init(argc, argv, envp); printf(&#34;Input: &#34;); __isoc99_scanf(&#34;%s&#34;, v4); return 0; } Identifying the vulnerabilities We can instantly see a get_shell function at 0x4006aa; and, a buffer overflow. But, this address has a nullbyte, and we’re reading with scanf… It might be a problem, but it also might work.
+I quickly tested it out, and it worked. Nice!
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-06 00:00:00 +0000 UTC'>May 6, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack Return Address Overwrite Writeup" href="https://irinasusca.github.io/writeup-blog/posts/rao-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="dreamhack pwn "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Dreamhack Return To Shellcode Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Exploit Tech: Return to Shellcode에서 실습하는 문제입니다.
+int __fastcall main(int argc, const char **argv, const char **envp) { char buf[88]; // [rsp&#43;0h] [rbp-60h] BYREF unsigned __int64 v5; // [rsp&#43;58h] [rbp-8h] v5 = __readfsqword(0x28u); init(argc, argv, envp); printf(&#34;Address of the buf: %p\n&#34;, buf); printf(&#34;Distance between buf and $rbp: %ld\n&#34;, 96); puts(&#34;[1] Leak the canary&#34;); printf(&#34;Input: &#34;); fflush(stdout); read(0, buf, 0x100u); printf(&#34;Your input is &#39;%s&#39;\n&#34;, buf); puts(&#34;[2] Overwrite the return address&#34;); printf(&#34;Input: &#34;); fflush(stdout); gets(buf); return 0; } Identifying the vulnerabilities This challenge is being very thoughtful; even spelling out the stack layout to us. We do have a canary, so we can leak that first. Then, shellcode challenge =&gt; we redirect the flow into buf where we place our shellcode. I feel like we have permission to do anything, so we can just pop a shell.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-06 00:00:00 +0000 UTC'>May 6, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack Return To Shellcode Writeup" href="https://irinasusca.github.io/writeup-blog/posts/r2s-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="dreamhack pwn "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Dreamhack basic_exploitation_000 Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(basic_exploitation_000)의 바이너리와 소스 코드가 주어집니다. 프로그램의 취약점을 찾고 익스플로잇해 셸을 획득한 후, “flag” 파일을 읽으세요. “flag” 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{…} 입니다.
+int __cdecl main(int argc, const char **argv, const char **envp) { _BYTE v4[128]; // [esp&#43;0h] [ebp-80h] BYREF initialize(); printf(&#34;buf = (%p)\n&#34;, v4); __isoc99_scanf(&#34;%141s&#34;, v4); return 0; } Identifying the vulnerabilities Back with 32-bit stuff. This time - NX disabled - so I’m thinking this is some shellcoding stuff.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-05 00:00:00 +0000 UTC'>May 5, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack basic_exploitation_000 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/basic_exploitation_000-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="dreamhack pwn "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Dreamhack basic_rop_x64 Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(basic_rop_x64)의 바이너리와 소스 코드가 주어집니다. Return Oriented Programming 공격 기법을 통해 셸을 획득한 후, “flag” 파일을 읽으세요. “flag” 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{…} 입니다.
+int __fastcall main(int argc, const char **argv, const char **envp) { _BYTE buf[64]; // [rsp&#43;10h] [rbp-40h] BYREF __int64 savedregs; // [rsp&#43;50h] [rbp&#43;0h] BYREF memset(buf, 0, sizeof(buf)); initialize(&amp;savedregs, argv, buf); read(0, buf, 0x400u); write(1, buf, 64u); return 0; } Identifying the vulnerabilities 64-bit rop, right? No PIE, NX enabled. So I suppose ret2libc. puts isn’t used in main, but luckily the alarm handler prints “TIME OUT”, so the binary has both the got and plt entries.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-05 00:00:00 +0000 UTC'>May 5, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack basic_rop_x64 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/basic_rop_x64-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
     <a class="prev" href="https://irinasusca.github.io/writeup-blog/tags/pwn/page/3/">
       «&nbsp;Prev&nbsp;
+    </a>
+    <a class="next" href="https://irinasusca.github.io/writeup-blog/tags/pwn/page/5/">Next&nbsp;&nbsp;»
     </a>
   </nav>
 </footer>

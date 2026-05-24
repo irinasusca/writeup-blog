@@ -17,6 +17,40 @@ I keep bumping into this stupid problem with binaries, where they provide the li
 
 > GNU C Library (Ubuntu GLIBC 2.27-3ubuntu1.6) stable release version 2.27.
 
+## Through Docker
+
+I recently just found this out, apparently you can use the Dockerfile to identify the exact libc!
+
+If all you get is this:
+
+```bash
+FROM ubuntu:22.04@sha256:hash`
+```
+
+Then:
+
+```bash
+sudo docker pull ubuntu:22.04@sha256:hash
+```
+
+```bash
+sudo docker create --name tmp ubuntu:22.04@sha256:hash
+```
+
+```bash
+sudo docker cp tmp:/usr/lib/x86_64-linux-gnu/libc.so.6 ./libc.so.6
+```
+
+```bash
+sudo docker cp tmp:/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2 ./ld-linux-x86-64.so.2
+```
+
+```bash
+sudo docker rm tmp
+```
+
+There!
+
 ## Use a tool to pull the version
 
 Get this tool:

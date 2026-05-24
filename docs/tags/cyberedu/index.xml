@@ -6,8 +6,86 @@
     <description>Recent content in CyberEdu on Irina&#39;s CTF Writeups</description>
     <generator>Hugo -- 0.146.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 29 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 11 May 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://irinasusca.github.io/writeup-blog/tags/cyberedu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CyberEdu baby heap Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/babyheap-writeup/</link>
+      <pubDate>Mon, 11 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/babyheap-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;In &lt;strong&gt;&lt;a href=&#34;https://app.cyber-edu.co/challenges/559febf0-7f21-11ea-be53-e5754acd68a0?tenant=cyberedu&#34;&gt;this challenge&lt;/a&gt;&lt;/strong&gt; you can test your understanding about basic heap exploitation.&lt;/p&gt;
+&lt;p&gt;Just as a side note, I&amp;rsquo;ve put off doing heap challenges for the longest time ever, because I thought they were too bothersome, but that changes today, because we&amp;rsquo;re solving this! So this is a great and notable milestone.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;I wrote that ^ in February and it&amp;rsquo;s May 11th now.&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/babyheap-writeup/lol.gif#center&#34;&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;As the challenge suggests, this is a heap overflow.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu minipwn &amp; minipwn2 Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/minipwn-writeup/</link>
+      <pubDate>Sat, 02 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/minipwn-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;Desi pare o aplicatie simpla suspectam ca autorul a introdus un backdoor. Trebuie sa aflam daca acesta exista si daca il putem exploata pentru a obtine acces la steag (/flag.txt).&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;minipwn is just like minipwn2 except they left /flag.txt as readable to anyone. So you can just go to /flag.txt and read it. But not in the second one.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;We do get a web instance this time:&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;challenge-screenshot&#34; loading=&#34;lazy&#34; src=&#34;https://irinasusca.github.io/writeup-blog/posts/minipwn-writeup/web.png#center&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu baby-rop Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/babyrop-writeup/</link>
+      <pubDate>Fri, 01 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/babyrop-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;This is a simple pwn challenge. You should get it in the lunch break.&lt;/p&gt;
+&lt;p&gt;Running on Ubuntu 20.04.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;I copied the template from a challenge I solved last year (baby-fmt) and I had &lt;em&gt;12 pictures&lt;/em&gt; attached to the post&amp;hellip; I used to have quite a lot of free time back then :)&lt;/p&gt;
+&lt;p&gt;And I switched from &lt;code&gt;gef&lt;/code&gt; to &lt;code&gt;pwndbg&lt;/code&gt; a couple days ago.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;By the looks of it, we have a no PIE, no canary with a buffer overflow. So just a ret2libc I suppose. Except there&amp;rsquo;s a bunch of garbage on the stack, so I set up a breakpoint after the &lt;code&gt;gets&lt;/code&gt; and looked at where our stuff ends up.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu pwn1 Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/pwn1-writeup/</link>
+      <pubDate>Fri, 01 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/pwn1-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;This is just a regular pwn!&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Again, no PIE, and classic ret2libc. Similar to &lt;a href=&#34;https://irinasusca.github.io/babyrop-writeup&#34;&gt;baby-rop&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;I crafted a classic rop chain, and now we only need to find the libc version to finish it remotely. I&amp;rsquo;ll assume it&amp;rsquo;s the same as the challenge I mentioned above.&lt;/p&gt;
+&lt;p&gt;Running remotely though, only gave us 5 bytes of libc puts when we needed 6; So I assumed that the last one was null bytes. Tried all the possible libc offsets, that didn&amp;rsquo;t work; But printing out the data read before our leak, it seemed to have a trailing space that was getting thrown out; an &lt;code&gt;0x20&lt;/code&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>CyberEdu pwn2 Writeup</title>
+      <link>https://irinasusca.github.io/writeup-blog/posts/pwn2-writeup/</link>
+      <pubDate>Fri, 01 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://irinasusca.github.io/writeup-blog/posts/pwn2-writeup/</guid>
+      <description>&lt;h2 id=&#34;challenge-overview&#34;&gt;Challenge overview&lt;/h2&gt;
+&lt;p&gt;We have a new version of our product.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;This time, we need to overwrite a data segment in bss, using fmtstr. Continuation of &lt;a href=&#34;https://irinasusca.github.io/pwn1-writeup&#34;&gt;pwn1&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-vulnerabilities&#34;&gt;Identifying the vulnerabilities&lt;/h2&gt;
+&lt;p&gt;This is main:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;__fastcall&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; argc, &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;argv, &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;envp)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; s[&lt;span style=&#34;color:#ae81ff&#34;&gt;512&lt;/span&gt;]; &lt;span style=&#34;color:#75715e&#34;&gt;// [rsp+0h] [rbp-200h] BYREF
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;setvbuf&lt;/span&gt;(stdout, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;setvbuf&lt;/span&gt;(stdin, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;fgets&lt;/span&gt;(s, &lt;span style=&#34;color:#ae81ff&#34;&gt;512&lt;/span&gt;, stdin);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;printf&lt;/span&gt;(s);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;system&lt;/span&gt;(cmd);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So, fmtstr to overwrite &lt;code&gt;cmd&lt;/code&gt;. We can write &amp;ldquo;/bin/sh&amp;rdquo; in another .bss region, and put that address into cmd. And we&amp;rsquo;re writing at the sixth offset:&lt;/p&gt;</description>
+    </item>
     <item>
       <title>CyberEdu casual-defence Writeup</title>
       <link>https://irinasusca.github.io/writeup-blog/posts/casualdefence-writeup/</link>

@@ -150,164 +150,159 @@
 
 
 <article class="post-entry"
-  data-tags="picoctf web "> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico No Sql Injection writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Overview Can you try to get access to this website to get the flag?
-We have access to the source, the most interesting part being this:
-const initialUser = new User({ firstName: &#34;pico&#34;, lastName: &#34;player&#34;, email: &#34;picoplayer355@picoctf.org&#34;, password: crypto.randomBytes(16).toString(&#34;hex&#34;).slice(0, 16), }); await initialUser.save(); #... app.post(&#34;/login&#34;, async (req, res) =&gt; { const { email, password } = req.body; try { const user = await User.findOne({ email: email.startsWith(&#34;{&#34;) &amp;&amp; email.endsWith(&#34;}&#34;) ? JSON.parse(email) : email, password: password.startsWith(&#34;{&#34;) &amp;&amp; password.endsWith(&#34;}&#34;) ? JSON.parse(password) : password, }); if (user) { res.json({ success: true, email: user.email, token: user.token, firstName: user.firstName, lastName: user.lastName, }); } else { res.json({ success: false }); } } catch (err) { res.status(500).json({ success: false, error: err.message }); } Identifying the vulnerabilities This is a Mongo db, with nosql, as suggested by the challenge name. What’s immediately interesting is that the email and password are parsed as json. Here is a portswigger article talking about NoSQL injection. I also watched this video.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
-  <a class="entry-link" aria-label="post link to Pico No Sql Injection writeup" href="https://irinasusca.github.io/writeup-blog/posts/nosqlinjection-writeup/"></a>
-</article>
-
-<article class="post-entry"
-  data-tags="picoctf web "> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico North-South writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Overview I’ve set up geo-based routing - can you outsmart it? You’re trying to retrieve the flag, but there’s a catch: access to the real service is restricted based on your geographic location. Only requests from a specific region are routed to the server that holds the flag. Everyone else is sent somewhere… less interesting.
-Identifying the vulnerabilities We also receive the nginx conf file; It’s serving two proxies, and one is only available to people with $geoip2_data_country_code = IS. That’s Iceland, upon looking at countrycode.org.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
-  <a class="entry-link" aria-label="post link to Pico North-South writeup" href="https://irinasusca.github.io/writeup-blog/posts/northsouth-writeup/"></a>
-</article>
-
-<article class="post-entry"
-  data-tags="picoctf web "> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Secret Box writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Overview I’ve set up geo-based routing - can you outsmart it? You’re trying to retrieve the flag, but there’s a catch: access to the real service is restricted based on your geographic location. Only requests from a specific region are routed to the server that holds the flag. Everyone else is sent somewhere… less interesting.
-Identifying the vulnerabilities The create secret is vulnerable to sql injection; Creating a secret with the contents a&#39;); INSERT INTO secrets(owner_id, content) SELECT &#39;5fba75e8-3444-434d-a353-b9ea93796097&#39;, password FROM users WHERE username = &#39;admin&#39;-- will insert into our secrets the admin’s password.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Secret Box writeup" href="https://irinasusca.github.io/writeup-blog/posts/secretbox-writeup/"></a>
-</article>
-
-<article class="post-entry"
   data-tags="materials "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">http
+    <h2 class="entry-hint-parent">steganography
     </h2>
   </header>
   <div class="entry-content">
-    <p>Why idfk
-headers Here are some of the headers that I didn’t really have much of a clue about what they actually meant.
-X-Forwarded-For: the originating IP address of a client connecting to a web server through a HTTP proxy. Basically saying, hey, I’m a proxy forwarding this for this guy!
-X-Forwarded-Host: the domain originally requested by the user.
-Forwarded: the official version to replace the previous ones, looks like this: by=; for=; host=; proto=http
-...</p>
+    <p>Why I have some notes in a text file on my kali VM, so I’m just going to be dumping that here.
+binwalk #Combining two flags recursively extract firmware file binwalk -Me --dd=&#34;.*&#34; firmware.bin Use binwalk -Mve to recursively extract files. It&#39;s super cool! ! gunoiul asta daca ii dai -e nu iti zice tot timpul ca exista binwalk zsteg stegsolve exiftool steghide / stegseek CyberChef Audacity HxD java -jar stegsolve.jar zsteg -a img.png foremost # Analyze key length xortool mystery.bin # Guess key length = 5, most common byte = 0x00 (for binary/nulls) xortool -l 5 -b 0x00 mystery.bin (on ctfweb) # If you expect printable text output xortool -l 5 -c &#39; &#39; mystery.bin # space is most common English byte # Single-byte XOR brute force (all 256 keys) xortool-xor -f mystery.bin # then inspect outputs Output: generates 256&#43; candidate files — use xortool-guess or grep for known strings: bashxortool mystery.bin cd xortool-out/ grep -rl &#34;flag{&#34; . grep -rl &#34;CTF&#34; . grep -rl &#34;PK&#34; . # #audio: #spectogram sox audio.wav -n spectrogram -o spec.png #convert format sox audio.mp3 audio.wav #reverse audio sox audio.wav reversed.wav reverse #view waveform sox audio.wav -n stat # statistics sox audio.wav -n stats # more detailed stats #separate channels sox stereo.wav left.wav remix 1 # left channel only sox stereo.wav right.wav remix 2 # right channel only </p>
   </div>
-  <footer class="entry-footer"><span title='2026-04-16 00:00:00 +0000 UTC'>April 16, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
-  <a class="entry-link" aria-label="post link to http" href="https://irinasusca.github.io/writeup-blog/posts/http/"></a>
+  <footer class="entry-footer"><span title='2026-05-14 00:00:00 +0000 UTC'>May 14, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to steganography" href="https://irinasusca.github.io/writeup-blog/posts/stego/"></a>
 </article>
 
 <article class="post-entry"
-  data-tags="picoctf web "> 
+  data-tags="dreamhack pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Crack The Gate 2 writeup
+    <h2 class="entry-hint-parent">Dreamhack cpp_container_1 Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Overview The login system has been upgraded with a basic rate-limiting mechanism that locks out repeated failed attempts from the same source. We’ve received a tip that the system might still trust user-controlled headers. Your objective is to bypass the rate-limiting restriction and log in using the known email address: ctf-player@picoctf.org and uncover the hidden secret.
-Identifying the vulnerabilities The challenge hints at modifying our headers, and the X-Forwarded-For header was the one responsible for rate limiting. We got a passwords.txt file, it wasn’t that long, but I wanted to practice python anyways; since I always dread doing it, I’m trying to force myself to get comfortable with it.
+    <p>Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(cpp_container_1)의 바이너리와 소스 코드가 주어집니다. 프로그램의 취약점을 찾아 flag를 획득하세요! “flag” 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{…} 입니다.
+Identifying the vulnerabilities There is a win function.
+We have a couple of vectors, which live in the heap, next to each other - src and dest.
+Looking through the code, we can either populate the vectors, resize them, and then copy the data from src to dest.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-04-16 00:00:00 +0000 UTC'>April 16, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Crack The Gate 2 writeup" href="https://irinasusca.github.io/writeup-blog/posts/crackthegate-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-05-13 00:00:00 +0000 UTC'>May 13, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack cpp_container_1 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/cpp_container_1-writeup/"></a>
 </article>
 
 <article class="post-entry"
-  data-tags="picoctf web "> 
+  data-tags="dreamhack pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Sql Map 1 writeup
+    <h2 class="entry-hint-parent">Dreamhack cube Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Overview You’ve been hired by a shadowy group of pentesters who love a good puzzle. The system looks ordinary, but appearances lie. Somewhere inside, sloppy code and legacy hashing practices left a tiny….
-I finally stumbled upon the newer AI slop challenges from pico, presenting itself immediately through the page long description.
-Identifying the vulnerabilities We can register our own user and search for flags. Just writing Flag immediately shows a bunch of fake results; I tried running sqlmap as suggested by the challenge name, but it kept breaking, so I got annoyed and wrote my stuff manually.
+    <p>Challenge overview 드림이가 오랜만에 도서관에 왔습니다! 원하는 책을 읽어볼까요? 플래그는 /home/pwnlibrary/flag.txt에 있습니다.
+void menuprint(){ printf(&#34;1. borrow book\n&#34;); printf(&#34;2. read book\n&#34;); printf(&#34;3. return book\n&#34;); printf(&#34;4. exit library\n&#34;); } int steal_book(){ FILE *fp = 0; __uint32_t filesize = 0; __uint32_t pages = 0; char buf[0x100] = {0, }; printf(&#34;[*] Welcome to steal book menu!\n&#34;); printf(&#34;[!] caution. it is illegal!\n&#34;); printf(&#34;[&#43;] whatever, where is the book? : &#34;); scanf(&#34;%144s&#34;, buf); fp = fopen(buf, &#34;r&#34;); if(!fp){ printf(&#34;[*] we can not find a book...\n&#34;); return 1; } else { fseek(fp, 0, SEEK_END); filesize = ftell(fp); fseek(fp, 0, SEEK_SET); printf(&#34;[*] how many pages?(MAX 400) : &#34;); scanf(&#34;%u&#34;, &amp;pages); if(pages &gt; 0x190){ printf(&#34;[*] it is heavy!!\n&#34;); return 1; } if(filesize &gt; pages){ filesize = pages; } secretbook.contents = (char *)malloc(pages); memset(secretbook.contents, 0x0, pages); __uint32_t result = fread(secretbook.contents, 1, filesize, fp); if(result != filesize){ printf(&#34;[*] result : %u\n&#34;, result); printf(&#34;[*] it is locked..\n&#34;); return 1; } memset(secretbook.bookname, 0, 0x20); strcpy(secretbook.bookname, &#34;STOLEN BOOK&#34;); printf(&#34;\n[*] (Siren rangs) (Siren rangs)\n&#34;); printf(&#34;[*] Oops.. cops take your book..\n&#34;); fclose(fp); return 0; } } Identifying the vulnerabilities The secret option to steal a book is 275.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-04-16 00:00:00 +0000 UTC'>April 16, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Sql Map 1 writeup" href="https://irinasusca.github.io/writeup-blog/posts/sqlmap-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-05-13 00:00:00 +0000 UTC'>May 13, 2026</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack cube Writeup" href="https://irinasusca.github.io/writeup-blog/posts/cube-writeup/"></a>
 </article>
 
 <article class="post-entry"
-  data-tags="picoctf web "> 
+  data-tags="dreamhack pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico findme writeup
+    <h2 class="entry-hint-parent">Dreamhack master_canary Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Overview Help us test the form by submiting the username as test and password as test!
-This only got a writeup because it took me almost half an hour.
-Identifying the vulnerabilities Logging in doesn’t do much, however by fuzzing we find a /home page, saying I was redirected here by a friend of mine but i couldnt find anything. Help me search for flags :-). It also has a Search for flags search bar that does nothing. Parameter fuzzing didn’t work either.
+    <p>Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(master_canary)의 바이너리와 소스 코드가 주어집니다. 카나리 값을 구해 실행 흐름을 조작해 셸을 획득하세요. 셸을 획득한 후 얻은 “flag” 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{…} 입니다.
+int main(int argc, char *argv[]) { size_t size = 0; pthread_t thread_t; int idx = 0; char leave_comment[32]; initialize(); while (1) { printf(&#34;1. Create thread\n&#34;); printf(&#34;2. Input\n&#34;); printf(&#34;3. Exit\n&#34;); printf(&#34;&gt; &#34;); scanf(&#34;%d&#34;, &amp;idx); switch (idx) { case 1: if (pthread_create(&amp;thread_t, NULL, thread_routine, NULL) &lt; 0) { perror(&#34;thread create error&#34;); exit(0); } break; case 2: printf(&#34;Size: &#34;); scanf(&#34;%lu&#34;, &amp;size); printf(&#34;Data: &#34;); read_bytes(global_buffer, size); printf(&#34;Data: %s&#34;, global_buffer); break; case 3: printf(&#34;Leave comment: &#34;); read(0, leave_comment, 1024); return 0; default: printf(&#34;Nope\n&#34;); break; } } return 0; } Identifying the vulnerabilities So, we can create threads. Interesting. We also have a massive overflow of leave_comment and into the global_buffer.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-04-15 00:00:00 +0000 UTC'>April 15, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
-  <a class="entry-link" aria-label="post link to Pico findme writeup" href="https://irinasusca.github.io/writeup-blog/posts/findme-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-05-13 00:00:00 +0000 UTC'>May 13, 2026</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack master_canary Writeup" href="https://irinasusca.github.io/writeup-blog/posts/master_canary-writeup/"></a>
 </article>
 
 <article class="post-entry"
-  data-tags="picoctf web "> 
+  data-tags="dreamhack pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Trickster writeup
+    <h2 class="entry-hint-parent">Dreamhack pwn-library Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Overview I found a web app that can help process images: PNG images only!
-Image upload, so immediately this is some sort of php file upload vulnerability.
-Identifying the vulnerabilities We can smuggle any file as a png, by adding the PNG header and the .png extension, upon testing.
-There is also an /uploads directory, where we can find each one of our uploaded files.
-I noticed something interesting in the phrasing, when trying different exentions: Error: File name does not contain ‘.png’. So I thought, what if we just pop that in? So I send this file:
+    <p>Challenge overview 루트 권한으로 실행되는 서비스를 찾았습니다. 그러나, 큐브안에 갇혀서 빠져나올 수가 없습니다. 큐브를 탈출하고 플래그를 획득하세요!
+Identifying the vulnerabilities This is a chroot shellcode challenge. Read this.
+The first thing said there about chroot is:
+One simple problem might be that the current directory is not set inside the jail. This allows you to access any file in your current directory before entering the jail and allows you to use ../ sequences freely. The only catch is that / paths will still be relative to the jail.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-04-15 00:00:00 +0000 UTC'>April 15, 2026</span>&nbsp;·&nbsp;<span>1 min</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Trickster writeup" href="https://irinasusca.github.io/writeup-blog/posts/trickster-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-05-13 00:00:00 +0000 UTC'>May 13, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack pwn-library Writeup" href="https://irinasusca.github.io/writeup-blog/posts/pwnlibrary-writeup/"></a>
 </article>
 
 <article class="post-entry"
-  data-tags="picoctf web "> 
+  data-tags="dreamhack pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico JAuth writeup
+    <h2 class="entry-hint-parent">Dreamhack Sea of Stack Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Overview Most web application developers use third party components without testing their security. Some of the past affected companies are:
-Equifax (a US credit bureau organization) - breach due to unpatched Apache Struts web framework CVE-2017-5638 Mossack Fonesca (Panama Papers law firm) breach - unpatched version of Drupal CMS used VerticalScope (internet media company) - outdated version of vBulletin forum software used Can you identify the components and exploit the vulnerable one? The website is running here. Can you become an admin? You can login as test with the password Test123! to get started.
+    <p>Challenge overview 플래그는 바다에 버려요. 깊은 데 빠뜨려서, 아무도 못 찾게 해요.
+int __fastcall main(int argc, const char **argv, const char **envp) { __int64 v4; // [rsp&#43;0h] [rbp-30h] BYREF _QWORD *v5; // [rsp&#43;8h] [rbp-28h] BYREF char s1[28]; // [rsp&#43;10h] [rbp-20h] BYREF int number; // [rsp&#43;2Ch] [rbp-4h] proc_init(argc, argv, envp); printf(&#34;If you really want to give me a present, bring me that kind detective&#39;s heart.\n&gt; &#34;); read_input(s1, 16); if ( !strcmp(s1, &#34;Decision2Solve&#34;) &amp;&amp; !gotPresent ) { read_input(&amp;v5, 8); read_input(&amp;v4, 6); *v5 = v4; gotPresent = 1; } print_menu(); number = read_number(); if ( number == 1 ) { safe(); } else if ( number == 2 ) { unsafe(); } return 0; } __int64 unsafe_func() { _BYTE v1[32]; // [rsp&#43;0h] [rbp-20h] BYREF return read_input(v1, 0x10000); } void *safe_func() { _BYTE s[48]; // [rsp&#43;0h] [rbp-30h] BYREF read_input(s, 41); return memset(s, 0, 0x28u); } Identifying the vulnerabilities This is the memory layout in .bss:
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-04-14 00:00:00 +0000 UTC'>April 14, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
-  <a class="entry-link" aria-label="post link to Pico JAuth writeup" href="https://irinasusca.github.io/writeup-blog/posts/jauth-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-05-13 00:00:00 +0000 UTC'>May 13, 2026</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack Sea of Stack Writeup" href="https://irinasusca.github.io/writeup-blog/posts/seaofstack-writeup/"></a>
 </article>
 
 <article class="post-entry"
-  data-tags="picoctf web "> 
+  data-tags="dreamhack pwn "> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico Super Serial writeup
+    <h2 class="entry-hint-parent">Dreamhack basic_heap_overflow Writeup
     </h2>
   </header>
   <div class="entry-content">
-    <p>Overview Try to recover the flag stored on this website
-We have a login page, which upon trying any credentials, we get back the error Fatal error: Uncaught Exception: Unable to open database: unable to open database file in /var/www/html/index.php:5 Stack trace: #0 /var/www/html/index.php(5): SQLite3-&gt;__construct(&#39;../users.db&#39;) #1 {main} thrown in /var/www/html/index.php on line 5.
-Identifying the vulnerabilities I tried fuzzing, and we got some interesting pages:
-The authentication.php one would just redirect to index and clear our cookies, the cookie.php one was just empty, and set us a PHP session id, and in robots.txt was Disallow: /admin.phps, a file which did not exist.
+    <p>Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(basic_heap_overflow)의 바이너리와 소스 코드가 주어집니다. 프로그램의 취약점을 찾고 익스플로잇해 셸을 획득한 후, “flag” 파일을 읽으세요. “flag” 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{…} 입니다.
+Arch: i386-32-little RELRO: No RELRO Stack: No canary found NX: NX enabled PIE: No PIE (0x8048000)
+int __cdecl main(int argc, const char **argv, const char **envp) { void *v4; // [esp&#43;8h] [ebp-10h] void (**v5)(void); // [esp&#43;Ch] [ebp-Ch] v4 = malloc(0x20u); v5 = (void (**)(void))malloc(0x20u); initialize(); *v5 = (void (*)(void))table_func; __isoc99_scanf(&#34;%s&#34;, v4); if ( *v5 ) (*v5)(); return 0; } Identifying the vulnerabilities We have a get_shell function, and an overflow: __isoc99_scanf(&#34;%s&#34;, v4); will allow us to overwrite stuff in the heap.
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-04-14 00:00:00 +0000 UTC'>April 14, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
-  <a class="entry-link" aria-label="post link to Pico Super Serial writeup" href="https://irinasusca.github.io/writeup-blog/posts/superserial-writeup/"></a>
+  <footer class="entry-footer"><span title='2026-05-12 00:00:00 +0000 UTC'>May 12, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack basic_heap_overflow Writeup" href="https://irinasusca.github.io/writeup-blog/posts/basic_heap_overflow-writeup/"></a>
+</article>
+
+<article class="post-entry"
+  data-tags="dreamhack pwn "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Dreamhack Bypass SECCOMP-1 Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Exploit Tech: Bypass SECCOMP에서 실습하는 문제입니다.
+int __fastcall main(int argc, const char **argv, const char **envp) { void *s; // [rsp&#43;10h] [rbp-10h] s = mmap(0, 0x1000u, 7, 33, -1, 0); init(0); memset(s, 0, 0x1000u); printf(&#34;shellcode: &#34;); read(0, s, 0x1000u); sandbox(0); ((void (__fastcall *)(_QWORD))s)(0); return 0; } Identifying the vulnerabilities ┌──(ctf-venv)─(kali㉿kali)-[~/ctf/pwn] └─$ seccomp-tools dump /home/kali/Downloads/dreamhack/bypassseccomp1/bypass_seccomp shellcode: line CODE JT JF K ================================= 0000: 0x20 0x00 0x00 0x00000004 A = arch 0001: 0x15 0x00 0x08 0xc000003e if (A != ARCH_X86_64) goto 0010 0002: 0x20 0x00 0x00 0x00000000 A = sys_number 0003: 0x35 0x00 0x01 0x40000000 if (A &lt; 0x40000000) goto 0005 0004: 0x15 0x00 0x05 0xffffffff if (A != 0xffffffff) goto 0010 0005: 0x15 0x04 0x00 0x00000001 if (A == write) goto 0010 0006: 0x15 0x03 0x00 0x00000002 if (A == open) goto 0010 0007: 0x15 0x02 0x00 0x0000003b if (A == execve) goto 0010 0008: 0x15 0x01 0x00 0x00000142 if (A == execveat) goto 0010 0009: 0x06 0x00 0x00 0x7fff0000 return ALLOW 0010: 0x06 0x00 0x00 0x00000000 return KILL So this is a shellcoding seccomp challenge.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-12 00:00:00 +0000 UTC'>May 12, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack Bypass SECCOMP-1 Writeup" href="https://irinasusca.github.io/writeup-blog/posts/bypass_seccomp-writeup/"></a>
+</article>
+
+<article class="post-entry"
+  data-tags="dreamhack pwn "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Dreamhack fho Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview Exploit Tech: Hook Overwrite에서 실습하는 문제입니다.
+int __fastcall main(int argc, const char **argv, const char **envp) { void *ptr; // [rsp&#43;0h] [rbp-50h] BYREF __int64 v5; // [rsp&#43;8h] [rbp-48h] BYREF char buf[56]; // [rsp&#43;10h] [rbp-40h] BYREF unsigned __int64 v7; // [rsp&#43;48h] [rbp-8h] v7 = __readfsqword(0x28u); setvbuf(stdin, 0, 2, 0); setvbuf(stdout, 0, 2, 0); puts(&#34;[1] Stack buffer overflow&#34;); printf(&#34;Buf: &#34;); read(0, buf, 0x100u); printf(&#34;Buf: %s\n&#34;, buf); puts(&#34;[2] Arbitary-Address-Write&#34;); printf(&#34;To write: &#34;); __isoc99_scanf(&#34;%llu&#34;, &amp;ptr); printf(&#34;With: &#34;); __isoc99_scanf(&#34;%llu&#34;, &amp;v5); printf(&#34;[%p] = %llu\n&#34;, ptr, v5); *(_QWORD *)ptr = v5; puts(&#34;[3] Arbitrary-Address-Free&#34;); printf(&#34;To free: &#34;); __isoc99_scanf(&#34;%llu&#34;, &amp;ptr); free(ptr); return 0; } Identifying the vulnerabilities We get a stack buffer overflow, an arbitrary write and then an arbitrary free.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-12 00:00:00 +0000 UTC'>May 12, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack fho Writeup" href="https://irinasusca.github.io/writeup-blog/posts/fho-writeup/"></a>
+</article>
+
+<article class="post-entry"
+  data-tags="cyberedu pwn heap "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CyberEdu baby heap Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview In this challenge you can test your understanding about basic heap exploitation.
+Just as a side note, I’ve put off doing heap challenges for the longest time ever, because I thought they were too bothersome, but that changes today, because we’re solving this! So this is a great and notable milestone.
+I wrote that ^ in February and it’s May 11th now.
+As the challenge suggests, this is a heap overflow.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-11 00:00:00 +0000 UTC'>May 11, 2026</span>&nbsp;·&nbsp;<span>10 min</span></footer>
+  <a class="entry-link" aria-label="post link to CyberEdu baby heap Writeup" href="https://irinasusca.github.io/writeup-blog/posts/babyheap-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

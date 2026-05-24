@@ -140,6 +140,22 @@
 
 
 <article class="post-entry tag-entry"
+  data-tags="dreamhack pwn random "> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Dreamhack Cat Jump Writeup
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Challenge overview 고양이가 방해물을 피해 옥상으로 올라갈 수 있도록 도와주세요!
+플래그 형식은 DH{…} 입니다.
+int PrintBanner() { return puts( &#34; .-.\n&#34; &#34; \\ \\\n&#34; &#34; \\ \\\n&#34; &#34; | |\n&#34; &#34; | |\n&#34; &#34; /\\---/\\ _,---._ | |\n&#34; &#34; /^ ^ \\,&#39; `. ;\n&#34; &#34; ( O O ) ;\n&#34; &#34; `.=o=__,&#39; \\\n&#34; &#34; / _,--.__ \\\n&#34; &#34; / _ ) ,&#39; `-. `-. \\\n&#34; &#34; / ,&#39; / ,&#39; \\ \\ \\ \\\n&#34; &#34; / / / ,&#39; (,_)(,_)\n&#34; &#34; (,; (,,) jrei\n&#34;); } unsigned __int64 StartGame() { unsigned int v0; // eax char v2; // [rsp&#43;4h] [rbp-7Ch] BYREF char v3; // [rsp&#43;5h] [rbp-7Bh] unsigned __int8 v4; // [rsp&#43;6h] [rbp-7Ah] char v5; // [rsp&#43;7h] [rbp-79h] double v6; // [rsp&#43;8h] [rbp-78h] char v7[32]; // [rsp&#43;10h] [rbp-70h] BYREF char s[72]; // [rsp&#43;30h] [rbp-50h] BYREF unsigned __int64 v9; // [rsp&#43;78h] [rbp-8h] v9 = __readfsqword(0x28u); v0 = time(0); srand(v0); v3 = 0; v4 = 0; puts(aLetTheCatReach); sleep(1u); do { v5 = rand() % 2; do { printf(&#34;left jump=&#39;h&#39;, right jump=&#39;j&#39;: &#34;); __isoc99_scanf(&#34;%c%*c&#34;, &amp;v2); } while ( v2 != &#39;h&#39; &amp;&amp; v2 != &#39;l&#39; ); if ( v3 ) { --v3; &#43;&#43;v4; puts(aTheCatPoweredU); } else { if ( (v2 != &#39;h&#39; || !v5) &amp;&amp; (v2 != &#39;l&#39; || v5 == 1) ) { puts(aTheCatGotStuck); return v9 - __readfsqword(0x28u); } &#43;&#43;v4; puts(aTheCatJumpedSu); } v6 = (double)rand() / 2147483647.0; if ( v6 &lt; 0.1 ) { puts(aTheCatFoundAnd); v3 = 3; } } while ( v4 &lt;= 0x24u ); puts(&#34;your cat has reached the roof!\n&#34;); printf(aLetPeopleKnowY); __isoc99_scanf(&#34;%31s&#34;, v7); snprintf(s, 0x40u, &#34;echo \&#34;%s\&#34; &gt; /tmp/cat_db&#34;, v7); system(s); printf(&#34;goodjob! &#34;); system(&#34;cat /tmp/cat_db&#34;); return v9 - __readfsqword(0x28u); } Identifying the vulnerabilities So, we want to win this little game about a cat jumping places. The branch that decides whether we move forward or lose is this:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-05-06 00:00:00 +0000 UTC'>May 6, 2026</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to Dreamhack Cat Jump Writeup" href="https://irinasusca.github.io/writeup-blog/posts/catjump-writeup/"></a>
+</article>
+
+<article class="post-entry tag-entry"
   data-tags="cyberedu pwn random "> 
   <header class="entry-header">
     <h2 class="entry-hint-parent">CyberEdu offensive-honeypot Writeup
